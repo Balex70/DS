@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+USER_ID="$UID"
+
+docker-compose exec -u root \
+  -w /var/www/html \
+  web \
+  npm "$@"
