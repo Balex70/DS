@@ -23,9 +23,15 @@ build:
 up:
 	$(DOCKER_COMPOSE) up -d
 	
+stop:
+	$(DOCKER_COMPOSE) stop
+
 container:
 	$(DOCKER_COMPOSE) exec -u root -w /app backend /bin/bash
 	
+composer-install:
+	$(DOCKER_COMPOSE) run --rm backend composer install
+
 #LOGS
 web-log:
 #@echo $(DOCKER_WEB_CONTAINER)
