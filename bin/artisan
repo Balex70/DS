@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 USER_ID="$UID"
 
-docker-compose exec -u $USER_ID \
+# $USER doesn't have acces to octane process
+# anyway it doesn't work with frankephp, and you should restart container
+docker compose exec -u $USER_ID \
   backend \
   php /app/artisan "$@"

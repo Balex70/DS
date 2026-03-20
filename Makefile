@@ -26,6 +26,9 @@ up:
 stop:
 	$(DOCKER_COMPOSE) stop
 
+restart:
+	$(DOCKER_COMPOSE) restart
+
 container:
 	$(DOCKER_COMPOSE) exec -u root -w /app backend /bin/bash
 	
