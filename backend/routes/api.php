@@ -13,4 +13,5 @@ use App\Http\Controllers\Api\CategoryController;
 // Route::post('/category', 'App\Http\Controllers\Api\CategoryController@store');
 // Route::put('/category/{id}', 'App\Http\Controllers\Api\CategoryController@update');
 // Route::delete('/category/{id}', 'App\Http\Controllers\Api\CategoryController@destroy');
-Route::get('categories', [CategoryController::class, 'index']);
+// Route::get('categories', [CategoryController::class, 'index']);
+Route::apiResource('categories', CategoryController::class);
