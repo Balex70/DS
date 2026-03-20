@@ -15,6 +15,7 @@ services:
       DB_DATABASE: ${DB_DATABASE}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
+      FRANKENPHP_DOCUMENT_ROOT: /app/public
     depends_on:
       - db
       - redis

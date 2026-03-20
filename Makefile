@@ -7,8 +7,8 @@ ifneq (,$(wildcard ./.env))
 endif
 
 ### VARIABLES ###
-DOCKER_WEB_CONTAINER=$(shell docker compose ps --quiet web)
-DOCKER_POSTGRES_CONTAINER=$(shell docker compose ps --quiet postgres)
+DOCKER_WEB_CONTAINER=$(shell docker compose ps --quiet backend)
+DOCKER_POSTGRES_CONTAINER=$(shell docker compose ps --quiet db)
 
 ### DOCKER ###
 # Docker compose command
@@ -32,6 +32,9 @@ container:
 composer-install:
 	$(DOCKER_COMPOSE) run --rm backend composer install
 
+migrate:
+	bin/artisan migrate
+
 #LOGS
 web-log:
 #@echo $(DOCKER_WEB_CONTAINER)
@@ -46,3 +49,13 @@ sh:
 	
 sh-db:
 	$(DOCKER_COMPOSE) exec db /bin/sh
+
+clear-cache:
+	# config:clear - clear the config cache
+	# cache:clear - clear application cache
+	# route:clear - clear route cache
+	# view:clear - clear all compiled view files
+	bin/artisan config:clear && \
+	bin/artisan cache:clear && \
+	bin/artisan route:clear && \
+	bin/artisan view:clear

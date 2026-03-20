@@ -2,5 +2,5 @@
 USER_ID="$UID"
 
 docker-compose exec -u $USER_ID \
-  web \
-  php /var/www/html/artisan "$@"
+  backend \
+  php /app/artisan "$@"
