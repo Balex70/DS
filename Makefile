@@ -47,9 +47,12 @@ postgres-log:
 	docker logs --follow $(DOCKER_POSTGRES_CONTAINER)
 	
 # Target to run the backend in the background ('-l' -> Use a Login Shell to be able to use profile.d scripts)
-sh:
+sh-backend:
 	$(DOCKER_COMPOSE) exec -u root -w /app backend /bin/bash
-	
+
+sh-frontend:
+	$(DOCKER_COMPOSE) exec frontend /bin/sh -l
+
 sh-db:
 	$(DOCKER_COMPOSE) exec db /bin/sh
 
