@@ -1,0 +1,12 @@
+services:
+  backend:
+    ports:
+      - "8000:80"
+    volumes:
+      - ./backend:/app
+  
+  frontend:
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/web  # Mount only the `web` folder, not the entire project

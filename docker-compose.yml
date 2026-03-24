@@ -4,10 +4,6 @@ services:
       context: .
       dockerfile: docker/php/Dockerfile
     working_dir: /app
-    volumes:
-      - ./backend:/app
-    ports:
-      - "8000:80"
     environment:
       DB_CONNECTION: ${DB_CONNECTION}
       DB_HOST: ${DB_HOST}
@@ -21,6 +17,16 @@ services:
       - redis
     command: php artisan octane:frankenphp --host=0.0.0.0 --port=80
 
+  frontend:
+    build:
+      context: .  # Ensure build context is correct (root folder)
+      dockerfile: docker/frontend/Dockerfile
+      target: dev
+    environment:
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
+      NODE_ENV: development # production for npm run build
+    depends_on:
+      - backend
   db:
     image: postgres:15
     environment:
