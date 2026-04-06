@@ -9,6 +9,7 @@ endif
 ### VARIABLES ###
 DOCKER_WEB_CONTAINER=$(shell docker compose ps --quiet backend)
 DOCKER_POSTGRES_CONTAINER=$(shell docker compose ps --quiet db)
+DOCKER_FE_CONTAINER=$(shell docker compose ps --quiet frontend)
 
 ### DOCKER ###
 # Docker compose command
@@ -46,6 +47,9 @@ web-log:
 postgres-log:
 	docker logs --follow $(DOCKER_POSTGRES_CONTAINER)
 	
+nextjs-log:
+	docker logs --tail 100 -f $(DOCKER_FE_CONTAINER)
+
 # Target to run the backend in the background ('-l' -> Use a Login Shell to be able to use profile.d scripts)
 sh-backend:
 	$(DOCKER_COMPOSE) exec -u root -w /app backend /bin/bash
