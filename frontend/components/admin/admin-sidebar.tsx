@@ -1,3 +1,4 @@
+"use client"
 import {
   Sidebar,
   SidebarContent,
@@ -9,54 +10,110 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
 } from "@/components/ui/sidebar"
-import { Home, User2, WalletCards } from "lucide-react"
-import { AdminModeToggle } from "../ui/admin-mode-toggle"
+import { Home, List, Settings, ShoppingCart, StretchHorizontal, UserLock, UsersRound, WalletCards } from "lucide-react"
+import { AdminModeToggle } from "./admin-mode-toggle"
+import Link from "next/link"
 
 export function AdminSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <h1>Admin</h1>
-        <AdminModeToggle />
+        <SidebarMenu className="list-none m-0 p-0">
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link href="/admin" className="flex items-center gap-2">
+                <Home />
+                <span>Admin</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+        <div className="flex items-center justify-between">
+          <AdminModeToggle />
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Operational</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenuItem className="list-none">
-              <SidebarMenuButton asChild>
-                <a href="/home">
-                  <Home />
-                  <span>Home</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>            
+            <SidebarMenu className="list-none m-0 p-0">
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/orders" className="flex items-center gap-2">
+                    <ShoppingCart />
+                    <span>Orders</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/payments" className="flex items-center gap-2">
+                    <WalletCards />
+                    <span>Payments</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/customers" className="flex items-center gap-2">
+                    <UsersRound />
+                    <span>Customers</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarGroupLabel>Settings</SidebarGroupLabel>
+          <SidebarGroupLabel>Inventory</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenuItem className="list-none">
-              <SidebarMenuButton asChild>
-                <a href="/payments">
-                  <WalletCards />
-                  <span>Payments</span>
-                </a>
-              </SidebarMenuButton>
-            </SidebarMenuItem>            
+            <SidebarMenu className="list-none m-0 p-0">
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/categories" className="flex items-center gap-2">
+                    <StretchHorizontal />
+                    <span>Categories</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/products" className="flex items-center gap-2">
+                    <List />
+                    <span>Products</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Admin Area</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="list-none m-0 p-0">
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/users" className="flex items-center gap-2">
+                    <UserLock />
+                    <span>Users</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/settings" className="flex items-center gap-2">
+                    <Settings />
+                    <span>Settings</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenu>
-        <SidebarMenuItem>
-            <SidebarMenuButton>
-            <User2 /> Username
-            </SidebarMenuButton>
-        </SidebarMenuItem>
-        </SidebarMenu>
+        {/* Footer */}
       </SidebarFooter>
       {/* <SidebarRail /> */}
     </Sidebar>

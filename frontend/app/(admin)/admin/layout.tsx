@@ -1,6 +1,8 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider } from "@/components/ui/sidebar"
 import { AdminSidebar } from "@/components/admin/admin-sidebar"
-import { AdminThemeProvider } from "@/components/ui/admin-theme-provider"
+import { AdminThemeProvider } from "@/components/admin/admin-theme-provider"
+import { AdminHeader } from "@/components/admin/admin-header"
+import { AdminBreadcrumbs } from "@/components/admin/admin-breadcrumbs"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,9 +14,23 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     >
       <SidebarProvider>
         <AdminSidebar />
-        <main>
-          <SidebarTrigger />
-          {children}
+        <main  className="w-full">
+
+          {/* Content */}
+          <div className="flex-1 flex flex-col h-screen">
+
+            {/* Sticky Header */}
+            <AdminHeader />
+
+            {/* Breadcrumbs */}
+            <AdminBreadcrumbs />
+
+            {/* Scrollable Content */}
+            <main className="flex-1 overflow-auto p-4">
+              {children}
+            </main>
+
+          </div>
         </main>
       </SidebarProvider>
     </AdminThemeProvider>
