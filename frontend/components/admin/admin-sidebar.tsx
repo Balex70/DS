@@ -12,12 +12,14 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { Home, User2, WalletCards } from "lucide-react"
+import { AdminModeToggle } from "../ui/admin-mode-toggle"
 
 export function AdminSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <h1>Admin</h1>
+        <AdminModeToggle />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
