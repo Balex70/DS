@@ -15,5 +15,6 @@ use Illuminate\Support\Facades\Route;
 // Route::put('/category/{id}', 'App\Http\Controllers\Api\CategoryController@update');
 // Route::delete('/category/{id}', 'App\Http\Controllers\Api\CategoryController@destroy');
 // Route::get('categories', [CategoryController::class, 'index']);
-Route::apiResource('users', UserController::class);
+Route::post('/users/login', [UserController::class, 'login']);
+Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
 Route::apiResource('categories', CategoryController::class);
