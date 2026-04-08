@@ -10,6 +10,8 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -18,6 +20,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        Gate::authorize('viewAny', User::class);
         return UserResource::collection(User::all());
     }
 
@@ -27,6 +30,8 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $user = User::create($request->validated());
+
+        $user->assignRole($request->role);
 
         return new UserResource($user);
     }
@@ -44,7 +49,11 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
+        Gate::authorize('update', $user);
+
         $user->update($request->validated());
+
+        $user->syncRoles([$request->role]);
 
         return new UserResource($user);
     }
@@ -54,6 +63,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        Gate::authorize('delete', $user);
+
         $user->delete();
 
         return response()->noContent();

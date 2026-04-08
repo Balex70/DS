@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\RolesEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -39,6 +40,11 @@ class UpdateUserRequest extends FormRequest
                 'string',
                 'min:8',
                 'confirmed',
+            ],
+
+            'role' => [
+                'required',
+                Rule::enum(RolesEnum::class)
             ],
         ];
     }

@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\RolesEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreUserRequest extends FormRequest
 {
@@ -39,6 +41,11 @@ class StoreUserRequest extends FormRequest
                 'string',
                 'min:8',
                 'confirmed', // requires password_confirmation
+            ],
+
+            'role' => [
+                'required',
+                Rule::enum(RolesEnum::class)
             ],
         ];
     }
