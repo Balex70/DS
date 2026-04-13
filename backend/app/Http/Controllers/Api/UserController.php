@@ -11,7 +11,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -75,9 +74,39 @@ class UserController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
+        $request->session()->regenerate();
+
+        return response()->json([
+            'user' => $request->user(),
+        ]);
+    }
+
+    public function me(Request $request) {
+        return new UserResource($request->user());
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json(['message' => 'Logged out successfully.'], 200);
+    }
+
+    public function loginWithToken(LoginUserRequest $request) {
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
+        }
+
         $user = $request->user();
         $token = $user->createToken('api-token');
 
         return ['token' => $token->plainTextToken];
+    }
+
+    public function meWithToken(Request $request) {
+        return new UserResource($request->user());
     }
 }

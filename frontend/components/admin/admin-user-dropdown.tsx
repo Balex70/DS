@@ -12,11 +12,36 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useRouter } from "next/navigation"
+import { getCookie } from "@/helpers/general"
 
 export function AdminUserDropdown() {
-  
-  const logout = () => {
-    // perform logout
+  const router = useRouter()
+  const logout = async () => {
+    try {
+      const csrfToken = getCookie('XSRF-TOKEN');
+      const headers = {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-XSRF-TOKEN': csrfToken!, // get the csrf token
+      };
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/users/logout`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: headers,
+          cache: 'no-cache', // 'no-cache' if you want it fresh each time
+      })
+
+      if (res.ok) {
+        router.push('/admin/login')
+        return
+      }
+    } catch (err: any) {
+      // setError(err.message)
+    } finally {
+      // setLoading(false)
+    }
   }
   return (
     <DropdownMenu>
