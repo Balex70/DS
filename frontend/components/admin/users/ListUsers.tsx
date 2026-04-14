@@ -20,35 +20,35 @@ function ListUsers () {
   const [createOpen, setCreateOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true)
+  const fetchUsers = async () => {
+    try {
+      setLoading(true)
 
-        const headers = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        };
-        // fetch swap item
-        const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/users`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: headers,
-            cache: 'no-cache', // 'no-cache' if you want it fresh each time
-        })
-        
-        const usersRes = await res.json()
-        
-        setUsers(usersRes.data ?? [])
-        
-      } catch (_err) {
-        // do nothing
-      } finally {
-        setLoading(false)
-      }
+      const headers = {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+      };
+      // fetch users
+      const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/users`, {
+          method: 'GET',
+          credentials: 'include',
+          headers: headers,
+          cache: 'no-cache', // 'no-cache' if you want it fresh each time
+      })
+
+      const usersRes = await res.json()
+
+      setUsers(usersRes.data ?? [])
+
+    } catch (_err) {
+      // do nothing
+    } finally {
+      setLoading(false)
     }
-    
-    fetchData()
+  }
+
+  useEffect(() => {
+      fetchUsers()
   }, [])
   
   if (loading) {
@@ -92,9 +92,7 @@ function ListUsers () {
       <CreateUserDrawer
         open={createOpen}
         onOpenChange={setCreateOpen}
-        onSuccess={() => {
-          // refetch users or mutate table
-        }}
+        onSuccess={fetchUsers}
       />
 
       <UserDrawer
@@ -107,14 +105,13 @@ function ListUsers () {
         open={editOpen}
         onOpenChange={setEditOpen}
         user={selectedUser}
+        onSuccess={fetchUsers}
       />
 
       <DeleteUserDrawer
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        onSuccess={() => {
-          // refetch users or mutate table
-        }}
+        onSuccess={fetchUsers}
         user={selectedUser}
       />
     </div>

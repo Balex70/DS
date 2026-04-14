@@ -18,10 +18,12 @@ export function EditUserDrawer({
   open,
   onOpenChange,
   user,
+  onSuccess
 }: {
   open: boolean
   onOpenChange: (v: boolean) => void
   user: User | null
+  onSuccess: () => void
 }) {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
@@ -72,7 +74,10 @@ export function EditUserDrawer({
                 setError(data.message || 'Login failed')
                 return
             }
-            
+
+            onSuccess();
+            onOpenChange(false);
+
           } catch (_err) {
             // do nothing
           } finally {
