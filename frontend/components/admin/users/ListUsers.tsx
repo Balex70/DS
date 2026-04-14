@@ -9,6 +9,7 @@ import { UserDrawer } from './UserDrawer';
 import { EditUserDrawer } from './EditUserDrawer';
 import { Button } from '@/components/ui/button';
 import { CreateUserDrawer } from './CreateUserDrawer';
+import { DeleteUserDrawer } from './DeleteUserDrawer';
 
 function ListUsers () {
   const [users, setUsers] = useState<User[]>([]);
@@ -17,6 +18,7 @@ function ListUsers () {
   const [viewOpen, setViewOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const [createOpen, setCreateOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
   
   useEffect(() => {
     const fetchData = async () => {
@@ -79,6 +81,10 @@ function ListUsers () {
             setSelectedUser(user)
             setEditOpen(true)
           },
+          onDelete: (user) => {
+            setSelectedUser(user)
+            setDeleteOpen(true)
+          },
         })}
         data={users}
       />
@@ -100,6 +106,15 @@ function ListUsers () {
       <EditUserDrawer
         open={editOpen}
         onOpenChange={setEditOpen}
+        user={selectedUser}
+      />
+
+      <DeleteUserDrawer
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        onSuccess={() => {
+          // refetch users or mutate table
+        }}
         user={selectedUser}
       />
     </div>

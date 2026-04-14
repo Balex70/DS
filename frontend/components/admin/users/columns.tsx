@@ -24,9 +24,11 @@ export type User = {
 export const columns = ({
   onView,
   onEdit,
+  onDelete,
 }: {
   onView: (user: User) => void
   onEdit: (user: User) => void
+  onDelete: (user: User) => void
 }): ColumnDef<User>[] => [
   {
     accessorKey: "name",
@@ -66,6 +68,9 @@ export const columns = ({
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => onEdit(user)}>
               Edit user
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onDelete(user)}>
+              Delete user
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
