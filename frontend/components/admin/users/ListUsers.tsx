@@ -5,10 +5,15 @@ import { useEffect, useState } from 'react';
 import { DataTable } from './dataTable';
 import { columns, User } from "./columns"
 import Loader from '@/components/common/Loader';
+import { UserDrawer } from './UserDrawer';
+import { EditUserDrawer } from './EditUserDrawer';
 
 function ListUsers () {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true)
+  const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [viewOpen, setViewOpen] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
   
   useEffect(() => {
     const fetchData = async () => {
@@ -56,7 +61,31 @@ function ListUsers () {
 
   return (
     <div className="w-[800px] main-bg flex flex-col border-b-0 rounded-none">
-      <DataTable columns={columns} data={users} />
+      <DataTable
+        columns={columns({
+          onView: (user) => {
+            setSelectedUser(user)
+            setViewOpen(true)
+          },
+          onEdit: (user) => {
+            setSelectedUser(user)
+            setEditOpen(true)
+          },
+        })}
+        data={users}
+      />
+
+      <UserDrawer
+        open={viewOpen}
+        onOpenChange={setViewOpen}
+        user={selectedUser}
+      />
+
+      <EditUserDrawer
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        user={selectedUser}
+      />
     </div>
   )
 }
