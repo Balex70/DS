@@ -7,6 +7,8 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { User } from "./columns"
+import { CardContent } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
 
 export function UserDrawer({
   open,
@@ -25,11 +27,28 @@ export function UserDrawer({
         </SheetHeader>
 
         {user && (
-          <div className="space-y-2 mt-4">
-            <p><strong>Name:</strong> {user.name}</p>
-            <p><strong>Email:</strong> {user.email}</p>
-            <p><strong>Role:</strong> {user.role}</p>
-          </div>
+            <CardContent className="space-y-4">
+                <div>
+                    <Label>Name</Label>
+                    <div className="text-md text-muted-foreground">
+                        {user.name}
+                    </div>
+                </div>
+
+                <div>
+                    <Label>Email</Label>
+                    <div className="text-md text-muted-foreground">
+                        {user.email}
+                    </div>
+                </div>
+
+                <div>
+                    <Label>Role</Label>
+                    <div className="text-md text-muted-foreground">
+                        {user.role}
+                    </div>
+                </div>
+            </CardContent>
         )}
       </SheetContent>
     </Sheet>
