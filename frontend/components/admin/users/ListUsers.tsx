@@ -7,6 +7,8 @@ import { columns, User } from "./columns"
 import Loader from '@/components/common/Loader';
 import { UserDrawer } from './UserDrawer';
 import { EditUserDrawer } from './EditUserDrawer';
+import { Button } from '@/components/ui/button';
+import { CreateUserDrawer } from './CreateUserDrawer';
 
 function ListUsers () {
   const [users, setUsers] = useState<User[]>([]);
@@ -14,6 +16,7 @@ function ListUsers () {
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [viewOpen, setViewOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
+  const [createOpen, setCreateOpen] = useState(false)
   
   useEffect(() => {
     const fetchData = async () => {
@@ -61,6 +64,11 @@ function ListUsers () {
 
   return (
     <div className="w-[800px] main-bg flex flex-col border-b-0 rounded-none">
+      <div className="flex items-start gap-2 my-2">
+        <Button variant="outline" size="lg" onClick={() => setCreateOpen(true)}>
+          Add User
+        </Button>
+      </div>
       <DataTable
         columns={columns({
           onView: (user) => {
@@ -73,6 +81,14 @@ function ListUsers () {
           },
         })}
         data={users}
+      />
+
+      <CreateUserDrawer
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onSuccess={() => {
+          // refetch users or mutate table
+        }}
       />
 
       <UserDrawer
