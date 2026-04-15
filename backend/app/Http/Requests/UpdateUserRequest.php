@@ -43,7 +43,7 @@ class UpdateUserRequest extends FormRequest
             ],
 
             'role' => [
-                'required',
+                'sometimes',
                 Rule::enum(RolesEnum::class)
             ],
         ];

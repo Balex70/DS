@@ -28,6 +28,8 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
+        Gate::authorize('create', User::class);
+
         $user = User::create($request->validated());
 
         $user->assignRole($request->role);
@@ -40,6 +42,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        Gate::authorize('view', $user);
         return new UserResource($user);
     }
 

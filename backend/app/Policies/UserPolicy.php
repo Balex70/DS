@@ -12,6 +12,9 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
+        if ($user->isAdministrator()) {
+            return true;
+        }
         return $user->can('users.edit');
     }
 
@@ -20,7 +23,10 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-        return false;
+        if ($user->isAdministrator()) {
+            return true;
+        }
+        return $user->can('users.edit');
     }
 
     /**
@@ -28,7 +34,10 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        if ($user->isAdministrator()) {
+            return true;
+        }
+        return $user->can('users.edit');
     }
 
     /**
@@ -36,6 +45,9 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
+        if ($user->isAdministrator()) {
+            return true;
+        }
         return $user->can('users.edit') || $user->id === $model->id;
     }
 
@@ -52,6 +64,9 @@ class UserPolicy
      */
     public function restore(User $user, User $model): bool
     {
+        if ($user->isAdministrator()) {
+            return true;
+        }
         return false;
     }
 
@@ -60,6 +75,9 @@ class UserPolicy
      */
     public function forceDelete(User $user, User $model): bool
     {
+        if ($user->isAdministrator()) {
+            return true;
+        }
         return false;
     }
 }

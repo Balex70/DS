@@ -94,7 +94,7 @@ export function AdminSidebar() {
             <SidebarMenu className="list-none m-0 p-0">
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/users" className="flex items-center gap-2">
+                  <Link href="/admin/users" className="flex items-center gap-2">
                     <UserLock />
                     <span>Users</span>
                   </Link>
