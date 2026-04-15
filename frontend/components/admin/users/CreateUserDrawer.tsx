@@ -73,10 +73,15 @@ export function CreateUserDrawer({
         if (!res.ok) {
             const data = await res.json()
             setError(
-            Object.values(data.errors ?? {})
+              Object.values(data.errors ?? {})
                 .flat()
                 .join(", ")
             )
+
+            const contentType = res.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+              setError('Something went wrong on server, maybe you don\'t have permissions?');
+            }
             return
         }
 

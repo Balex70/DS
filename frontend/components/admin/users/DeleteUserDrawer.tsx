@@ -58,6 +58,11 @@ export function DeleteUserDrawer({
                 .flat()
                 .join(", ")
             )
+
+            const contentType = res.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+                setError('Something went wrong, maybe you don\'t have permissions or you are trying to delete yourself!');
+            }
             return
         }
 

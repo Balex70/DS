@@ -8,22 +8,13 @@ use Illuminate\Auth\Access\Response;
 class UserPolicy
 {
     /**
-     * Perform pre-authorization checks.
-     */
-    public function before(User $user, string $ability): bool|null
-    {
-        if ($user->isAdministrator()) {
-            return true;
-        }
-
-        return null;
-    }
-
-    /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
+        if ($user->isAdministrator()) {
+            return true;
+        }
         return $user->can('users.edit');
     }
 
@@ -32,7 +23,10 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-        return false;
+        if ($user->isAdministrator()) {
+            return true;
+        }
+        return $user->can('users.edit');
     }
 
     /**
@@ -40,7 +34,10 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        if ($user->isAdministrator()) {
+            return true;
+        }
+        return $user->can('users.edit');
     }
 
     /**
@@ -48,6 +45,9 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
+        if ($user->isAdministrator()) {
+            return true;
+        }
         return $user->can('users.edit') || $user->id === $model->id;
     }
 
@@ -64,6 +64,9 @@ class UserPolicy
      */
     public function restore(User $user, User $model): bool
     {
+        if ($user->isAdministrator()) {
+            return true;
+        }
         return false;
     }
 
@@ -72,6 +75,9 @@ class UserPolicy
      */
     public function forceDelete(User $user, User $model): bool
     {
+        if ($user->isAdministrator()) {
+            return true;
+        }
         return false;
     }
 }
