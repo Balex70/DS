@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Dropshipping\Providers\CjDropshippingProvider;
-use App\Dropshipping\Services\DropshippingManager;
+use App\Dropshipping\DropshippingManager;
 use Illuminate\Support\ServiceProvider;
 class DropshippingServiceProvider extends ServiceProvider
 {

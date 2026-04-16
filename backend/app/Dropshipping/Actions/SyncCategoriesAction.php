@@ -2,8 +2,7 @@
 
 namespace App\Dropshipping\Actions;
 
-use App\Dropshipping\DTO\CategoryDTO;
-use App\Dropshipping\Services\DropshippingManager;
+use App\Dropshipping\DropshippingManager;
 use App\Models\Category;
 
 class SyncCategoriesAction
@@ -16,31 +15,42 @@ class SyncCategoriesAction
     {
         $provider = $this->manager->driver();
 
-        $treeCategories = $provider->getCategories();
+        $categories = $provider->getCategories();
 
-        $flatCategories = [];
-
-        foreach ($treeCategories as $category) {
-            $flatCategories = array_merge(
-                $flatCategories,
-                $category->flatten()
+        // upsert categories
+        foreach ($categories as $category) {
+            Category::updateOrCreate(
+                [
+                    'external_id' => $category->externalId,
+                    'provider' => $provider->getName(),
+                ],
+                [
+                    'name' => $category->name,
+                ]
             );
         }
 
-        // external_id => id
-        $existing = Category::pluck('id', 'external_id')->toArray();
+        // build map
+        $map = Category::where('provider', $provider->getName())
+            ->pluck('id', 'external_id')
+            ->toArray();
 
-        foreach ($flatCategories as $category) {
-            $model = Category::updateOrCreate(
-                ['external_id' => $category->id],
-                [
-                    'name' => $category->name,
-                    'parent_id' => $existing[$category->parentId] ?? null,
-                ]
-            );
+        // preload models
+        $models = Category::where('provider', $provider->getName())
+            ->get()
+            ->keyBy('external_id');
 
-            // update mapping after insert
-            $existing[$category->id] = $model->id;
+        // assign parents
+        foreach ($categories as $category) {
+            if (!isset($models[$category->externalId])) {
+                continue;
+            }
+
+            $models[$category->externalId]->update([
+                'parent_id' => $category->parentId
+                    ? ($map[$category->parentId] ?? null)
+                    : null
+            ]);
         }
     }
 

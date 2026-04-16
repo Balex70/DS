@@ -2,11 +2,16 @@
 namespace App\Dropshipping\Providers;
 
 use App\Dropshipping\Contracts\DropshippingProviderInterface;
-use App\Dropshipping\DTO\CategoryDTO;
-use Illuminate\Support\Facades\Http;
+use App\Dropshipping\Services\CjCategoryService;
+use App\Dropshipping\Services\CjProductService;
 
 class CjDropshippingProvider implements DropshippingProviderInterface
 {
+    public function __construct(
+        private CjCategoryService $categories,
+        private CjProductService $products
+    ) {}
+
     public function getName(): string
     {
         return 'cj';
@@ -14,14 +19,7 @@ class CjDropshippingProvider implements DropshippingProviderInterface
 
     public function getCategories(): array
     {
-        $response = Http::get('cj-api/categories');
-
-        $data = $response->json();
-
-        return array_map(
-            fn ($item) => CategoryDTO::fromArray($item),
-            $data
-        );
+        return $this->categories->all();
     }
 
     public function getProducts(array $filters = []): array
@@ -33,7 +31,6 @@ class CjDropshippingProvider implements DropshippingProviderInterface
     {
         // CJ-specific logic
     }
-    
     
     public function deactivateProduct(string $externalId): bool
     {

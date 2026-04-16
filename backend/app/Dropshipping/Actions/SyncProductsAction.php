@@ -3,7 +3,7 @@
 namespace App\Dropshipping\Actions;
 
 use App\Dropshipping\DTO\ProductData;
-use App\Dropshipping\Services\DropshippingManager;
+use App\Dropshipping\DropshippingManager;
 use App\Models\Product;
 
 class SyncProductsAction

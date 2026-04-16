@@ -1,5 +1,5 @@
 <?php
-namespace App\Dropshipping\Services;
+namespace App\Dropshipping;
 
 use App\Dropshipping\Contracts\DropshippingProviderInterface;
 
@@ -16,7 +16,11 @@ class DropshippingManager
 
     public function driver(?string $name = null): DropshippingProviderInterface
     {
-        $name = $name ?? config('dropshipping.default');
+        $name = $name ?? config('dropshipping.default', 'cj');
+
+        if (!$name) {
+            throw new \Exception("No default dropshipping provider configured");
+        }
 
         if (!isset($this->providers[$name])) {
             throw new \Exception("Unsupported provider [$name]");
