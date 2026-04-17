@@ -8,6 +8,7 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
 {
@@ -19,6 +20,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        Gate::authorize('viewAny', Category::class);
         return CategoryResource::collection(Category::all());
     }
 
