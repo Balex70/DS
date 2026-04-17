@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'cj' => [
+        'api_key' => env('CJ_API_KEY'),
+    ],
+
 ];
