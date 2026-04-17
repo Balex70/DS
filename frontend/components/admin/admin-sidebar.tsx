@@ -71,7 +71,7 @@ export function AdminSidebar() {
             <SidebarMenu className="list-none m-0 p-0">
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/categories" className="flex items-center gap-2">
+                  <Link href="/admin/categories" className="flex items-center gap-2">
                     <StretchHorizontal />
                     <span>Categories</span>
                   </Link>
