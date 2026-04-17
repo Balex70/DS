@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Dropshipping\Services\CjCategoryService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
@@ -10,12 +11,15 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
+    public function __construct(protected CjCategoryService $categories)
+    {}
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return CategoryResource::collection(Category::paginate(2));
+        return CategoryResource::collection(Category::all());
     }
 
     /**

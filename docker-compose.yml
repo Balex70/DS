@@ -43,5 +43,24 @@ services:
     ports:
       - "6379:6379"
 
+  queue:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    working_dir: /app
+    environment:
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    command: php artisan queue:work --tries=3 --timeout=60
+    depends_on:
+      - backend
+      - db
+      - redis
+    volumes:
+      - .:/var/www/html
 volumes:
   db_data:

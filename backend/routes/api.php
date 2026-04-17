@@ -10,4 +10,4 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
-Route::apiResource('categories', CategoryController::class);
+Route::apiResource('categories', CategoryController::class)->middleware('auth:sanctum');

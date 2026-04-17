@@ -10,3 +10,7 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/web  # Mount only the `web` folder, not the entire project
+
+  queue:
+    volumes:
+      - ./backend:/app
