@@ -11,3 +11,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
 Route::apiResource('categories', CategoryController::class)->middleware('auth:sanctum');
+Route::post('categories/bulk-activate', [CategoryController::class, 'bulkActivate'])->middleware('auth:sanctum');

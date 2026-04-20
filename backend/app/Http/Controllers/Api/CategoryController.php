@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Dropshipping\Services\CjCategoryService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BulkActivateCategoryRequest;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
@@ -25,24 +26,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreCategoryRequest $request)
-    {
-        $category = Category::create($request->validated());
-
-        return new CategoryResource($category);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category)
-    {
-        return new CategoryResource($category);
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(UpdateCategoryRequest $request, Category $category)
@@ -52,13 +35,19 @@ class CategoryController extends Controller
         return new CategoryResource($category);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Category $category)
+    public function bulkActivate(BulkActivateCategoryRequest $request)
     {
-        $category->delete();
+        Gate::authorize('bulkActivate', Category::class);
+        $request->validated();
 
-        return response()->noContent();
+        // Activate selected
+        Category::whereIn('id', $request->ids)
+            ->update(['active' => true]);
+
+        // Deactivate everything else
+        Category::whereNotIn('id', $request->ids)
+            ->update(['active' => false]);
+
+        return response()->json(['success' => true]);
     }
 }

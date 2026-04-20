@@ -5,6 +5,7 @@ interface CategoryInterface {
   provider: string
   parent_id?: number;
   children?: Category[];
+  active: boolean
 }
 
 export type Category = CategoryInterface
