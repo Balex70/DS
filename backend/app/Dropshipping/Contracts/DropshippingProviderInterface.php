@@ -7,7 +7,7 @@ interface DropshippingProviderInterface
 
     public function getCategories(): array;
 
-    public function getProducts(array $filters = []): array;
+    public function getProducts(string $categoryId, int $page, int $size): array;
 
     public function activateProduct(string $externalId): bool;
 
