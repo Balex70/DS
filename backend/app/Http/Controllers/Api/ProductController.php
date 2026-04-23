@@ -17,7 +17,7 @@ class ProductController extends Controller
     public function index()
     {
         Gate::authorize('viewAny', Product::class);
-        return ProductResource::collection(Product::all());
+        return ProductResource::collection(Product::all()->sortBy('id'));
     }
 
     /**
