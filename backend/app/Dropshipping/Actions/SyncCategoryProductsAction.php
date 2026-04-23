@@ -16,22 +16,27 @@ class SyncCategoryProductsAction
 
     public function execute(string $categoryId): void
     {
-        // Get category sync state
-        // If not exists → start from page 1
+        // Get category
         $category = Category::where('external_id', $categoryId)->first();
 
-        $state = CategorySyncState::where('category_id', $category->id)->first();
-        // $page = $state ? $state->page : 1;
-        // for now use page 1
-        $page = 1;
+        // Get category sync state. If not exists, start from page 1
+        $state = CategorySyncState::firstOrCreate(
+            ['category_id' => $category->id],
+            [
+                'page' => 1,
+                'finished' => false,
+            ]
+        );
 
-        // Call CJ product list API (paged) GET /products?categoryId=X&page=1&limit=100
+        // Stop condition if category is finished
+        if ($state->finished) {
+            return;
+        }
+        $page = $state->page;
+
+        // Call CJ product list API
         $provider = $this->manager->driver();
-        $productsData = $provider->getProducts($categoryId, $page, 2);
-
-        // \Log::info('productsData', $productsData);
-
-        $nextPage = $productsData['pagination']['page'] + 1;
+        $productsData = $provider->getProducts($categoryId, $page, 20);
 
         // Update products (IMPORTANT: idempotent upsert)
         $now = now();
@@ -44,30 +49,33 @@ class SyncCategoryProductsAction
                 'updated_at' => $now,
             ];
         }, $productsData['products']);
-        Product::upsert($rows, ['external_id'], ['name_raw', 'price', 'now_price', 'suggested_price', 'big_image', 'status', 'last_seen_at', 'raw_data']);
 
-        // UPDATE CATEGORY (PIVOT)
-        // Get existing products
-        $products = Product::whereIn(
-            'external_id',
-            collect($rows)->pluck('external_id')
-        )->get()->keyBy('external_id');
+        $totalPages = $productsData['pagination']['total_pages'];
+        $isLastPage = $page >= $totalPages;
+        DB::transaction(function () use ($rows, $state, $isLastPage, $page, $category, $now) {
+            // Upsert products
+            Product::upsert($rows, ['external_id'], ['name_raw', 'price', 'now_price', 'suggested_price', 'big_image', 'status', 'last_seen_at', 'raw_data']);
 
-        // Generate pivot rows
-        $pivotRows = [];
-        foreach ($rows as $row) {
-            $product = $products[$row['external_id']] ?? null;
+            // Get existing (upserted) products
+            $products = Product::whereIn(
+                'external_id',
+                collect($rows)->pluck('external_id')
+            )->get()->keyBy('external_id');
 
-            if (!$product) continue;
+            // Generate pivot rows
+            $pivotRows = [];
+            foreach ($rows as $row) {
+                $product = $products[$row['external_id']] ?? null;
 
-            $pivotRows[] = [
-                'product_id' => $product->id,
-                'category_id' => $category->id, // id from my category table
-            ];
-        }
+                if (!$product) continue;
 
-        // Update pivot
-        DB::transaction(function () use ($products, $pivotRows) {
+                $pivotRows[] = [
+                    'product_id' => $product->id,
+                    'category_id' => $category->id, // id from my category table
+                ];
+            }
+
+            // category_product update (with delete before)
             DB::table('category_product')
                 ->whereIn('product_id', $products->pluck('id'))
                 ->delete();
@@ -76,19 +84,13 @@ class SyncCategoryProductsAction
                 $pivotRows,
                 ['product_id', 'category_id']
             );
-        });       
 
-
-        // Mark product for later enrichment $product->needs_ai_processing = true; OR dispatch(new SyncProductDetailsJob($product->external_id));
-
-        // Update pagination state
-        // $state->page = $nextPage;
-        // $state->last_run_at = now();       
-
-        // Stop condition
-        // Stop when:
-        // API returns empty
-        // OR less than 100 items
-        
+            // Update category sync state
+            $state->update([
+                'page' => $isLastPage ? $page : $page + 1,
+                'finished' => $isLastPage,
+                'last_run_at' => $now,
+            ]);
+        });
     }
 }
