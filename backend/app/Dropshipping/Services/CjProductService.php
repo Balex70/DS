@@ -41,6 +41,17 @@ class CjProductService
         ];
     }
 
+    public function getProductDetails(string $externalProductId): array
+    {
+        $data = $this->client->getProductDetails($externalProductId);
+
+        if (!isset($data) || empty($data)) {
+            return [];
+        }
+
+        return $data;
+    }
+
     private function extractPagination(array $data): array
     {
         return [

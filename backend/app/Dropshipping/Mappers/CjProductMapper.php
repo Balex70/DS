@@ -2,8 +2,6 @@
 
 namespace App\Dropshipping\Mappers;
 
-use App\Dropshipping\DTO\ProductVariantDTO;
-
 class CjProductMapper
 {
     public function mapFromList(array $data): array
@@ -37,9 +35,10 @@ class CjProductMapper
         return [
             'external_id' => $base['external_id'],
 
+            // 'sku' => $data['productSku'] ?? null,
             'name_raw' => $data['productNameEn'] ?? $base['name_raw'],
             
-            'description_raw' => $this->cleanHtml($data['description_raw']) ?? null,
+            'description_raw' => $this->cleanHtml($data['description']) ?? null,
 
             'price' => $this->parsePrice($data['sellPrice'] ?? $base['price'] ?? null),
             'now_price' => $this->parsePrice($data['nowPrice'] ?? $base['now_price'] ?? null),
@@ -47,9 +46,7 @@ class CjProductMapper
 
             'big_image' => $data['bigImage'] ?? $base['big_image'] ?? null,
 
-            'is_collect' => (bool) $data['isCollect'] ?? $base['is_collect'] ?? null,
             'add_mark_status' => (bool) $data['addMarkStatus'] ?? $base['add_mark_status'] ?? null,
-            'warehouse_inventory_num' => $data['warehouseInventoryNum'] ?? $base['warehouse_inventory_num'] ?? null,
 
             'variants' => $variants,
 
@@ -73,20 +70,20 @@ class CjProductMapper
     private function mapVariants(array $variants): array
     {
         return array_map(function ($v) {
-            return new ProductVariantDTO(
-                externalId: $v['vid'],
-                sku: $v['variantSku'] ?? null,
-                name: $v['variantNameEn'] ?? null,
-                price: (float) $v['variantSellPrice'],
-                stock: $v['inventoryNum'] ?? null,
-                weight: isset($v['variantWeight'])
+            return [
+                'external_id' => $v['vid'],
+                'sku' => $v['variantSku'] ?? null,
+                'name' => $v['variantNameEn'] ?? null,
+                'price' => (float) $v['variantSellPrice'],
+                // 'stock' => $v['inventoryNum'] ?? null,
+                'weight' => isset($v['variantWeight'])
                     ? (float) $v['variantWeight']
                     : null,
-                volume: isset($v['variantVolume'])
+                'volume' => isset($v['variantVolume'])
                     ? (float) $v['variantVolume']
                     : null,
-                image: $v['variantImage'] ?? null,
-            );
+                'image' => $v['variantImage'] ?? null,
+            ];
         }, $variants);
     }
     
