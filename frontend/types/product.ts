@@ -5,7 +5,9 @@ interface ProductInterface {
   price: number,
   now_price: number,
   is_collect: boolean,
-  add_mark_status: boolean
+  add_mark_status: boolean,
+  last_enrichment_at: Date|null,
+  ai_processed_at: Date|null
 }
 
 export type Product = ProductInterface
