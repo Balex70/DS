@@ -43,8 +43,6 @@ class SyncCategoryProductsAction
         $rows = array_map(function ($p) use ($now) {
             return [
                 ...$p,
-                'status' => 'discovered',
-                'last_seen_at' => $now,
                 'created_at' => $now,
                 'updated_at' => $now,
             ];
@@ -54,7 +52,7 @@ class SyncCategoryProductsAction
         $isLastPage = $page >= $totalPages;
         DB::transaction(function () use ($rows, $state, $isLastPage, $page, $category, $now) {
             // Upsert products
-            Product::upsert($rows, ['external_id'], ['name_raw', 'price', 'now_price', 'suggested_price', 'big_image', 'status', 'last_seen_at', 'raw_data']);
+            Product::upsert($rows, ['external_id'], ['name_raw', 'price', 'now_price', 'suggested_price', 'big_image', 'raw_data']);
 
             // Get existing (upserted) products
             $products = Product::whereIn(

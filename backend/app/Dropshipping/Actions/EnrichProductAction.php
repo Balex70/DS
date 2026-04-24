@@ -43,7 +43,6 @@ class EnrichProductAction
                 'big_image' => $mappedDetails['big_image'],
                 'add_mark_status' => $mappedDetails['add_mark_status'],
                 // 'images' => $mappedDetails['images'],
-                'last_seen_at' => $now,
                 'updated_at' => $now,
                 'last_enrichment_at' => $now,
                 'needs_enrichment' => false,
