@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
     'price', 'now_price', 'suggested_price',
     'big_image', 'add_mark_status', 'raw_data',
     'is_collect', 'warehouse_inventory_num',
-    'needs_enrichment', 'last_enrichment_at'
+    'last_enrichment_at'
 ])]
 class Product extends Model
 {

@@ -19,7 +19,6 @@ class EnrichProductAction
         // get product to enrich
         $productToEnrich = Product::where(function ($q) {
             $q->whereNull('last_enrichment_at')
-            ->orWhere('needs_enrichment', true)
             ->orWhere('last_enrichment_at', '<', now()->minus(weeks: 4));
         })->orderBy('id')->first();
 
@@ -44,8 +43,7 @@ class EnrichProductAction
                 'add_mark_status' => $mappedDetails['add_mark_status'],
                 // 'images' => $mappedDetails['images'],
                 'updated_at' => $now,
-                'last_enrichment_at' => $now,
-                'needs_enrichment' => false,
+                'last_enrichment_at' => $now
             ]);
 
             $variantsRows = array_map(function ($variant) use ($productToEnrich, $now) {
