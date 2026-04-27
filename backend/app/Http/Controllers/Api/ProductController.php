@@ -14,10 +14,30 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         Gate::authorize('viewAny', Product::class);
-        return ProductResource::collection(Product::all()->sortBy('id'));
+
+        $query = Product::query()->orderBy('id');
+
+        // // SEARCH
+        // if ($request->filled('search')) {
+        //     $query->where('name_raw', 'like', "%{$request->search}%");
+        // }
+
+        // ENRICHED FILTER
+        if ($request->filled('enriched')) {
+            $query->orWhereNotNull('last_enrichment_at');
+        }
+
+        // AI FILTER
+        if ($request->filled('aiProcessed')) {
+            $query->orWhereNotNull('ai_processed_at');
+        }
+
+        return ProductResource::collection(
+            $query->paginate(10)
+        );
     }
 
     /**
