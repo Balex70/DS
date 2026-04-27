@@ -22,9 +22,16 @@ class CjDropshippingProvider implements DropshippingProviderInterface
         return $this->categories->all();
     }
 
-    public function getProducts(array $filters = []): array
+    public function getProducts(string $categoryId, int $page, int $size = 10): array
     {
-        // map CJ response → ProductData
+        // Get products with pagination data
+        return $this->products->get($categoryId, $page, $size);
+    }
+
+    public function getProductDetails(string $externalProductId): array
+    {
+        // Get product details
+        return $this->products->getProductDetails($externalProductId);
     }
 
     public function activateProduct(string $externalId): bool
