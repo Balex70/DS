@@ -5,13 +5,15 @@ namespace App\Dropshipping\Actions;
 use App\Dropshipping\DropshippingManager;
 use App\Dropshipping\Mappers\CjProductMapper;
 use App\Models\Product;
+use App\Services\ProductImageService;
 use Illuminate\Support\Facades\DB;
 
 class EnrichProductAction
 {
     public function __construct(
         private DropshippingManager $manager,
-        private CjProductMapper $mapper
+        private CjProductMapper $mapper,
+        private ProductImageService $imageService
     ) {}
 
     public function execute(): void
@@ -32,6 +34,13 @@ class EnrichProductAction
         $mappedDetails = $this->mapper->mapDetail($productDetails, $productToEnrich->toArray());
 
         DB::transaction(function () use ($productToEnrich, $mappedDetails) {
+            $bigImage = null;
+
+            // store big_image
+            if ($mappedDetails['big_image']) {
+                $bigImage = $this->imageService->downloadAndStore($mappedDetails['big_image'], $productToEnrich->id);
+            }
+
             $now = now();
             $productToEnrich->update([
                 'name_raw' => $mappedDetails['name_raw'],
@@ -39,7 +48,7 @@ class EnrichProductAction
                 'price' => $mappedDetails['price'],
                 'now_price' => $mappedDetails['now_price'],
                 'suggested_price' => $mappedDetails['suggested_price'],
-                'big_image' => $mappedDetails['big_image'],
+                'big_image' => $bigImage ?? $mappedDetails['big_image'],
                 'add_mark_status' => $mappedDetails['add_mark_status'],
                 // 'images' => $mappedDetails['images'],
                 'updated_at' => $now,
@@ -55,10 +64,18 @@ class EnrichProductAction
                 ];
             }, $mappedDetails['variants']);
 
+            // Upsert variants
             DB::table('product_variants')->upsert(
                 $variantsRows,
                 ['external_id']
-            );            
+            );
+
+            // Store images
+            if($mappedDetails['images']) {
+                foreach ($mappedDetails['images'] as $key =>$imageUrl) {
+                    $this->imageService->storeOriginal($productToEnrich->id, $imageUrl, $key);
+                }
+            }
         });
     }
 }
