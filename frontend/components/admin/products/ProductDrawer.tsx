@@ -9,6 +9,7 @@ import {
 import { CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Product } from "@/types/product"
+import { ProductImagesDrawer } from "./ProductImagesDrawer"
 
 export function ProductDrawer({
   open,
@@ -21,13 +22,14 @@ export function ProductDrawer({
 }) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent>
+      <SheetContent style={{ maxWidth: '40vw' }}>
         <SheetHeader>
           <SheetTitle>Product details</SheetTitle>
         </SheetHeader>
 
         {product && (
             <CardContent className="space-y-4">
+                <ProductImagesDrawer product={product}/>
                 <div>
                     <Label>Name Raw</Label>
                     <div className="text-md text-muted-foreground">
