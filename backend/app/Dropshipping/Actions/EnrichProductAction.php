@@ -4,6 +4,7 @@ namespace App\Dropshipping\Actions;
 
 use App\Dropshipping\DropshippingManager;
 use App\Dropshipping\Mappers\CjProductMapper;
+use App\Jobs\AiProcessImagesProductJob;
 use App\Models\Product;
 use App\Services\ProductImageService;
 use Illuminate\Support\Facades\DB;
@@ -77,5 +78,8 @@ class EnrichProductAction
                 }
             }
         });
+
+        // dispatch ai job for images
+        AiProcessImagesProductJob::dispatch($productToEnrich->id);
     }
 }

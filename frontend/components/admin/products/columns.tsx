@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal } from "lucide-react"
+import { MoreHorizontal, Plus } from "lucide-react"
 import { Product } from "@/types/product"
 import { Badge } from "@/components/ui/badge"
 
@@ -65,15 +65,30 @@ export const columns = ({
     },
   },
   {
-    id: "ai",
-    header: "AI",
+    id: "ai_texts",
+    header: "AI Texts",
     cell: ({ row }) => {
       const product = row.original
 
-      if (product.ai_processed_at) {
+      if (product.ai_texts_at) {
         return (
           <Badge className="bg-green-200 text-green-800 hover:bg-green-100">
-            AI
+            <Plus></Plus>
+          </Badge>
+        )
+      }
+    },
+  },
+  {
+    id: "ai_images",
+    header: "AI Images",
+    cell: ({ row }) => {
+      const product = row.original
+
+      if (product.ai_images_at) {
+        return (
+          <Badge className="bg-green-200 text-green-800 hover:bg-green-100">
+            <Plus></Plus>
           </Badge>
         )
       }

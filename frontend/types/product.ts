@@ -7,7 +7,8 @@ interface ProductInterface {
   is_collect: boolean,
   add_mark_status: boolean,
   last_enrichment_at: Date|null,
-  ai_processed_at: Date|null,
+  ai_images_at: Date|null,
+  ai_texts_at: Date|null,
   big_image: string,
   images: ProductImageInterface[],
 }

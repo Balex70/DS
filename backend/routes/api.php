@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AiImagesController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserController;
@@ -15,3 +16,5 @@ Route::apiResource('categories', CategoryController::class)->middleware('auth:sa
 Route::post('categories/bulk-activate', [CategoryController::class, 'bulkActivate'])->middleware('auth:sanctum');
 
 Route::apiResource('products', ProductController::class)->middleware('auth:sanctum');
+Route::get('ai-images/next', [AiImagesController::class, 'next']);
+Route::post('ai-images/{id}/complete', [AiImagesController::class, 'complete']);

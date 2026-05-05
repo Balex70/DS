@@ -30,9 +30,14 @@ class ProductController extends Controller
             $query->orWhereNotNull('last_enrichment_at');
         }
 
-        // AI FILTER
-        if ($request->filled('aiProcessed')) {
-            $query->orWhereNotNull('ai_processed_at');
+        // AI TEXTS FILTER
+        if ($request->filled('aiTextsProcessed')) {
+            $query->orWhereNotNull('ai_texts_at');
+        }
+
+        // AI IMAGES FILTER
+        if ($request->filled('aiImagesProcessed')) {
+            $query->orWhereNotNull('ai_images_at');
         }
 
         return ProductResource::collection(
