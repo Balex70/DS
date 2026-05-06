@@ -37,6 +37,7 @@ class AiImagesController extends Controller
     public function complete($id, Request $request)
     {
         $image = ProductImage::findOrFail($id);
+        $oldPath = $image->ai_url;
 
         $file = $request->file('image');
 
@@ -48,6 +49,10 @@ class AiImagesController extends Controller
             'ai_processed_at' => now(),
         ]);
 
+        // delete old file AFTER successful update
+        if ($oldPath) {
+            $this->imageService->delete($oldPath);
+        }
         $pending = ProductImage::where('product_id', $image->product_id)
             ->where('status', '!=', 'done')
             ->exists();

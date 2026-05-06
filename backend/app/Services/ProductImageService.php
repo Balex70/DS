@@ -47,4 +47,12 @@ class ProductImageService
 
         return Storage::url($fileName);
     }
+
+    public function delete(string $path): bool
+    {
+        $path = str_replace('/storage/', '', $path);
+        $path = ltrim($path, '/');
+
+        return Storage::disk('public')->delete($path);
+    }
 }
