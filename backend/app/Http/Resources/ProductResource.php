@@ -22,6 +22,7 @@ class ProductResource extends JsonResource
                     'id' => $image->id,
                     'url' => $image->url,
                     'original_url' => $image->original_url,
+                    'ai_url' => $image->ai_url,
                     'position' => $image->position,
                     'status' => $image->status,
                 ];
