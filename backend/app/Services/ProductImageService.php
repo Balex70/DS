@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ProductImage;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
@@ -34,6 +35,15 @@ class ProductImageService
         $fileName = "products/{$productId}/original/" . uniqid() . ".jpg";
 
         Storage::disk('public')->put($fileName, $contents);
+
+        return Storage::url($fileName);
+    }
+
+    public function storeAiProcessed(int $productId, UploadedFile $file): string
+    {
+        $fileName = "products/{$productId}/ai/" . uniqid() . ".png";
+
+        Storage::disk('public')->put($fileName, file_get_contents($file));
 
         return Storage::url($fileName);
     }

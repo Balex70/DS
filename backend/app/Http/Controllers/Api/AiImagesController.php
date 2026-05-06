@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Services\ProductImageService;
 use Illuminate\Http\Request;
 
 class AiImagesController extends Controller
 {
+    public function __construct(protected ProductImageService $imageService)
+    {}
     public function next()
     {
         $image = ProductImage::where('status', 'queued')
@@ -26,7 +29,7 @@ class AiImagesController extends Controller
         // TODO: send nameEN to AI also
         return response()->json([
             'id' => $image->id,
-            'image_url' => $image->original_url,
+            'image_url' => asset($image->original_url),
             'product_id' => $image->product_id,
         ]);
     }
@@ -35,8 +38,12 @@ class AiImagesController extends Controller
     {
         $image = ProductImage::findOrFail($id);
 
+        $file = $request->file('image');
+
+        $path = $this->imageService->storeAiProcessed($image->product_id, $file);
+
         $image->update([
-            'ai_url' => $request->ai_url,
+            'ai_url' => $path,
             'status' => 'done',
             'ai_processed_at' => now(),
         ]);
