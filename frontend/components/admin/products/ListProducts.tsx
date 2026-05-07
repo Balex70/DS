@@ -26,7 +26,7 @@ function ListProducts () {
   const [aiImagesProcessed, setAiImagesProcessed] = useState<string | null>(null)
   
   const fetchProducts = async (params?: {
-    page?: number
+    page?: number,
     enriched: string|null,
     aiTextsProcessed: string|null,
     aiImagesProcessed: string|null,
@@ -131,6 +131,14 @@ function ListProducts () {
         open={viewOpen}
         onOpenChange={setViewOpen}
         product={selectedProduct}
+        onRefresh={() =>
+          fetchProducts({
+            page,
+            enriched,
+            aiTextsProcessed,
+            aiImagesProcessed,
+          })
+        }
       />
 
       <EditProductDrawer

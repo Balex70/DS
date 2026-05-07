@@ -38,4 +38,16 @@ class ProductPolicy
     {
         return false;
     }
+
+    /**
+     * Determine whether the user can enrich product.
+     */
+    public function enrich(User $user, Product $product): bool
+    {
+        if ($user->isAdministrator()) {
+            return true;
+        }
+
+        return $user->can('products.edit');
+    }
 }

@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
+    public function __construct(private ProductService $service) {}
     /**
      * Display a listing of the resource.
      */
@@ -83,5 +85,14 @@ class ProductController extends Controller
         $product->delete();
 
         return response()->noContent();
+    }
+
+    public function enrich(Product $product)
+    {
+        Gate::authorize('enrich', $product);
+
+        $this->service->enrichProduct($product);
+
+        return response()->json(['message' => 'Product enriched'], 200);
     }
 }
