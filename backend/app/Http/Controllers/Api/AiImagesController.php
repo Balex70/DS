@@ -26,11 +26,11 @@ class AiImagesController extends Controller
             'status' => 'processing'
         ]);
 
-        // TODO: send nameEN to AI also
         return response()->json([
             'id' => $image->id,
             'image_url' => asset($image->original_url),
             'product_id' => $image->product_id,
+            'product_name' => $image->product->name_raw,
         ]);
     }
     
