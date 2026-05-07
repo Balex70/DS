@@ -2,7 +2,6 @@
 
 namespace App\Dropshipping\Actions;
 
-use App\Jobs\AiProcessImageJob;
 use App\Models\ProductImage;
 
 class AiProcessImagesProductAction
@@ -20,9 +19,6 @@ class AiProcessImagesProductAction
             $image->update([
                 'status' => 'queued'
             ]);
-
-            dispatch(new AiProcessImageJob($image->id))
-                ->onQueue('ai_image_processing');
         }
     }
 }
