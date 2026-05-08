@@ -26,9 +26,9 @@ export function ProductImagesDrawer({
                     Product image {!product.last_enrichment_at && <span>(image from CJ)</span>}
                   </Label>
                   <div className="aspect-square overflow-hidden rounded-lg border bg-muted">
-                    {product.last_enrichment_at ? (
+                    {product.big_image?.ai_url ? (
                       <NextImageWithReplace
-                        src={product.big_image}
+                        src={product.big_image.ai_url}
                         alt={product.name_raw}
                         width={200}
                         height={200}
@@ -36,7 +36,7 @@ export function ProductImagesDrawer({
                       />
                     ) : (
                       <img
-                        src={product.big_image}
+                        src={product.big_image.original_url}
                         alt={product.name_raw}
                         className="h-full w-full object-cover"
                       />

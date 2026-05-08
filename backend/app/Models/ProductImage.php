@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
     'product_id', 'url', 'original_url',
-    'position', 'status', 'ai_url'
+    'position', 'status', 'ai_url', 'type'
 ])]
 class ProductImage extends Model
 {

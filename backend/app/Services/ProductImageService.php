@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductImageService
 {
-    public function storeOriginal(int $productId, string $imageUrl, int $position = 0): ProductImage
+    public function storeOriginal(int $productId, string $imageUrl, int $position = 0, ?string $type): ProductImage
     {
         $path = $this->downloadAndStore($imageUrl, $productId);
 
@@ -19,6 +19,7 @@ class ProductImageService
             'original_url' => $path,     // canonical source
             'position' => $position,
             'status' => 'original',
+            'type' => $type
         ]);
     }
 

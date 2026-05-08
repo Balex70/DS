@@ -49,7 +49,7 @@ export function ProductDrawer({
             const headers = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                 "X-XSRF-TOKEN": xsrfToken,
+                'X-XSRF-TOKEN': xsrfToken,
             };
             await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/enrich/${product.id}`, {
                 method: "PATCH",

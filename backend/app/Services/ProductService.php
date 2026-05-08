@@ -24,13 +24,6 @@ class ProductService
         $mappedDetails = $this->mapper->mapDetail($productDetails, $productToEnrich->toArray());
 
         DB::transaction(function () use ($productToEnrich, $mappedDetails) {
-            $bigImage = null;
-
-            // store big_image
-            if ($mappedDetails['big_image']) {
-                $bigImage = $this->imageService->downloadAndStore($mappedDetails['big_image'], $productToEnrich->id);
-            }
-
             $now = now();
             $productToEnrich->update([
                 'name_raw' => $mappedDetails['name_raw'],
@@ -38,7 +31,6 @@ class ProductService
                 'price' => $mappedDetails['price'],
                 'now_price' => $mappedDetails['now_price'],
                 'suggested_price' => $mappedDetails['suggested_price'],
-                'big_image' => $bigImage ?? $mappedDetails['big_image'],
                 'add_mark_status' => $mappedDetails['add_mark_status'],
                 // 'images' => $mappedDetails['images'],
                 'updated_at' => $now,
@@ -60,10 +52,20 @@ class ProductService
                 ['external_id']
             );
 
+            // Store big image
+            if (!empty($mappedDetails['big_image'])) {
+                $this->imageService->storeOriginal(
+                    $productToEnrich->id,
+                    $mappedDetails['big_image'],
+                    0,
+                    'big',
+                );
+            }
+
             // Store images
             if($mappedDetails['images']) {
                 foreach ($mappedDetails['images'] as $key =>$imageUrl) {
-                    $this->imageService->storeOriginal($productToEnrich->id, $imageUrl, $key);
+                    $this->imageService->storeOriginal($productToEnrich->id, $imageUrl, $key, null);
                 }
             }
         });

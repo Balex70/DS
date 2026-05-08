@@ -43,7 +43,7 @@ class ProductController extends Controller
         }
 
         return ProductResource::collection(
-            $query->with('images')->paginate(10)
+            $query->paginate(10)
         );
     }
 

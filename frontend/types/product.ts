@@ -9,7 +9,7 @@ interface ProductInterface {
   last_enrichment_at: Date|null,
   ai_images_at: Date|null,
   ai_texts_at: Date|null,
-  big_image: string,
+  big_image: ProductImageInterface,
   images: ProductImageInterface[],
 }
 
