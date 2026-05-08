@@ -28,6 +28,7 @@ class ProductImageService
             // update position if changed
             $existing->update([
                 'position' => $position,
+                'status' => 'queued',
             ]);
 
             return $existing;
