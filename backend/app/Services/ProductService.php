@@ -54,7 +54,7 @@ class ProductService
 
             // Store big image
             if (!empty($mappedDetails['big_image'])) {
-                $this->imageService->storeOriginal(
+                $this->imageService->syncOriginal(
                     $productToEnrich->id,
                     $mappedDetails['big_image'],
                     0,
@@ -65,7 +65,7 @@ class ProductService
             // Store images
             if($mappedDetails['images']) {
                 foreach ($mappedDetails['images'] as $key =>$imageUrl) {
-                    $this->imageService->storeOriginal($productToEnrich->id, $imageUrl, $key, null);
+                    $this->imageService->syncOriginal($productToEnrich->id, $imageUrl, $key, null);
                 }
             }
         });

@@ -9,17 +9,40 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductImageService
 {
-    public function storeOriginal(int $productId, string $imageUrl, int $position = 0, ?string $type): ProductImage
-    {
+    public function syncOriginal(
+        int $productId,
+        string $imageUrl,
+        int $position = 0,
+        ?string $type = null
+    ): ProductImage {
+
+        $existing = ProductImage::where([
+            'product_id' => $productId,
+            'url' => $imageUrl,
+            'type' => $type,
+        ])->first();
+
+        // already exists
+        if ($existing) {
+
+            // update position if changed
+            $existing->update([
+                'position' => $position,
+            ]);
+
+            return $existing;
+        }
+
+        // create new
         $path = $this->downloadAndStore($imageUrl, $productId);
 
         return ProductImage::create([
             'product_id' => $productId,
-            'url' => $imageUrl,              // fallback original field
-            'original_url' => $path,     // canonical source
+            'url' => $imageUrl, // fallback original field
+            'original_url' => $path, // canonical source
             'position' => $position,
-            'status' => 'original',
-            'type' => $type
+            'status' => 'queued',
+            'type' => $type,
         ]);
     }
 
