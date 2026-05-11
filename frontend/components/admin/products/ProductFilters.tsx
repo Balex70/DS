@@ -18,18 +18,22 @@ interface Props {
     open: boolean
     onOpenChange: (open: boolean) => void
     enriched: string | null
-    aiProcessed: string | null
+    aiTextsProcessed: string | null
+    aiImagesProcessed: string | null
     onEnrichedChange: (value: string | null) => void
-    onAiProcessedChange: (value: string | null) => void
+    onAiTextsProcessedChange: (value: string | null) => void
+    onAiImagesProcessedChange: (value: string | null) => void
 }
 
 export function ProductFilters({
     open,
     onOpenChange,
     enriched,
-    aiProcessed,
+    aiTextsProcessed,
+    aiImagesProcessed,
     onEnrichedChange,
-    onAiProcessedChange,
+    onAiTextsProcessedChange,
+    onAiImagesProcessedChange,
 }: Props) {
     type FilterBadge = {
         label: string
@@ -42,9 +46,14 @@ export function ProductFilters({
             onClick: () => onEnrichedChange(null),
             color: "blue",
         },
-        aiProcessed && {
-            label: "AI Processed",
-            onClick: () => onAiProcessedChange(null),
+        aiTextsProcessed && {
+            label: "AI Texts",
+            onClick: () => onAiTextsProcessedChange(null),
+            color: "green",
+        },
+        aiImagesProcessed && {
+            label: "AI Images",
+            onClick: () => onAiImagesProcessedChange(null),
             color: "green",
         },
     ].filter((f): f is FilterBadge => f !== null)
@@ -79,16 +88,31 @@ export function ProductFilters({
 
                     <Field orientation="horizontal">
                     <Checkbox
-                        id="aiProcessed"
-                        checked={aiProcessed === "aiProcessed"}
+                        id="aiTextsProcessed"
+                        checked={aiTextsProcessed === "aiTextsProcessed"}
                         onCheckedChange={(checked) =>
-                        onAiProcessedChange(
-                            checked ? "aiProcessed" : null
+                        onAiTextsProcessedChange(
+                            checked ? "aiTextsProcessed" : null
                         )
                         }
                     />
-                    <Label htmlFor="aiProcessed">
-                        AI Processed
+                    <Label htmlFor="aiTextsProcessed">
+                        AI Texts
+                    </Label>
+                    </Field>
+
+                    <Field orientation="horizontal">
+                    <Checkbox
+                        id="aiImagesProcessed"
+                        checked={aiImagesProcessed === "aiImagesProcessed"}
+                        onCheckedChange={(checked) =>
+                        onAiImagesProcessedChange(
+                            checked ? "aiImagesProcessed" : null
+                        )
+                        }
+                    />
+                    <Label htmlFor="aiImagesProcessed">
+                        AI Images
                     </Label>
                     </Field>
 

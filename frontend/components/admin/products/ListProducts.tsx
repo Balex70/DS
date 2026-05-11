@@ -1,6 +1,5 @@
 'use client'
 
-import NotFoundCard from '@/components/common/NotFoundCard';
 import { useEffect, useState } from 'react';
 import { DataTable } from './dataTable';
 import { columns } from "./columns"
@@ -23,12 +22,14 @@ function ListProducts () {
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [page, setPage] = useState(1)
   const [enriched, setEnriched] = useState<string | null>(null)
-  const [aiProcessed, setAiProcessed] = useState<string | null>(null)
+  const [aiTextsProcessed, setAiTextsProcessed] = useState<string | null>(null)
+  const [aiImagesProcessed, setAiImagesProcessed] = useState<string | null>(null)
   
   const fetchProducts = async (params?: {
-    page?: number
+    page?: number,
     enriched: string|null,
-    aiProcessed: string|null
+    aiTextsProcessed: string|null,
+    aiImagesProcessed: string|null,
   }) => {
     try {
       setLoading(true)
@@ -37,7 +38,8 @@ function ListProducts () {
 
       if (params?.page) query.append("page", String(params.page))
       if (params?.enriched) query.append("enriched", params.enriched)
-      if (params?.aiProcessed) query.append("aiProcessed", params.aiProcessed)
+      if (params?.aiTextsProcessed) query.append("aiTextsProcessed", params.aiTextsProcessed)
+      if (params?.aiImagesProcessed) query.append("aiImagesProcessed", params.aiImagesProcessed)
 
       const headers = {
           'Content-Type': 'application/json',
@@ -65,20 +67,11 @@ function ListProducts () {
   }
 
   useEffect(() => {
-      fetchProducts({ page, enriched, aiProcessed })
-  }, [page, enriched, aiProcessed])
+      fetchProducts({ page, enriched, aiTextsProcessed, aiImagesProcessed })
+  }, [page, enriched, aiTextsProcessed, aiImagesProcessed])
 
   if (loading) {
     return <Loader />
-  }
-
-  if (!products || products.length === 0) {
-    return (
-      <NotFoundCard
-        title="No products found"
-        description="There are no products to display"
-      />
-    )
   }
 
   return (
@@ -87,14 +80,19 @@ function ListProducts () {
         open={filtersOpen}
         onOpenChange={setFiltersOpen}
         enriched={enriched}
-        aiProcessed={aiProcessed}
+        aiTextsProcessed={aiTextsProcessed}
+        aiImagesProcessed={aiImagesProcessed}
         onEnrichedChange={(value) => {
           setPage(1)
           setEnriched(value)
         }}
-        onAiProcessedChange={(value) => {
+        onAiTextsProcessedChange={(value) => {
           setPage(1)
-          setAiProcessed(value)
+          setAiTextsProcessed(value)
+        }}
+        onAiImagesProcessedChange={(value) => {
+          setPage(1)
+          setAiImagesProcessed(value)
         }}
       />
       <DataTable
@@ -133,6 +131,14 @@ function ListProducts () {
         open={viewOpen}
         onOpenChange={setViewOpen}
         product={selectedProduct}
+        onRefresh={() =>
+          fetchProducts({
+            page,
+            enriched,
+            aiTextsProcessed,
+            aiImagesProcessed,
+          })
+        }
       />
 
       <EditProductDrawer

@@ -7,7 +7,19 @@ interface ProductInterface {
   is_collect: boolean,
   add_mark_status: boolean,
   last_enrichment_at: Date|null,
-  ai_processed_at: Date|null
+  ai_images_at: Date|null,
+  ai_texts_at: Date|null,
+  big_image: ProductImageInterface,
+  images: ProductImageInterface[],
+}
+
+interface ProductImageInterface {
+  id: string,
+  url: string,
+  original_url: string,
+  ai_url: string,
+  position: number,
+  status: string
 }
 
 interface MetaInterface {
