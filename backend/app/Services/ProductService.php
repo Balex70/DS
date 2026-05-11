@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Dropshipping\DropshippingManager;
 use App\Dropshipping\Mappers\CjProductMapper;
+use App\Enums\ProductAiStatusEnum;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 
@@ -33,7 +34,8 @@ class ProductService
                 'add_mark_status' => $mappedDetails['add_mark_status'],
                 // 'images' => $mappedDetails['images'],
                 'updated_at' => $now,
-                'last_enrichment_at' => $now
+                'last_enrichment_at' => $now,
+                'ai_status' => ProductAiStatusEnum::QUEUED
             ]);
 
             $variantsRows = array_map(function ($variant) use ($productToEnrich, $now) {

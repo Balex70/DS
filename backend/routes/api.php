@@ -17,5 +17,7 @@ Route::post('categories/bulk-activate', [CategoryController::class, 'bulkActivat
 
 Route::apiResource('products', ProductController::class)->middleware('auth:sanctum');
 Route::patch('enrich/{product}', [ProductController::class, 'enrich'])->middleware('auth:sanctum');
+Route::get('ai-texts/next', [ProductController::class, 'aiTextsNext']);
+Route::post('ai-texts/{product}/complete', [ProductController::class, 'aiTextsComplete']);
 Route::get('ai-images/next', [AiImagesController::class, 'next']);
 Route::post('ai-images/{id}/complete', [AiImagesController::class, 'complete']);

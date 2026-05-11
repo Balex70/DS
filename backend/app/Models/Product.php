@@ -12,7 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
     'price', 'now_price', 'suggested_price',
     'add_mark_status', 'raw_data',
     'is_collect', 'warehouse_inventory_num',
-    'last_enrichment_at'
+    'last_enrichment_at', 'description_processed',
+    'ai_texts_at', 'ai_status',
 ])]
 class Product extends Model
 {
