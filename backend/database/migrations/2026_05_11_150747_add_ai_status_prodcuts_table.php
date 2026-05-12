@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('ai_processed_at');
+            $table->enum('ai_status', ['queued', 'processing', 'done', 'failed'])->nullable();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->timestamp('ai_processed_at')->nullable();
+            $table->dropColumn('ai_status');
         });
     }
 };
