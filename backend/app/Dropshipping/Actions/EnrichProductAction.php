@@ -15,8 +15,8 @@ class EnrichProductAction
     {
         // get product to enrich
         $productToEnrich = Product::where(function ($q) {
-            $q->whereNull('last_enrichment_at')
-            ->orWhere('last_enrichment_at', '<', now()->minus(weeks: 4));
+            $q->whereNull('last_enrichment_at');
+            // ->orWhere('last_enrichment_at', '<', now()->minus(weeks: 4));
         })->orderBy('id')->first();
 
         if (!$productToEnrich) {
