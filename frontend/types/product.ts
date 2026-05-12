@@ -2,15 +2,23 @@ interface ProductInterface {
   id: string,
   name_raw: string,
   name_processed: string,
+  description_raw: string,
+  description_processed: string,
   price: number,
   now_price: number,
+  suggested_price: number,
   is_collect: boolean,
   add_mark_status: boolean,
   last_enrichment_at: Date|null,
   ai_images_at: Date|null,
   ai_texts_at: Date|null,
+  ai_status: string,
   big_image: ProductImageInterface,
   images: ProductImageInterface[],
+  slug: string,
+  warehouse_inventory_num: number,
+  raw_data: string,
+  external_id: string
 }
 
 interface ProductImageInterface {

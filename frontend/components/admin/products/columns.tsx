@@ -125,16 +125,12 @@ export const columns = ({
     header: "Price",
   },
   {
-    accessorKey: "now_price",
-    header: "Now price",
+    accessorKey: "ai_status",
+    header: "AI Status",
   },
   {
-    accessorKey: "is_collect",
-    header: "Is collect",
-  },
-  {
-    accessorKey: "add_mark_status",
-    header: "Shipping included (add_mark_status)",
+    accessorKey: "warehouse_inventory_num",
+    header: "Inventory",
   },
   {
     id: "actions",

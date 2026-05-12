@@ -7,12 +7,17 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { CardContent } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
 import { Product } from "@/types/product"
 import { ProductImagesDrawer } from "./ProductImagesDrawer"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { Loader2 } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ProductDrawerMainFields } from "./ProductDrawerMainFields"
+import { ProductDrawerSecondaryFields } from "./ProductDrawerSecondaryFields"
+import NextImageWithReplace from "@/components/custom/NextImageWithReplace"
+import { ProductDrawerRawDataField } from "./ProductDrawerRawDataField"
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 
 export function ProductDrawer({
   open,
@@ -69,7 +74,7 @@ export function ProductDrawer({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent style={{ maxWidth: '40vw' }}>
         <SheetHeader>
-          <SheetTitle>Product details</SheetTitle>
+          <SheetTitle>Product details (ID: {product ? product.id : ''})</SheetTitle>
         </SheetHeader>
 
         {product && (
@@ -78,48 +83,63 @@ export function ProductDrawer({
                     {isEnriching && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {isEnriching ? "Enriching..." : "Enrich product"}
                 </Button>
-                <ProductImagesDrawer product={product}/>
-                <div>
-                    <Label>Name Raw</Label>
-                    <div className="text-md text-muted-foreground">
-                        {product.name_raw}
-                    </div>
+                <div className="flex space-x-4">
+                    {product.big_image && (
+                    <>
+                        <div className="max-w-28 aspect-square overflow-hidden rounded-lg border bg-muted shrink-0">
+                        {product.big_image?.ai_url ? (
+                            <NextImageWithReplace
+                                src={product.big_image.ai_url}
+                                alt={product.name_raw}
+                                width={200}
+                                height={200}
+                                imageClassName="h-full w-full object-cover"
+                            />
+                        ) : (
+                            <img
+                                src={product.big_image.original_url}
+                                alt={product.name_raw}
+                                className="h-full w-full object-cover"
+                            />
+                        )}
+                        </div>
+                    </>
+                    )}
+                    <FieldGroup className="flex flex-col gap-4 min-w-0">
+                        <Field className="gap-1">
+                            <FieldLabel>Name Raw</FieldLabel>
+                            <div className="text-md text-muted-foreground">
+                                {product.name_raw}
+                            </div>
+                        </Field>
+                        <Field className="gap-1">
+                            <FieldLabel>Name Processed</FieldLabel>
+                            <span className="text-md text-muted-foreground">
+                                {product.name_processed}
+                            </span>
+                        </Field>
+                    </FieldGroup>
                 </div>
-
-                <div>
-                    <Label>Name Processed</Label>
-                    <div className="text-md text-muted-foreground">
-                        {product.name_processed}
-                    </div>
-                </div>
-
-                <div>
-                    <Label>Price</Label>
-                    <div className="text-md text-muted-foreground">
-                        {product.price}
-                    </div>
-                </div>
-
-                <div>
-                    <Label>Now Price</Label>
-                    <div className="text-md text-muted-foreground">
-                        {product.now_price}
-                    </div>
-                </div>
-
-                <div>
-                    <Label>Is collect</Label>
-                    <div className="text-md text-muted-foreground">
-                        {product.is_collect}
-                    </div>
-                </div>
-
-                <div>
-                    <Label>Shipping included (add_mark_status)</Label>
-                    <div className="text-md text-muted-foreground">
-                        {product.add_mark_status}
-                    </div>
-                </div>
+                <Tabs defaultValue="main">
+                    <TabsList variant="line" className="mb-5">
+                        <TabsTrigger value="main">Main</TabsTrigger>
+                        <TabsTrigger value="secondary">Secondary</TabsTrigger>
+                        <TabsTrigger value="images">Images</TabsTrigger>
+                        <TabsTrigger value="raw">Raw Data</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="main">
+                        <ProductDrawerMainFields product={product} />
+                    </TabsContent>
+                    <TabsContent value="secondary">
+                        <ProductDrawerSecondaryFields product={product} />
+                    </TabsContent>
+                    <TabsContent value="images">
+                        <ProductImagesDrawer product={product}/>
+                    </TabsContent>
+                    <TabsContent value="raw">
+                        <ProductDrawerRawDataField product={product} />
+                    </TabsContent>
+                    </Tabs>
             </CardContent>
         )}
       </SheetContent>
