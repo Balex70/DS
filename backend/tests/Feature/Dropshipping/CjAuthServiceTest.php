@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Dropshipping;
 
 use App\Dropshipping\Services\CjAuthService;
 use App\Models\CjToken;

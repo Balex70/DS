@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature\Dropshipping;
 
 use App\Dropshipping\API\CjApiClient;
 use App\Dropshipping\Services\CjAuthService;
