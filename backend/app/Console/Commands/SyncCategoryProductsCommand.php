@@ -7,7 +7,7 @@ use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use App\Jobs\SyncCategoryProductsJob;
 
-#[Signature('cj:sync-category {categoryId}')]
+#[Signature('app:sync-category {categoryId}')]
 #[Description('Sync category products from CJ')]
 class SyncCategoryProductsCommand extends Command
 {
