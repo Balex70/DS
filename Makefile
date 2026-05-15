@@ -72,3 +72,6 @@ clear-cache:
 
 backend-test:
 	bin/artisan test
+	
+testo:
+	bin/artisan test /app/tests/Feature/Controllers/CategoryControllerTest.php
