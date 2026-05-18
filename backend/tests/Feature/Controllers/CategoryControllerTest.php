@@ -23,9 +23,6 @@ class CategoryControllerTest extends TestCase
         Permission::firstOrCreate(['name' => 'categories.edit']);
         Permission::firstOrCreate(['name' => 'categories.delete']);
         
-        Role::firstOrCreate(['name' => 'admin']);
-        Role::firstOrCreate(['name' => 'editor']);
-        
         // roles
         $admin = Role::firstOrCreate(['name' => 'admin']);
         $editor = Role::firstOrCreate(['name' => 'editor']);
