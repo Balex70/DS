@@ -23,7 +23,7 @@ class AiImagesControllerTest extends TestCase
             'original_url' => 'images/test.jpg',
         ]);
 
-        $response = $this->getJson('/api/ai-images/next');
+        $response = $this->getJson('/api/products/ai-images/next');
 
         $response->assertOk()
             ->assertJson([
@@ -40,7 +40,7 @@ class AiImagesControllerTest extends TestCase
     
     public function test_next_returns_204_when_no_images()
     {
-        $response = $this->getJson('/api/ai-images/next');
+        $response = $this->getJson('/api/products/ai-images/next');
 
         $response->assertNoContent();
     }
@@ -68,7 +68,7 @@ class AiImagesControllerTest extends TestCase
 
         $file = UploadedFile::fake()->create('ai.jpg');
 
-        $response = $this->postJson("/api/ai-images/{$image->id}/complete", [
+        $response = $this->postJson("/api/products/ai-images/{$image->id}/complete", [
             'image' => $file,
         ]);
 
@@ -101,7 +101,7 @@ class AiImagesControllerTest extends TestCase
 
         $file = UploadedFile::fake()->create('ai.jpg');
 
-        $this->postJson("/api/ai-images/{$image->id}/complete", [
+        $this->postJson("/api/products/ai-images/{$image->id}/complete", [
             'image' => $file,
         ]);
 
