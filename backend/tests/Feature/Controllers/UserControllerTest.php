@@ -269,32 +269,27 @@ class UserControllerTest extends TestCase
 
         $this->assertModelMissing($target);
     }
+    
+    public function test_superadmin_cannot_delete_self()
+    {
+        $response = $this->actingAs($this->superadmin)
+            ->deleteJson("/api/users/{$this->superadmin->id}");
 
-    public function test_admin_can_delete_user()
+         $response->assertForbidden();
+
+        $this->assertModelExists($this->superadmin);
+    }
+
+    public function test_admin_cannot_delete_user()
     {
         $target = User::factory()->create();
 
         $response = $this->actingAs($this->admin)
             ->deleteJson("/api/users/{$target->id}");
 
-        $response->assertNoContent();
+        $response->assertForbidden();
 
-        $this->assertModelMissing($target);
-    }
-    
-    public function test_user_with_delete_permission_can_delete_other_user()
-    {
-        $deleter = User::factory()->create();
-        $deleter->givePermissionTo('users.delete');
-
-        $target = User::factory()->create();
-
-        $response = $this->actingAs($deleter)
-            ->deleteJson("/api/users/{$target->id}");
-
-        $response->assertNoContent();
-
-        $this->assertModelMissing($target);
+        $this->assertModelExists($target);
     }
     
     public function test_user_cannot_delete_themselves_even_with_permission()
