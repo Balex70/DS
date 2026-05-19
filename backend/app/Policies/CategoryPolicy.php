@@ -33,6 +33,10 @@ class CategoryPolicy
      */
     public function delete(User $user, Category $category): bool
     {
+        if ($user->isAdministrator()) {
+            return true;
+        }
+
         return false;
     }
 

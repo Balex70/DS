@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Category;
+use App\Models\CategorySyncState;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Category>
+ * @extends Factory<CategorySyncState>
  */
-class CategoryFactory extends Factory
+class CategorySyncStateFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,11 +18,9 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->word(),
-            'external_id' => fake()->uuid(),
-            'provider' => 'cj',
-            'active' => true,
-            'parent_id' => null,
+            'category_id' => fake()->randomNumber(5),
+            'page' => 1,
+            'finished' => false,
         ];
     }
 }

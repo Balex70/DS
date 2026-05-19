@@ -84,20 +84,6 @@ class UserController extends Controller
         ]);
     }
 
-    public function me(Request $request) {
-        return new UserResource($request->user());
-    }
-
-    public function logout(Request $request)
-    {
-        Auth::logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return response()->json(['message' => 'Logged out successfully.'], 200);
-    }
-
     public function loginWithToken(LoginUserRequest $request) {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json(['message' => 'Invalid credentials'], 401);

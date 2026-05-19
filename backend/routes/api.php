@@ -12,12 +12,13 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
+
 Route::apiResource('categories', CategoryController::class)->middleware('auth:sanctum');
 Route::post('categories/bulk-activate', [CategoryController::class, 'bulkActivate'])->middleware('auth:sanctum');
 
 Route::apiResource('products', ProductController::class)->middleware('auth:sanctum');
-Route::patch('enrich/{product}', [ProductController::class, 'enrich'])->middleware('auth:sanctum');
-Route::get('ai-texts/next', [ProductController::class, 'aiTextsNext']);
-Route::post('ai-texts/{product}/complete', [ProductController::class, 'aiTextsComplete']);
-Route::get('ai-images/next', [AiImagesController::class, 'next']);
-Route::post('ai-images/{id}/complete', [AiImagesController::class, 'complete']);
+Route::patch('products/enrich/{product}', [ProductController::class, 'enrich'])->middleware('auth:sanctum');
+Route::get('products/ai-texts/next', [ProductController::class, 'aiTextsNext']);
+Route::post('products/ai-texts/{product}/complete', [ProductController::class, 'aiTextsComplete']);
+Route::get('products/ai-images/next', [AiImagesController::class, 'next']);
+Route::post('products/ai-images/{id}/complete', [AiImagesController::class, 'complete']);

@@ -45,10 +45,14 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
+        // You can't update yourself on this route
+        if ($user->id === $model->id) {
+            return false;
+        }
         if ($user->isAdministrator()) {
             return true;
         }
-        return $user->can('users.edit') || $user->id === $model->id;
+        return $user->can('users.edit');
     }
 
     /**
@@ -56,7 +60,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return $user->can('users.delete') && $user->id !== $model->id;
+        return $user->isAdministrator() && $user->id !== $model->id;
     }
 
     /**

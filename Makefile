@@ -69,3 +69,9 @@ clear-cache:
 	bin/artisan cache:clear && \
 	bin/artisan route:clear && \
 	bin/artisan view:clear
+
+backend-test:
+	bin/artisan test
+	
+testo:
+	bin/artisan test /app/tests/Feature/Controllers/CategoryControllerTest.php

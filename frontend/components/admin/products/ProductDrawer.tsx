@@ -56,7 +56,7 @@ export function ProductDrawer({
                 'Accept': 'application/json',
                 'X-XSRF-TOKEN': xsrfToken,
             };
-            await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/enrich/${product.id}`, {
+            await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/products/enrich/${product.id}`, {
                 method: "PATCH",
                 credentials: 'include',
                 headers: headers,

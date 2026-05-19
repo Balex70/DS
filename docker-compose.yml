@@ -5,12 +5,6 @@ services:
       dockerfile: docker/php/Dockerfile
     working_dir: /app
     environment:
-      DB_CONNECTION: ${DB_CONNECTION}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-      DB_DATABASE: ${DB_DATABASE}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
       FRANKENPHP_DOCUMENT_ROOT: /app/public
     depends_on:
       - db
@@ -38,6 +32,17 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
+  test_db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ${TEST_DB_DATABASE}
+      POSTGRES_USER: ${TEST_DB_USERNAME}
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD}
+    ports:
+      - "${TEST_DB_PORT}:5432"
+    volumes:
+      - test_db_data:/var/lib/postgresql/data
+
   redis:
     image: redis:alpine
     ports:
@@ -64,3 +69,4 @@ services:
       - .:/var/www/html
 volumes:
   db_data:
+  test_db_data:

@@ -36,6 +36,10 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product): bool
     {
+        if ($user->isAdministrator()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -48,6 +52,6 @@ class ProductPolicy
             return true;
         }
 
-        return $user->can('products.edit');
+        return false;
     }
 }

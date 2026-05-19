@@ -46,7 +46,7 @@ class CjProductMapper
 
             'big_image' => $data['bigImage'] ?? $base['big_image'] ?? null,
 
-            'add_mark_status' => (bool) $data['addMarkStatus'] ?? $base['add_mark_status'] ?? null,
+            'add_mark_status' => (bool) ($data['addMarkStatus'] ?? $base['add_mark_status'] ?? null),
 
             'variants' => $variants,
 

@@ -7,7 +7,7 @@ use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use App\Jobs\SyncCategoriesJob;
 
-#[Signature('app:sync-categories-command')]
+#[Signature('app:sync-categories')]
 #[Description('Command description')]
 class SyncCategoriesCommand extends Command
 {
