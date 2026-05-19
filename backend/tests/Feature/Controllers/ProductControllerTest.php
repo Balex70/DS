@@ -10,6 +10,7 @@ use App\Policies\ProductPolicy;
 use App\Services\ProductService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
+use Laravel\Sanctum\Sanctum;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -44,6 +45,18 @@ class ProductControllerTest extends TestCase
         $this->superadmin = User::factory()->superAdmin()->create();
         $this->admin = User::factory()->admin()->create();
         $this->editor = User::factory()->editor()->create();
+    }
+
+    protected function actingAsAiWorker(): User
+    {
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user, [
+            'ai:texts',
+            'ai:images',
+        ]);
+
+        return $user;
     }
 
     // INDEX TESTS
@@ -251,6 +264,8 @@ class ProductControllerTest extends TestCase
     // AI TEXTS NEXT
     public function test_ai_texts_next_returns_next_queued_product()
     {
+        $this->actingAsAiWorker();
+
         Product::factory()->create([
             'ai_status' => ProductAiStatusEnum::DONE,
         ]);
@@ -276,6 +291,8 @@ class ProductControllerTest extends TestCase
 
     public function test_ai_texts_next_returns_204_when_no_products()
     {
+        $this->actingAsAiWorker();
+
         Product::factory()->create([
             'ai_status' => ProductAiStatusEnum::DONE,
         ]);
@@ -284,10 +301,53 @@ class ProductControllerTest extends TestCase
 
         $response->assertNoContent();
     }
+
+    public function test_ai_texts_next_fails_without_token()
+    {
+        $response = $this->getJson('/api/products/ai-texts/next');
+
+        $response
+            ->assertStatus(401)
+            ->assertJson([
+                'message' => 'Unauthenticated.',
+            ]);
+    }
+
+    public function test_ai_texts_next_fails_with_invalid_token()
+    {
+        $response = $this
+            ->withHeaders([
+                'Authorization' => 'Bearer invalid-token-123',
+            ])
+            ->getJson('/api/products/ai-texts/next');
+
+        $response
+            ->assertStatus(401)
+            ->assertJson([
+                'message' => 'Unauthenticated.',
+            ]);
+    }
+
+    public function test_ai_texts_next_fails_without_required_ability()
+    {
+        $user = User::factory()->create();
+
+        $token = $user->createToken('test', ['ai:images'])->plainTextToken;
+
+        $response = $this
+            ->withHeaders([
+                'Authorization' => "Bearer $token",
+            ])
+            ->getJson('/api/products/ai-texts/next');
+
+        $response->assertStatus(403);
+    }
     
     // AI TEXTS COMPLETE
     public function test_ai_texts_complete_updates_product()
     {
+        $this->actingAsAiWorker();
+
         $product = Product::factory()->create([
             'ai_status' => ProductAiStatusEnum::PROCESSING,
         ]);
@@ -308,6 +368,78 @@ class ProductControllerTest extends TestCase
             'description_processed' => 'AI Description',
             'ai_status' => ProductAiStatusEnum::DONE,
         ]);
+    }
+    
+    public function test_ai_texts_complete_fails_without_token()
+    {
+        $product = Product::factory()->create([
+            'ai_status' => ProductAiStatusEnum::PROCESSING,
+        ]);
+
+        $response = $this->postJson(
+            "/api/products/ai-texts/{$product->id}/complete",
+            [
+                'title' => 'AI Title',
+                'description' => 'AI Description',
+            ]
+        );
+
+        $response
+            ->assertStatus(401)
+            ->assertJson([
+                'message' => 'Unauthenticated.',
+            ]);
+    }
+
+    public function test_ai_texts_complete_fails_with_invalid_token()
+    {
+        $product = Product::factory()->create([
+            'ai_status' => ProductAiStatusEnum::PROCESSING,
+        ]);
+
+        $response = $this
+            ->withHeaders([
+                'Authorization' => 'Bearer invalid-token-123',
+            ])
+            ->postJson(
+                "/api/products/ai-texts/{$product->id}/complete",
+                [
+                    'title' => 'AI Title',
+                    'description' => 'AI Description',
+                ]
+            );
+
+        $response
+            ->assertStatus(401)
+            ->assertJson([
+                'message' => 'Unauthenticated.',
+            ]);
+    }
+
+    public function test_ai_texts_complete_fails_without_required_ability()
+    {
+        $user = User::factory()->create();
+
+        // token WITHOUT ai:texts ability
+        $token = $user->createToken('test', ['ai:images'])->plainTextToken;
+
+        $product = Product::factory()->create([
+            'ai_status' => ProductAiStatusEnum::PROCESSING,
+        ]);
+
+        $response = $this
+            ->withHeaders([
+                'Authorization' => "Bearer $token",
+            ])
+            ->postJson(
+                "/api/products/ai-texts/{$product->id}/complete",
+                [
+                    'title' => 'AI Title',
+                    'description' => 'AI Description',
+                ]
+            );
+
+        $response->assertStatus(403);
     }
     
     // FILTERS
