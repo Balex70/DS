@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCustomerRequest extends FormRequest
+class LoginCustomerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,13 +22,17 @@ class StoreCustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string'],
             'email' => [
                 'required',
+                'string',
                 'email',
-                'unique:customers,email'
+                'max:255',
             ],
-            'password' => ['required', 'min:8'],
+
+            'password' => [
+                'required',
+                'string',
+            ],
         ];
     }
 }

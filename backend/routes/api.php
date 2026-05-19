@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AiImagesController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -25,4 +26,16 @@ Route::middleware(['auth:sanctum', 'abilities:ai:texts'])->group(function () {
 Route::middleware(['auth:sanctum', 'abilities:ai:images'])->group(function () {
     Route::get('products/ai-images/next', [AiImagesController::class, 'next']);
     Route::post('products/ai-images/{id}/complete', [AiImagesController::class, 'complete']);
+});
+
+// Customer
+Route::prefix('customer')->group(function () {
+    Route::post('/register', [CustomerController::class, 'register']);
+    Route::post('/login', [CustomerController::class, 'login']);
+
+    Route::middleware('auth:customers')->group(function () {
+        Route::get('/me', [CustomerController::class, 'me']);
+        Route::post('/logout', [CustomerController::class, 'logout']);
+    });
+
 });
