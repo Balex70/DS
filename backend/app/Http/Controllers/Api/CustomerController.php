@@ -11,6 +11,8 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Socialite\Socialite;
+use Illuminate\Support\Str;
 
 class CustomerController extends Controller
 {
@@ -81,5 +83,41 @@ class CustomerController extends Controller
     public function destroy(Customer $customer)
     {
         //
+    }
+
+    public function googleRedirect()
+    {
+        return Socialite::driver('google')->stateless()->redirect();
+    }
+
+    public function googleCallback(Request $request)
+    {
+        $googleUser = Socialite::driver('google')
+            ->stateless()
+            ->user();
+
+        $customer = Customer::firstOrCreate(
+            [
+                'email' => $googleUser->getEmail(),
+            ],
+            [
+                'name' => $googleUser->getName(),
+                'google_id' => $googleUser->getId(),
+                'avatar' => $googleUser->getAvatar(),
+                'password' => bcrypt(Str::random(32)),
+            ]
+        );
+
+        if (!$customer->google_id) {
+            $customer->update([
+                'google_id' => $googleUser->getId(),
+            ]);
+        }
+
+        Auth::guard('customers')->login($customer);
+
+        $request->session()->regenerate();
+
+        return redirect(env('APP_URL'));
     }
 }

@@ -38,4 +38,7 @@ Route::prefix('customer')->group(function () {
         Route::post('/logout', [CustomerController::class, 'logout']);
     });
 
+    Route::get('/auth/google/redirect', [CustomerController::class, 'googleRedirect']);
+    Route::get('/auth/google/callback', [CustomerController::class, 'googleCallback']);
+
 });
