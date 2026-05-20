@@ -1,13 +1,14 @@
 import { SearchBar } from "./search-bar";
 import { CustomerMenu } from "./customer-menu";
 import { CartButton } from "./cart-button";
+import Link from "next/link";
 
 export function Header() {
     return (
         <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
             <div className="container mx-auto flex h-16 items-center gap-4 px-4">
                 <div className="text-xl font-bold">
-                    CJ Store
+                    <Link href="/"><h3>CJ Store</h3></Link>
                 </div>
 
                 <div className="flex-1">
