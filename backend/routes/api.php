@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AiImagesController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\Store\CategoryController as StoreCategoryController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\UserController;
@@ -16,6 +17,7 @@ Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
 
 Route::apiResource('categories', CategoryController::class)->middleware('auth:sanctum');
 Route::post('categories/bulk-activate', [CategoryController::class, 'bulkActivate'])->middleware('auth:sanctum');
+Route::get('store/categories', [StoreCategoryController::class, 'index']);
 
 Route::apiResource('products', ProductController::class)->middleware('auth:sanctum');
 Route::patch('products/enrich/{product}', [ProductController::class, 'enrich'])->middleware('auth:sanctum');
