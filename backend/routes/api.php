@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\Store\CategoryController as StoreCategoryController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\Store\ProductController as StoreProductController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,8 @@ Route::middleware(['auth:sanctum', 'abilities:ai:images'])->group(function () {
     Route::get('products/ai-images/next', [AiImagesController::class, 'next']);
     Route::post('products/ai-images/{id}/complete', [AiImagesController::class, 'complete']);
 });
+
+Route::get('store/products', [StoreProductController::class, 'index']);
 
 // Customer
 Route::prefix('customer')->group(function () {

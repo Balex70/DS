@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useCategories } from "@/hooks/use-categories";
 import Link from "next/link";
 import Image from 'next/image'
-import CategoryImage from "@/components/admin/categories/CategoryImage";
+import CategoryImage from "@/components/frontend/category/CategoryImage";
 
 export function MaincategoriesSection() {
     const { data: categories, isLoading } = useCategories();
