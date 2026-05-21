@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use App\Services\ProductImageService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AiImagesController extends Controller
 {
@@ -28,7 +29,7 @@ class AiImagesController extends Controller
 
         return response()->json([
             'id' => $image->id,
-            'image_url' => asset($image->original_url),
+            'image_url' => asset(Storage::url($image->original_url)),
             'product_id' => $image->product_id,
             'product_name' => $image->product->name_raw,
         ]);
