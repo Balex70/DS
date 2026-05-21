@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { useCategories } from "@/hooks/use-categories";
 import Link from "next/link";
+import Image from 'next/image'
 
 export function MaincategoriesSection() {
     const { data: categories, isLoading } = useCategories();
@@ -40,10 +41,21 @@ export function MaincategoriesSection() {
                     href={`/category/${category.slug}`}
                     className="block"
                 >
-                    <Card className="h-32 w-full cursor-pointer transition hover:shadow-md">
-                        <CardContent className="flex h-full items-center justify-center p-6 text-center">
-                            <div className="font-medium">
-                                {category.name}
+                    <Card className="group relative h-40 overflow-hidden py-0">
+                        <CardContent className="relative h-full p-0">
+                            <Image
+                                src="/categories/parts.png"
+                                alt={category.name}
+                                fill
+                                className="object-cover transition duration-300 group-hover:scale-105"
+                            />
+
+                            <div className="absolute inset-0 bg-black/40" />
+
+                            <div className="absolute inset-0 flex items-center justify-center p-4 text-center">
+                                <div className="text-lg font-semibold text-white">
+                                    {category.name}
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
