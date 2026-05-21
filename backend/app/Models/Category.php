@@ -14,7 +14,8 @@ use Illuminate\Support\Str;
     'external_id',
     'parent_id',
     'provider',
-    'slug'
+    'slug',
+    'image',
 ])]
 class Category extends Model
 {

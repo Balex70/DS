@@ -128,7 +128,7 @@ function CategoryTree() {
 
             <div className="text-sm">
                 {data.map(node => (
-                    <CategoryNode key={node.id} node={node} onSelected={handleSelectedIds} selectedIds={selectedIds} />
+                    <CategoryNode key={node.id} node={node} onSelected={handleSelectedIds} selectedIds={selectedIds} fetchCategories={fetchCategories}/>
                 ))}
             </div>
         </>

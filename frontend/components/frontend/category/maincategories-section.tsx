@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useCategories } from "@/hooks/use-categories";
 import Link from "next/link";
 import Image from 'next/image'
+import CategoryImage from "@/components/admin/categories/CategoryImage";
 
 export function MaincategoriesSection() {
     const { data: categories, isLoading } = useCategories();
@@ -43,17 +44,24 @@ export function MaincategoriesSection() {
                 >
                     <Card className="group relative h-40 overflow-hidden py-0">
                         <CardContent className="relative h-full p-0">
-                            <Image
-                                src="/categories/parts.png"
-                                alt={category.name}
-                                fill
-                                className="object-cover transition duration-300 group-hover:scale-105"
-                            />
+                            {category.image
+                                ? <CategoryImage
+                                    src={`/storage/${category.image}`}
+                                    alt={category.name}
+                                    imageClassName="object-cover transition duration-300 group-hover:scale-105"
+                                />
+                                : <Image
+                                    src="/categories/placeholder.jpg"
+                                    alt={category.name}
+                                    fill
+                                    className="object-cover transition duration-300 group-hover:scale-105"
+                                />
+                            }
 
-                            <div className="absolute inset-0 bg-black/40" />
+                            <div className="absolute inset-0 bg-black/75" />
 
                             <div className="absolute inset-0 flex items-center justify-center p-4 text-center">
-                                <div className="text-lg font-semibold text-white">
+                                <div className="text-xl font-semibold text-white">
                                     {category.name}
                                 </div>
                             </div>

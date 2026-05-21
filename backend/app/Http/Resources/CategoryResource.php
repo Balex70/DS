@@ -20,7 +20,8 @@ class CategoryResource extends JsonResource
             'parent_id' => $this->parent_id,
             'provider' => $this->provider,
             'active' => $this->active,
-            'slug' => $this->slug
+            'slug' => $this->slug,
+            'image' => $this->image,
         ];
         // return parent::toArray($request);
     }

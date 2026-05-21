@@ -6,7 +6,8 @@ interface CategoryInterface {
   parent_id?: number;
   children?: Category[];
   active: boolean,
-  slug: string
+  slug: string,
+  image: string
 }
 
 export type Category = CategoryInterface

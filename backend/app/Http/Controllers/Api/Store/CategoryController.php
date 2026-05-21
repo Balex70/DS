@@ -16,6 +16,6 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return CategoryResource::collection(Category::all());
+        return CategoryResource::collection(Category::orderBy('id')->get());
     }
 }

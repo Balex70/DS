@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -22,7 +23,7 @@ class CategoryController extends Controller
     public function index()
     {
         Gate::authorize('viewAny', Category::class);
-        return CategoryResource::collection(Category::all());
+        return CategoryResource::collection(Category::orderBy('id')->get());
     }
 
     /**
@@ -30,7 +31,25 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $category->update($request->validated());
+        $data = $request->validated();
+
+        // handle image upload
+        if ($request->hasFile('image')) {
+
+            // delete old image if exists
+            if ($category->image) {
+                Storage::disk('public')->delete($category->image);
+            }
+
+            // store new image
+            // $path = $request->file('image')->store('categories', 'public');
+            $path = $request->file('image')->store("categories/{$category->id}", 'public');
+            // Storage::disk('public')->put($fileName, $contents);
+
+            $data['image'] = $path;
+        }
+
+        $category->update($data);
 
         return new CategoryResource($category);
     }
