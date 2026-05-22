@@ -2,7 +2,7 @@ import { api } from "@/lib/axios";
 import { Meta, Product } from "@/types/product";
 
 export interface GetProductsParams {
-    category?: string;
+    category?: string[];
     page?: number;
     sort?: string;
 }

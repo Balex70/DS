@@ -5,7 +5,7 @@ import { useProducts } from "@/hooks/use-products";
 import { ProductCard } from "./product-card";
 
 type Props = {
-    slug: string;
+    slug: string[];
 };
 
 export function ProductsSection({ slug }: Props) {

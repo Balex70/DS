@@ -3,7 +3,7 @@
 import { useCategories } from "@/hooks/use-categories";
 
 type Props = {
-    slug: string;
+    slug: string[];
 };
 
 export function CategoryHeaderSection({ slug }: Props) {

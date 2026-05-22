@@ -6,9 +6,10 @@ import Link from "next/link";
 import CategoryImage from "./CategoryImage";
 import Image from 'next/image'
 import { Separator } from "@/components/ui/separator";
+import { CategoryBreadcrumbs } from "./category-breadcrumbs";
 
 type Props = {
-    slug: string;
+    slug: string[];
 };
 
 export function SubcategoriesSection({ slug }: Props) {
@@ -42,12 +43,18 @@ export function SubcategoriesSection({ slug }: Props) {
     }
 
     if (!subcategories?.length) {
-        return;
+        return (
+            <>
+                <Separator />
+                <CategoryBreadcrumbs slug={slug} />
+            </>
+        );
     }
 
     return (
         <>
             <Separator />
+            <CategoryBreadcrumbs slug={slug} />
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                 {subcategories.map((category) => (
                     <Link
