@@ -17,8 +17,6 @@ export default async function CategoryPage({
             {/* Header / Category Info */}
             <CategoryHeaderSection slug={slug} />
 
-            <Separator />
-
             {/* Subcategories */}
             <SubcategoriesSection slug={slug} />
 

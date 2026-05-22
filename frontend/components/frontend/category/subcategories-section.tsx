@@ -5,6 +5,7 @@ import { useCategories } from "@/hooks/use-categories";
 import Link from "next/link";
 import CategoryImage from "./CategoryImage";
 import Image from 'next/image'
+import { Separator } from "@/components/ui/separator";
 
 type Props = {
     slug: string;
@@ -41,48 +42,47 @@ export function SubcategoriesSection({ slug }: Props) {
     }
 
     if (!subcategories?.length) {
-        return (
-            <p className="text-sm text-muted-foreground">
-                No subcategories available.
-            </p>
-        );
+        return;
     }
 
     return (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {subcategories.map((category) => (
-                <Link
-                    key={category.id}
-                    href={`/category/${category.full_path}`}
-                    className="block"
-                >
-                    <Card className="group relative h-40 overflow-hidden py-0">
-                        <CardContent className="relative h-full p-0">
-                            {category.image
-                                ? <CategoryImage
-                                    src={`/storage/${category.image}`}
-                                    alt={category.name}
-                                    imageClassName="object-cover transition duration-300 group-hover:scale-105"
-                                />
-                                : <Image
-                                    src="/categories/placeholder.jpg"
-                                    alt={category.name}
-                                    fill
-                                    className="object-cover transition duration-300 group-hover:scale-105"
-                                />
-                            }
+        <>
+            <Separator />
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                {subcategories.map((category) => (
+                    <Link
+                        key={category.id}
+                        href={`/category/${category.full_path}`}
+                        className="block"
+                    >
+                        <Card className="group relative h-40 overflow-hidden py-0">
+                            <CardContent className="relative h-full p-0">
+                                {category.image
+                                    ? <CategoryImage
+                                        src={`/storage/${category.image}`}
+                                        alt={category.name}
+                                        imageClassName="object-cover transition duration-300 group-hover:scale-105"
+                                    />
+                                    : <Image
+                                        src="/categories/placeholder.jpg"
+                                        alt={category.name}
+                                        fill
+                                        className="object-cover transition duration-300 group-hover:scale-105"
+                                    />
+                                }
 
-                            <div className="absolute inset-0 bg-black/75" />
+                                <div className="absolute inset-0 bg-black/75" />
 
-                            <div className="absolute inset-0 flex items-center justify-center p-4 text-center">
-                                <div className="text-xl font-semibold text-white">
-                                    {category.name}
+                                <div className="absolute inset-0 flex items-center justify-center p-4 text-center">
+                                    <div className="text-xl font-semibold text-white">
+                                        {category.name}
+                                    </div>
                                 </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </Link>
-            ))}
-        </div>
+                            </CardContent>
+                        </Card>
+                    </Link>
+                ))}
+            </div>
+        </>
     );
 }
