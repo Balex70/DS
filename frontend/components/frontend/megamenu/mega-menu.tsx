@@ -1,0 +1,165 @@
+"use client";
+
+import * as React from "react";
+import Link from "next/link";
+import { ChevronRight, Menu } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+
+import { useCategories } from "@/hooks/use-categories";
+import { Category } from "@/types/category";
+
+export function MegaMenu() {
+    const { data: categories, isLoading } = useCategories();
+    const [open, setOpen] = React.useState(false);
+
+    // Root categories
+    const rootCategories =
+        categories?.filter(
+            (category) =>
+                !category.parent_id &&
+                category.active
+        ) ?? [];
+
+    // Active root category
+    const [activeRootId, setActiveRootId] = React.useState<
+        number | null
+    >(null);
+
+    // Set initial active category
+    React.useEffect(() => {
+        if (!activeRootId && rootCategories.length) {
+            setActiveRootId(rootCategories[0].id);
+        }
+    }, [rootCategories, activeRootId]);
+
+    // Active root object
+    const activeRoot = rootCategories.find(
+        (category) => category.id === activeRootId
+    );
+
+    // Second level
+    const secondLevelCategories =
+        categories?.filter(
+            (category) =>
+                category.parent_id === activeRoot?.id &&
+                category.active
+        ) ?? [];
+
+    if (isLoading) {
+        return (
+            <Button
+                variant="outline"
+                className="gap-2"
+            >
+                <Menu className="h-4 w-4" />
+                Categories
+            </Button>
+        );
+    }
+
+    return (
+        <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                    variant="outline"
+                    className="gap-2"
+                >
+                    <Menu className="h-4 w-4" />
+                    Categories
+                </Button>
+            </PopoverTrigger>
+
+            <PopoverContent
+                align="start"
+                className="w-[950px] p-0"
+            >
+                <div className="flex h-[600px]">
+                    {/* LEFT SIDE */}
+                    <div className="w-64 border-r bg-muted/30">
+                        <ScrollArea className="h-full">
+                            <div className="p-2">
+                                {rootCategories.map((category) => {
+                                    const isActive =
+                                        category.id === activeRootId;
+
+                                    return (
+                                        <Link
+                                            key={category.id}
+                                            href={`/category/${category.full_path}`}
+                                            onMouseEnter={() => setActiveRootId(category.id)}
+                                            onClick={() => setOpen(false)}
+                                            className={cn(
+                                                "flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition",
+                                                category.id === activeRootId
+                                                    ? "bg-background font-medium shadow-sm"
+                                                    : "hover:bg-background"
+                                            )}
+                                        >
+                                            <span className="truncate">{category.name}</span>
+
+                                            <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+                                        </Link>
+                                    );
+                                })}
+                            </div>
+                        </ScrollArea>
+                    </div>
+
+                    {/* RIGHT SIDE */}
+                    <div className="flex-1">
+                        <ScrollArea className="h-full">
+                            <div className="p-4">
+                                <div className="columns-3 gap-6 space-y-0">
+                                    {secondLevelCategories.map((second) => {
+                                        const thirdLevelCategories =
+                                            categories?.filter(
+                                                (c) => c.parent_id === second.id && c.active
+                                            ) ?? [];
+
+                                        return (
+                                            <div
+                                                key={second.id}
+                                                className="mb-6 break-inside-avoid"
+                                            >
+                                                {/* SECOND LEVEL */}
+                                                <Link
+                                                    href={`/category/${second.full_path}`}
+                                                    onClick={() => setOpen(false)}
+                                                    className="block font-semibold text-sm mb-2 hover:underline"
+                                                >
+                                                    {second.name}
+                                                </Link>
+
+                                                {/* THIRD LEVEL */}
+                                                <div className="space-y-1">
+                                                    {thirdLevelCategories.map((third) => (
+                                                        <Link
+                                                            key={third.id}
+                                                            href={`/category/${third.full_path}`}
+                                                            onClick={() => setOpen(false)}
+                                                            className="block text-sm text-muted-foreground hover:text-foreground"
+                                                        >
+                                                            {third.name}
+                                                        </Link>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </ScrollArea>
+                    </div>
+                </div>
+            </PopoverContent>
+        </Popover>
+    );
+}
