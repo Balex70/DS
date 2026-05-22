@@ -9,13 +9,18 @@ type Props = {
 };
 
 export function ProductsSection({ slug }: Props) {
-    const { data: products, isLoading } = useProducts({
+    const {
+        data,
+        isLoading,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+    } = useProducts({
         category: slug,
-        page: 1,
         sort: "latest",
     });
-    
-    console.log(products);
+
+    const products = data?.pages.flatMap(page => page.data) ?? [];
 
     if (isLoading) {
         return (
@@ -32,22 +37,29 @@ export function ProductsSection({ slug }: Props) {
         );
     }
 
-    if (!products || !products.data.length) {
-        return (
-            <p className="text-sm text-muted-foreground">
-                No Products
-            </p>
-        );
+    if (!products.length) {
+        return <p className="text-sm text-muted-foreground">No Products</p>;
     }
 
     return (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {products?.data.map(product => (
-                <ProductCard
-                    key={product.id}
-                    product={product}
-                />
-            ))}
+        <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                {products.map(product => (
+                    <ProductCard key={product.id} product={product} />
+                ))}
+            </div>
+
+            {hasNextPage && (
+                <div className="flex justify-center">
+                    <button
+                        onClick={() => fetchNextPage()}
+                        disabled={isFetchingNextPage}
+                        className="px-4 py-2 text-sm border rounded"
+                    >
+                        {isFetchingNextPage ? "Loading..." : "Load more"}
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
