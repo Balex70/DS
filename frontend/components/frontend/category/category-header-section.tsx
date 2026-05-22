@@ -9,7 +9,8 @@ type Props = {
 export function CategoryHeaderSection({ slug }: Props) {
     const { data: categories, isLoading } = useCategories();
     
-    const category = categories?.find((c) => c.slug === slug);
+    const lastSlug = slug[slug.length - 1];
+    const category = categories?.find((c) => c.slug === lastSlug);
 
     if (isLoading) {
         return (

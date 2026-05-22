@@ -18,6 +18,7 @@ Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
 
 Route::apiResource('categories', CategoryController::class)->middleware('auth:sanctum');
 Route::post('categories/bulk-activate', [CategoryController::class, 'bulkActivate'])->middleware('auth:sanctum');
+Route::post('categories/sync-full-paths', [CategoryController::class, 'syncFullPaths'])->middleware('auth:sanctum');
 Route::get('store/categories', [StoreCategoryController::class, 'index']);
 
 Route::apiResource('products', ProductController::class)->middleware('auth:sanctum');

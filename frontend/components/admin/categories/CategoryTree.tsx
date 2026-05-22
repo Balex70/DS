@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import CategoryNode from "./CategoryNode";
 import { Category } from "@/types/category";
 import treeBuilder from "./treeBuilder";
@@ -15,6 +15,7 @@ function CategoryTree() {
     const [loading, setLoading] = useState(true)
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const [savedIds, setSavedIds] = useState<number[]>([]);
+    const [syncFullPathsLoading, setSyncFullPathsLoading] = useState(false)
     const fetchCategories = async () => {
         try {
             setLoading(true)
@@ -95,6 +96,31 @@ function CategoryTree() {
         }
     }
 
+    const handleSyncFullPaths = async () => {
+        try {
+            setSyncFullPathsLoading(true)
+            const csrfToken = getCookie('XSRF-TOKEN');
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-XSRF-TOKEN': csrfToken!, // get the csrf token
+            };
+
+            const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/categories/sync-full-paths`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: headers,
+                cache: 'no-cache', // 'no-cache' if you want it fresh each time
+            })
+
+            setSyncFullPathsLoading(false);
+        } catch (err: any) {
+            // setError(err.message)
+        } finally {
+            // setLoading(false)
+        }
+    }
+
     if (loading) {
         return <Loader />
     }
@@ -114,6 +140,12 @@ function CategoryTree() {
         <>
             <div className="flex flex-col sm:flex-row items-center justify-between my-2">
                 <h1 className="text-lg font-medium">Categories</h1>
+
+                <ButtonGroup>
+                    <Button onClick={handleSyncFullPaths} disabled={syncFullPathsLoading}>
+                        Sync Full Paths
+                    </Button>
+                </ButtonGroup>
 
                 <ButtonGroup>
                     {/* <Button variant="outline" onClick={() => setSelectedIds([])}>

@@ -35,7 +35,7 @@ export function EditCategoryDrawer({
         if (category) {
             setName(category.name)
             if (category.image) {
-                setPreview(`/storage/${category.image}`)
+                setPreview(`${category.image}`)
                 setPreviewType('origin')
             } else {
                 setPreview(null)

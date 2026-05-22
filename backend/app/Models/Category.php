@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
     'provider',
     'slug',
     'image',
+    'full_path',
 ])]
 class Category extends Model
 {
@@ -43,26 +44,33 @@ class Category extends Model
     {
         static::creating(function ($category) {
             if (!$category->slug) {
-                $category->slug = static::generateUniqueSlug($category->name);
+                $category->slug = static::generateUniqueSlug($category->name, $category->parent_id);
             }
         });
 
         static::updating(function ($category) {
             if ($category->isDirty('name') && !$category->isDirty('slug')) {
-                $category->slug = static::generateUniqueSlug($category->name, $category->id);
+                $category->slug = static::generateUniqueSlug($category->name, $category->parent_id, $category->id);
             }
         });
     }
 
-    public static function generateUniqueSlug(string $name, ?int $ignoreId = null): string
-    {
+    public static function generateUniqueSlug(
+        string $name,
+        ?int $parentId = null,
+        ?int $ignoreId = null
+    ): string {
         $slug = Str::slug($name);
         $original = $slug;
         $i = 1;
 
         while (
             static::where('slug', $slug)
-                ->when($ignoreId, fn ($q) => $q->where('id', '!=', $ignoreId))
+                ->where('parent_id', $parentId)
+                ->when(
+                    $ignoreId,
+                    fn ($q) => $q->where('id', '!=', $ignoreId)
+                )
                 ->exists()
         ) {
             $slug = $original . '-' . $i++;

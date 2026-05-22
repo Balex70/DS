@@ -4,6 +4,7 @@ import { Category } from "@/types/category";
 import { Input } from "@/components/ui/input";
 import { CategoryActions } from "./CategoryActions";
 import { EditCategoryDrawer } from "./EditCategoryDrawer";
+import NextImageWithReplace from "@/components/custom/NextImageWithReplace";
 
 function CategoryNode({
   node,
@@ -21,6 +22,7 @@ function CategoryNode({
   const [editOpen, setEditOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
   const hasChildren = (node.children?.length && node.children?.length > 0)? true : false;
+  const preview = node.image
 
   return (
     <div style={{ paddingLeft: level * 24 }}>
@@ -42,7 +44,16 @@ function CategoryNode({
                 setSelectedCategory(category)
                 setEditOpen(true)
             }}
-        />
+          />
+          {preview && (
+            <NextImageWithReplace
+                    src={preview}
+                    alt={"name"}
+                    width={24}
+                    height={24}
+                    imageClassName="object-cover border"
+                />
+          )}
         </div>
 
         <CollapsibleContent className="ml-2 border-l">
