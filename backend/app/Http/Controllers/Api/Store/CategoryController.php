@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Store;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CategoryResource;
+use App\Http\Resources\StoreCategoryResource;
 use App\Models\Category;
 
 class CategoryController extends Controller
@@ -16,6 +16,6 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return CategoryResource::collection(Category::orderBy('id')->get());
+        return StoreCategoryResource::collection(Category::orderBy('id')->get());
     }
 }

@@ -98,7 +98,8 @@ export function EditCategoryDrawer({
         <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent side="right" style={{ maxWidth: '40vw' }}>
             <SheetHeader>
-            <SheetTitle>Edit category</SheetTitle>
+            <SheetTitle>Edit category (ID: {category?.id})</SheetTitle>
+            <SheetTitle>External ID: {category?.external_id}</SheetTitle>
             </SheetHeader>
 
             {category && (

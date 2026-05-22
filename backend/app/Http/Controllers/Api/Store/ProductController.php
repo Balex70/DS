@@ -4,13 +4,18 @@ namespace App\Http\Controllers\Api\Store;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
+use App\Models\Category;
 use App\Models\Product;
+use App\Services\CategoryService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function __construct(private ProductService $service) {}
+    public function __construct(
+        private ProductService $service,
+        private CategoryService $categories
+    ) {}
     /**
      * Display a listing of the resource.
      */
@@ -18,10 +23,15 @@ class ProductController extends Controller
     {
         $query = Product::query();
 
+        $slugArray = $request->category;
+        $lastSlug = end($slugArray);
+        $slugs = $this->categories->getChildrenSlugs($lastSlug);
+
         if ($request->filled('category')) {
-            $query->whereHas('categories', function ($q) use ($request) {
-                $q->where('slug', $request->category);
-            });        }
+            $query->whereHas('categories', function ($q) use ($slugs) {
+                $q->whereIn('slug', $slugs);
+            });
+        }
 
         $query->has('bigImage'); // temporary, need to figure out  
         $query->latest();
