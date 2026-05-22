@@ -33,11 +33,16 @@ class ProductController extends Controller
             });
         }
 
-        $query->has('bigImage'); // temporary, need to figure out  
+        // $query->has('bigImage'); // temporary, need to figure out
         $query->latest();
 
         return ProductResource::collection(
             $query->paginate(24)
         );
+    }
+
+    public function show(Product $product)
+    {
+        return new ProductResource($product);
     }
 }

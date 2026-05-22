@@ -33,6 +33,7 @@ Route::middleware(['auth:sanctum', 'abilities:ai:images'])->group(function () {
 });
 
 Route::get('store/products', [StoreProductController::class, 'index']);
+Route::get('store/products/{product}', [StoreProductController::class, 'show']);
 
 // Customer
 Route::prefix('customer')->group(function () {

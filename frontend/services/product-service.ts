@@ -21,3 +21,8 @@ export async function getProducts(
 
     return response.data;
 }
+
+export async function getProduct(id: string | number): Promise<Product> {
+    const response = await api.get(`/api/store/products/${id}`);
+    return response.data.data;
+}
