@@ -41,3 +41,4 @@ interface MetaInterface {
 
 export type Product = ProductInterface
 export type Meta = MetaInterface
+export type ProductImageType = ProductImageInterface

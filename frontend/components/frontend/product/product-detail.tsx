@@ -1,7 +1,7 @@
 "use client";
 
-import ProductImage from "./ProductImage";
 import { useProduct } from "@/hooks/use-product";
+import ProductGallery from "./ProductGallery";
 
 type Props = {
     productId: string;
@@ -41,21 +41,11 @@ export function ProductDetail({ productId }: Props) {
     return (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             {/* IMAGE */}
-            <div className="space-y-4">
-                <div className="relative aspect-square rounded-lg border bg-muted overflow-hidden">
-                    {product.big_image?.url ? (
-                        <ProductImage
-                            src={`/storage/${product.big_image.original_url}`}
-                            alt={product.name_processed ?? product.name_raw}
-                            imageClassName="object-cover"
-                        />
-                    ) : (
-                        <div className="flex h-full items-center justify-center text-muted-foreground">
-                            No image
-                        </div>
-                    )}
-                </div>
-            </div>
+            <ProductGallery
+                bigImage={product.big_image}
+                images={product.images}
+                productName={product.name_processed ?? product.name_raw}
+            />
 
             {/* INFO */}
             <div className="space-y-4">
