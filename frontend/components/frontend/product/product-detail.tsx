@@ -2,14 +2,16 @@
 
 import { useProduct } from "@/hooks/use-product";
 import ProductGallery from "./ProductGallery";
+import { useAddToCart } from "@/hooks/use-add-to-cart";
 
 type Props = {
     productId: string;
 };
 
 export function ProductDetail({ productId }: Props) {
-    const {data: product, error, isLoading} = useProduct(productId);
-    
+    const { data: product, error, isLoading } = useProduct(productId);
+    const { mutate: addToCart, isPending } = useAddToCart();
+
     if (error?.response?.status === 404) {
         return (
             <h2>Product not found (redirect or show nice 404)</h2>
@@ -38,6 +40,16 @@ export function ProductDetail({ productId }: Props) {
             <h2>Product not found (redirect or show nice 404)</h2>
         )
     }
+
+    const handleAddToCart = async () => {
+        addToCart({
+            product_id: product.id,
+            title: product.name_processed ?? product.name_raw,
+            quantity: 1,
+            price: 1, // product.price,
+        });
+    };
+
     return (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             {/* IMAGE */}
@@ -74,8 +86,12 @@ export function ProductDetail({ productId }: Props) {
 
                 {/* ACTIONS */}
                 <div className="flex gap-3 pt-4">
-                    <button className="rounded-md bg-black px-4 py-2 text-white hover:opacity-90">
-                        Add to cart
+                    <button
+                        onClick={handleAddToCart}
+                        disabled={isPending}
+                        className="rounded-md bg-black px-4 py-2 text-white hover:opacity-90 disabled:opacity-50"
+                    >
+                        {isPending ? "Adding..." : "Add to cart"}
                     </button>
 
                     <button className="rounded-md border px-4 py-2">

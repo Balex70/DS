@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AiImagesController;
+use App\Http\Controllers\Api\Store\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\ProductController;
@@ -53,5 +54,5 @@ Route::prefix('customer')->group(function () {
 });
 
 // Order
-Route::post('orders/create', [StoreOrderController::class, 'store'])->middleware(EnsureCartToken::class);
-Route::post('cart/add', [StoreOrderController::class, 'add'])->middleware(EnsureCartToken::class);
+Route::post('store/orders/create', [StoreOrderController::class, 'store'])->middleware(EnsureCartToken::class);
+Route::post('store/cart/add', [CartController::class, 'add'])->middleware(EnsureCartToken::class);
