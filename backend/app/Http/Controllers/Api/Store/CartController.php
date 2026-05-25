@@ -1,0 +1,53 @@
+<?php
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Services\CartService;
+use Illuminate\Http\Request;
+
+class CartController extends Controller
+{
+    public function show(Request $request, CartService $cartService)
+    {
+        $token = $request->attributes->get('cart_token');
+
+        if (!$token) {
+            return response()->json(['items' => []]);
+        }
+
+        return response()->json(
+            $cartService->get($token)
+        );
+    }
+
+    public function add(Request $request, CartService $cartService)
+    {
+        $token = $cartService->getOrCreateToken(
+            $request->attributes->get('cart_token')
+        );
+
+        $item = $request->validate([
+            'product_id' => ['nullable', 'integer'],
+            'title' => ['required', 'string'],
+            'quantity' => ['required', 'integer', 'min:1'],
+            'price' => ['required', 'integer', 'min:0'],
+        ]);
+
+        $cart = $cartService->addItem($token, $item);
+
+        return response()
+            ->json($cart)
+            ->cookie('cart_token', $token, 60 * 24 * 30);
+    }
+
+    public function clear(Request $request, CartService $cartService)
+    {
+        $token = $request->attributes->get('cart_token');
+
+        if ($token) {
+            $cartService->clear($token);
+        }
+
+        return response()->json(['message' => 'Cart cleared']);
+    }
+}

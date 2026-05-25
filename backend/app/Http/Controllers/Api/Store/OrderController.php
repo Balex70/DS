@@ -6,11 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
+use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
+    public function __construct(
+        private CartService $cartService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -31,7 +36,11 @@ class OrderController extends Controller
     {
         $data = $request->validated();
 
-        $items = $data['items'];
+        $token = $request->attributes->get('cart_token');
+
+        $cart = $this->cartService->get($token);
+
+        $items = $cart['items'];
         
         // TODO: move it into service
         // Calculate totals server-side (IMPORTANT)
