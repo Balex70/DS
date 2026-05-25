@@ -39,7 +39,19 @@ class CartService
     {
         $cart = $this->get($token);
 
-        // simple merge logic (you can improve later)
+        foreach ($cart['items'] as &$existingItem) {
+            if (
+                isset($existingItem['product_id']) &&
+                isset($item['product_id']) &&
+                $existingItem['product_id'] === $item['product_id']
+            ) {
+                $existingItem['quantity'] += $item['quantity'];
+
+                $this->save($token, $cart);
+
+                return $cart;
+            }
+        }
         $cart['items'][] = $item;
 
         $this->save($token, $cart);

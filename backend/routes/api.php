@@ -54,5 +54,8 @@ Route::prefix('customer')->group(function () {
 });
 
 // Order
-Route::post('store/orders/create', [StoreOrderController::class, 'store'])->middleware(EnsureCartToken::class);
-Route::post('store/cart/add', [CartController::class, 'add'])->middleware(EnsureCartToken::class);
+Route::prefix('store')->group(function () {
+    Route::post('orders/create', [StoreOrderController::class, 'store'])->middleware(EnsureCartToken::class);
+    Route::post('cart/add', [CartController::class, 'add'])->middleware(EnsureCartToken::class);
+    Route::get('cart', [CartController::class, 'show'])->middleware(EnsureCartToken::class);
+});
