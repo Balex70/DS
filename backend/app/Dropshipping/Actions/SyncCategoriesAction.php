@@ -4,6 +4,7 @@ namespace App\Dropshipping\Actions;
 
 use App\Dropshipping\DropshippingManager;
 use App\Models\Category;
+use Illuminate\Support\Str;
 
 class SyncCategoriesAction
 {
@@ -26,6 +27,7 @@ class SyncCategoriesAction
                 ],
                 [
                     'name' => $category->name,
+                    'slug' => Str::slug($category->name),
                 ]
             );
         }

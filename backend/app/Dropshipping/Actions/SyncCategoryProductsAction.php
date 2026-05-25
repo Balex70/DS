@@ -42,7 +42,16 @@ class SyncCategoryProductsAction
         $now = now();
         $rows = array_map(function ($p) use ($now) {
             return [
-                ...$p,
+                'external_id' => $p['external_id'],
+                'name_raw' => $p['name_raw'],
+                'description_raw' => $p['description_raw'],
+                'price' => $p['price'],
+                'now_price' => $p['now_price'],
+                'suggested_price' => $p['suggested_price'],
+                'is_collect' => $p['is_collect'],
+                'add_mark_status' => $p['add_mark_status'],
+                'warehouse_inventory_num' => $p['warehouse_inventory_num'],
+                'raw_data' => $p['raw_data'],
                 'created_at' => $now,
                 'updated_at' => $now,
             ];

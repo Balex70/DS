@@ -51,4 +51,16 @@ class CategoryPolicy
 
         return $user->can('categories.edit');
     }
+
+    /**
+     * Determine whether the user can sync full paths of categories.
+     */
+    public function syncFullPaths(User $user): bool
+    {
+        if ($user->isAdministrator()) {
+            return true;
+        }
+
+        return false;
+    }
 }

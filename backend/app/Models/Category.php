@@ -6,13 +6,18 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 #[Fillable([
     'name',
     'external_id',
     'parent_id',
     'provider',
+    'slug',
+    'image',
+    'full_path',
 ])]
 class Category extends Model
 {
@@ -28,5 +33,49 @@ class Category extends Model
     public function children(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id');
+    }
+
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class);
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($category) {
+            if (!$category->slug) {
+                $category->slug = static::generateUniqueSlug($category->name, $category->parent_id);
+            }
+        });
+
+        static::updating(function ($category) {
+            if ($category->isDirty('name') && !$category->isDirty('slug')) {
+                $category->slug = static::generateUniqueSlug($category->name, $category->parent_id, $category->id);
+            }
+        });
+    }
+
+    public static function generateUniqueSlug(
+        string $name,
+        ?int $parentId = null,
+        ?int $ignoreId = null
+    ): string {
+        $slug = Str::slug($name);
+        $original = $slug;
+        $i = 1;
+
+        while (
+            static::where('slug', $slug)
+                ->where('parent_id', $parentId)
+                ->when(
+                    $ignoreId,
+                    fn ($q) => $q->where('id', '!=', $ignoreId)
+                )
+                ->exists()
+        ) {
+            $slug = $original . '-' . $i++;
+        }
+
+        return $slug;
     }
 }

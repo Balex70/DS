@@ -61,7 +61,7 @@ class ProductImageService
 
         Storage::disk('public')->put($fileName, $contents);
 
-        return Storage::url($fileName);
+        return $fileName;
     }
 
     public function storeAiProcessed(int $productId, UploadedFile $file): string
@@ -70,7 +70,7 @@ class ProductImageService
 
         Storage::disk('public')->put($fileName, file_get_contents($file));
 
-        return Storage::url($fileName);
+        return $fileName;
     }
 
     public function delete(string $path): bool

@@ -16,10 +16,14 @@ class CategoryResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'external_id' => $this->external_id,
             'name' => $this->name,
             'parent_id' => $this->parent_id,
             'provider' => $this->provider,
-            'active' => $this->active
+            'active' => $this->active,
+            'slug' => $this->slug,
+            'image' => $this->image,
+            'full_path' => $this->full_path,
         ];
         // return parent::toArray($request);
     }
