@@ -59,6 +59,22 @@ class CartService
         return $cart;
     }
 
+    public function updateQuantity(string $token, int $productId, int $quantity): array
+    {
+        $cart = $this->get($token);
+
+        foreach ($cart['items'] as &$item) {
+            if (($item['product_id'] ?? null) === $productId) {
+                $item['quantity'] = $quantity;
+                break;
+            }
+        }
+
+        $this->save($token, $cart);
+
+        return $cart;
+    }
+
     public function removeItem(string $token, int $productId): array
     {
         $cart = $this->get($token);

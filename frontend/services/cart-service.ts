@@ -7,6 +7,10 @@ export async function addToCart(data: CartItemPayload) {
     return api.post("/api/store/cart/add", data);
 }
 
+export async function updateCartItem(data: Pick<CartItemPayload, "product_id" | "quantity">) {
+    return api.post("/api/store/cart/update", data);
+}
+
 export async function getCart() {
     return api.get("/api/store/cart");
 }

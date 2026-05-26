@@ -41,6 +41,24 @@ class CartController extends Controller
             ->cookie('cart_token', $token, 60 * 24 * 30);
     }
 
+    public function update(Request $request, CartService $cartService)
+    {
+        $token = $request->attributes->get('cart_token');
+
+        $data = $request->validate([
+            'product_id' => ['required', 'integer'],
+            'quantity' => ['required', 'integer', 'min:1'],
+        ]);
+
+        $cart = $cartService->updateQuantity(
+            $token,
+            $data['product_id'],
+            $data['quantity']
+        );
+
+        return response()->json($cart);
+    }
+
     public function remove(Request $request, CartService $cartService)
     {
         $token = $request->attributes->get('cart_token');
