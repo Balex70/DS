@@ -1,5 +1,3 @@
-
-
 import { api } from "@/lib/axios";
 import { CartItemPayload } from "@/types/cart";
 
