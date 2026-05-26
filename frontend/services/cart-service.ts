@@ -14,3 +14,7 @@ export async function getCart() {
 export async function clearCart() {
     return api.post("/api/store/cart/clear");
 }
+
+export async function removeFromCart(data: Pick<CartItemPayload, "product_id">) {
+    return api.post("/api/store/cart/remove", data);
+}

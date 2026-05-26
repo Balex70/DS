@@ -41,6 +41,21 @@ class CartController extends Controller
             ->cookie('cart_token', $token, 60 * 24 * 30);
     }
 
+    public function remove(Request $request, CartService $cartService)
+    {
+        $token = $request->attributes->get('cart_token');
+
+        $request->validate([
+            'product_id' => ['required', 'integer'],
+        ]);
+
+        if ($token) {
+            $cartService->removeItem($token, $request->product_id);
+        }
+
+        return response()->json($cartService->get($token));
+    }
+
     public function clear(Request $request, CartService $cartService)
     {
         $token = $request->attributes->get('cart_token');

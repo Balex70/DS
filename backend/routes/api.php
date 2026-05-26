@@ -59,4 +59,5 @@ Route::prefix('store')->group(function () {
     Route::post('cart/add', [CartController::class, 'add'])->middleware(EnsureCartToken::class);
     Route::get('cart', [CartController::class, 'show'])->middleware(EnsureCartToken::class);
     Route::post('cart/clear', [CartController::class, 'clear'])->middleware(EnsureCartToken::class);
+    Route::post('cart/remove', [CartController::class, 'remove'])->middleware(EnsureCartToken::class);
 });

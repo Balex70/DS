@@ -59,6 +59,22 @@ class CartService
         return $cart;
     }
 
+    public function removeItem(string $token, int $productId): array
+    {
+        $cart = $this->get($token);
+
+        $cart['items'] = array_values(
+            array_filter(
+                $cart['items'],
+                fn ($item) => ($item['product_id'] ?? null) !== $productId
+            )
+        );
+
+        $this->save($token, $cart);
+
+        return $cart;
+    }
+
     public function clear(string $token): void
     {
         Redis::del($this->key($token));
