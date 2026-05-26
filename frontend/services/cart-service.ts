@@ -10,3 +10,7 @@ export async function addToCart(data: CartItemPayload) {
 export async function getCart() {
     return api.get("/api/store/cart");
 }
+
+export async function clearCart() {
+    return api.post("/api/store/cart/clear");
+}

@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/use-cart";
 import ProductImage from "./ProductImage";
 import Image from 'next/image'
+import { useClearCart } from "@/hooks/use-clear-cart";
 
 type Props = {
     open: boolean;
@@ -19,6 +20,7 @@ export function CartDrawer({
     onOpenChange,
 }: Props) {
     const { data: cart, isLoading } = useCart();
+    const { mutate: clearCart, isPending } = useClearCart();
 
     const items = cart?.items ?? [];
 
@@ -156,6 +158,15 @@ export function CartDrawer({
                                 <Link href="/cart">
                                     View Cart
                                 </Link>
+                            </Button>
+
+                            <Button
+                                variant="ghost"
+                                className="w-full text-red-500 hover:text-red-600"
+                                disabled={isPending}
+                                onClick={() => clearCart()}
+                            >
+                                {isPending ? "Clearing..." : "Clear cart"}
                             </Button>
                         </div>
                     </div>
