@@ -30,7 +30,7 @@ class CartController extends Controller
             'product_id' => ['nullable', 'integer'],
             'title' => ['required', 'string'],
             'quantity' => ['required', 'integer', 'min:1'],
-            'price' => ['required', 'integer', 'min:0'],
+            'price' => ['required', 'numeric', 'min:0'],
             'image' => ['nullable', 'string'],
         ]);
 
