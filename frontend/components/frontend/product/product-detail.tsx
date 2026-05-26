@@ -47,6 +47,7 @@ export function ProductDetail({ productId }: Props) {
             title: product.name_processed ?? product.name_raw,
             quantity: 1,
             price: 1, // product.price,
+            image: product.big_image?.original_url ?? undefined,
         });
     };
 

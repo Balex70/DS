@@ -31,6 +31,7 @@ class CartController extends Controller
             'title' => ['required', 'string'],
             'quantity' => ['required', 'integer', 'min:1'],
             'price' => ['required', 'integer', 'min:0'],
+            'image' => ['nullable', 'string'],
         ]);
 
         $cart = $cartService->addItem($token, $item);
