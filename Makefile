@@ -18,6 +18,9 @@ DOCKER_COMPOSE_PROD = docker compose -f docker-compose.yml -f docker-compose.pro
 DOCKER_COMPOSE_CI=docker compose -f docker-compose.ci.yml
 DOCKER_COMPOSE_KUBE=docker-compose -f docker-compose.kube.yml # use docker compose in local
 
+show-config:
+	$(DOCKER_COMPOSE) config
+
 build:
 	$(DOCKER_COMPOSE) build
 
