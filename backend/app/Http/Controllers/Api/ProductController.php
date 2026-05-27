@@ -29,6 +29,14 @@ class ProductController extends Controller
         //     $query->where('name_raw', 'like', "%{$request->search}%");
         // }
 
+        if ($request->filled('categoryIds')) {
+            $categoryIds = explode(',', $request->categoryIds);
+
+            $query->whereHas('categories', function ($q) use ($categoryIds) {
+                $q->whereIn('categories.id', $categoryIds);
+            });
+        }
+
         // ENRICHED FILTER
         if ($request->filled('enriched')) {
             $query->orWhereNotNull('last_enrichment_at');
