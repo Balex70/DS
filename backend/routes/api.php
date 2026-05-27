@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\AiImagesController;
-use App\Http\Controllers\Api\Store\CartController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\Store\CartController;
 use App\Http\Controllers\Api\Store\CategoryController as StoreCategoryController;
 use App\Http\Controllers\Api\Store\OrderController as StoreOrderController;
 use App\Http\Controllers\Api\Store\ProductController as StoreProductController;
@@ -53,7 +54,9 @@ Route::prefix('customer')->group(function () {
 
 });
 
-// Order
+Route::get('orders', [OrderController::class, 'index'])->middleware('auth:sanctum');
+
+// Store Order
 Route::prefix('store')->group(function () {
     Route::post('orders/create', [StoreOrderController::class, 'store'])->middleware(EnsureCartToken::class);
     Route::post('cart/add', [CartController::class, 'add'])->middleware(EnsureCartToken::class);

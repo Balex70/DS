@@ -40,7 +40,7 @@ export function AdminSidebar() {
             <SidebarMenu className="list-none m-0 p-0">
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/orders" className="flex items-center gap-2">
+                  <Link href="/admin/orders" className="flex items-center gap-2">
                     <ShoppingCart />
                     <span>Orders</span>
                   </Link>
