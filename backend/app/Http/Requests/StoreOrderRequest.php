@@ -43,19 +43,6 @@ class StoreOrderRequest extends FormRequest
             'shipping_postal_code' => ['nullable', 'string', 'max:50'],
             'shipping_country' => ['required', 'string', 'size:2'],
 
-            // Order items
-            'items' => ['required', 'array', 'min:1'],
-
-            'items.*.product_id' => ['nullable', 'integer', 'exists:products,id'],
-
-            'items.*.title' => ['required', 'string', 'max:255'],
-
-            'items.*.quantity' => ['required', 'integer', 'min:1', 'max:100'],
-
-            'items.*.price' => ['required', 'integer', 'min:0'],
-
-            'items.*.variant_data' => ['nullable', 'array'],
-
             // Optional totals (you may also recalculate in backend)
             'subtotal' => ['nullable', 'integer', 'min:0'],
             'shipping_cost' => ['nullable', 'integer', 'min:0'],

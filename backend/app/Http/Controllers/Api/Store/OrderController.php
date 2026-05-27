@@ -37,11 +37,13 @@ class OrderController extends Controller
         $data = $request->validated();
 
         $token = $request->attributes->get('cart_token');
-
         $cart = $this->cartService->get($token);
-
         $items = $cart['items'];
         
+        if (empty($items)) {
+            return response()->json(['message' => 'Cart is empty'], 422);
+        }
+
         // TODO: move it into service
         // Calculate totals server-side (IMPORTANT)
         $subtotal = collect($items)->sum(fn ($item) => $item['price'] * $item['quantity']);
