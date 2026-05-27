@@ -49,11 +49,12 @@ class OrderController extends Controller
         $subtotal = collect($items)->sum(fn ($item) => $item['price'] * $item['quantity']);
         $shipping = $data['shipping_cost'] ?? 0;
         $total = $subtotal + $shipping;
+        $customer = auth('customer')->user();
 
         $order = Order::create([
             'order_number' => 'ORD-' . strtoupper(Str::random(10)),
 
-            'customer_id' => $request->user()?->id,
+            'customer_id' => $customer ? $customer->id : null,
 
             'subtotal' => $subtotal,
             'shipping_cost' => $shipping,

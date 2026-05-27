@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 // import { Textarea } from "@/components/ui/textarea";
 import { CartItemsDrawer } from "../product/CartItemsDrawer";
 import { useCreateOrder } from "@/hooks/use-create-order";
+import { PriceRenderer } from "@/components/custom/PriceRenderer";
 
 export function CheckoutComponent() {
     const { data: cart, isLoading } = useCart();
@@ -216,7 +217,7 @@ export function CheckoutComponent() {
                             <span>Total</span>
 
                             <span>
-                                ${subtotal.toFixed(2)}
+                                <PriceRenderer value={subtotal} />
                             </span>
                         </div>
 
