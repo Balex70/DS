@@ -66,7 +66,6 @@ function ListOrders () {
       fetchOrders({ page, enriched, aiTextsProcessed, aiImagesProcessed })
   }, [page, enriched, aiTextsProcessed, aiImagesProcessed])
 
-  console.log(orders)
   return (
     <div className="w-full main-bg flex flex-col border-b-0 rounded-none">
       <OrderFilters

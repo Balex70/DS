@@ -2,6 +2,7 @@ interface OrderInterface {
     id: number;
     order_number: string;
     customer_id?: number;
+    items: OrderItem[];
     ds_provider: string;
     ds_order_id?: string;
     ds_tracking_number?: string;
@@ -34,6 +35,16 @@ interface MetaInterface {
   last_page: number,
   from: number,
   to: number
+}
+
+interface OrderItem {
+    order_id: number;
+    product_id?: number;
+    title: string;
+    quantity: number;
+    price: number;
+    total: number;
+    variant_data?: string;
 }
 
 interface OrderPayloadInterface {

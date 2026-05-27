@@ -17,6 +17,7 @@ import { OrderDrawerCustomerFields } from "./OrderDrawerCustomerFields"
 import { Field, FieldGroup } from "@/components/ui/field"
 import { OrderDrawerShippingFields } from "./OrderDrawerShippingFields"
 import { OrderDrawerPaymentFields } from "./OrderDrawerPaymentFields"
+import { OrderDrawerItemsFields } from "./OrderDrawerItemsFields"
 
 export function OrderDrawer({
   open,
@@ -69,6 +70,7 @@ export function OrderDrawer({
                         <TabsTrigger value="customer">Customer</TabsTrigger>
                         <TabsTrigger value="shipping">Shipping</TabsTrigger>
                         <TabsTrigger value="payment">Payment</TabsTrigger>
+                        <TabsTrigger value="items">Items</TabsTrigger>
                     </TabsList>
                     <TabsContent value="main">
                         <OrderDrawerMainFields order={order} />
@@ -81,6 +83,9 @@ export function OrderDrawer({
                     </TabsContent>
                     <TabsContent value="payment">
                         <OrderDrawerPaymentFields order={order} />
+                    </TabsContent>
+                    <TabsContent value="items">
+                        <OrderDrawerItemsFields order={order} />
                     </TabsContent>
                     </Tabs>
             </CardContent>
