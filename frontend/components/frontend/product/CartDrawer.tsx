@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/use-cart";
 import { useClearCart } from "@/hooks/use-clear-cart";
 import { CartItemsDrawer } from "./CartItemsDrawer";
+import { PriceRenderer } from "@/components/custom/PriceRenderer";
 
 type Props = {
     open: boolean;
@@ -87,7 +88,7 @@ export function CartDrawer({
                             </span>
 
                             <span className="text-lg font-semibold">
-                                ${subtotal.toFixed(2)}
+                                <PriceRenderer value={subtotal} />
                             </span>
                         </div>
 

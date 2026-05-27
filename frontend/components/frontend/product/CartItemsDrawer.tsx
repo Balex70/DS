@@ -7,6 +7,7 @@ import { useRemoveFromCart } from "@/hooks/use-remove-from-cart";
 import { Trash2 } from "lucide-react";
 import { useUpdateCartItem } from "@/hooks/use-update-cart-item";
 import { CartItemPayload } from "@/types/cart";
+import { PriceRenderer } from "@/components/custom/PriceRenderer";
 
 type Props = {
     items: CartItemPayload[];
@@ -82,7 +83,7 @@ export function CartItemsDrawer({items}: Props) {
                                 </span>
 
                                 <span className="font-medium">
-                                    ${(item.price * item.quantity).toFixed(2)}
+                                    <PriceRenderer value={item.price * item.quantity} />
                                 </span>
                             </div>
                         </div>

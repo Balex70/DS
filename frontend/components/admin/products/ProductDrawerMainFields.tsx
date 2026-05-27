@@ -1,5 +1,6 @@
 "use client"
 
+import { PriceRenderer } from "@/components/custom/PriceRenderer"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Product } from "@/types/product"
 
@@ -23,19 +24,19 @@ export function ProductDrawerMainFields({product}: {product: Product}) {
         <Field>
             <FieldLabel>Price</FieldLabel>
             <div className="text-md text-muted-foreground">
-                {product.price}
+                <PriceRenderer value={product.price} />
             </div>
         </Field>
         <Field>
             <FieldLabel>Now Price</FieldLabel>
             <div className="text-md text-muted-foreground">
-                {product.now_price}
+                <PriceRenderer value={product.now_price} />
             </div>
         </Field>
         <Field>
             <FieldLabel>Suggested Price</FieldLabel>
             <div className="text-md text-muted-foreground">
-                {product.suggested_price}
+                <PriceRenderer value={product.suggested_price} />
             </div>
         </Field>
         <Field>

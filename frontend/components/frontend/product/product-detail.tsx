@@ -3,6 +3,7 @@
 import { useProduct } from "@/hooks/use-product";
 import ProductGallery from "./ProductGallery";
 import { useAddToCart } from "@/hooks/use-add-to-cart";
+import { PriceRenderer } from "@/components/custom/PriceRenderer";
 
 type Props = {
     productId: string;
@@ -67,7 +68,7 @@ export function ProductDetail({ productId }: Props) {
                 </h1>
 
                 <div className="text-3xl font-bold">
-                    ${product.price}
+                    <PriceRenderer value={product.price} />
                 </div>
 
                 <div>

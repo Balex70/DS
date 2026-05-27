@@ -5,6 +5,7 @@ import { Product } from "@/types/product";
 import ProductImage from "./ProductImage";
 import Link from "next/link";
 import { useAddToCart } from "@/hooks/use-add-to-cart";
+import { PriceRenderer } from "@/components/custom/PriceRenderer";
 
 type Props = {
     product: Product;
@@ -51,7 +52,7 @@ export function ProductCard({ product }: Props) {
                 </h3>
 
                 <div className="text-lg font-semibold">
-                    ${product.price}
+                    <PriceRenderer value={product.price} />
                 </div>
 
                 {product.warehouse_inventory_num > 0 ? (

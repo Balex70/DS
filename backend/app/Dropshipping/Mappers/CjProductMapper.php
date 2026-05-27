@@ -95,14 +95,20 @@ class CjProductMapper
 
         return trim(strip_tags($html, '<p><b><br><img><ul><li><strong><em>'));
     }
-    private function parsePrice(?string $price): ?float
+    public function parsePrice(?string $price): ?float
     {
         if (!$price) return null;
 
         if (str_contains($price, '--')) {
-            return (float) explode('--', $price)[0]; // take min price TODO: change this
+            $price = explode('--', $price)[0]; // take min price TODO: change this
+            return $this->priceToCents($price);
         }
 
-        return (float) $price;
+        return $this->priceToCents($price);
+    }
+
+    public function priceToCents(string|int|float $value): int
+    {
+        return (int) round(((float) $value) * 100);
     }
 }
