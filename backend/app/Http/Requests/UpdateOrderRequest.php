@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\OrderDsStatusEnum;
+use App\Enums\OrderStatusEnum;
+use App\Enums\PaymentStatusEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -29,12 +32,12 @@ class UpdateOrderRequest extends FormRequest
                 'sometimes',
                 'string',
                 Rule::in([
-                    'pending',
-                    'paid',
-                    'processing',
-                    'fulfilled',
-                    'canceled',
-                    'refunded',
+                    OrderStatusEnum::PENDING,
+                    OrderStatusEnum::PAID,
+                    OrderStatusEnum::PROCESSING,
+                    OrderStatusEnum::FULFILLED,
+                    OrderStatusEnum::CANCELED,
+                    OrderStatusEnum::REFUNDED,
                 ]),
             ],
 
@@ -43,12 +46,12 @@ class UpdateOrderRequest extends FormRequest
                 'sometimes',
                 'string',
                 Rule::in([
-                    'pending',
-                    'paid',
-                    'processing',
-                    'shipped',
-                    'delivered',
-                    'failed',
+                    OrderDsStatusEnum::PENDING,
+                    OrderDsStatusEnum::PAID,
+                    OrderDsStatusEnum::PROCESSING,
+                    OrderDsStatusEnum::SHIPPED,
+                    OrderDsStatusEnum::DELIVERED,
+                    OrderDsStatusEnum::FAILED,
                 ]),
             ],
 
@@ -64,7 +67,12 @@ class UpdateOrderRequest extends FormRequest
             'payment_status' => [
                 'sometimes',
                 'string',
-                Rule::in(['unpaid', 'paid', 'failed', 'refunded']),
+                Rule::in([
+                    PaymentStatusEnum::UNPAID,
+                    PaymentStatusEnum::PAID,
+                    PaymentStatusEnum::FAILED,
+                    PaymentStatusEnum::REFUNDED,
+                ]),
             ],
 
             // Notes (safe editable field)

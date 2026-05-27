@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\OrderDsStatusEnum;
+use App\Enums\OrderStatusEnum;
+use App\Enums\PaymentStatusEnum;
 use App\Models\Customer;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -21,28 +24,28 @@ class OrderFactory extends Factory
         $total = $subtotal + $shipping;
 
         $status = $this->faker->randomElement([
-            'pending',
-            'paid',
-            'processing',
-            'fulfilled',
-            'canceled',
-            'refunded',
+            OrderStatusEnum::PENDING,
+            OrderStatusEnum::PAID,
+            OrderStatusEnum::PROCESSING,
+            OrderStatusEnum::FULFILLED,
+            OrderStatusEnum::CANCELED,
+            OrderStatusEnum::REFUNDED,
         ]);
 
         $paymentStatus = $this->faker->randomElement([
-            'unpaid',
-            'paid',
-            'failed',
-            'refunded',
+            PaymentStatusEnum::UNPAID,
+            PaymentStatusEnum::PAID,
+            PaymentStatusEnum::FAILED,
+            PaymentStatusEnum::REFUNDED,
         ]);
 
         $dsStatus = $this->faker->randomElement([
-            'pending',
-            'paid',
-            'processing',
-            'shipped',
-            'delivered',
-            'failed',
+            OrderDsStatusEnum::PENDING,
+            OrderDsStatusEnum::PAID,
+            OrderDsStatusEnum::PROCESSING,
+            OrderDsStatusEnum::SHIPPED,
+            OrderDsStatusEnum::DELIVERED,
+            OrderDsStatusEnum::FAILED,
         ]);
 
         $countries = ['US', 'PL', 'DE', 'GB', 'FR', 'UA'];
@@ -88,7 +91,7 @@ class OrderFactory extends Factory
             'sent_to_ds_provider' => $this->faker->boolean(30),
             'sent_to_ds_provider_at' => $this->faker->optional()->dateTimeBetween('-10 days', 'now'),
 
-            'fulfilled_at' => $status === 'fulfilled'
+            'fulfilled_at' => $status === OrderStatusEnum::FULFILLED
                 ? $this->faker->dateTimeBetween('-5 days', 'now')
                 : null,
 
@@ -102,8 +105,8 @@ class OrderFactory extends Factory
     public function paid(): static
     {
         return $this->state(fn () => [
-            'status' => 'paid',
-            'payment_status' => 'paid',
+            'status' => OrderStatusEnum::PAID,
+            'payment_status' => PaymentStatusEnum::PAID,
         ]);
     }
 
@@ -113,9 +116,9 @@ class OrderFactory extends Factory
     public function fulfilled(): static
     {
         return $this->state(fn () => [
-            'status' => 'fulfilled',
-            'payment_status' => 'paid',
-            'ds_status' => 'delivered',
+            'status' => OrderStatusEnum::FULFILLED,
+            'payment_status' => PaymentStatusEnum::PAID,
+            'ds_status' => OrderDsStatusEnum::DELIVERED,
             'fulfilled_at' => now(),
             'sent_to_ds_provider' => true,
             'sent_to_ds_provider_at' => now()->subDays(rand(1, 5)),

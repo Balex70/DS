@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\OrderStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
@@ -63,7 +64,7 @@ class OrderController extends Controller
     public function destroy(Order $order)
     {
         // Safety check: prevent deleting fulfilled CJ orders
-        if ($order->status === 'fulfilled') {
+        if ($order->status === OrderStatusEnum::FULFILLED) {
             return response()->json([
                 'message' => 'Cannot delete fulfilled orders.',
             ], 422);

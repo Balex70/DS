@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api\Store;
 
+use App\Enums\OrderDsStatusEnum;
+use App\Enums\OrderStatusEnum;
+use App\Enums\PaymentStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
@@ -62,8 +65,11 @@ class OrderController extends Controller
 
             'currency' => $data['currency'] ?? 'USD',
 
-            'status' => 'pending',
-            'payment_status' => 'unpaid',
+            'ds_provider' => $data['ds_provider'] ?? 'cj',
+            'ds_status' => OrderDsStatusEnum::PENDING,
+
+            'status' => OrderStatusEnum::PENDING,
+            'payment_status' => PaymentStatusEnum::UNPAID,
 
             'payment_method' => $data['payment_method'] ?? null,
 
@@ -116,14 +122,14 @@ class OrderController extends Controller
         abort_unless($order->customer_id === $request->user()->id, 403);
 
         // need to move this logic into model or service
-        if (in_array($order->status, ['fulfilled', 'processing'])) {
+        if (in_array($order->status, [ OrderStatusEnum::FULFILLED, OrderStatusEnum::PROCESSING])) {
             return response()->json([
                 'message' => 'Order cannot be canceled at this stage.',
             ], 422);
         }
 
         $order->update([
-            'status' => 'canceled',
+            'status' => OrderStatusEnum::CANCELED,
         ]);
 
         return response()->json($order);
