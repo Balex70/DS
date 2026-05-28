@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class OrderController extends Controller
 {
@@ -15,6 +16,8 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
+        Gate::authorize('viewAny', Order::class);
+
         $orders = Order::query()
             ->with(['items'])
             ->when($request->status, fn ($q) =>
@@ -37,6 +40,8 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
+        Gate::authorize('view', $order);
+
         return response()->json(
             $order->load(['items'])
         );
@@ -47,6 +52,8 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order)
     {
+        Gate::authorize('update', $order);
+
         $data = $request->validated();
 
         // Update only allowed admin fields
@@ -63,6 +70,8 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
+        Gate::authorize('delete', $order);
+
         // Safety check: prevent deleting fulfilled CJ orders
         if ($order->status === OrderStatusEnum::FULFILLED) {
             return response()->json([
