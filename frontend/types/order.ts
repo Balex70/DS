@@ -67,6 +67,22 @@ interface OrderPayloadInterface {
     currency?: string;
 };
 
+export type OrderStatus =
+    | "pending"
+    | "paid"
+    | "processing"
+    | "fulfilled"
+    | "canceled"
+    | "refunded"
+
+export type DsStatus =
+    | "pending"
+    | "paid"
+    | "processing"
+    | "shipped"
+    | "delivered"
+    | "failed"
+
 export type Order = OrderInterface
 export type Meta = MetaInterface
 export type OrderPayload = OrderPayloadInterface

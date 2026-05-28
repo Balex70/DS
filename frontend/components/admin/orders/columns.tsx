@@ -18,16 +18,16 @@ export const columns = (): ColumnDef<Order>[] => [
     header: "DS order ID",
   },
   {
-    accessorKey: "ds_status",
-    header: "DS Status",
-  },
-  {
     accessorKey: "status",
     header: "Status",
   },
   {
     accessorKey: "payment_status",
     header: "Payment Status",
+  },
+  {
+    accessorKey: "ds_status",
+    header: "DS Status",
   },
   {
     accessorKey: "subtotal",

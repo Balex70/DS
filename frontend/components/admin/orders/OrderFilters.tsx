@@ -9,31 +9,67 @@ import {
 import { Badge } from "@/components/ui/badge"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Field, FieldGroup } from "@/components/ui/field"
 import { BadgeX } from "lucide-react"
+import { DsStatus, OrderStatus } from "@/types/order"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { PaymentStatus } from "@/types/payment"
 
 interface Props {
     open: boolean
     onOpenChange: (open: boolean) => void
-    enriched: string | null
-    aiTextsProcessed: string | null
-    aiImagesProcessed: string | null
-    onEnrichedChange: (value: string | null) => void
-    onAiTextsProcessedChange: (value: string | null) => void
-    onAiImagesProcessedChange: (value: string | null) => void
+    status: OrderStatus | null
+    paymentStatus: PaymentStatus | null
+    dsStatus: string | null
+    onStatusChange: (value: OrderStatus | null) => void
+    onPaymentStatusChange: (value: PaymentStatus | null) => void
+    onDsStatusChange: (value: DsStatus | null) => void
 }
+
+const ORDER_STATUSES: {
+    value: OrderStatus
+    label: string
+}[] = [
+    { value: "pending", label: "Pending" },
+    { value: "paid", label: "Paid" },
+    { value: "processing", label: "Processing" },
+    { value: "fulfilled", label: "Fulfilled" },
+    { value: "canceled", label: "Canceled" },
+    { value: "refunded", label: "Refunded" },
+]
+
+const PAYMENT_STATUSES: {
+    value: PaymentStatus
+    label: string
+}[] = [
+    { value: "unpaid", label: "Unpaid" },
+    { value: "paid", label: "Paid" },
+    { value: "failed", label: "Failed" },
+    { value: "refunded", label: "Refunded" },
+]
+
+const DS_STATUSES: {
+    value: string
+    label: string
+}[] = [
+    { value: "pending", label: "Pending" },
+    { value: "paid", label: "Paid" },
+    { value: "processing", label: "Processing" },
+    { value: "shipped", label: "Shipped" },
+    { value: "delivered", label: "Delivered" },
+    { value: "failed", label: "Failed" },
+]
 
 export function OrderFilters({
     open,
     onOpenChange,
-    enriched,
-    aiTextsProcessed,
-    aiImagesProcessed,
-    onEnrichedChange,
-    onAiTextsProcessedChange,
-    onAiImagesProcessedChange,
+    status,
+    paymentStatus,
+    dsStatus,
+    onStatusChange,
+    onPaymentStatusChange,
+    onDsStatusChange,
 }: Props) {
     type FilterBadge = {
         label: string
@@ -41,21 +77,22 @@ export function OrderFilters({
         color: string
     }
     const activeFilters: { label: string; onClick: () => void; color: string }[] = [
-        enriched && {
-            label: "Enriched",
-            onClick: () => onEnrichedChange(null),
-            color: "blue",
+        status && {
+            label: 'Order Status: ' + 
+                (ORDER_STATUSES.find((s) => s.value === status)?.label ?? status),
+            onClick: () => onStatusChange(null),
         },
-        aiTextsProcessed && {
-            label: "AI Texts",
-            onClick: () => onAiTextsProcessedChange(null),
-            color: "green",
+        paymentStatus && {
+            label: 'Payment Status: ' + 
+                (PAYMENT_STATUSES.find((s) => s.value === paymentStatus)?.label ?? paymentStatus),
+            onClick: () => onPaymentStatusChange(null),
         },
-        aiImagesProcessed && {
-            label: "AI Images",
-            onClick: () => onAiImagesProcessedChange(null),
-            color: "green",
+        dsStatus && {
+            label: 'DS Status: ' + 
+                (DS_STATUSES.find((s) => s.value === dsStatus)?.label ?? dsStatus),
+            onClick: () => onDsStatusChange(null),
         },
+
     ].filter((f): f is FilterBadge => f !== null)
     return (
         <div className="w-full mb-4">
@@ -73,50 +110,97 @@ export function OrderFilters({
 
                         {/* LEFT COLUMN */}
                         <FieldGroup className="space-y-3">
+                            {/* STATUS */}
+                            <Field>
+                                <Label>Order Status</Label>
 
-                            <Field orientation="horizontal">
-                                <Checkbox
-                                    id="enriched"
-                                    checked={enriched === "enriched"}
-                                    onCheckedChange={(checked) =>
-                                        onEnrichedChange(
-                                            checked ? "enriched" : null
+                                <Select
+                                    value={status ?? ""}
+                                    onValueChange={(value) =>
+                                        onStatusChange(
+                                            value
+                                                ? (value as OrderStatus)
+                                                : null
                                         )
                                     }
-                                />
-                                <Label htmlFor="enriched">
-                                    Enriched
-                                </Label>
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="All statuses" />
+                                    </SelectTrigger>
+
+                                    <SelectContent>
+                                        {ORDER_STATUSES.map((status) => (
+                                            <SelectItem
+                                                key={status.value}
+                                                value={status.value}
+                                            >
+                                                {status.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </Field>
 
-                            <Field orientation="horizontal">
-                                <Checkbox
-                                    id="aiTextsProcessed"
-                                    checked={aiTextsProcessed === "aiTextsProcessed"}
-                                    onCheckedChange={(checked) =>
-                                        onAiTextsProcessedChange(
-                                            checked ? "aiTextsProcessed" : null
+                            {/* PAYMENT STATUS */}
+                            <Field>
+                                <Label>Payment Status</Label>
+
+                                <Select
+                                    value={paymentStatus ?? ""}
+                                    onValueChange={(value) =>
+                                        onPaymentStatusChange(
+                                            value
+                                                ? (value as PaymentStatus)
+                                                : null
                                         )
                                     }
-                                />
-                                <Label htmlFor="aiTextsProcessed">
-                                    AI Texts
-                                </Label>
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="All payment statuses" />
+                                    </SelectTrigger>
+
+                                    <SelectContent>
+                                        {PAYMENT_STATUSES.map((paymentStatus) => (
+                                            <SelectItem
+                                                key={paymentStatus.value}
+                                                value={paymentStatus.value}
+                                            >
+                                                {paymentStatus.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </Field>
 
-                            <Field orientation="horizontal">
-                                <Checkbox
-                                    id="aiImagesProcessed"
-                                    checked={aiImagesProcessed === "aiImagesProcessed"}
-                                    onCheckedChange={(checked) =>
-                                        onAiImagesProcessedChange(
-                                            checked ? "aiImagesProcessed" : null
+                            {/* DS STATUS */}
+                            <Field>
+                                <Label>DS Status</Label>
+
+                                <Select
+                                    value={dsStatus ?? ""}
+                                    onValueChange={(value) =>
+                                        onDsStatusChange(
+                                            value
+                                                ? (value as DsStatus)
+                                                : null
                                         )
                                     }
-                                />
-                                <Label htmlFor="aiImagesProcessed">
-                                    AI Images
-                                </Label>
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="All ds statuses" />
+                                    </SelectTrigger>
+
+                                    <SelectContent>
+                                        {DS_STATUSES.map((dsStatus) => (
+                                            <SelectItem
+                                                key={dsStatus.value}
+                                                value={dsStatus.value}
+                                            >
+                                                {dsStatus.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </Field>
 
                         </FieldGroup>

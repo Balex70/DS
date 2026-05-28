@@ -7,7 +7,8 @@ import Loader from '@/components/common/Loader';
 import { OrderDrawer } from './OrderDrawer';
 import { OrderPagination } from './OrderPagination';
 import { OrderFilters } from './OrderFilters';
-import { Meta, Order } from '@/types/order';
+import { Meta, Order, OrderStatus } from '@/types/order';
+import { PaymentStatus } from '@/types/payment';
 
 function ListOrders () {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -17,15 +18,15 @@ function ListOrders () {
   const [viewOpen, setViewOpen] = useState(false)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [page, setPage] = useState(1)
-  const [enriched, setEnriched] = useState<string | null>(null)
-  const [aiTextsProcessed, setAiTextsProcessed] = useState<string | null>(null)
-  const [aiImagesProcessed, setAiImagesProcessed] = useState<string | null>(null)
+  const [status, setStatus] = useState<OrderStatus | null>(null)
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | null>(null)
+  const [dsStatus, setDsStatus] = useState<string | null>(null)
   
   const fetchOrders = async (params?: {
     page?: number,
-    enriched: string|null,
-    aiTextsProcessed: string|null,
-    aiImagesProcessed: string|null,
+    status: OrderStatus|null,
+    paymentStatus: PaymentStatus|null,
+    dsStatus: string|null,
   }) => {
     try {
       setLoading(true)
@@ -33,9 +34,9 @@ function ListOrders () {
       const query = new URLSearchParams()
 
       if (params?.page) query.append("page", String(params.page))
-      if (params?.enriched) query.append("enriched", params.enriched)
-      if (params?.aiTextsProcessed) query.append("aiTextsProcessed", params.aiTextsProcessed)
-      if (params?.aiImagesProcessed) query.append("aiImagesProcessed", params.aiImagesProcessed)
+      if (params?.status) query.append("status", params.status)
+      if (params?.paymentStatus) query.append("paymentStatus", params.paymentStatus)
+      if (params?.dsStatus) query.append("dsStatus", params.dsStatus)
 
       const headers = {
           'Content-Type': 'application/json',
@@ -63,28 +64,28 @@ function ListOrders () {
   }
 
   useEffect(() => {
-      fetchOrders({ page, enriched, aiTextsProcessed, aiImagesProcessed })
-  }, [page, enriched, aiTextsProcessed, aiImagesProcessed])
+      fetchOrders({ page, status, paymentStatus, dsStatus })
+  }, [page, status, paymentStatus, dsStatus])
 
   return (
     <div className="w-full main-bg flex flex-col border-b-0 rounded-none">
       <OrderFilters
         open={filtersOpen}
         onOpenChange={setFiltersOpen}
-        enriched={enriched}
-        aiTextsProcessed={aiTextsProcessed}
-        aiImagesProcessed={aiImagesProcessed}
-        onEnrichedChange={(value) => {
+        status={status}
+        paymentStatus={paymentStatus}
+        dsStatus={dsStatus}
+        onStatusChange={(value) => {
           setPage(1)
-          setEnriched(value)
+          setStatus(value)
         }}
-        onAiTextsProcessedChange={(value) => {
+        onPaymentStatusChange={(value) => {
           setPage(1)
-          setAiTextsProcessed(value)
+          setPaymentStatus(value)
         }}
-        onAiImagesProcessedChange={(value) => {
+        onDsStatusChange={(value) => {
           setPage(1)
-          setAiImagesProcessed(value)
+          setDsStatus(value)
         }}
       />
       {loading ? (
@@ -119,9 +120,9 @@ function ListOrders () {
         onRefresh={() =>
           fetchOrders({
             page,
-            enriched,
-            aiTextsProcessed,
-            aiImagesProcessed
+            status,
+            paymentStatus,
+            dsStatus,
           })
         }
       />

@@ -23,8 +23,11 @@ class OrderController extends Controller
             ->when($request->status, fn ($q) =>
                 $q->where('status', $request->status)
             )
-            ->when($request->payment_status, fn ($q) =>
-                $q->where('payment_status', $request->payment_status)
+            ->when($request->paymentStatus, fn ($q) =>
+                $q->where('payment_status', $request->paymentStatus)
+            )
+            ->when($request->dsStatus, fn ($q) =>
+                $q->where('ds_status', $request->dsStatus)
             )
             ->when($request->search, fn ($q) =>
                 $q->where('order_number', 'like', "%{$request->search}%")
