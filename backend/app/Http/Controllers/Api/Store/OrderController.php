@@ -10,13 +10,15 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use App\Services\CartService;
+use App\Services\StoreOrderService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+
 
 class OrderController extends Controller
 {
     public function __construct(
-        private CartService $cartService
+        private CartService $cartService,
+        private StoreOrderService $storeOrderService
     ) {}
 
     /**
@@ -24,6 +26,7 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
+        // should be restricted
         $orders = Order::query()
             ->where('customer_id', $request->user()->id)
             ->latest()
@@ -47,57 +50,7 @@ class OrderController extends Controller
             return response()->json(['message' => 'Cart is empty'], 422);
         }
 
-        // TODO: move it into service
-        // Calculate totals server-side (IMPORTANT)
-        $subtotal = collect($items)->sum(fn ($item) => $item['price'] * $item['quantity']);
-        $shipping = $data['shipping_cost'] ?? 0;
-        $total = $subtotal + $shipping;
-        $customer = auth('customer')->user();
-
-        $order = Order::create([
-            'order_number' => 'ORD-' . strtoupper(Str::random(10)),
-
-            'customer_id' => $customer ? $customer->id : null,
-
-            'subtotal' => $subtotal,
-            'shipping_cost' => $shipping,
-            'total' => $total,
-
-            'currency' => $data['currency'] ?? 'USD',
-
-            'ds_provider' => $data['ds_provider'] ?? 'cj',
-            'ds_status' => OrderDsStatusEnum::PENDING,
-
-            'status' => OrderStatusEnum::PENDING,
-            'payment_status' => PaymentStatusEnum::UNPAID,
-
-            'payment_method' => $data['payment_method'] ?? null,
-
-            'shipping_full_name' => $data['shipping_full_name'],
-            'shipping_phone' => $data['shipping_phone'] ?? null,
-            'shipping_email' => $data['shipping_email'] ?? null,
-
-            'shipping_address_line1' => $data['shipping_address_line1'],
-            'shipping_address_line2' => $data['shipping_address_line2'] ?? null,
-            'shipping_city' => $data['shipping_city'],
-            'shipping_state' => $data['shipping_state'] ?? null,
-            'shipping_postal_code' => $data['shipping_postal_code'] ?? null,
-            'shipping_country' => $data['shipping_country'],
-
-            'notes' => $data['notes'] ?? null,
-        ]);
-
-        // Create order items
-        foreach ($items as $item) {
-            $order->items()->create([
-                'product_id' => $item['product_id'] ?? null,
-                'title' => $item['title'],
-                'quantity' => $item['quantity'],
-                'price' => $item['price'],
-                'total' => $item['price'] * $item['quantity'],
-                'variant_data' => $item['variant_data'] ?? null,
-            ]);
-        }
+        $order = $this->storeOrderService->storeOrder($data, $items);
 
         return response()->json($order->load('items'), 201);
     }
