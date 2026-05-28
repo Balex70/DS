@@ -29,9 +29,16 @@ class OrderController extends Controller
             ->when($request->dsStatus, fn ($q) =>
                 $q->where('ds_status', $request->dsStatus)
             )
-            ->when($request->search, fn ($q) =>
-                $q->where('order_number', 'like', "%{$request->search}%")
-            )
+            ->when($request->search, function ($q) use ($request) {
+                $search = $request->search;
+
+                $q->where(function ($query) use ($search) {
+                    $query->where('order_number', 'ILIKE', "%{$search}%")
+                        ->orWhere('shipping_email', 'ILIKE', "%{$search}%")
+                        ->orWhere('shipping_full_name', 'ILIKE', "%{$search}%")
+                        ->orWhere('shipping_country', 'ILIKE', "%{$search}%");
+                });
+            })
             ->latest()
             ->paginate(20);
 

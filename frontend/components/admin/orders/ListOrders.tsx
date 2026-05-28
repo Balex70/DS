@@ -7,8 +7,9 @@ import Loader from '@/components/common/Loader';
 import { OrderDrawer } from './OrderDrawer';
 import { OrderPagination } from './OrderPagination';
 import { OrderFilters } from './OrderFilters';
-import { Meta, Order, OrderStatus } from '@/types/order';
+import { DsStatus, Meta, Order, OrderStatus } from '@/types/order';
 import { PaymentStatus } from '@/types/payment';
+import { Input } from '@/components/ui/input';
 
 function ListOrders () {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -18,15 +19,29 @@ function ListOrders () {
   const [viewOpen, setViewOpen] = useState(false)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [page, setPage] = useState(1)
+  const [search, setSearch] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
   const [status, setStatus] = useState<OrderStatus | null>(null)
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | null>(null)
-  const [dsStatus, setDsStatus] = useState<string | null>(null)
+  const [dsStatus, setDsStatus] = useState<DsStatus | null>(null)
+
+  /**
+   * Debounce search
+   */
+  useEffect(() => {
+      const timeout = setTimeout(() => {
+          setDebouncedSearch(search)
+      }, 500)
+
+      return () => clearTimeout(timeout)
+  }, [search])
   
   const fetchOrders = async (params?: {
     page?: number,
+    search?: string,
     status: OrderStatus|null,
     paymentStatus: PaymentStatus|null,
-    dsStatus: string|null,
+    dsStatus: DsStatus|null,
   }) => {
     try {
       setLoading(true)
@@ -34,6 +49,7 @@ function ListOrders () {
       const query = new URLSearchParams()
 
       if (params?.page) query.append("page", String(params.page))
+      if (params?.search) query.append("search", params.search)
       if (params?.status) query.append("status", params.status)
       if (params?.paymentStatus) query.append("paymentStatus", params.paymentStatus)
       if (params?.dsStatus) query.append("dsStatus", params.dsStatus)
@@ -63,12 +79,28 @@ function ListOrders () {
     }
   }
 
+  /**
+   * Reset page when search changes
+   */
   useEffect(() => {
-      fetchOrders({ page, status, paymentStatus, dsStatus })
-  }, [page, status, paymentStatus, dsStatus])
+      setPage(1)
+  }, [debouncedSearch])
+
+  /**
+   * Fetch orders
+   */
+  useEffect(() => {
+      fetchOrders({ page, search: debouncedSearch, status, paymentStatus, dsStatus })
+  }, [page, debouncedSearch, status, paymentStatus, dsStatus])
 
   return (
     <div className="w-full main-bg flex flex-col border-b-0 rounded-none">
+      <Input
+          placeholder="Search orders..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="max-w-md mb-2"
+      />
       <OrderFilters
         open={filtersOpen}
         onOpenChange={setFiltersOpen}
