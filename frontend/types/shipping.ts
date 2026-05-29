@@ -7,3 +7,8 @@ export type ShippingMethod = {
     taxes_fee?: number;
     provider?: "cj";
 };
+
+export type ShippingCategory =
+  | "cheapest"
+  | "fastest"
+  | "recommended";

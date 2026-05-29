@@ -5,10 +5,12 @@ import { Input } from "@/components/ui/input";
 import { useShippingCalculate } from "@/hooks/use-shipping-calculate";
 import { ShippingMethod } from "@/types/shipping";
 import { OrderPayload } from "@/types/order";
+import { PriceRenderer } from "@/components/custom/PriceRenderer";
+import { ShippingMethodsSelector } from "./ShippingMethodsSelector";
 
 type Props = {
     form: OrderPayload;
-    setForm: (form: OrderPayload) => void;
+    setForm: (form: any) => void;
 
     shippingMethod: ShippingMethod | null;
     setShippingMethod: (method: ShippingMethod) => void;
@@ -41,6 +43,12 @@ export function ShippingForm({
 
         return () => clearTimeout(timeout);
     }, [form.shipping_country, form.shipping_postal_code]);
+
+    useEffect(() => {
+        if (!shippingMethod && shippingOptions.length > 0) {
+            setShippingMethod(shippingOptions[0]);
+        }
+    }, [shippingOptions]);
 
     return (
         <div>
@@ -164,7 +172,7 @@ export function ShippingForm({
             {/* SHIPPING METHODS */}
             <div className="mt-8">
                 <h3 className="text-lg font-semibold mb-3">
-                    Shipping method
+                    Shipping methods
                 </h3>
 
                 {!form.shipping_country ? (
@@ -176,35 +184,11 @@ export function ShippingForm({
                         Loading shipping methods...
                     </p>
                 ) : (
-                    <div className="space-y-2">
-                        {shippingOptions?.map((method: ShippingMethod) => (
-                            <button
-                                key={method.id}
-                                onClick={() => setShippingMethod(method)}
-                                className={`w-full border rounded p-3 text-left flex justify-between ${
-                                    shippingMethod?.id === method.id
-                                        ? "border-black"
-                                        : ""
-                                }`}
-                            >
-                                <div>
-                                    <div className="font-medium">
-                                        {method.name}
-                                    </div>
-
-                                    {method.estimated_delivery && (
-                                        <div className="text-sm text-muted-foreground">
-                                            {method.estimated_delivery}
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="font-semibold">
-                                    ${method.price}
-                                </div>
-                            </button>
-                        ))}
-                    </div>
+                    <ShippingMethodsSelector
+                        methods={shippingOptions}
+                        value={shippingMethod}
+                        onChange={setShippingMethod}
+                    />
                 )}
             </div>
         </div>
