@@ -27,6 +27,7 @@ class ProductService
             $now = now();
             $productToEnrich->update([
                 'name_raw' => $mappedDetails['name_raw'],
+                'sku' => $mappedDetails['sku'],
                 'description_raw' => $mappedDetails['description_raw'],
                 'price' => $mappedDetails['price'],
                 'now_price' => $mappedDetails['now_price'],
@@ -35,7 +36,9 @@ class ProductService
                 // 'images' => $mappedDetails['images'],
                 'updated_at' => $now,
                 'last_enrichment_at' => $now,
-                'ai_status' => ProductAiStatusEnum::QUEUED
+                'ai_status' => ProductAiStatusEnum::QUEUED,
+                'product_weight' => $mappedDetails['product_weight'],
+                'packing_weight' => $mappedDetails['packing_weight'],
             ]);
 
             $variantsRows = array_map(function ($variant) use ($productToEnrich, $now) {

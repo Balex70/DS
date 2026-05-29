@@ -34,6 +34,11 @@ class CjDropshippingProvider implements DropshippingProviderInterface
         return $this->products->getProductDetails($externalProductId);
     }
 
+    public function calculateShipping(array $payload): array
+    {
+        return $this->products->calculateShipping($payload);
+    }
+
     public function activateProduct(string $externalId): bool
     {
         // CJ-specific logic

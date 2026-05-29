@@ -11,6 +11,8 @@ interface DropshippingProviderInterface
 
     public function getProductDetails(string $externalProductId): array;
 
+    public function calculateShipping(array $payload): array;
+
     public function activateProduct(string $externalId): bool;
 
     public function deactivateProduct(string $externalId): bool;

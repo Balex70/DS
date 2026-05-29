@@ -1,0 +1,82 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Enums\OrderDsStatusEnum;
+use App\Enums\OrderStatusEnum;
+use App\Enums\PaymentStatusEnum;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class UpdateOrderRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            // Internal order status (admin/system only)
+            'status' => [
+                'sometimes',
+                'string',
+                Rule::in([
+                    OrderStatusEnum::PENDING,
+                    OrderStatusEnum::PAID,
+                    OrderStatusEnum::PROCESSING,
+                    OrderStatusEnum::FULFILLED,
+                    OrderStatusEnum::CANCELED,
+                    OrderStatusEnum::REFUNDED,
+                ]),
+            ],
+
+            // Dropshipping provider status (CJ sync)
+            'ds_status' => [
+                'sometimes',
+                'string',
+                Rule::in([
+                    OrderDsStatusEnum::PENDING,
+                    OrderDsStatusEnum::PAID,
+                    OrderDsStatusEnum::PROCESSING,
+                    OrderDsStatusEnum::SHIPPED,
+                    OrderDsStatusEnum::DELIVERED,
+                    OrderDsStatusEnum::FAILED,
+                ]),
+            ],
+
+            // Tracking updates
+            'ds_tracking_number' => ['sometimes', 'nullable', 'string', 'max:255'],
+
+            // Flags
+            'sent_to_ds_provider' => ['sometimes', 'boolean'],
+            'sent_to_ds_provider_at' => ['sometimes', 'nullable', 'date'],
+            'fulfilled_at' => ['sometimes', 'nullable', 'date'],
+
+            // Payment status (admin/system only)
+            'payment_status' => [
+                'sometimes',
+                'string',
+                Rule::in([
+                    PaymentStatusEnum::UNPAID,
+                    PaymentStatusEnum::PAID,
+                    PaymentStatusEnum::FAILED,
+                    PaymentStatusEnum::REFUNDED,
+                ]),
+            ],
+
+            // Notes (safe editable field)
+            'notes' => ['sometimes', 'nullable', 'string', 'max:2000'],
+        ];
+    }
+}

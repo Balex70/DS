@@ -13,6 +13,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Field, FieldGroup } from "@/components/ui/field"
 import { BadgeX } from "lucide-react"
+import { useAdminCategories } from "@/hooks/use-admin-categories";
+import { CategoryMultiSelect } from "./CategoryMultiSelect";
 
 interface Props {
     open: boolean
@@ -20,9 +22,11 @@ interface Props {
     enriched: string | null
     aiTextsProcessed: string | null
     aiImagesProcessed: string | null
+    categoryIds: number[];
     onEnrichedChange: (value: string | null) => void
     onAiTextsProcessedChange: (value: string | null) => void
     onAiImagesProcessedChange: (value: string | null) => void
+    onCategoryIdsChange: (value: number[]) => void;
 }
 
 export function ProductFilters({
@@ -31,10 +35,15 @@ export function ProductFilters({
     enriched,
     aiTextsProcessed,
     aiImagesProcessed,
+    categoryIds,
     onEnrichedChange,
     onAiTextsProcessedChange,
     onAiImagesProcessedChange,
+    onCategoryIdsChange,
 }: Props) {
+    const { categories } = useAdminCategories();
+    const categoryOptions = categories;
+
     type FilterBadge = {
         label: string
         onClick: () => void
@@ -68,55 +77,71 @@ export function ProductFilters({
             </CollapsibleTrigger>
             <CollapsibleContent className="mt-3">
             <Card className="w-full">
-                <CardContent className="p-4 flex gap-6">
-                <FieldGroup className="space-y-3 pt-2">
+                <CardContent className="p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    <Field orientation="horizontal">
-                    <Checkbox
-                        id="enriched"
-                        checked={enriched === "enriched"}
-                        onCheckedChange={(checked) =>
-                        onEnrichedChange(
-                            checked ? "enriched" : null
-                        )
-                        }
-                    />
-                    <Label htmlFor="enriched">
-                        Enriched
-                    </Label>
-                    </Field>
+                        {/* LEFT COLUMN */}
+                        <FieldGroup className="space-y-3">
 
-                    <Field orientation="horizontal">
-                    <Checkbox
-                        id="aiTextsProcessed"
-                        checked={aiTextsProcessed === "aiTextsProcessed"}
-                        onCheckedChange={(checked) =>
-                        onAiTextsProcessedChange(
-                            checked ? "aiTextsProcessed" : null
-                        )
-                        }
-                    />
-                    <Label htmlFor="aiTextsProcessed">
-                        AI Texts
-                    </Label>
-                    </Field>
+                            <Field orientation="horizontal">
+                                <Checkbox
+                                    id="enriched"
+                                    checked={enriched === "enriched"}
+                                    onCheckedChange={(checked) =>
+                                        onEnrichedChange(
+                                            checked ? "enriched" : null
+                                        )
+                                    }
+                                />
+                                <Label htmlFor="enriched">
+                                    Enriched
+                                </Label>
+                            </Field>
 
-                    <Field orientation="horizontal">
-                    <Checkbox
-                        id="aiImagesProcessed"
-                        checked={aiImagesProcessed === "aiImagesProcessed"}
-                        onCheckedChange={(checked) =>
-                        onAiImagesProcessedChange(
-                            checked ? "aiImagesProcessed" : null
-                        )
-                        }
-                    />
-                    <Label htmlFor="aiImagesProcessed">
-                        AI Images
-                    </Label>
-                    </Field>
+                            <Field orientation="horizontal">
+                                <Checkbox
+                                    id="aiTextsProcessed"
+                                    checked={aiTextsProcessed === "aiTextsProcessed"}
+                                    onCheckedChange={(checked) =>
+                                        onAiTextsProcessedChange(
+                                            checked ? "aiTextsProcessed" : null
+                                        )
+                                    }
+                                />
+                                <Label htmlFor="aiTextsProcessed">
+                                    AI Texts
+                                </Label>
+                            </Field>
 
-                </FieldGroup>
+                            <Field orientation="horizontal">
+                                <Checkbox
+                                    id="aiImagesProcessed"
+                                    checked={aiImagesProcessed === "aiImagesProcessed"}
+                                    onCheckedChange={(checked) =>
+                                        onAiImagesProcessedChange(
+                                            checked ? "aiImagesProcessed" : null
+                                        )
+                                    }
+                                />
+                                <Label htmlFor="aiImagesProcessed">
+                                    AI Images
+                                </Label>
+                            </Field>
+
+                        </FieldGroup>
+
+                        {/* RIGHT COLUMN */}
+                        <div className="space-y-2">
+                            <Label>Categories</Label>
+
+                            <CategoryMultiSelect
+                                options={categoryOptions}
+                                value={categoryIds}
+                                onChange={onCategoryIdsChange}
+                            />
+                        </div>
+
+                    </div>
                 </CardContent>
             </Card>
             </CollapsibleContent>

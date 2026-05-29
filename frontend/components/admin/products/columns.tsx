@@ -13,6 +13,7 @@ import {
 import { MoreHorizontal, Plus } from "lucide-react"
 import { Product } from "@/types/product"
 import { Badge } from "@/components/ui/badge"
+import { PriceRenderer } from "@/components/custom/PriceRenderer"
 
 const FOUR_WEEKS_MS = 1000 * 60 * 60 * 24 * 28
 
@@ -123,6 +124,13 @@ export const columns = ({
   {
     accessorKey: "price",
     header: "Price",
+    cell: ({ getValue }) => {
+      const value = Number(getValue())
+
+      return (
+        <PriceRenderer value={value} />
+      )
+    }
   },
   {
     accessorKey: "ai_status",

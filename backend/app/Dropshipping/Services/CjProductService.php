@@ -4,6 +4,7 @@ namespace App\Dropshipping\Services;
 
 use App\Dropshipping\API\CjApiClient;
 use App\Dropshipping\Mappers\CjProductMapper;
+use Illuminate\Support\Str;
 
 class CjProductService
 {
@@ -50,6 +51,31 @@ class CjProductService
         }
 
         return $data;
+    }
+
+    public function calculateShipping(array $payload): array
+    {
+        $cjShippingPayload = [
+            'startCountryCode' => 'CN',
+            'endCountryCode' => $payload['shippingData']['shipping_country'],
+            'products' => array_map(function ($item) {
+                return [
+                    'vid' => "1383296520174047232",
+                    'quantity' => $item['quantity'],
+                ];
+            }, $payload['items']),
+        ];
+
+        $shippingOptions = $this->client->calculateShipping($cjShippingPayload);
+
+        return array_map(function ($item) {
+            return [
+                'id' => Str::slug($item['logisticName']),
+                'name' => $item['logisticName'],
+                'price' => (int) round($item['logisticPrice'] * 100),
+                'estimated_delivery' => $item['logisticAging'],
+            ];
+        }, $shippingOptions);
     }
 
     private function extractPagination(array $data): array

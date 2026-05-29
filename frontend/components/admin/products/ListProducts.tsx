@@ -24,12 +24,14 @@ function ListProducts () {
   const [enriched, setEnriched] = useState<string | null>(null)
   const [aiTextsProcessed, setAiTextsProcessed] = useState<string | null>(null)
   const [aiImagesProcessed, setAiImagesProcessed] = useState<string | null>(null)
+  const [categoryIds, setCategoryIds] = useState<number[]>([])
   
   const fetchProducts = async (params?: {
     page?: number,
     enriched: string|null,
     aiTextsProcessed: string|null,
     aiImagesProcessed: string|null,
+    categoryIds: number[]|null
   }) => {
     try {
       setLoading(true)
@@ -40,6 +42,7 @@ function ListProducts () {
       if (params?.enriched) query.append("enriched", params.enriched)
       if (params?.aiTextsProcessed) query.append("aiTextsProcessed", params.aiTextsProcessed)
       if (params?.aiImagesProcessed) query.append("aiImagesProcessed", params.aiImagesProcessed)
+      if (params?.categoryIds?.length) query.append("categoryIds", params.categoryIds.join(","))
 
       const headers = {
           'Content-Type': 'application/json',
@@ -67,12 +70,8 @@ function ListProducts () {
   }
 
   useEffect(() => {
-      fetchProducts({ page, enriched, aiTextsProcessed, aiImagesProcessed })
-  }, [page, enriched, aiTextsProcessed, aiImagesProcessed])
-
-  if (loading) {
-    return <Loader />
-  }
+      fetchProducts({ page, enriched, aiTextsProcessed, aiImagesProcessed, categoryIds })
+  }, [page, enriched, aiTextsProcessed, aiImagesProcessed, categoryIds])
 
   return (
     <div className="w-full main-bg flex flex-col border-b-0 rounded-none">
@@ -80,6 +79,7 @@ function ListProducts () {
         open={filtersOpen}
         onOpenChange={setFiltersOpen}
         enriched={enriched}
+        categoryIds={categoryIds}
         aiTextsProcessed={aiTextsProcessed}
         aiImagesProcessed={aiImagesProcessed}
         onEnrichedChange={(value) => {
@@ -94,38 +94,48 @@ function ListProducts () {
           setPage(1)
           setAiImagesProcessed(value)
         }}
-      />
-      <DataTable
-        columns={columns({
-          onView: (product) => {
-            setSelectedProduct(product)
-            setViewOpen(true)
-          },
-          onEdit: (product) => {
-            setSelectedProduct(product)
-            setEditOpen(true)
-          },
-          onDelete: (product) => {
-            setSelectedProduct(product)
-            setDeleteOpen(true)
-          },
-        })}
-        data={products}
-        onRowClick={(product) => {
-          setSelectedProduct(product)
-          setViewOpen(true)
+        onCategoryIdsChange={(value) => {
+          setPage(1)
+          setCategoryIds(value)
         }}
       />
-      <div className="flex gap-3 mt-4">
-        {meta && (
-          <ProductPagination
-            meta={meta}
-            onPageChange={(page) => {
-              setPage(page)
-            }}
-          />
-        )}
-      </div>
+      {loading ? (
+        <Loader />
+      ) : (
+          <>
+            <DataTable
+              columns={columns({
+                onView: (product) => {
+                  setSelectedProduct(product)
+                  setViewOpen(true)
+                },
+                onEdit: (product) => {
+                  setSelectedProduct(product)
+                  setEditOpen(true)
+                },
+                onDelete: (product) => {
+                  setSelectedProduct(product)
+                  setDeleteOpen(true)
+                },
+              })}
+              data={products}
+              onRowClick={(product) => {
+                setSelectedProduct(product)
+                setViewOpen(true)
+              }}
+            />
+            <div className="flex gap-3 mt-4">
+              {meta && (
+                <ProductPagination
+                  meta={meta}
+                  onPageChange={(page) => {
+                    setPage(page)
+                  }}
+                />
+              )}
+            </div>
+          </>
+      )}
 
       <ProductDrawer
         open={viewOpen}
@@ -137,6 +147,7 @@ function ListProducts () {
             enriched,
             aiTextsProcessed,
             aiImagesProcessed,
+            categoryIds
           })
         }
       />
