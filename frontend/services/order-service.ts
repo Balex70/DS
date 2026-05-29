@@ -9,3 +9,19 @@ export async function createOrder(data: OrderPayload) {
         currency: "USD",
     });
 }
+
+type ShippingCalculatePayload = {
+    shipping_country: string;
+    shipping_postal_code?: string;
+};
+
+export async function getShippingCalculate(
+    data: ShippingCalculatePayload
+): Promise<any> {
+    const response = await api.post(
+        "/api/store/orders/shipping-calculate",
+        data
+    );
+
+    return response.data;
+}

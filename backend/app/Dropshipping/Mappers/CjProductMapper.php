@@ -16,6 +16,8 @@ class CjProductMapper
             'now_price' => $this->parsePrice($data['nowPrice'] ?? null),
             'suggested_price' => $this->parsePrice($data['suggestedPrice'] ?? null),
 
+            'sku' => $data['sku'] ?? null,
+
             'big_image' => $data['bigImage'] ?? null,
 
             'is_collect' => (bool) ($data['isCollect'] ?? false),
@@ -35,7 +37,6 @@ class CjProductMapper
         return [
             'external_id' => $base['external_id'],
 
-            // 'sku' => $data['productSku'] ?? null,
             'name_raw' => $data['productNameEn'] ?? $base['name_raw'],
             
             'description_raw' => $this->cleanHtml($data['description']) ?? null,
@@ -43,6 +44,10 @@ class CjProductMapper
             'price' => $this->parsePrice($data['sellPrice'] ?? $base['price'] ?? null),
             'now_price' => $this->parsePrice($data['nowPrice'] ?? $base['now_price'] ?? null),
             'suggested_price' => $this->parsePrice($data['suggestedSellPrice'] ?? $base['suggested_price'] ?? null),
+
+            'sku' => $data['productSku'] ?? $base['sku'] ?? null,
+            'product_weight' => $data['productWeight'] ?? null,
+            'packing_weight' => $data['packingWeight'] ?? null,
 
             'big_image' => $data['bigImage'] ?? $base['big_image'] ?? null,
 

@@ -44,6 +44,7 @@ class SyncCategoryProductsAction
             return [
                 'external_id' => $p['external_id'],
                 'name_raw' => $p['name_raw'],
+                'sku' => $p['sku'],
                 'description_raw' => $p['description_raw'],
                 'price' => $p['price'],
                 'now_price' => $p['now_price'],

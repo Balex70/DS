@@ -20,9 +20,12 @@ export function ProductCard({ product }: Props) {
         addToCart({
             product_id: product.id,
             title: product.name_processed ?? product.name_raw,
+            sku: product.sku,
             quantity: 1,
             price: product.price, // product.price,
             image: product.big_image?.original_url ?? undefined,
+            product_weight: product.product_weight ?? undefined,
+            packing_weight: product.packing_weight ?? undefined
         });
     };
     return (

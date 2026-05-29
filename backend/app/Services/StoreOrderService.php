@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Dropshipping\DropshippingManager;
 use App\Enums\OrderDsStatusEnum;
 use App\Enums\OrderStatusEnum;
 use App\Enums\PaymentStatusEnum;
@@ -12,6 +13,7 @@ use Illuminate\Support\Str;
 class StoreOrderService
 {
     public function __construct(
+        private DropshippingManager $manager,
     ) {}
     
     public function storeOrder(array $data, mixed $items): Order
@@ -69,5 +71,12 @@ class StoreOrderService
             
             return $order;
         });
+    }
+
+    public function calculateShipping(array $payload): array
+    {
+        $provider = $this->manager->driver();
+
+        return $provider->calculateShipping($payload);
     }
 }

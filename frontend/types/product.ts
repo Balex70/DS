@@ -2,6 +2,7 @@ interface ProductInterface {
   id: string,
   name_raw: string,
   name_processed: string,
+  sku: string,
   description_raw: string,
   description_processed: string,
   price: number,
@@ -18,7 +19,9 @@ interface ProductInterface {
   slug: string,
   warehouse_inventory_num: number,
   raw_data: string,
-  external_id: string
+  external_id: string,
+  product_weight: number,
+  packing_weight: number
 }
 
 interface ProductImageInterface {

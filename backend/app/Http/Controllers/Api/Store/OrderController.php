@@ -55,6 +55,33 @@ class OrderController extends Controller
         return response()->json($order->load('items'), 201);
     }
 
+    public function shippingCalculate(Request $request)
+    {
+        $token = $request->attributes->get('cart_token');
+        $cart = $this->cartService->get($token);
+        $items = $cart['items'];
+
+        if (empty($items)) {
+            return response()->json([
+                'message' => 'Cart is empty'
+            ], 422);
+        }
+
+        $shippingData = $request->validate([
+            'shipping_country' => 'required|string',
+            'shipping_postal_code' => 'nullable|string',
+        ]);
+
+        $payload = [
+            'items' => $items,
+            'shippingData' => $shippingData
+        ];
+
+        $shippingOptions = $this->storeOrderService->calculateShipping($payload);
+
+        return response()->json($shippingOptions);
+    }
+
     /**
      * Show single order (only owner)
      */
