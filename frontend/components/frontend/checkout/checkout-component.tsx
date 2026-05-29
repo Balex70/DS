@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useCart } from "@/hooks/use-cart";
 import { useCreateOrder } from "@/hooks/use-create-order";
 
@@ -15,6 +15,11 @@ export function CheckoutComponent() {
     const [shippingMethod, setShippingMethod] = useState<ShippingMethod | undefined>(undefined);
 
     const items = cart?.items ?? [];
+
+    const cartKey = cart?.items
+        ?.map(i => `${i.product_id}:${i.quantity}`)
+        .sort()
+        .join("|");
 
     const subtotal = items.reduce(
         (sum, item) => sum + item.price * item.quantity,
@@ -61,7 +66,7 @@ export function CheckoutComponent() {
 
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
                 {/* LEFT */}
-                <ShippingForm form={form} setForm={setForm} shippingMethod={shippingMethod} setShippingMethod={setShippingMethod} />
+                <ShippingForm form={form} setForm={setForm} shippingMethod={shippingMethod} setShippingMethod={setShippingMethod} cartKey={cartKey} />
 
                 {/* RIGHT */}
                 <div className="space-y-6">

@@ -7,10 +7,11 @@ type ShippingCalculatePayload = {
 };
 
 export function useShippingCalculate(
-    payload: ShippingCalculatePayload | null
+    payload: ShippingCalculatePayload | null,
+    cartKey: string | undefined
 ) {
     return useQuery({
-        queryKey: ["shipping-calculate", payload],
+        queryKey: ["shipping-calculate", payload, cartKey],
         queryFn: () => {
             if (!payload) throw new Error("Missing shipping payload");
             return getShippingCalculate(payload);

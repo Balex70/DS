@@ -7,7 +7,7 @@ import { getMaxDays, getMinDays } from "@/helpers/shipping";
 
 type Props = {
     methods: ShippingMethod[];
-    value: ShippingMethod | null;
+    value: ShippingMethod | undefined;
     onChange: (method: ShippingMethod) => void;
 };
 

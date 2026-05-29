@@ -5,15 +5,14 @@ import { Input } from "@/components/ui/input";
 import { useShippingCalculate } from "@/hooks/use-shipping-calculate";
 import { ShippingMethod } from "@/types/shipping";
 import { OrderPayload } from "@/types/order";
-import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { ShippingMethodsSelector } from "./ShippingMethodsSelector";
 
 type Props = {
     form: OrderPayload;
     setForm: (form: any) => void;
-
     shippingMethod: ShippingMethod | undefined;
     setShippingMethod: (method: ShippingMethod | undefined) => void;
+    cartKey: string | undefined;
 };
 
 export function ShippingForm({
@@ -21,19 +20,19 @@ export function ShippingForm({
     setForm,
     shippingMethod,
     setShippingMethod,
+    cartKey
 }: Props) {
     const [payload, setPayload] = useState<{
         shipping_country: string;
         shipping_postal_code?: string;
     } | null>(null);
 
-    const { data: shippingOptions = [], isLoading } =
-        useShippingCalculate(payload);
+    const { data: shippingOptions = [], isLoading } =  useShippingCalculate(payload, cartKey);
 
     // trigger shipping calculation when address changes
     useEffect(() => {
         if (!form.shipping_country)  {
-            setShippingMethod(null);
+            setShippingMethod(undefined);
             return;
         };
 
@@ -45,13 +44,26 @@ export function ShippingForm({
         }, 500);
 
         return () => clearTimeout(timeout);
-    }, [form.shipping_country, form.shipping_postal_code]);
+    }, [form.shipping_country, form.shipping_postal_code, setShippingMethod]);
 
+    // reset shipping method when shipping options change (e.g. country changed, cart items changed, cart item deleted)
     useEffect(() => {
+        if (!shippingOptions.length) {
+            setShippingMethod(undefined);
+            return;
+        }
+
+        const stillValid =
+            shippingMethod &&
+            shippingOptions.some((m: ShippingMethod) => m.id === shippingMethod.id);
+
+        // if current method is still valid → keep it
+        if (stillValid) return;
+
         if (!shippingMethod && shippingOptions.length > 0) {
             setShippingMethod(shippingOptions[0]);
         }
-    }, [shippingOptions]);
+    }, [shippingOptions, shippingMethod, setShippingMethod]);
 
     return (
         <div>
