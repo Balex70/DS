@@ -3,20 +3,22 @@
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
+import { ShippingMethod } from "@/types/shipping";
 
 type Props = {
     subtotal: number;
-    shippingCost?: number;
+    shippingMethod?: ShippingMethod,
     isPending: boolean;
     onSubmit: () => void;
 };
 
 export function OrderSummary({
     subtotal,
-    shippingCost = 0,
+    shippingMethod,
     isPending,
     onSubmit,
 }: Props) {
+    const shippingCost = shippingMethod?.price ?? 0;
     const total = subtotal + shippingCost;
 
     return (
@@ -45,9 +47,9 @@ export function OrderSummary({
             <Button
                 className="mt-6 w-full"
                 onClick={onSubmit}
-                disabled={isPending}
+                disabled={isPending || !shippingMethod}
             >
-                {isPending ? "Creating order..." : "Create order"}
+                {isPending ? "Creating order..." : (isPending || !shippingMethod) ? "Select shipping method" : "Create order"}
             </Button>
         </div>
     );

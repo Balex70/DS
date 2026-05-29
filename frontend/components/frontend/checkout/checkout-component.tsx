@@ -7,11 +7,12 @@ import { useCreateOrder } from "@/hooks/use-create-order";
 import { ShippingForm } from "./ShippingForm";
 import { OrderItems } from "./OrderItems";
 import { OrderSummary } from "./OrderSummary";
+import { ShippingMethod } from "@/types/shipping";
 
 export function CheckoutComponent() {
     const { data: cart, isLoading } = useCart();
     const { mutate: createOrder, isPending } = useCreateOrder();
-    const [shippingMethod, setShippingMethod] = useState<any>(null);
+    const [shippingMethod, setShippingMethod] = useState<ShippingMethod | undefined>(undefined);
 
     const items = cart?.items ?? [];
 
@@ -68,6 +69,7 @@ export function CheckoutComponent() {
 
                     <OrderSummary
                         subtotal={subtotal}
+                        shippingMethod={shippingMethod}
                         isPending={isPending}
                         onSubmit={handleSubmit}
                     />

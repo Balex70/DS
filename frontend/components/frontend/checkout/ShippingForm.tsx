@@ -12,8 +12,8 @@ type Props = {
     form: OrderPayload;
     setForm: (form: any) => void;
 
-    shippingMethod: ShippingMethod | null;
-    setShippingMethod: (method: ShippingMethod) => void;
+    shippingMethod: ShippingMethod | undefined;
+    setShippingMethod: (method: ShippingMethod | undefined) => void;
 };
 
 export function ShippingForm({
@@ -32,7 +32,10 @@ export function ShippingForm({
 
     // trigger shipping calculation when address changes
     useEffect(() => {
-        if (!form.shipping_country) return;
+        if (!form.shipping_country)  {
+            setShippingMethod(null);
+            return;
+        };
 
         const timeout = setTimeout(() => {
             setPayload({
