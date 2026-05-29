@@ -31,10 +31,7 @@ export function ShippingForm({
 
     // trigger shipping calculation when address changes
     useEffect(() => {
-        if (!form.shipping_country)  {
-            setShippingMethod(undefined);
-            return;
-        };
+        if (!form.shipping_country) return;
 
         const timeout = setTimeout(() => {
             setPayload({
@@ -44,7 +41,7 @@ export function ShippingForm({
         }, 500);
 
         return () => clearTimeout(timeout);
-    }, [form.shipping_country, form.shipping_postal_code, setShippingMethod]);
+    }, [form.shipping_country, form.shipping_postal_code]);
 
     // reset shipping method when shipping options change (e.g. country changed, cart items changed, cart item deleted)
     useEffect(() => {
@@ -60,10 +57,8 @@ export function ShippingForm({
         // if current method is still valid → keep it
         if (stillValid) return;
 
-        if (!shippingMethod && shippingOptions.length > 0) {
-            setShippingMethod(shippingOptions[0]);
-        }
-    }, [shippingOptions, shippingMethod, setShippingMethod]);
+        setShippingMethod(shippingOptions[0]);
+    }, [shippingOptions]);
 
     return (
         <div>
@@ -175,10 +170,17 @@ export function ShippingForm({
                         placeholder="Country"
                         value={form.shipping_country}
                         onChange={(e) =>
-                            setForm({
-                                ...form,
-                                shipping_country: e.target.value,
-                            })
+                            {
+                                const value = e.target.value;
+                                setForm({
+                                    ...form,
+                                    shipping_country: e.target.value,
+                                })
+                                if (!value) {
+                                    setShippingMethod(undefined);
+                                    setPayload(null);
+                                }
+                            }
                         }
                     />
                 </div>

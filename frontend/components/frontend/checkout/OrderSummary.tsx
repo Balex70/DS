@@ -33,7 +33,7 @@ export function OrderSummary({
             </div>
 
             <div className="flex justify-between">
-                <span>Shipping</span>
+                <span>Shipping {shippingMethod && `(${shippingMethod.name})`}</span>
                 <PriceRenderer value={shippingCost} />
             </div>
 
