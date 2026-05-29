@@ -20,8 +20,8 @@ interface ProductInterface {
   warehouse_inventory_num: number,
   raw_data: string,
   external_id: string,
-  product_weight: number,
-  packing_weight: number
+  product_weight: string,
+  packing_weight: string
 }
 
 interface ProductImageInterface {

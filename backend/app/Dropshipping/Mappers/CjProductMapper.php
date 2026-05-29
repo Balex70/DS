@@ -76,17 +76,14 @@ class CjProductMapper
     {
         return array_map(function ($v) {
             return [
-                'external_id' => $v['vid'],
+                'external_id' => $v['vid'] ?? null,
                 'sku' => $v['variantSku'] ?? null,
-                'name' => $v['variantNameEn'] ?? null,
-                'price' => (float) $v['variantSellPrice'],
-                // 'stock' => $v['inventoryNum'] ?? null,
-                'weight' => isset($v['variantWeight'])
-                    ? (float) $v['variantWeight']
-                    : null,
-                'volume' => isset($v['variantVolume'])
-                    ? (float) $v['variantVolume']
-                    : null,
+                'name' => $v['variantNameEn'] ? $v['variantNameEn'] : $v['variantKey'] ?? null,
+                'key' => $v['variantKey'] ?? null,
+                'price' => $this->parsePrice($v['variantSellPrice'] ?? null),
+                'stock' => isset($v['inventoryNum']) ? (int) $v['inventoryNum'] : null,
+                'weight' => $v['variantWeight'] ?? null,
+                'volume' => $v['variantVolume'] ?? null,
                 'image' => $v['variantImage'] ?? null,
             ];
         }, $variants);
