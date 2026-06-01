@@ -43,6 +43,11 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        $product->load([
+            'variants' => fn ($query) => $query
+                ->with('image')
+                ->orderBy('price'),
+        ]);
         return new ProductResource($product);
     }
 }

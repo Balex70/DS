@@ -42,4 +42,9 @@ class Product extends Model
     {
         return $this->belongsToMany(Category::class);
     }
+
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 }

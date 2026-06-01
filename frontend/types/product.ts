@@ -21,7 +21,8 @@ interface ProductInterface {
   raw_data: string,
   external_id: string,
   product_weight: string,
-  packing_weight: string
+  packing_weight: string,
+  variants: ProductVariant[];
 }
 
 interface ProductImageInterface {
@@ -40,6 +41,20 @@ interface MetaInterface {
   last_page: number,
   from: number,
   to: number
+}
+
+export type ProductVariant = {
+    id: string;
+    product_id: string;
+    external_id: string;
+    sku: string;
+    name: string;
+    key: string;
+    price: number;
+    stock: number;
+    weight: string;
+    volume: string;
+    image?: ProductImageInterface;
 }
 
 export type Product = ProductInterface
