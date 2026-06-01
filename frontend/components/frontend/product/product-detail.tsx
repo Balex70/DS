@@ -55,6 +55,7 @@ export function ProductDetail({ productId }: Props) {
     const handleAddToCart = async () => {
         addToCart({
             product_id: selectedVariant.id,
+            vid: selectedVariant.external_id,
             title: selectedVariant.name ?? product.name_processed ?? product.name_raw, // TODO: need to be change to selected variant name_processed after finish with ai_texts endpoint for variants (selectedVariant.name_processed ?? selectedVariant.name_raw)
             sku: selectedVariant.sku,
             quantity: 1,

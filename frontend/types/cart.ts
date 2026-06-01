@@ -1,5 +1,6 @@
 interface CartItemPayloadInterface {
   product_id: string;
+  vid: string;
   title: string;
   sku: string;
   quantity: number;

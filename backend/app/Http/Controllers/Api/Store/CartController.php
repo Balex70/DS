@@ -28,6 +28,7 @@ class CartController extends Controller
 
         $item = $request->validate([
             'product_id' => ['nullable', 'integer'],
+            'vid' => ['required', 'string'],
             'title' => ['required', 'string'],
             'sku' => ['required', 'string'],
             'quantity' => ['required', 'integer', 'min:1'],
