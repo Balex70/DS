@@ -15,6 +15,12 @@ export function OrderDrawerShippingFields({order}: {order: Order}) {
             </span>
         </Field>
         <Field>
+            <FieldLabel>Shipping Method</FieldLabel>
+            <span className="text-md text-muted-foreground">
+                {order.shipping_method ?? "no shipping method"}
+            </span>
+        </Field>
+        <Field>
             <FieldLabel>Shipping Full Name</FieldLabel>
             <span className="text-md text-muted-foreground">
                 {order.shipping_full_name}

@@ -8,6 +8,30 @@ export function OrderDrawerMainFields({order}: {order: Order}) {
   return (
     <FieldGroup className="grid grid-cols-2">
         <Field>
+            <FieldLabel>Status</FieldLabel>
+            <span className="text-md text-muted-foreground">
+                {order.status}
+            </span>
+        </Field>
+        <Field>
+            <FieldLabel>Shipping Method</FieldLabel>
+            <span className="text-md text-muted-foreground">
+                {order.shipping_method ?? "no shipping method"}
+            </span>
+        </Field>
+        <Field>
+            <FieldLabel>Subtotal</FieldLabel>
+            <span className="text-md text-muted-foreground">
+                <PriceRenderer value={order.subtotal} />
+            </span>
+        </Field>
+        <Field>
+            <FieldLabel>Total</FieldLabel>
+            <span className="text-md text-muted-foreground">
+                <PriceRenderer value={order.total} />
+            </span>
+        </Field>
+        <Field>
             <FieldLabel>DS Provider</FieldLabel>
             <span className="text-md text-muted-foreground">
                 {order.ds_provider}
@@ -29,24 +53,6 @@ export function OrderDrawerMainFields({order}: {order: Order}) {
             <FieldLabel>DS Status</FieldLabel>
             <span className="text-md text-muted-foreground">
                 {order.ds_status ?? "no status"}
-            </span>
-        </Field>
-        <Field>
-            <FieldLabel>Subtotal</FieldLabel>
-            <span className="text-md text-muted-foreground">
-                <PriceRenderer value={order.subtotal} />
-            </span>
-        </Field>
-        <Field>
-            <FieldLabel>Total</FieldLabel>
-            <span className="text-md text-muted-foreground">
-                <PriceRenderer value={order.total} />
-            </span>
-        </Field>
-        <Field>
-            <FieldLabel>Status</FieldLabel>
-            <span className="text-md text-muted-foreground">
-                {order.status}
             </span>
         </Field>
         <Field>

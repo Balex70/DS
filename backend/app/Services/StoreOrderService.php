@@ -43,6 +43,7 @@ class StoreOrderService
 
                 'payment_method' => $data['payment_method'] ?? null,
 
+                'shipping_method' => $data['shipping_method'],
                 'shipping_full_name' => $data['shipping_full_name'],
                 'shipping_phone' => $data['shipping_phone'] ?? null,
                 'shipping_email' => $data['shipping_email'] ?? null,

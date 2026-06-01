@@ -4,6 +4,7 @@ import { OrderPayload } from "@/types/order";
 export async function createOrder(data: OrderPayload) {
     return api.post("/api/store/orders/create", {
         ...data,
+        payment_method: "stripe",
         currency: "USD",
     });
 }
