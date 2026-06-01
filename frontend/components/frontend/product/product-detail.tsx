@@ -54,13 +54,13 @@ export function ProductDetail({ productId }: Props) {
 
     const handleAddToCart = async () => {
         addToCart({
-            product_id: product.id,
-            title: product.name_processed ?? product.name_raw,
-            sku: product.sku,
+            product_id: selectedVariant.id,
+            title: selectedVariant.name ?? product.name_processed ?? product.name_raw, // TODO: need to be change to selected variant name_processed after finish with ai_texts endpoint for variants (selectedVariant.name_processed ?? selectedVariant.name_raw)
+            sku: selectedVariant.sku,
             quantity: 1,
-            price: product.price, // product.price,
-            image: product.big_image?.original_url ?? undefined,
-            product_weight: product.product_weight ?? undefined,
+            price: selectedVariant.price, // product.price,
+            image: selectedVariant.image?.original_url ?? undefined,
+            product_weight: selectedVariant.weight ?? undefined,
             packing_weight: product.packing_weight ?? undefined
         });
     };
