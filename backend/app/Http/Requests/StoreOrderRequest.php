@@ -46,6 +46,7 @@ class StoreOrderRequest extends FormRequest
             // Optional totals (you may also recalculate in backend)
             'subtotal' => ['nullable', 'integer', 'min:0'],
             'shipping_cost' => ['nullable', 'integer', 'min:0'],
+            'shipping_method' => ['nullable', 'string', 'max:255'],
             'total' => ['nullable', 'integer', 'min:0'],
 
             // Notes

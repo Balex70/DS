@@ -64,6 +64,7 @@ interface OrderPayloadInterface {
 
     payment_method?: string;
     shipping_cost?: number;
+    shipping_method?: string;
     currency?: string;
 };
 

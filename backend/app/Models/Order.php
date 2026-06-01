@@ -12,7 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 #[Fillable([
-    'id', 'customer_id', 'subtotal', 'shipping_cost', 'total',
+    'id', 'customer_id', 'subtotal', 'shipping_cost', 'total', 'shipping_method',
     'ds_provider', 'ds_order_id', 'ds_tracking_number', 'ds_status',
     'order_number', 'status', 'payment_method', 'payment_status',
     'shipping_full_name', 'shipping_phone', 'shipping_email', 'shipping_address_line1',

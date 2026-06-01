@@ -40,14 +40,21 @@ export function CheckoutComponent() {
     });
 
     function handleSubmit() {
-        createOrder(form, {
-            onSuccess: () => {
-                alert("Order created!");
+        createOrder(
+            {
+                ...form,
+                shipping_cost: shippingMethod?.price,
+                shipping_method: shippingMethod?.id,
             },
-            onError: () => {
-                alert("Something went wrong");
-            },
-        });
+            {
+                onSuccess: () => {
+                    alert("Order created!");
+                },
+                onError: () => {
+                    alert("Something went wrong");
+                },
+            }
+        );
     }
 
     if (isLoading) return <div className="container py-10">Loading...</div>;
