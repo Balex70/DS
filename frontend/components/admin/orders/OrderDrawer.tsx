@@ -18,6 +18,7 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import { OrderDrawerShippingFields } from "./OrderDrawerShippingFields"
 import { OrderDrawerPaymentFields } from "./OrderDrawerPaymentFields"
 import { OrderDrawerItemsFields } from "./OrderDrawerItemsFields"
+import { PriceRenderer } from "@/components/custom/PriceRenderer"
 
 export function OrderDrawer({
   open,
@@ -60,6 +61,11 @@ export function OrderDrawer({
                         <Field className="gap-1">
                             <div className="text-md text-muted-foreground">
                                 Order Number: {order.order_number}
+                            </div>
+                        </Field>
+                        <Field className="gap-1">
+                            <div className="text-md text-muted-foreground">
+                                Total cost: <PriceRenderer value={order.total} />
                             </div>
                         </Field>
                     </FieldGroup>
