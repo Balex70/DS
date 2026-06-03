@@ -23,6 +23,7 @@ interface ProductInterface {
   product_weight: string,
   packing_weight: string,
   variants: ProductVariant[];
+  cheapest_variant: ProductVariant
 }
 
 interface ProductImageInterface {

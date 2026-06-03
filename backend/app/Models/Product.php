@@ -47,4 +47,11 @@ class Product extends Model
     {
         return $this->hasMany(ProductVariant::class);
     }
+
+    public function cheapestVariant(): hasOne
+    {
+        return $this->hasOne(ProductVariant::class)
+            ->ofMany('price', 'min')
+            ->with('image');
+    }
 }

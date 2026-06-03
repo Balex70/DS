@@ -34,6 +34,7 @@ class ProductController extends Controller
         }
 
         // $query->has('bigImage'); // temporary, need to figure out
+        $query->with('cheapestVariant');
         $query->latest();
 
         return ProductResource::collection(
