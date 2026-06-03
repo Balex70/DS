@@ -1,7 +1,7 @@
 "use client";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
-import ProductImage from "./ProductImage";
+import ProductImage from "../product/ProductImage";
 import Image from 'next/image'
 import { useRemoveFromCart } from "@/hooks/use-remove-from-cart";
 import { Trash2 } from "lucide-react";

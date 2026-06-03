@@ -1,8 +1,8 @@
 import { SearchBar } from "./search-bar";
 import { CustomerMenu } from "./customer-menu";
-import { CartButton } from "./cart-button";
 import Link from "next/link";
 import { MegaMenu } from "./megamenu/mega-menu";
+import { CartButton } from "./cart/cart-button";
 
 export function Header() {
     return (

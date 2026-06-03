@@ -1,12 +1,13 @@
 interface CartItemPayloadInterface {
   product_id: string;
+  vid: string;
   title: string;
   sku: string;
   quantity: number;
   price: number;
   image?: string;
-  product_weight?: number;
-  packing_weight?: number;
+  product_weight?: string;
+  packing_weight?: string;
 }
 
 export type CartItemPayload = CartItemPayloadInterface

@@ -18,15 +18,11 @@ class ProductResource extends JsonResource
         return [
             ...$product,
             'images' => $this->images->map(function ($image) {
-                return [
-                    'id' => $image->id,
-                    'url' => $image->url,
-                    'original_url' => $image->original_url,
-                    'ai_url' => $image->ai_url,
-                    'position' => $image->position,
-                    'status' => $image->status,
-                ];
+                return new ProductImageResource($image);
             }),
+            'variants' => ProductVariantResource::collection(
+                $this->whenLoaded('variants')
+            ),
         ];
     }
 }

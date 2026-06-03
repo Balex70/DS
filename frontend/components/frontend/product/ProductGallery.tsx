@@ -35,12 +35,12 @@ export default function ProductGallery({
         }
 
         images.forEach((image) => {
-            if (!result.find((img) => img.id === image.id)) {
+            if (image.id !== bigImage?.id) {
                 result.push(image);
             }
         });
 
-        return result.sort((a, b) => a.position - b.position);
+        return result;
     }, [bigImage, images]);
 
     const [mainApi, setMainApi] = useState<CarouselApi>();
@@ -80,6 +80,7 @@ export default function ProductGallery({
         <div className="space-y-4">
             {/* MAIN CAROUSEL */}
             <Carousel
+                key={bigImage?.id}
                 setApi={setMainApi}
                 className="w-full"
                 opts={{

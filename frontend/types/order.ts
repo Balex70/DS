@@ -9,6 +9,7 @@ interface OrderInterface {
     ds_status?: string;
     subtotal: number;
     shipping_cost: number;
+    shipping_method: string;
     total: number;
     currency: string;
     status: string;
@@ -64,6 +65,7 @@ interface OrderPayloadInterface {
 
     payment_method?: string;
     shipping_cost?: number;
+    shipping_method?: string;
     currency?: string;
 };
 

@@ -34,6 +34,7 @@ class ProductController extends Controller
         }
 
         // $query->has('bigImage'); // temporary, need to figure out
+        $query->with('cheapestVariant');
         $query->latest();
 
         return ProductResource::collection(
@@ -43,6 +44,11 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        $product->load([
+            'variants' => fn ($query) => $query
+                ->with('image')
+                ->orderBy('price'),
+        ]);
         return new ProductResource($product);
     }
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { CartItemPayload } from "@/types/cart";
-import { CartItemsDrawer } from "../product/CartItemsDrawer";
+import { CartItemsDrawer } from "../cart/CartItemsDrawer";
 import { Separator } from "@/components/ui/separator";
 
 export function OrderItems({ items }: {items: CartItemPayload[]}) {

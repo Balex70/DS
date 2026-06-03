@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/use-cart";
 import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
-import { CartDrawer } from "./product/CartDrawer";
+import { CartDrawer } from "./CartDrawer";
 
 export function CartButton() {
     const { data } = useCart();

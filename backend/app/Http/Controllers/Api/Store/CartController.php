@@ -28,13 +28,14 @@ class CartController extends Controller
 
         $item = $request->validate([
             'product_id' => ['nullable', 'integer'],
+            'vid' => ['required', 'string'],
             'title' => ['required', 'string'],
             'sku' => ['required', 'string'],
             'quantity' => ['required', 'integer', 'min:1'],
             'price' => ['required', 'numeric', 'min:0'],
             'image' => ['nullable', 'string'],
-            'product_weight' => ['nullable', 'numeric', 'min:0'],
-            'packing_weight' => ['nullable', 'numeric', 'min:0'],
+            'product_weight' => ['nullable', 'string', 'min:0'],
+            'packing_weight' => ['nullable', 'string', 'min:0'],
         ]);
 
         $cart = $cartService->addItem($token, $item);

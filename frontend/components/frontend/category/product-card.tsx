@@ -14,17 +14,20 @@ type Props = {
 export function ProductCard({ product }: Props) {
     const { mutate: addToCart, isPending } = useAddToCart();
 
+    const cheapestVariantImage = product.cheapest_variant?.image?.original_url ?? product.big_image?.original_url ?? undefined;
+
     const handleAddToCart = async (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         addToCart({
-            product_id: product.id,
-            title: product.name_processed ?? product.name_raw,
-            sku: product.sku,
+            product_id: product.cheapest_variant.id,
+            vid: product.cheapest_variant.external_id,
+            title: product.cheapest_variant.name ?? product.name_processed ?? product.name_raw,
+            sku: product.cheapest_variant.sku,
             quantity: 1,
-            price: product.price, // product.price,
-            image: product.big_image?.original_url ?? undefined,
-            product_weight: product.product_weight ?? undefined,
+            price: product.cheapest_variant.price, // product.price,
+            image: product.cheapest_variant.image?.original_url ?? undefined,
+            product_weight: product.cheapest_variant.weight ?? undefined,
             packing_weight: product.packing_weight ?? undefined
         });
     };
@@ -37,7 +40,7 @@ export function ProductCard({ product }: Props) {
                 <div className="relative aspect-square bg-muted">
                     {product.big_image?.url ? (
                         <ProductImage
-                                src={`/storage/${product.big_image.original_url}`}
+                                src={`/storage/${cheapestVariantImage}`}
                                 alt={product.name_processed ? product.name_processed : product.name_raw}
                                 imageClassName="object-cover transition duration-300 group-hover:scale-105"
                             />

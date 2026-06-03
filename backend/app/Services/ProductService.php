@@ -41,21 +41,6 @@ class ProductService
                 'packing_weight' => $mappedDetails['packing_weight'],
             ]);
 
-            $variantsRows = array_map(function ($variant) use ($productToEnrich, $now) {
-                return [
-                    ...$variant,
-                    'product_id' => $productToEnrich->id,
-                    'created_at' => $now,
-                    'updated_at' => $now,
-                ];
-            }, $mappedDetails['variants']);
-
-            // Upsert variants
-            DB::table('product_variants')->upsert(
-                $variantsRows,
-                ['external_id']
-            );
-
             // Store big image
             if (!empty($mappedDetails['big_image'])) {
                 $this->imageService->syncOriginal(
@@ -72,6 +57,33 @@ class ProductService
                     $this->imageService->syncOriginal($productToEnrich->id, $imageUrl, $key, null);
                 }
             }
+
+            $productImages = DB::table('product_images')
+                ->where('product_id', $productToEnrich->id)
+                ->pluck('id', 'url');
+
+            $variantsRows = array_map(function ($variant) use ($productToEnrich, $productImages, $now) {
+                return [
+                    'product_id' => $productToEnrich->id,
+                    'external_id'  => $variant['external_id'],
+                    'sku'          => $variant['sku'] ?? null,
+                    'key'          => $variant['key'] ?? null,
+                    'name'         => $variant['name'] ?? null,
+                    'price'        => $variant['price'] ?? null,
+                    'stock'        => $variant['stock'] ?? null,
+                    'weight'       => $variant['weight'] ?? null,
+                    'volume'       => $variant['volume'] ?? null,
+                    'image_id'     => $productImages[$variant['image']] ?? null,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }, $mappedDetails['variants']);
+
+            // Upsert variants
+            DB::table('product_variants')->upsert(
+                $variantsRows,
+                ['external_id']
+            );
         });
     }
 }

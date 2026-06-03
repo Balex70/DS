@@ -60,7 +60,7 @@ class CjProductService
             'endCountryCode' => $payload['shippingData']['shipping_country'],
             'products' => array_map(function ($item) {
                 return [
-                    'vid' => "1383296520174047232",
+                    'vid' => $item['vid'],
                     'quantity' => $item['quantity'],
                 ];
             }, $payload['items']),

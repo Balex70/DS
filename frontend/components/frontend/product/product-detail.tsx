@@ -4,6 +4,8 @@ import { useProduct } from "@/hooks/use-product";
 import ProductGallery from "./ProductGallery";
 import { useAddToCart } from "@/hooks/use-add-to-cart";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 type Props = {
     productId: string;
@@ -12,6 +14,7 @@ type Props = {
 export function ProductDetail({ productId }: Props) {
     const { data: product, error, isLoading } = useProduct(productId);
     const { mutate: addToCart, isPending } = useAddToCart();
+    const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
 
     if (error?.response?.status === 404) {
         return (
@@ -42,15 +45,23 @@ export function ProductDetail({ productId }: Props) {
         )
     }
 
+    const selectedVariant = product?.variants?.find(v => v.id === selectedVariantId)
+        ?? product?.variants?.[0];
+
+    const activeVariantId = selectedVariant?.id;
+
+    const galleryMainImage = selectedVariant?.image ?? product.big_image;
+
     const handleAddToCart = async () => {
         addToCart({
-            product_id: product.id,
-            title: product.name_processed ?? product.name_raw,
-            sku: product.sku,
+            product_id: selectedVariant.id,
+            vid: selectedVariant.external_id,
+            title: selectedVariant.name ?? product.name_processed ?? product.name_raw, // TODO: need to be change to selected variant name_processed after finish with ai_texts endpoint for variants (selectedVariant.name_processed ?? selectedVariant.name_raw)
+            sku: selectedVariant.sku,
             quantity: 1,
-            price: product.price, // product.price,
-            image: product.big_image?.original_url ?? undefined,
-            product_weight: product.product_weight ?? undefined,
+            price: selectedVariant.price, // product.price,
+            image: selectedVariant.image?.original_url ?? undefined,
+            product_weight: selectedVariant.weight ?? undefined,
             packing_weight: product.packing_weight ?? undefined
         });
     };
@@ -59,7 +70,7 @@ export function ProductDetail({ productId }: Props) {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             {/* IMAGE */}
             <ProductGallery
-                bigImage={product.big_image}
+                bigImage={galleryMainImage}
                 images={product.images}
                 productName={product.name_processed ?? product.name_raw}
             />
@@ -71,11 +82,11 @@ export function ProductDetail({ productId }: Props) {
                 </h1>
 
                 <div className="text-3xl font-bold">
-                    <PriceRenderer value={product.price} />
+                    <PriceRenderer value={selectedVariant?.price ?? product.price} />
                 </div>
 
                 <div>
-                    {product.warehouse_inventory_num > 0 ? (
+                    {(selectedVariant?.stock ?? product.warehouse_inventory_num) > 0 ? (
                         <p className="text-green-600">In stock</p>
                     ) : (
                         <p className="text-red-500">Out of stock</p>
@@ -86,6 +97,35 @@ export function ProductDetail({ productId }: Props) {
                 {product.description_processed && (
                     <div className="prose max-w-none text-sm text-muted-foreground">
                         {product.description_processed}
+                    </div>
+                )}
+
+                {product.variants?.length > 0 && (
+                    <div className="space-y-2">
+                        <div className="text-sm font-medium text-muted-foreground">
+                            Variant
+                        </div>
+
+                        <div className="flex flex-wrap gap-2">
+                            {product.variants.map((variant) => {
+                                const isSelected = variant.id === activeVariantId;
+
+                                return (
+                                    <button
+                                        key={variant.id}
+                                        onClick={() => setSelectedVariantId(variant.id)}
+                                        className={cn(
+                                            "rounded-lg border px-3 py-1.5 text-sm transition-all",
+                                            isSelected
+                                                ? "cursor-default border-green-600 bg-green-50 text-black"
+                                                : "cursor-pointer border-muted bg-background text-foreground hover:border-gray-100 hover:bg-gray-100 hover:text-black"
+                                        )}
+                                    >
+                                        {variant.key}
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
                 )}
 
