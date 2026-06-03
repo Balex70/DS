@@ -12,6 +12,20 @@ class WayForPayGateway extends AbstractGateway
         return 'wayforpay';
     }
 
+    public function isAvailable(
+        string $country,
+        ?string $currency = null,
+        array $methods = []
+    ): bool {
+        if (!config('services.wayforpay.enabled')) {
+            return false;
+        }
+
+        return $this->supportsCountry($country)
+            && $this->supportsCurrency($currency)
+            && $this->supportsMethod($methods);
+    }
+
     public function createPayment(PaymentRequestDTO $request): PaymentResponseDTO
     {
         $this->log(['wayforpay' => 'create_payment', 'order' => $request->orderId]);
@@ -30,6 +44,22 @@ class WayForPayGateway extends AbstractGateway
 
     public function refund(string $transactionId, float $amount): bool
     {
+        return true;
+    }
+
+    public function supportsCountry(string $country): bool
+    {
+        return $country === 'UA';
+    }
+
+    public function supportsCurrency(string $currency): bool
+    {
+        return in_array($currency, ['UAH', 'USD', 'EUR']);
+    }
+
+    public function supportsMethod(array $methods): bool
+    {
+        // supports cards + Apple Pay + Google Pay
         return true;
     }
 }
