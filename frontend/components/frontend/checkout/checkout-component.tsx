@@ -8,17 +8,17 @@ import { ShippingForm } from "./ShippingForm";
 import { OrderItems } from "./OrderItems";
 import { OrderSummary } from "./OrderSummary";
 import { ShippingMethod } from "@/types/shipping";
-import { PaymentMethods, PaymentResponse } from "@/types/payment";
-import { PaymentSelector } from "./PaymentSelector";
+import { PaymentResponse } from "@/types/payment";
+import { PaymentInfo } from "./PaymentInfo";
 import { Order } from "@/types/order";
 import { useCreatePayment } from "@/hooks/use-create-payment";
+import { useAvailableGateway } from "@/hooks/use-available-gateway";
 
 export function CheckoutComponent() {
     const { data: cart, isLoading } = useCart();
     const { mutate: createOrder, isPending } = useCreateOrder();
     const { mutate: createPayment } = useCreatePayment();
     const [shippingMethod, setShippingMethod] = useState<ShippingMethod | undefined>(undefined);
-    const [paymentMethod, setPaymentMethod] = useState<PaymentMethods>("stripe");
 
     const items = cart?.items ?? [];
 
@@ -45,13 +45,18 @@ export function CheckoutComponent() {
         notes: "",
     });
 
+    const { data: gateway } = useAvailableGateway(
+        form.shipping_country,
+        "USD"
+    );
+
     function handleSubmit() {
         createOrder(
             {
                 ...form,
                 shipping_cost: shippingMethod?.price,
                 shipping_method: shippingMethod?.id,
-                payment_method: paymentMethod,
+                payment_method: gateway?.gateway,
                 currency: "USD",
             },
             {
@@ -61,7 +66,7 @@ export function CheckoutComponent() {
                     createPayment(
                         {
                             orderId: order.id,
-                            payment_method: paymentMethod,
+                            payment_method: gateway?.gateway,
                         },
                         {
                             onSuccess: (paymentResponse: PaymentResponse) => {
@@ -104,7 +109,7 @@ export function CheckoutComponent() {
                 <div className="space-y-6">
                     <OrderItems items={items} />
 
-                    <PaymentSelector shippingMethod={shippingMethod} paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod} />
+                    <PaymentInfo gateway={gateway} isLoading={isPending} />
 
                     <OrderSummary
                         subtotal={subtotal}

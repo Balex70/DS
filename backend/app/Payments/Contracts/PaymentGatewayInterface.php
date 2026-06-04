@@ -21,4 +21,8 @@ interface PaymentGatewayInterface
     public function supportsCurrency(string $currency): bool;
 
     public function supportsMethod(array $methods): bool;
+
+    public function getPriority(): int;
+
+    public function getPaymentMethods(): array;
 }

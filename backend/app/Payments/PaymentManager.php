@@ -29,21 +29,30 @@ class PaymentManager
         return $this->gateways[$name];
     }
 
-    /**
-     * NEW: context-based selection
-     */
-    public function resolve(
+    public function availableGateway(
         string $country,
         ?string $currency = null,
         array $methods = []
-    ): PaymentGatewayInterface {
+    ): ?PaymentGatewayInterface {
         foreach ($this->gateways as $gateway) {
             if ($gateway->isAvailable($country, $currency, $methods)) {
                 return $gateway;
             }
         }
 
-        throw new \Exception("No available payment gateway for [$country]");
+        $available = collect($this->gateways)
+            ->filter(fn ($gateway) =>
+                $gateway->isAvailable(
+                    $country,
+                    $currency,
+                    $methods
+                )
+            )
+            ->sortByDesc(fn ($gateway) =>
+                $gateway->getPriority()
+            );
+
+        return $available->first();
     }
 
     public function all(): array

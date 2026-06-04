@@ -46,4 +46,21 @@ class PaymentController extends Controller
             'redirect_url' => $paymentResponse->redirectUrl,
         ]);
     }
+
+    public function availableGateway(Request $request): ?array
+    {
+        $gateway = $this->manager->availableGateway(
+            $request->country,
+            $request->currency
+        );
+
+        if (!$gateway) {
+            return null;
+        }
+
+        return [
+            'gateway' => $gateway->getName(),
+            'methods' => $gateway->getPaymentMethods(),
+        ];
+    }
 }

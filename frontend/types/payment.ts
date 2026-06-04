@@ -25,3 +25,8 @@ export type PaymentResponse = {
     redirect_url?: string
     transaction_id?: string
 }
+
+export type AvailableGatewayResponse = {
+    gateway: string;
+    methods: string[];
+};

@@ -17,7 +17,7 @@ class StripeGateway extends AbstractGateway
         ?string $currency = null,
         array $methods = []
     ): bool {
-        if (!config('services.stripe.enabled')) {
+        if (!config('payments.stripe.enabled')) {
             return false;
         }
 
@@ -64,5 +64,20 @@ class StripeGateway extends AbstractGateway
     {
         // Stripe supports everything via cards + wallets
         return true;
+    }
+
+    public function getPriority(): int
+    {
+        return 100;
+    }
+
+    public function getPaymentMethods(): array
+    {
+        return [
+            'card',
+            'apple_pay',
+            'google_pay',
+            'link',
+        ];
     }
 }

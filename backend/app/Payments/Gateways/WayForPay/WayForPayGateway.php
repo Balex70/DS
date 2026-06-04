@@ -18,7 +18,7 @@ class WayForPayGateway extends AbstractGateway
         ?string $currency = null,
         array $methods = []
     ): bool {
-        if (!config('services.wayforpay.enabled')) {
+        if (!config('payments.wayforpay.enabled')) {
             return false;
         }
 
@@ -127,12 +127,26 @@ class WayForPayGateway extends AbstractGateway
 
     public function supportsCurrency(string $currency): bool
     {
-        return in_array($currency, ['UAH', 'USD', 'EUR']);
+        return in_array($currency, ['UAH', 'USD']);
     }
 
     public function supportsMethod(array $methods): bool
     {
         // supports cards + Apple Pay + Google Pay
         return true;
+    }
+
+    public function getPriority(): int
+    {
+        return 100;
+    }
+
+    public function getPaymentMethods(): array
+    {
+        return [
+            'card',
+            'apple_pay',
+            'google_pay',
+        ];
     }
 }

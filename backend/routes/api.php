@@ -67,4 +67,5 @@ Route::prefix('store')->group(function () {
     Route::post('cart/remove', [CartController::class, 'remove'])->middleware(EnsureCartToken::class);
     Route::post('cart/update', [CartController::class, 'update'])->middleware(EnsureCartToken::class);
     Route::post('payments/{order}/create', [PaymentController::class, 'create']);
+    Route::post('payments/available-gateway', [PaymentController::class, 'availableGateway']);
 });
