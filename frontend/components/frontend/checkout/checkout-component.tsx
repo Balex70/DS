@@ -112,9 +112,11 @@ export function CheckoutComponent() {
                     <PaymentInfo gateway={gateway} isLoading={isPending} />
 
                     <OrderSummary
+                        country={form.shipping_country}
                         subtotal={subtotal}
                         shippingMethod={shippingMethod}
                         isPending={isPending}
+                        gateway={gateway}
                         onSubmit={handleSubmit}
                     />
                 </div>
