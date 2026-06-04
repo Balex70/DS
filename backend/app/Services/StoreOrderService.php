@@ -39,7 +39,7 @@ class StoreOrderService
                 'ds_status' => OrderDsStatusEnum::PENDING,
 
                 'status' => OrderStatusEnum::PENDING,
-                'payment_status' => PaymentStatusEnum::UNPAID,
+                'payment_status' => PaymentStatusEnum::PENDING,
 
                 'payment_method' => $data['payment_method'] ?? null,
 

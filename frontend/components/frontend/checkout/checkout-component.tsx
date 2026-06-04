@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useCart } from "@/hooks/use-cart";
 import { useCreateOrder } from "@/hooks/use-create-order";
 
@@ -8,11 +8,17 @@ import { ShippingForm } from "./ShippingForm";
 import { OrderItems } from "./OrderItems";
 import { OrderSummary } from "./OrderSummary";
 import { ShippingMethod } from "@/types/shipping";
+import { PaymentMethods, PaymentResponse } from "@/types/payment";
+import { PaymentSelector } from "./PaymentSelector";
+import { Order } from "@/types/order";
+import { useCreatePayment } from "@/hooks/use-create-payment";
 
 export function CheckoutComponent() {
     const { data: cart, isLoading } = useCart();
     const { mutate: createOrder, isPending } = useCreateOrder();
+    const { mutate: createPayment } = useCreatePayment();
     const [shippingMethod, setShippingMethod] = useState<ShippingMethod | undefined>(undefined);
+    const [paymentMethod, setPaymentMethod] = useState<PaymentMethods>("stripe");
 
     const items = cart?.items ?? [];
 
@@ -45,10 +51,29 @@ export function CheckoutComponent() {
                 ...form,
                 shipping_cost: shippingMethod?.price,
                 shipping_method: shippingMethod?.id,
+                payment_method: paymentMethod,
+                currency: "USD",
             },
             {
-                onSuccess: () => {
-                    alert("Order created!");
+                onSuccess: (orderResponse) => {
+                    const order: Order = orderResponse;
+
+                    createPayment(
+                        {
+                            orderId: order.id,
+                            payment_method: paymentMethod,
+                        },
+                        {
+                            onSuccess: (paymentResponse: PaymentResponse) => {
+                                console.log('paymentResponse');
+                                console.log(paymentResponse);
+                                // window.location.href = paymentResponse.redirect_url !== undefined ? paymentResponse.redirect_url : "";
+                            },
+                            onError: () => {
+                                alert("Payment init failed");
+                            },
+                        }
+                    );
                 },
                 onError: () => {
                     alert("Something went wrong");
@@ -78,6 +103,8 @@ export function CheckoutComponent() {
                 {/* RIGHT */}
                 <div className="space-y-6">
                     <OrderItems items={items} />
+
+                    <PaymentSelector shippingMethod={shippingMethod} paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod} />
 
                     <OrderSummary
                         subtotal={subtotal}

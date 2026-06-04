@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\Store\CartController;
 use App\Http\Controllers\Api\Store\CategoryController as StoreCategoryController;
 use App\Http\Controllers\Api\Store\OrderController as StoreOrderController;
+use App\Http\Controllers\Api\Store\PaymentController;
 use App\Http\Controllers\Api\Store\ProductController as StoreProductController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Middleware\EnsureCartToken;
@@ -65,4 +66,5 @@ Route::prefix('store')->group(function () {
     Route::post('cart/clear', [CartController::class, 'clear'])->middleware(EnsureCartToken::class);
     Route::post('cart/remove', [CartController::class, 'remove'])->middleware(EnsureCartToken::class);
     Route::post('cart/update', [CartController::class, 'update'])->middleware(EnsureCartToken::class);
+    Route::post('payments/{order}/create', [PaymentController::class, 'create']);
 });

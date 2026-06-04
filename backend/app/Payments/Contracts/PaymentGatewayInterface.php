@@ -8,7 +8,7 @@ interface PaymentGatewayInterface
 {
     public function getName(): string;
 
-    public function isAvailable(string $country, string $currency = null, array $methods = []): bool;
+    public function isAvailable(string $country, ?string $currency = null, array $methods = []): bool;
 
     public function createPayment(PaymentRequestDTO $request): PaymentResponseDTO;
 
