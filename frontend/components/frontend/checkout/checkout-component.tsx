@@ -13,12 +13,7 @@ import { PaymentInfo } from "./PaymentInfo";
 import { CheckoutStatus, Order } from "@/types/order";
 import { useCreatePayment } from "@/hooks/use-create-payment";
 import { useAvailableGateway } from "@/hooks/use-available-gateway";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
+import { CheckoutDialog } from "./CheckoutDialog";
 
 export function CheckoutComponent() {
     const { data: cart, isLoading } = useCart();
@@ -143,33 +138,7 @@ export function CheckoutComponent() {
                 </div>
             </div>
 
-            <Dialog open={checkoutOpen} onOpenChange={setCheckoutOpen}>
-                <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                        <DialogTitle>Processing checkout</DialogTitle>
-                    </DialogHeader>
-
-                    <div className="space-y-4">
-                        {checkoutStatus === "creating-order" && (
-                            <p>Creating your order...</p>
-                        )}
-
-                        {checkoutStatus === "creating-payment" && (
-                            <p>Preparing payment...</p>
-                        )}
-
-                        {checkoutStatus === "redirecting" && (
-                            <p>Redirecting to payment provider...</p>
-                        )}
-
-                        {checkoutStatus === "failed" && (
-                            <p className="text-red-500">
-                                Payment failed. Please try again.
-                            </p>
-                        )}
-                    </div>
-                </DialogContent>
-            </Dialog>
+            <CheckoutDialog checkoutOpen={checkoutOpen} setCheckoutOpen={setCheckoutOpen} checkoutStatus={checkoutStatus} />
         </div>
     );
 }
