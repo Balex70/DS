@@ -1,10 +1,11 @@
 <?php
 namespace App\Http\Controllers\Api\Store;
 
+use App\Enums\PaymentStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Payments\PaymentManager;
 use App\Payments\DTO\PaymentRequestDTO;
+use App\Payments\PaymentManager;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -39,7 +40,7 @@ class PaymentController extends Controller
             'transaction_id' => $paymentResponse->transactionId,
             'amount' => $order->total,
             'currency' => $order->currency,
-            'status' => 'pending',
+            'status' => PaymentStatusEnum::PENDING,
         ]);
 
         return response()->json([

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { ShippingMethod } from "@/types/shipping";
 import { AvailableGatewayResponse } from "@/types/payment";
+import { CheckoutStatus } from "@/types/order";
 
 type Props = {
     country?: string;
@@ -12,6 +13,7 @@ type Props = {
     shippingMethod?: ShippingMethod,
     isPending: boolean;
     gateway: AvailableGatewayResponse;
+    checkoutStatus: CheckoutStatus;
     onSubmit: () => void;
 };
 
@@ -21,26 +23,42 @@ export function OrderSummary({
     shippingMethod,
     isPending,
     gateway,
+    checkoutStatus,
     onSubmit,
 }: Props) {
     const shippingCost = shippingMethod?.price ?? 0;
     const total = subtotal + shippingCost;
 
-    const isLoading = isPending;
     const hasCountry = !!country;
     const noShipping = !shippingMethod;
-    const noGateway = shippingMethod && !gateway;
+    const noGateway = !!shippingMethod && !gateway;
+    const isLoading = checkoutStatus !== "idle";
 
-    let buttonText = "Create order";
-    if (isLoading) {
-        buttonText = "Creating order...";
+    let buttonText = "Proceed to Payment";
+
+    if (checkoutStatus === "failed") {
+        buttonText = "Payment Failed — Try Again";
+    } else if (checkoutStatus === "creating-order") {
+        buttonText = "Creating Order...";
+    } else if (checkoutStatus === "creating-payment") {
+        buttonText = "Preparing Payment...";
+    } else if (checkoutStatus === "redirecting") {
+        buttonText = "Redirecting...";
     } else if (!hasCountry) {
-        buttonText = "Select delivery country";
+        buttonText = "Select Delivery Country";
     } else if (noShipping) {
-        buttonText = "Select shipping method";
+        buttonText = "Select Shipping Method";
     } else if (noGateway) {
-        buttonText = "Payments not available in this region";
+        buttonText = "Payments Not Available";
     }
+
+    const isDisabled =
+        checkoutStatus === "creating-order" ||
+        checkoutStatus === "creating-payment" ||
+        checkoutStatus === "redirecting" ||
+        noShipping ||
+        noGateway ||
+        !hasCountry;
 
     return (
         <div className="rounded-xl border p-4">
@@ -68,7 +86,7 @@ export function OrderSummary({
             <Button
                 className="mt-6 w-full"
                 onClick={onSubmit}
-                disabled={isLoading || noShipping || noGateway}
+                disabled={isDisabled}
             >
                 {buttonText}
             </Button>

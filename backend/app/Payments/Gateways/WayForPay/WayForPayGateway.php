@@ -5,6 +5,7 @@ use App\Payments\DTO\PaymentRequestDTO;
 use App\Payments\DTO\PaymentResponseDTO;
 use App\Payments\Gateways\AbstractGateway;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class WayForPayGateway extends AbstractGateway
 {
@@ -35,7 +36,7 @@ class WayForPayGateway extends AbstractGateway
         $merchantSecret  = config('payments.wayforpay.merchant_secret');
         $domain          = config('app.url');
 
-        $orderReference = 'ORDER_' . $request->orderId;
+        $orderReference = 'ORDER_' . $request->orderId . '_PAY_' . Str::uuid();
         $orderDate = time();
 
         $amount = number_format($request->amount / 100, 2, '.', '');
