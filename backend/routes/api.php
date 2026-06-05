@@ -61,6 +61,7 @@ Route::get('orders', [OrderController::class, 'index'])->middleware('auth:sanctu
 Route::prefix('store')->group(function () {
     Route::post('orders/create', [StoreOrderController::class, 'store'])->middleware(EnsureCartToken::class);
     Route::post('orders/shipping-calculate', [StoreOrderController::class, 'shippingCalculate'])->middleware(EnsureCartToken::class);
+    Route::get('orders/public-token/{token}', [StoreOrderController::class, 'showByPublicToken']);
     Route::post('cart/add', [CartController::class, 'add'])->middleware(EnsureCartToken::class);
     Route::get('cart', [CartController::class, 'show'])->middleware(EnsureCartToken::class);
     Route::post('cart/clear', [CartController::class, 'clear'])->middleware(EnsureCartToken::class);

@@ -16,31 +16,27 @@ class StoreOrderService
         private DropshippingManager $manager,
     ) {}
     
-    public function storeOrder(array $data, mixed $items): Order
+    public function upsertOrderByCheckoutToken(array $data, mixed $items, string $cartToken): Order
     {
         $subtotal = collect($items)->sum(fn ($item) => $item['price'] * $item['quantity']);
         $shipping = $data['shipping_cost'] ?? 0;
         $total = $subtotal + $shipping;
         $customer = auth('customer')->user();
-        
-        return DB::transaction(function () use ($items, $subtotal, $shipping, $total, $customer, $data) {
-            $order = Order::create([
-                'order_number' => 'ORD-' . strtoupper(Str::random(10)),
 
-                'customer_id' => $customer ? $customer->id : null,
+        // 1. Check if a pending order already exists for this checkout token
+        $existingOrder = Order::where('checkout_token', $cartToken)
+            ->where('status', OrderStatusEnum::DRAFT)
+            ->first();
 
+        return DB::transaction(function () use ($existingOrder, $items, $subtotal, $shipping, $total, $customer, $data, $cartToken) {
+
+            // Shared data payload for both Create and Update actions
+            $orderData = [
                 'subtotal' => $subtotal,
                 'shipping_cost' => $shipping,
                 'total' => $total,
 
                 'currency' => $data['currency'] ?? 'USD',
-
-                'ds_provider' => $data['ds_provider'] ?? 'cj',
-                'ds_status' => OrderDsStatusEnum::PENDING,
-
-                'status' => OrderStatusEnum::PENDING,
-                'payment_status' => PaymentStatusEnum::PENDING,
-
                 'payment_method' => $data['payment_method'] ?? null,
 
                 'shipping_method' => $data['shipping_method'],
@@ -56,9 +52,31 @@ class StoreOrderService
                 'shipping_country' => $data['shipping_country'],
 
                 'notes' => $data['notes'] ?? null,
-            ]);
+                'checkout_token' => $cartToken,
+            ];
 
-            // Create order items
+            if ($existingOrder) {
+                // Scenario A: Update existing order
+                $existingOrder->update($orderData);
+                $order = $existingOrder;
+
+                // Wipe old items so we can completely rebuild them based on the current cart
+                $order->items()->delete();
+            } else {
+                // Scenario B: Create a fresh order record
+                $extraData = [
+                    'order_number' => 'ORD-' . strtoupper(Str::random(10)),
+                    'customer_id' => $customer ? $customer->id : null,
+                    'ds_provider' => $data['ds_provider'] ?? 'cj',
+                    'ds_status' => OrderDsStatusEnum::PENDING,
+                    'status' => OrderStatusEnum::DRAFT,
+                    'payment_status' => PaymentStatusEnum::DRAFT,
+                ];
+
+                $order = Order::create(array_merge($orderData, $extraData));
+            }
+
+            // 2. Insert/Recreate order items seamlessly
             foreach ($items as $item) {
                 $order->items()->create([
                     'product_id' => $item['product_id'] ?? null,

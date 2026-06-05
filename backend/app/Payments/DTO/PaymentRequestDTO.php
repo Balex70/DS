@@ -5,6 +5,7 @@ class PaymentRequestDTO
 {
     public function __construct(
         public readonly int $orderId,
+        public readonly string $public_token,
         public readonly int $amount, // in cents
         public readonly string $currency,
         public readonly string $country,

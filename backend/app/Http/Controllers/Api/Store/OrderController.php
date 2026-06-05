@@ -50,7 +50,7 @@ class OrderController extends Controller
             return response()->json(['message' => 'Cart is empty'], 422);
         }
 
-        $order = $this->storeOrderService->storeOrder($data, $items);
+        $order = $this->storeOrderService->upsertOrderByCheckoutToken($data, $items, $token);
 
         return response()->json($order->load('items'), 201);
     }
@@ -94,23 +94,11 @@ class OrderController extends Controller
         );
     }
 
-    /**
-     * Cancel order (only if not fulfilled)
-     */
-    public function update(UpdateOrderRequest $request, Order $order)
+    public function showByPublicToken(string $token)
     {
-        abort_unless($order->customer_id === $request->user()->id, 403);
-
-        // need to move this logic into model or service
-        if (in_array($order->status, [ OrderStatusEnum::FULFILLED, OrderStatusEnum::PROCESSING])) {
-            return response()->json([
-                'message' => 'Order cannot be canceled at this stage.',
-            ], 422);
-        }
-
-        $order->update([
-            'status' => OrderStatusEnum::CANCELED,
-        ]);
+        $order = Order::query()
+            ->where('public_token', $token)
+            ->firstOrFail();
 
         return response()->json($order);
     }

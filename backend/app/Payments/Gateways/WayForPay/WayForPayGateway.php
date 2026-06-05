@@ -80,8 +80,8 @@ class WayForPayGateway extends AbstractGateway
 
             "clientEmail" => $request->email,
 
-            "returnUrl" => config('payment.wayforpay.return_url'),
-            "serviceUrl" => config('payment.wayforpay.service_url'),
+            "returnUrl" => config('payments.wayforpay.return_url') . '/payment-result?token=' . $request->public_token,
+            "serviceUrl" => config('payments.wayforpay.service_url'),
 
             "merchantSignature" => $merchantSignature,
         ];

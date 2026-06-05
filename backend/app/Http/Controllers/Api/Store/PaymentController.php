@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api\Store;
 
 use App\Enums\PaymentStatusEnum;
+use App\Events\PaymentInitiated;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Payments\DTO\PaymentRequestDTO;
@@ -26,6 +27,7 @@ class PaymentController extends Controller
         $paymentResponse = $gateway->createPayment(
             new PaymentRequestDTO(
                 orderId: $order->id,
+                public_token: $order->public_token,
                 amount: $order->total,
                 currency: $order->currency ?? 'USD',
                 country: $order->shipping_country,
@@ -34,7 +36,7 @@ class PaymentController extends Controller
             )
         );
 
-        // optionally store payment
+        // store payment
         $order->payments()->create([
             'gateway' => $gateway->getName(),
             'transaction_id' => $paymentResponse->transactionId,
@@ -42,6 +44,10 @@ class PaymentController extends Controller
             'currency' => $order->currency,
             'status' => PaymentStatusEnum::PENDING,
         ]);
+
+        // Dispatch the event right before giving the user the URL
+        // This immediately marks the order as PENDING behind the scenes
+        PaymentInitiated::dispatch($order); // TODO: PaymentPassed for scenario where payment is actually bypass (failed or paid or canceled)
 
         return response()->json([
             'redirect_url' => $paymentResponse->redirectUrl,

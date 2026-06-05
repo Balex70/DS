@@ -8,7 +8,7 @@ import { ShippingForm } from "./ShippingForm";
 import { OrderItems } from "./OrderItems";
 import { OrderSummary } from "./OrderSummary";
 import { ShippingMethod } from "@/types/shipping";
-import { PaymentResponse } from "@/types/payment";
+import { AvailableGatewayResponse, PaymentResponse } from "@/types/payment";
 import { PaymentInfo } from "./PaymentInfo";
 import { CheckoutStatus, Order } from "@/types/order";
 import { useCreatePayment } from "@/hooks/use-create-payment";
@@ -58,6 +58,34 @@ export function CheckoutComponent() {
         setCheckoutStatus("idle");
     };
 
+    function proceedWithPayment(order: Order, gateway: AvailableGatewayResponse){
+        if (!gateway) {
+            setCheckoutStatus("failed");
+            return;
+        }
+        setCheckoutStatus("creating-payment");
+        createPayment(
+            {
+                orderId: order.id,
+                payment_method: gateway?.gateway,
+            },
+            {
+                onSuccess: (paymentResponse: PaymentResponse) => {
+                    if (!paymentResponse.redirect_url) {
+                        setCheckoutStatus("failed");
+                        return;
+                    }
+
+                    setCheckoutStatus("redirecting");
+                    window.location.href = paymentResponse.redirect_url;
+                },
+                onError: () => {
+                    setCheckoutStatus("failed");
+                },
+            }
+        );
+    }
+
     function handleSubmit() {
         setCheckoutOpen(true);
         setCheckoutStatus("creating-order");
@@ -72,28 +100,7 @@ export function CheckoutComponent() {
             {
                 onSuccess: (orderResponse) => {
                     const order: Order = orderResponse;
-                    setCheckoutStatus("creating-payment");
-
-                    createPayment(
-                        {
-                            orderId: order.id,
-                            payment_method: gateway?.gateway,
-                        },
-                        {
-                            onSuccess: (paymentResponse: PaymentResponse) => {
-                                if (!paymentResponse.redirect_url) {
-                                    setCheckoutStatus("failed");
-                                    return;
-                                }
-
-                                setCheckoutStatus("redirecting");
-                                window.location.href = paymentResponse.redirect_url;
-                            },
-                            onError: () => {
-                                setCheckoutStatus("failed");
-                            },
-                        }
-                    );
+                    proceedWithPayment(order, gateway);
                 },
                 onError: () => {
                     setCheckoutStatus("failed");
