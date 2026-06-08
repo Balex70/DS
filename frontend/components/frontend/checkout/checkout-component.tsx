@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useCart } from "@/hooks/use-cart";
 import { useCreateOrder } from "@/hooks/use-create-order";
 
@@ -8,11 +8,20 @@ import { ShippingForm } from "./ShippingForm";
 import { OrderItems } from "./OrderItems";
 import { OrderSummary } from "./OrderSummary";
 import { ShippingMethod } from "@/types/shipping";
+import { AvailableGatewayResponse, PaymentResponse } from "@/types/payment";
+import { PaymentInfo } from "./PaymentInfo";
+import { CheckoutStatus, Order } from "@/types/order";
+import { useCreatePayment } from "@/hooks/use-create-payment";
+import { useAvailableGateway } from "@/hooks/use-available-gateway";
+import { CheckoutDialog } from "./CheckoutDialog";
 
 export function CheckoutComponent() {
     const { data: cart, isLoading } = useCart();
-    const { mutate: createOrder, isPending } = useCreateOrder();
+    const { mutate: createOrder } = useCreateOrder();
+    const { mutate: createPayment } = useCreatePayment();
     const [shippingMethod, setShippingMethod] = useState<ShippingMethod | undefined>(undefined);
+    const [checkoutOpen, setCheckoutOpen] = useState(false);
+    const [checkoutStatus, setCheckoutStatus] = useState<CheckoutStatus>("idle");
 
     const items = cart?.items ?? [];
 
@@ -39,19 +48,62 @@ export function CheckoutComponent() {
         notes: "",
     });
 
+    const { data: gateway } = useAvailableGateway(
+        form.shipping_country,
+        "USD"
+    );
+
+    const handleFormChange = (newForm: typeof form) => {
+        setForm(newForm);
+        setCheckoutStatus("idle");
+    };
+
+    function proceedWithPayment(order: Order, gateway: AvailableGatewayResponse){
+        if (!gateway) {
+            setCheckoutStatus("failed");
+            return;
+        }
+        setCheckoutStatus("creating-payment");
+        createPayment(
+            {
+                orderId: order.id,
+                payment_method: gateway?.gateway,
+            },
+            {
+                onSuccess: (paymentResponse: PaymentResponse) => {
+                    if (!paymentResponse.redirect_url) {
+                        setCheckoutStatus("failed");
+                        return;
+                    }
+
+                    setCheckoutStatus("redirecting");
+                    window.location.href = paymentResponse.redirect_url;
+                },
+                onError: () => {
+                    setCheckoutStatus("failed");
+                },
+            }
+        );
+    }
+
     function handleSubmit() {
+        setCheckoutOpen(true);
+        setCheckoutStatus("creating-order");
         createOrder(
             {
                 ...form,
                 shipping_cost: shippingMethod?.price,
                 shipping_method: shippingMethod?.id,
+                payment_method: gateway?.gateway,
+                currency: "USD",
             },
             {
-                onSuccess: () => {
-                    alert("Order created!");
+                onSuccess: (orderResponse) => {
+                    const order: Order = orderResponse;
+                    proceedWithPayment(order, gateway);
                 },
                 onError: () => {
-                    alert("Something went wrong");
+                    setCheckoutStatus("failed");
                 },
             }
         );
@@ -73,20 +125,27 @@ export function CheckoutComponent() {
 
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
                 {/* LEFT */}
-                <ShippingForm form={form} setForm={setForm} shippingMethod={shippingMethod} setShippingMethod={setShippingMethod} cartKey={cartKey} />
+                <ShippingForm form={form} setForm={handleFormChange} shippingMethod={shippingMethod} setShippingMethod={setShippingMethod} cartKey={cartKey} />
 
                 {/* RIGHT */}
                 <div className="space-y-6">
                     <OrderItems items={items} />
 
+                    <PaymentInfo gateway={gateway} isLoading={isLoading} />
+
                     <OrderSummary
+                        country={form.shipping_country}
                         subtotal={subtotal}
                         shippingMethod={shippingMethod}
-                        isPending={isPending}
+                        isPending={isLoading}
+                        gateway={gateway}
+                        checkoutStatus={checkoutStatus}
                         onSubmit={handleSubmit}
                     />
                 </div>
             </div>
+
+            <CheckoutDialog checkoutOpen={checkoutOpen} setCheckoutOpen={setCheckoutOpen} checkoutStatus={checkoutStatus} />
         </div>
     );
 }

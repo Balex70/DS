@@ -33,10 +33,11 @@ class OrderFactory extends Factory
         ]);
 
         $paymentStatus = $this->faker->randomElement([
-            PaymentStatusEnum::UNPAID,
+            PaymentStatusEnum::PENDING,
             PaymentStatusEnum::PAID,
             PaymentStatusEnum::FAILED,
             PaymentStatusEnum::REFUNDED,
+            PaymentStatusEnum::CANCELED,
         ]);
 
         $dsStatus = $this->faker->randomElement([

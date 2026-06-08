@@ -85,6 +85,13 @@ export type DsStatus =
     | "delivered"
     | "failed"
 
+export type CheckoutStatus =
+    | "idle"
+    | "creating-order"
+    | "creating-payment"
+    | "redirecting"
+    | "failed"
+
 export type Order = OrderInterface
 export type Meta = MetaInterface
 export type OrderPayload = OrderPayloadInterface

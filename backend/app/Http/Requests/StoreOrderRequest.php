@@ -29,12 +29,12 @@ class StoreOrderRequest extends FormRequest
 
             // Currency / payment
             'currency' => ['nullable', 'string', 'size:3'],
-            'payment_method' => ['nullable', 'string', Rule::in(['stripe', 'paypal', 'cod', 'bank_transfer'])],
+            'payment_method' => ['nullable', 'string', Rule::in(['stripe', 'wayforpay', 'paypal', 'cod', 'bank_transfer'])],
 
             // Shipping info (required)
             'shipping_full_name' => ['required', 'string', 'max:255'],
             'shipping_phone' => ['nullable', 'string', 'max:50'],
-            'shipping_email' => ['nullable', 'email', 'max:255'],
+            'shipping_email' => ['required', 'email', 'max:255'],
 
             'shipping_address_line1' => ['required', 'string', 'max:255'],
             'shipping_address_line2' => ['nullable', 'string', 'max:255'],

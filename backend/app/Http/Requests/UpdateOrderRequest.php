@@ -68,10 +68,11 @@ class UpdateOrderRequest extends FormRequest
                 'sometimes',
                 'string',
                 Rule::in([
-                    PaymentStatusEnum::UNPAID,
+                    PaymentStatusEnum::PENDING,
                     PaymentStatusEnum::PAID,
                     PaymentStatusEnum::FAILED,
                     PaymentStatusEnum::REFUNDED,
+                    PaymentStatusEnum::CANCELED,
                 ]),
             ],
 
