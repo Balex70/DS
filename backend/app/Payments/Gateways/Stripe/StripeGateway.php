@@ -7,6 +7,22 @@ use App\Payments\Gateways\AbstractGateway;
 
 class StripeGateway extends AbstractGateway
 {
+    private const SUPPORTED_COUNTRIES = [
+        // EU
+        'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR',
+        'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL',
+        'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE',
+
+        // EEA / Europe (non-EU but commonly supported by Stripe)
+        'NO', 'IS', 'LI', 'CH', 'GB',
+
+        // North America
+        'US', 'CA',
+
+        // Oceania
+        'AU', 'NZ',
+    ];
+
     public function getName(): string
     {
         return 'stripe';
@@ -52,7 +68,7 @@ class StripeGateway extends AbstractGateway
     public function supportsCountry(string $country): bool
     {
         // Stripe = global, except maybe restricted regions
-        return in_array($country, ['US', 'EU', 'PL', 'DE', 'FR']);
+        return in_array($country, self::SUPPORTED_COUNTRIES, true);
     }
 
     public function supportsCurrency(string $currency): bool
