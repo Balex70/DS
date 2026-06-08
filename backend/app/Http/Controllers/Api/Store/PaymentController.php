@@ -7,14 +7,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Payments\DTO\PaymentRequestDTO;
 use App\Payments\PaymentManager;
+use App\Services\CartService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 
 class PaymentController extends Controller
 {
     public function __construct(
         private PaymentManager $manager
     ) {}
-    public function create(Request $request, Order $order)
+    public function create(Request $request, Order $order, CartService $cartService)
     {
         // abort_unless($order->customer_id === $request->user()->id, 403);
 
@@ -48,6 +50,15 @@ class PaymentController extends Controller
         // Dispatch the event right before giving the user the URL
         // This immediately marks the order as PENDING behind the scenes
         PaymentInitiated::dispatch($order); // TODO: PaymentPassed for scenario where payment is actually bypass (failed or paid or canceled)
+
+        // Clear the cart
+        $token = $request->attributes->get('cart_token');
+
+        if ($token) {
+            $cartService->clear($token);
+        }
+
+        Cookie::queue(Cookie::forget('cart_token'));
 
         return response()->json([
             'redirect_url' => $paymentResponse->redirectUrl,

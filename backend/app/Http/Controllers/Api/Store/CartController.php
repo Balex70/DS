@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Store;
 use App\Http\Controllers\Controller;
 use App\Services\CartService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 
 class CartController extends Controller
 {
@@ -86,6 +87,9 @@ class CartController extends Controller
             $cartService->clear($token);
         }
 
-        return response()->json(['message' => 'Cart cleared']);
+        Cookie::queue(Cookie::forget('cart_token'));
+
+        return response()
+            ->json(['message' => 'Cart cleared']);
     }
 }
