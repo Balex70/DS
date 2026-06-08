@@ -22,6 +22,7 @@ export function CheckoutComponent() {
     const [shippingMethod, setShippingMethod] = useState<ShippingMethod | undefined>(undefined);
     const [checkoutOpen, setCheckoutOpen] = useState(false);
     const [checkoutStatus, setCheckoutStatus] = useState<CheckoutStatus>("idle");
+    const [errors, setErrors] = useState<Record<string, string[]>>({});
 
     const items = cart?.items ?? [];
 
@@ -87,7 +88,6 @@ export function CheckoutComponent() {
     }
 
     function handleSubmit() {
-        setCheckoutOpen(true);
         setCheckoutStatus("creating-order");
         createOrder(
             {
@@ -100,9 +100,18 @@ export function CheckoutComponent() {
             {
                 onSuccess: (orderResponse) => {
                     const order: Order = orderResponse;
+                    setCheckoutOpen(true);
                     proceedWithPayment(order, gateway);
                 },
-                onError: () => {
+                onError: (error: any) => {
+                    const status = error?.response?.status;
+
+                    if (status === 422) {
+                        setErrors(error.response.data.errors);
+                        setCheckoutStatus("idle");
+                        setCheckoutOpen(false);
+                        return;
+                    }
                     setCheckoutStatus("failed");
                 },
             }
@@ -125,7 +134,7 @@ export function CheckoutComponent() {
 
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
                 {/* LEFT */}
-                <ShippingForm form={form} setForm={handleFormChange} shippingMethod={shippingMethod} setShippingMethod={setShippingMethod} cartKey={cartKey} />
+                <ShippingForm form={form} setForm={handleFormChange} shippingMethod={shippingMethod} setShippingMethod={setShippingMethod} cartKey={cartKey} errors={errors} />
 
                 {/* RIGHT */}
                 <div className="space-y-6">
