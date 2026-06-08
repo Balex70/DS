@@ -97,18 +97,11 @@ export function CartDrawer({
                                 asChild
                                 className="w-full"
                             >
-                                <Link href="/checkout">
+                                <Link
+                                    href="/checkout"
+                                    onClick={() => onOpenChange(false)}
+                                >
                                     Checkout
-                                </Link>
-                            </Button>
-
-                            <Button
-                                asChild
-                                variant="outline"
-                                className="w-full"
-                            >
-                                <Link href="/cart">
-                                    View Cart
                                 </Link>
                             </Button>
 

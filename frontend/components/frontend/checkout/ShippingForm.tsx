@@ -30,6 +30,7 @@ type Props = {
     shippingMethod: ShippingMethod | undefined;
     setShippingMethod: (method: ShippingMethod | undefined) => void;
     cartKey: string | undefined;
+    errors: Record<string, string[]>
 };
 
 export function ShippingForm({
@@ -37,14 +38,15 @@ export function ShippingForm({
     setForm,
     shippingMethod,
     setShippingMethod,
-    cartKey
+    cartKey,
+    errors
 }: Props) {
     const [payload, setPayload] = useState<{
         shipping_country: string;
         shipping_postal_code?: string;
     } | null>(null);
-
     const { data: shippingOptions = [], isLoading } =  useShippingCalculate(payload, cartKey);
+    const getError = (field: string) => errors[field]?.[0];
 
     // trigger shipping calculation when address changes
     useEffect(() => {
@@ -145,160 +147,223 @@ export function ShippingForm({
 
             {/* FORM */}
             <div className="space-y-4">
-                <Input
-                    placeholder="Full name"
-                    value={form.shipping_full_name}
-                    onChange={(e) =>
-                        setForm({
-                            ...form,
-                            shipping_full_name: e.target.value,
-                        })
-                    }
-                />
-
-                <Input
-                    placeholder="Phone"
-                    value={form.shipping_phone}
-                    onChange={(e) =>
-                        setForm({
-                            ...form,
-                            shipping_phone: e.target.value,
-                        })
-                    }
-                />
-
-                <Input
-                    placeholder="Email"
-                    type="email"
-                    value={form.shipping_email}
-                    onChange={(e) =>
-                        setForm({
-                            ...form,
-                            shipping_email: e.target.value,
-                        })
-                    }
-                />
-
-                <Input
-                    placeholder="Address line 1"
-                    value={form.shipping_address_line1}
-                    onChange={(e) =>
-                        setForm({
-                            ...form,
-                            shipping_address_line1: e.target.value,
-                        })
-                    }
-                />
-
-                <Input
-                    placeholder="Address line 2"
-                    value={form.shipping_address_line2}
-                    onChange={(e) =>
-                        setForm({
-                            ...form,
-                            shipping_address_line2: e.target.value,
-                        })
-                    }
-                />
-
-                <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
                     <Input
-                        placeholder="City"
-                        value={form.shipping_city}
+                        placeholder="Full name"
+                        value={form.shipping_full_name}
                         onChange={(e) =>
                             setForm({
                                 ...form,
-                                shipping_city: e.target.value,
+                                shipping_full_name: e.target.value,
                             })
                         }
                     />
+                    {getError("shipping_full_name") && (
+                        <p className="text-sm text-red-500">
+                            {getError("shipping_full_name")}
+                        </p>
+                    )}
+                </div>
 
+                <div className="space-y-1">
                     <Input
-                        placeholder="State"
-                        value={form.shipping_state}
+                        placeholder="Phone"
+                        value={form.shipping_phone}
                         onChange={(e) =>
                             setForm({
                                 ...form,
-                                shipping_state: e.target.value,
+                                shipping_phone: e.target.value,
                             })
                         }
                     />
+                    {getError("shipping_phone") && (
+                        <p className="text-sm text-red-500">
+                            {getError("shipping_phone")}
+                        </p>
+                    )}
+                </div>
+
+                <div className="space-y-1">
+                    <Input
+                        placeholder="Email"
+                        type="email"
+                        value={form.shipping_email}
+                        onChange={(e) =>
+                            setForm({
+                                ...form,
+                                shipping_email: e.target.value,
+                            })
+                        }
+                    />
+                    {getError("shipping_email") && (
+                        <p className="text-sm text-red-500">
+                            {getError("shipping_email")}
+                        </p>
+                    )}
+                </div>
+
+                <div className="space-y-1">
+                    <Input
+                        placeholder="Address line 1"
+                        value={form.shipping_address_line1}
+                        onChange={(e) =>
+                            setForm({
+                                ...form,
+                                shipping_address_line1: e.target.value,
+                            })
+                        }
+                    />
+                    {getError("shipping_address_line1") && (
+                        <p className="text-sm text-red-500">
+                            {getError("shipping_address_line1")}
+                        </p>
+                    )}
+                </div>
+
+                <div className="space-y-1">
+                    <Input
+                        placeholder="Address line 2"
+                        value={form.shipping_address_line2}
+                        onChange={(e) =>
+                            setForm({
+                                ...form,
+                                shipping_address_line2: e.target.value,
+                            })
+                        }
+                    />
+                    {getError("shipping_address_line2") && (
+                        <p className="text-sm text-red-500">
+                            {getError("shipping_address_line2")}
+                        </p>
+                    )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                    <Input
-                        placeholder="Postal code"
-                        value={form.shipping_postal_code}
-                        onChange={(e) =>
-                            setForm({
-                                ...form,
-                                shipping_postal_code: e.target.value,
-                            })
-                        }
-                    />
+                    <div className="space-y-1">
+                        <Input
+                            placeholder="City"
+                            value={form.shipping_city}
+                            onChange={(e) =>
+                                setForm({
+                                    ...form,
+                                    shipping_city: e.target.value,
+                                })
+                            }
+                        />
+                        {getError("shipping_city") && (
+                            <p className="text-sm text-red-500">
+                                {getError("shipping_city")}
+                            </p>
+                        )}
+                    </div>
 
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button
-                                variant="outline"
-                                role="combobox"
-                                className="w-full justify-between"
-                            >
-                                {selectedCountry?.name ?? "Select country"}
+                    <div className="space-y-1">
+                        <Input
+                            placeholder="State"
+                            value={form.shipping_state}
+                            onChange={(e) =>
+                                setForm({
+                                    ...form,
+                                    shipping_state: e.target.value,
+                                })
+                            }
+                        />
+                        {getError("shipping_state") && (
+                            <p className="text-sm text-red-500">
+                                {getError("shipping_state")}
+                            </p>
+                        )}
+                    </div>
+                </div>
 
-                                <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
-                            </Button>
-                        </PopoverTrigger>
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                        <Input
+                            placeholder="Postal code"
+                            value={form.shipping_postal_code}
+                            onChange={(e) =>
+                                setForm({
+                                    ...form,
+                                    shipping_postal_code: e.target.value,
+                                })
+                            }
+                        />
+                        {getError("shipping_postal_code") && (
+                            <p className="text-sm text-red-500">
+                                {getError("shipping_postal_code")}
+                            </p>
+                        )}
+                    </div>
 
-                        <PopoverContent align="start"
-                            sideOffset={4}
-                            className="w-[--radix-popover-trigger-width] p-0">
-                            <div className="w-[var(--radix-popover-trigger-width)]">
-                                <Command>
-                                    <CommandInput placeholder="Search country..." />
+                    <div className="space-y-1">
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    className="w-full justify-between"
+                                >
+                                    {selectedCountry?.name ?? "Select country"}
 
-                                    <CommandList>
-                                        <CommandEmpty>No country found.</CommandEmpty>
+                                    <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+                                </Button>
+                            </PopoverTrigger>
 
-                                        <CommandGroup>
-                                            {COUNTRIES.map((country) =>
-                                                country.code === "__divider__" ? (
-                                                    <div key="divider" className="my-2 border-t" />
-                                                ) : (
-                                                    <CommandItem
-                                                        key={country.code}
-                                                        value={country.name}
-                                                        onSelect={() => {
-                                                            setForm({
-                                                                ...form,
-                                                                shipping_country: country.code,
-                                                            });
+                            <PopoverContent align="start"
+                                sideOffset={4}
+                                className="w-[--radix-popover-trigger-width] p-0">
+                                <div className="w-[var(--radix-popover-trigger-width)]">
+                                    <Command>
+                                        <CommandInput placeholder="Search country..." />
 
-                                                            if (!country.code) {
-                                                                setShippingMethod(undefined);
-                                                                setPayload(null);
-                                                            }
-                                                        }}
-                                                    >
-                                                        <Check
-                                                            className={cn(
-                                                                "mr-2 h-4 w-4",
-                                                                form.shipping_country === country.code
-                                                                    ? "opacity-100"
-                                                                    : "opacity-0"
-                                                            )}
-                                                        />
+                                        <CommandList>
+                                            <CommandEmpty>No country found.</CommandEmpty>
 
-                                                        {country.name}
-                                                    </CommandItem>
-                                                )
-                                            )}
-                                        </CommandGroup>
-                                    </CommandList>
-                                </Command>
-                            </div>
-                        </PopoverContent>
-                    </Popover>
+                                            <CommandGroup>
+                                                {COUNTRIES.map((country) =>
+                                                    country.code === "__divider__" ? (
+                                                        <div key="divider" className="my-2 border-t" />
+                                                    ) : (
+                                                        <CommandItem
+                                                            key={country.code}
+                                                            value={country.name}
+                                                            onSelect={() => {
+                                                                setForm({
+                                                                    ...form,
+                                                                    shipping_country: country.code,
+                                                                });
+
+                                                                if (!country.code) {
+                                                                    setShippingMethod(undefined);
+                                                                    setPayload(null);
+                                                                }
+                                                            }}
+                                                        >
+                                                            <Check
+                                                                className={cn(
+                                                                    "mr-2 h-4 w-4",
+                                                                    form.shipping_country === country.code
+                                                                        ? "opacity-100"
+                                                                        : "opacity-0"
+                                                                )}
+                                                            />
+
+                                                            {country.name}
+                                                        </CommandItem>
+                                                    )
+                                                )}
+                                            </CommandGroup>
+                                        </CommandList>
+                                    </Command>
+                                </div>
+                            </PopoverContent>
+                        </Popover>
+                        {getError("shipping_country") && (
+                            <p className="text-sm text-red-500 mt-1">
+                                {getError("shipping_country")}
+                            </p>
+                        )}
+                    </div>
                 </div>
             </div>
 
