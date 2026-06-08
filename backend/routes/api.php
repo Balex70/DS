@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\Store\CartController;
 use App\Http\Controllers\Api\Store\CategoryController as StoreCategoryController;
 use App\Http\Controllers\Api\Store\OrderController as StoreOrderController;
@@ -52,6 +53,9 @@ Route::prefix('customer')->group(function () {
 
 // Orders
 Route::get('orders', [OrderController::class, 'index'])->middleware('auth:sanctum');
+
+// Payments
+Route::get('payments', [PaymentController::class, 'index'])->middleware('auth:sanctum');
 
 // Store Order
 Route::prefix('store')->group(function () {
