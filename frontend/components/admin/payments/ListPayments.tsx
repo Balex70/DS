@@ -9,6 +9,8 @@ import { Meta, Payment } from '@/types/payment';
 import { PaymentPagination } from './PaymentPagination';
 import { PaymentFilters } from './PaymentFilters';
 import { Input } from '@/components/ui/input';
+import { getErrorStringFromCatch } from '@/helpers/general';
+import NotFoundCard from '@/components/common/NotFoundCard';
 
 function ListPayments () {
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -22,6 +24,7 @@ function ListPayments () {
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [status, setStatus] = useState<string | null>(null)
   const [gateway, setGateway] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   /**
    * Debounce search
@@ -68,8 +71,8 @@ function ListPayments () {
       setPayments(paymentsRes.data ?? [])
       setMeta(paymentsRes.meta ?? null)
 
-    } catch (_err) {
-      // do nothing
+    } catch (err: unknown) {
+      setError(getErrorStringFromCatch(err))
     } finally {
       setLoading(false)
     }
@@ -85,6 +88,15 @@ function ListPayments () {
   useEffect(() => {
       fetchPayments({ page, search: debouncedSearch, status, gateway })
   }, [page, debouncedSearch, status, gateway])  
+
+  if (error) {
+    return (
+      <NotFoundCard
+          title="Error fetching payments"
+          description={error}
+      />
+    )
+  }
 
   return (
     <div className="w-full main-bg flex flex-col border-b-0 rounded-none">

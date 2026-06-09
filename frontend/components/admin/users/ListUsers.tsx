@@ -1,5 +1,5 @@
 'use client'
-import { CommonLogger } from '@/lib/logger/commonLogger';
+
 import NotFoundCard from '@/components/common/NotFoundCard';
 import { useEffect, useState } from 'react';
 import { DataTable } from './dataTable';
@@ -10,6 +10,7 @@ import { EditUserDrawer } from './EditUserDrawer';
 import { Button } from '@/components/ui/button';
 import { CreateUserDrawer } from './CreateUserDrawer';
 import { DeleteUserDrawer } from './DeleteUserDrawer';
+import { getErrorStringFromCatch } from '@/helpers/general';
 
 function ListUsers () {
   const [users, setUsers] = useState<User[]>([]);
@@ -19,6 +20,7 @@ function ListUsers () {
   const [editOpen, setEditOpen] = useState(false)
   const [createOpen, setCreateOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   
   const fetchUsers = async () => {
     try {
@@ -40,8 +42,8 @@ function ListUsers () {
 
       setUsers(usersRes.data ?? [])
 
-    } catch (_err) {
-      // do nothing
+    } catch (err: unknown) {
+      setError(getErrorStringFromCatch(err))
     } finally {
       setLoading(false)
     }
@@ -53,6 +55,15 @@ function ListUsers () {
   
   if (loading) {
     return <Loader />
+  }
+
+  if (error) {
+    return (
+      <NotFoundCard
+        title="Error fetching admin users"
+        description={error}
+      />
+    )
   }
 
   if (!users || users.length === 0) {

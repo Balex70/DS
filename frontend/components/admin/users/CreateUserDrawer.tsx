@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { getCookie } from "@/helpers/general"
+import { getCookie, getErrorStringFromCatch } from "@/helpers/general"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 
@@ -34,7 +34,6 @@ export function CreateUserDrawer({
   const [password, setPassword] = useState("")
   const [passwordConfirmation, setPasswordConfirmation] = useState("")
   const [role, setRole] = useState<string>("user")
-
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -96,8 +95,8 @@ export function CreateUserDrawer({
         setPasswordConfirmation("")
         setRole("user")
 
-    } catch (e) {
-      setError("Something went wrong")
+    } catch (err: unknown) {
+      setError(getErrorStringFromCatch(err))
     } finally {
       setLoading(false)
     }

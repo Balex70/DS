@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/sheet"
 import { User } from "./columns"
 import { useEffect, useState } from "react"
-import { getCookie } from "@/helpers/general"
+import { getCookie, getErrorStringFromCatch } from "@/helpers/general"
 import { availableRoles } from "@/enums/roles"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -78,8 +78,8 @@ export function EditUserDrawer({
             onSuccess();
             onOpenChange(false);
 
-          } catch (_err) {
-            // do nothing
+          } catch (err: unknown) {
+            setError(getErrorStringFromCatch(err))
           } finally {
             setLoading(false)
           }

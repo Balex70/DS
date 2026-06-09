@@ -23,18 +23,11 @@ import { PriceRenderer } from "@/components/custom/PriceRenderer"
 export function OrderDrawer({
   open,
   onOpenChange,
-  order,
-  onRefresh
+  order
 }: {
   open: boolean
   onOpenChange: (v: boolean) => void
   order: Order | null
-  onRefresh: (params?: {
-    page?: number,
-    enriched: string|null,
-    aiTextsProcessed: string|null,
-    aiImagesProcessed: string|null,
-  }) => void
 }) {
     const [isAction, setIsAction] = useState(false)
 
