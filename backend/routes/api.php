@@ -5,27 +5,26 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\Store\CartController;
 use App\Http\Controllers\Api\Store\CategoryController as StoreCategoryController;
 use App\Http\Controllers\Api\Store\OrderController as StoreOrderController;
-use App\Http\Controllers\Api\Store\PaymentController;
+use App\Http\Controllers\Api\Store\PaymentController as StorePaymentController;
 use App\Http\Controllers\Api\Store\ProductController as StoreProductController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Middleware\EnsureCartToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
-
+// Users
 Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
 
+// Categories
 Route::apiResource('categories', CategoryController::class)->middleware('auth:sanctum');
 Route::post('categories/bulk-activate', [CategoryController::class, 'bulkActivate'])->middleware('auth:sanctum');
 Route::post('categories/sync-full-paths', [CategoryController::class, 'syncFullPaths'])->middleware('auth:sanctum');
-Route::get('store/categories', [StoreCategoryController::class, 'index']);
 
+// Products
 Route::apiResource('products', ProductController::class)->middleware('auth:sanctum');
 Route::patch('products/enrich/{product}', [ProductController::class, 'enrich'])->middleware('auth:sanctum');
 Route::middleware(['auth:sanctum', 'abilities:ai:texts'])->group(function () {
@@ -36,9 +35,6 @@ Route::middleware(['auth:sanctum', 'abilities:ai:images'])->group(function () {
     Route::get('products/ai-images/next', [AiImagesController::class, 'next']);
     Route::post('products/ai-images/{id}/complete', [AiImagesController::class, 'complete']);
 });
-
-Route::get('store/products', [StoreProductController::class, 'index']);
-Route::get('store/products/{product}', [StoreProductController::class, 'show']);
 
 // Customer
 Route::prefix('customer')->group(function () {
@@ -55,18 +51,34 @@ Route::prefix('customer')->group(function () {
 
 });
 
+// Orders
 Route::get('orders', [OrderController::class, 'index'])->middleware('auth:sanctum');
+
+// Payments
+Route::get('payments', [PaymentController::class, 'index'])->middleware('auth:sanctum');
 
 // Store Order
 Route::prefix('store')->group(function () {
+    // Categories
+    Route::get('categories', [StoreCategoryController::class, 'index']);
+
+    // Products
+    Route::get('products', [StoreProductController::class, 'index']);
+    Route::get('products/{product}', [StoreProductController::class, 'show']);
+
+    // Orders
     Route::post('orders/create', [StoreOrderController::class, 'store'])->middleware(EnsureCartToken::class);
     Route::post('orders/shipping-calculate', [StoreOrderController::class, 'shippingCalculate'])->middleware(EnsureCartToken::class);
     Route::get('orders/public-token/{token}', [StoreOrderController::class, 'showByPublicToken']);
+
+    // Cart
     Route::post('cart/add', [CartController::class, 'add'])->middleware(EnsureCartToken::class);
     Route::get('cart', [CartController::class, 'show'])->middleware(EnsureCartToken::class);
     Route::post('cart/clear', [CartController::class, 'clear'])->middleware(EnsureCartToken::class);
     Route::post('cart/remove', [CartController::class, 'remove'])->middleware(EnsureCartToken::class);
     Route::post('cart/update', [CartController::class, 'update'])->middleware(EnsureCartToken::class);
-    Route::post('payments/{order}/create', [PaymentController::class, 'create']);
-    Route::post('payments/available-gateway', [PaymentController::class, 'availableGateway']);
+
+    // Payments
+    Route::post('payments/{order}/create', [StorePaymentController::class, 'create']);
+    Route::post('payments/available-gateway', [StorePaymentController::class, 'availableGateway']);
 });

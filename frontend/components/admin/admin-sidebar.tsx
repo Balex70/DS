@@ -48,7 +48,7 @@ export function AdminSidebar() {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/payments" className="flex items-center gap-2">
+                  <Link href="/admin/payments" className="flex items-center gap-2">
                     <WalletCards />
                     <span>Payments</span>
                   </Link>
