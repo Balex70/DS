@@ -7,6 +7,7 @@ import { getErrorStringFromCatch } from "@/helpers/general"
 import { CommonLogger } from "@/lib/logger/commonLogger"
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
+import { Toaster } from "sonner"
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
@@ -45,6 +46,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
       enableSystem
       disableTransitionOnChange
     >
+      <Toaster richColors position="top-right" />
       <SidebarProvider>
         <AdminSidebar />
         <main  className="w-full">

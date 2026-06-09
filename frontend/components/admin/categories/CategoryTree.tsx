@@ -7,8 +7,9 @@ import treeBuilder from "./treeBuilder";
 import Loader from "@/components/common/Loader";
 import NotFoundCard from "@/components/common/NotFoundCard";
 import { Button } from "@/components/ui/button";
-import { getCookie } from "@/helpers/general";
+import { getCookie, getErrorStringFromCatch } from "@/helpers/general";
 import { ButtonGroup } from "@/components/ui/button-group"
+import { toast } from "sonner";
 
 function CategoryTree() {
     const [categories, setCategories] = useState<Category[]>([]);
@@ -16,6 +17,10 @@ function CategoryTree() {
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const [savedIds, setSavedIds] = useState<number[]>([]);
     const [syncFullPathsLoading, setSyncFullPathsLoading] = useState(false)
+    const [errorFetch, setErrorFetch] = useState<string | null>(null)
+    const [errorBulkActive, setErrorBulkActive] = useState<string | null>(null)
+    const [errorSyncFullPaths, setErrorSyncFullPaths] = useState<string | null>(null)
+
     const fetchCategories = async () => {
         try {
             setLoading(true)
@@ -36,8 +41,8 @@ function CategoryTree() {
 
             setCategories(categoriesRes.data ?? [])
 
-        } catch (_err) {
-            // do nothing
+        } catch (err: unknown) {
+            setErrorFetch(getErrorStringFromCatch(err))
         } finally {
             setLoading(false)
         }
@@ -88,9 +93,15 @@ function CategoryTree() {
                 cache: 'no-cache', // 'no-cache' if you want it fresh each time
             })
 
+            if (!res.ok) {
+                const data = await res.json().catch(() => null)
+
+                throw new Error(data?.message || `Request failed (${res.status})`)
+            }
+
             setSavedIds([...selectedIds]);
-        } catch (err: any) {
-            // setError(err.message)
+        } catch (err: unknown) {
+            setErrorBulkActive(getErrorStringFromCatch(err))
         } finally {
             // setLoading(false)
         }
@@ -113,9 +124,15 @@ function CategoryTree() {
                 cache: 'no-cache', // 'no-cache' if you want it fresh each time
             })
 
+            if (!res.ok) {
+                setSyncFullPathsLoading(false);
+                const data = await res.json().catch(() => null)
+                throw new Error(data?.message || `Request failed (${res.status})`)
+            }
+
             setSyncFullPathsLoading(false);
-        } catch (err: any) {
-            // setError(err.message)
+        } catch (err: unknown) {
+            setErrorSyncFullPaths(getErrorStringFromCatch(err))
         } finally {
             // setLoading(false)
         }
@@ -123,6 +140,25 @@ function CategoryTree() {
 
     if (loading) {
         return <Loader />
+    }
+
+    if (errorFetch) {
+        return (
+            <NotFoundCard
+                title="Error fetching categories"
+                description={errorFetch}
+            />
+        )
+    }
+
+    if (errorBulkActive) {
+        toast.error(errorBulkActive)
+        setErrorBulkActive(null)
+    }
+
+    if (errorSyncFullPaths) {
+        toast.error(errorSyncFullPaths)
+        setErrorSyncFullPaths(null)
     }
 
     if (!categories || categories.length === 0) {

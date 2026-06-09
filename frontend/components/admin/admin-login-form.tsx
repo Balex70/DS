@@ -19,7 +19,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { getCookie } from '@/helpers/general'
+import { getCookie, getErrorStringFromCatch } from '@/helpers/general'
 
 export function AdminLoginForm({
   className,
@@ -70,8 +70,8 @@ export function AdminLoginForm({
       // Redirect after success
       router.push('/admin')
 
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      setError(getErrorStringFromCatch(err))
     } finally {
       setLoading(false)
     }

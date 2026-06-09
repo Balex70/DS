@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import { User } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -13,10 +12,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useRouter } from "next/navigation"
-import { getCookie } from "@/helpers/general"
+import { getCookie, getErrorStringFromCatch } from "@/helpers/general"
+import { useState } from "react"
+import { toast } from "sonner"
 
 export function AdminUserDropdown() {
   const router = useRouter()
+  const [error, setError] = useState<string | null>(null)
+
   const logout = async () => {
     try {
       const csrfToken = getCookie('XSRF-TOKEN');
@@ -37,11 +40,16 @@ export function AdminUserDropdown() {
         router.push('/admin/login')
         return
       }
-    } catch (err: any) {
-      // setError(err.message)
+    } catch (err: unknown) {
+      setError(getErrorStringFromCatch(err))
     } finally {
       // setLoading(false)
     }
+  }
+
+  if (error) {
+    toast.error(error)
+    setError(null)
   }
   return (
     <DropdownMenu>
