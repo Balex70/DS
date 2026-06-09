@@ -45,13 +45,16 @@ class StripeGateway extends AbstractGateway
     public function createPayment(PaymentRequestDTO $request): PaymentResponseDTO
     {
         $this->log(['stripe' => 'create_payment', 'order' => $request->orderId]);
+        // TODO: temporary return exception for testing
+        throw new \Exception("Error Processing Request", 1);
 
         // Stripe SDK logic here
 
         return new PaymentResponseDTO(
             success: true,
             transactionId: 'stripe_tx_123',
-            redirectUrl: 'https://stripe.com/checkout/...'
+            // redirectUrl: 'https://stripe.com/checkout/...'
+            redirectUrl: null
         );
     }
 
