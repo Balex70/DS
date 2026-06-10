@@ -9,7 +9,7 @@ export default async function CategoryPage({
     params: Promise<{ slug: string[] }>;
 }) {
     const { slug } = await params;
-    console.log(slug);
+
     return (
         <div className="space-y-6">
             {/* Header / Category Info */}

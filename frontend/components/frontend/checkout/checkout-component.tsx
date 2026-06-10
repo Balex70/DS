@@ -98,10 +98,10 @@ export function CheckoutComponent() {
                     setCheckoutOpen(true);
                     proceedWithPayment(order, gateway);
                 },
-                onError: (error: any) => {
-                    const status = error?.response?.status;
+                onError: (error) => {
+                    const status = error.response?.status;
 
-                    if (status === 422) {
+                    if (status === 422 && error.response?.data?.errors) {
                         setErrors(error.response.data.errors);
                         setCheckoutStatus("idle");
                         setCheckoutOpen(false);

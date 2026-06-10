@@ -34,7 +34,6 @@ export function OrderDrawer({
     const handleSomething = async () => {
         if (!order) return
         setIsAction(true)
-        console.log('handle something');
     }
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
