@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
 import { ChevronRight, Menu } from "lucide-react";
 
@@ -14,31 +13,27 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 import { useCategories } from "@/hooks/use-categories";
-import { Category } from "@/types/category";
+import { useMemo, useState } from "react";
 
 export function MegaMenu() {
     const { data: categories, isLoading } = useCategories();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
 
     // Root categories
-    const rootCategories =
+    const rootCategories = useMemo(() =>
         categories?.filter(
             (category) =>
                 !category.parent_id &&
                 category.active
-        ) ?? [];
+        ) ?? [],
+        [categories]
+    )
 
     // Active root category
-    const [activeRootId, setActiveRootId] = React.useState<
-        number | null
-    >(null);
+    const [selectedRootId, setSelectedRootId] = useState<number | null>(null);
 
     // Set initial active category
-    React.useEffect(() => {
-        if (!activeRootId && rootCategories.length) {
-            setActiveRootId(rootCategories[0].id);
-        }
-    }, [rootCategories, activeRootId]);
+    const activeRootId = selectedRootId ?? rootCategories[0]?.id ?? null;
 
     // Active root object
     const activeRoot = rootCategories.find(
@@ -94,11 +89,11 @@ export function MegaMenu() {
                                         <Link
                                             key={category.id}
                                             href={`/category/${category.full_path}`}
-                                            onMouseEnter={() => setActiveRootId(category.id)}
+                                            onMouseEnter={() => setSelectedRootId(category.id)}
                                             onClick={() => setOpen(false)}
                                             className={cn(
                                                 "flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition",
-                                                category.id === activeRootId
+                                                isActive
                                                     ? "bg-background font-medium shadow-sm"
                                                     : "hover:bg-background"
                                             )}

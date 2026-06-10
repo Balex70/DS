@@ -11,7 +11,6 @@ type Props = {
     country?: string;
     subtotal: number;
     shippingMethod?: ShippingMethod,
-    isPending: boolean;
     gateway: AvailableGatewayResponse;
     checkoutStatus: CheckoutStatus;
     onSubmit: () => void;
@@ -21,7 +20,6 @@ export function OrderSummary({
     country,
     subtotal,
     shippingMethod,
-    isPending,
     gateway,
     checkoutStatus,
     onSubmit,
@@ -32,7 +30,6 @@ export function OrderSummary({
     const hasCountry = !!country;
     const noShipping = !shippingMethod;
     const noGateway = !!shippingMethod && !gateway;
-    const isLoading = checkoutStatus !== "idle";
 
     let buttonText = "Proceed to Payment";
 

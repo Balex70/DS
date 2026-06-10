@@ -15,7 +15,7 @@ export  function convertUrlToDockerHost(url: string, dockerHost: string): string
     parsedUrl.port = dockerHostUrl.port;          // e.g. '3000' or '' if none
 
     return parsedUrl.toString();
-  } catch (_errors) {
+  } catch {
     // If invalid URL, return original
     return url;
   }
