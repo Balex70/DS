@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useShippingCalculate } from "@/hooks/use-shipping-calculate";
 import { ShippingMethod } from "@/types/shipping";
-import { OrderPayload } from "@/types/order";
+import { CheckoutStatus, OrderPayload } from "@/types/order";
 import { ShippingMethodsSelector } from "./ShippingMethodsSelector";
 import {
     Command,
@@ -26,7 +26,8 @@ import { cn } from "@/lib/utils";
 
 type Props = {
     form: OrderPayload;
-    setForm: (form: any) => void;
+    setForm: React.Dispatch<React.SetStateAction<OrderPayload>>;
+    setCheckoutStatus: (status: CheckoutStatus) => void;
     shippingMethod: ShippingMethod | undefined;
     setShippingMethod: (method: ShippingMethod | undefined) => void;
     cartKey: string | undefined;
@@ -36,6 +37,7 @@ type Props = {
 export function ShippingForm({
     form,
     setForm,
+    setCheckoutStatus,
     shippingMethod,
     setShippingMethod,
     cartKey,
@@ -77,7 +79,12 @@ export function ShippingForm({
         if (stillValid) return;
 
         setShippingMethod(shippingOptions[0]);
-    }, [shippingOptions]);
+    }, [shippingOptions, shippingMethod, setShippingMethod]);
+
+    const onFieldChange = <K extends keyof OrderPayload>(field: K, value: OrderPayload[K]) => {
+        setForm(prev => ({ ...prev, [field]: value }));
+        setCheckoutStatus("idle");
+    }
 
     const COUNTRIES = [
         { code: "US", name: "United States" },
@@ -151,12 +158,7 @@ export function ShippingForm({
                     <Input
                         placeholder="Full name"
                         value={form.shipping_full_name}
-                        onChange={(e) =>
-                            setForm({
-                                ...form,
-                                shipping_full_name: e.target.value,
-                            })
-                        }
+                        onChange={(e) => onFieldChange("shipping_full_name", e.target.value)}
                     />
                     {getError("shipping_full_name") && (
                         <p className="text-sm text-red-500">
@@ -169,12 +171,7 @@ export function ShippingForm({
                     <Input
                         placeholder="Phone"
                         value={form.shipping_phone}
-                        onChange={(e) =>
-                            setForm({
-                                ...form,
-                                shipping_phone: e.target.value,
-                            })
-                        }
+                        onChange={(e) => onFieldChange("shipping_phone", e.target.value)}
                     />
                     {getError("shipping_phone") && (
                         <p className="text-sm text-red-500">
@@ -188,12 +185,7 @@ export function ShippingForm({
                         placeholder="Email"
                         type="email"
                         value={form.shipping_email}
-                        onChange={(e) =>
-                            setForm({
-                                ...form,
-                                shipping_email: e.target.value,
-                            })
-                        }
+                        onChange={(e) => onFieldChange("shipping_email", e.target.value)}
                     />
                     {getError("shipping_email") && (
                         <p className="text-sm text-red-500">
@@ -206,12 +198,7 @@ export function ShippingForm({
                     <Input
                         placeholder="Address line 1"
                         value={form.shipping_address_line1}
-                        onChange={(e) =>
-                            setForm({
-                                ...form,
-                                shipping_address_line1: e.target.value,
-                            })
-                        }
+                        onChange={(e) => onFieldChange("shipping_address_line1", e.target.value)}
                     />
                     {getError("shipping_address_line1") && (
                         <p className="text-sm text-red-500">
@@ -224,12 +211,7 @@ export function ShippingForm({
                     <Input
                         placeholder="Address line 2"
                         value={form.shipping_address_line2}
-                        onChange={(e) =>
-                            setForm({
-                                ...form,
-                                shipping_address_line2: e.target.value,
-                            })
-                        }
+                        onChange={(e) => onFieldChange("shipping_address_line2", e.target.value)}
                     />
                     {getError("shipping_address_line2") && (
                         <p className="text-sm text-red-500">
@@ -243,12 +225,7 @@ export function ShippingForm({
                         <Input
                             placeholder="City"
                             value={form.shipping_city}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    shipping_city: e.target.value,
-                                })
-                            }
+                            onChange={(e) => onFieldChange("shipping_city", e.target.value)}
                         />
                         {getError("shipping_city") && (
                             <p className="text-sm text-red-500">
@@ -261,12 +238,7 @@ export function ShippingForm({
                         <Input
                             placeholder="State"
                             value={form.shipping_state}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    shipping_state: e.target.value,
-                                })
-                            }
+                            onChange={(e) => onFieldChange("shipping_state", e.target.value)}
                         />
                         {getError("shipping_state") && (
                             <p className="text-sm text-red-500">
@@ -281,12 +253,7 @@ export function ShippingForm({
                         <Input
                             placeholder="Postal code"
                             value={form.shipping_postal_code}
-                            onChange={(e) =>
-                                setForm({
-                                    ...form,
-                                    shipping_postal_code: e.target.value,
-                                })
-                            }
+                            onChange={(e) => onFieldChange("shipping_postal_code", e.target.value)}
                         />
                         {getError("shipping_postal_code") && (
                             <p className="text-sm text-red-500">

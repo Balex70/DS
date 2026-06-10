@@ -10,7 +10,7 @@ import { OrderSummary } from "./OrderSummary";
 import { ShippingMethod } from "@/types/shipping";
 import { AvailableGatewayResponse, PaymentResponse } from "@/types/payment";
 import { PaymentInfo } from "./PaymentInfo";
-import { CheckoutStatus, Order } from "@/types/order";
+import { CheckoutStatus, Order, OrderPayload } from "@/types/order";
 import { useCreatePayment } from "@/hooks/use-create-payment";
 import { useAvailableGateway } from "@/hooks/use-available-gateway";
 import { CheckoutDialog } from "./CheckoutDialog";
@@ -36,7 +36,7 @@ export function CheckoutComponent() {
         0
     );
 
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<OrderPayload>({
         shipping_full_name: "",
         shipping_phone: "",
         shipping_email: "",
@@ -54,12 +54,7 @@ export function CheckoutComponent() {
         "USD"
     );
 
-    const handleFormChange = (newForm: typeof form) => {
-        setForm(newForm);
-        setCheckoutStatus("idle");
-    };
-
-    function proceedWithPayment(order: Order, gateway: AvailableGatewayResponse){
+     function proceedWithPayment(order: Order, gateway: AvailableGatewayResponse){
         if (!gateway) {
             setCheckoutStatus("failed");
             return;
@@ -103,10 +98,10 @@ export function CheckoutComponent() {
                     setCheckoutOpen(true);
                     proceedWithPayment(order, gateway);
                 },
-                onError: (error: any) => {
-                    const status = error?.response?.status;
+                onError: (error) => {
+                    const status = error.response?.status;
 
-                    if (status === 422) {
+                    if (status === 422 && error.response?.data?.errors) {
                         setErrors(error.response.data.errors);
                         setCheckoutStatus("idle");
                         setCheckoutOpen(false);
@@ -134,7 +129,7 @@ export function CheckoutComponent() {
 
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
                 {/* LEFT */}
-                <ShippingForm form={form} setForm={handleFormChange} shippingMethod={shippingMethod} setShippingMethod={setShippingMethod} cartKey={cartKey} errors={errors} />
+                <ShippingForm form={form} setForm={setForm} setCheckoutStatus={setCheckoutStatus} shippingMethod={shippingMethod} setShippingMethod={setShippingMethod} cartKey={cartKey} errors={errors} />
 
                 {/* RIGHT */}
                 <div className="space-y-6">
@@ -146,7 +141,6 @@ export function CheckoutComponent() {
                         country={form.shipping_country}
                         subtotal={subtotal}
                         shippingMethod={shippingMethod}
-                        isPending={isLoading}
                         gateway={gateway}
                         checkoutStatus={checkoutStatus}
                         onSubmit={handleSubmit}

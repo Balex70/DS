@@ -7,7 +7,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { useState } from "react"
-import { getCookie } from "@/helpers/general"
+import { getCookie, getErrorStringFromCatch } from "@/helpers/general"
 import { Product } from "@/types/product"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { CheckCircle2Icon } from "lucide-react"
@@ -70,8 +70,8 @@ export function DeleteProductDrawer({
         onOpenChange(false)
         onSuccess()
 
-    } catch (e) {
-      setError("Something went wrong")
+    } catch (err: unknown) {
+      setError(getErrorStringFromCatch(err))
     } finally {
       setLoading(false)
     }

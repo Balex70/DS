@@ -43,7 +43,8 @@ const PAYMENT_STATUSES: {
     value: PaymentStatus
     label: string
 }[] = [
-    { value: "unpaid", label: "Unpaid" },
+    { value: "draft", label: "Draft" },
+    { value: "pending", label: "Pending" },
     { value: "paid", label: "Paid" },
     { value: "failed", label: "Failed" },
     { value: "refunded", label: "Refunded" },

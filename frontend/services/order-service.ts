@@ -1,7 +1,9 @@
 import { api } from "@/lib/axios";
-import { OrderPayload } from "@/types/order";
+import { Order, OrderPayload } from "@/types/order";
+import { ShippingMethod } from "@/types/shipping";
+import { AxiosResponse } from "axios";
 
-export async function createOrder(data: OrderPayload) {
+export async function createOrder(data: OrderPayload): Promise<AxiosResponse<Order>> {
     return api.post("/api/store/orders/create", data);
 }
 
@@ -12,10 +14,18 @@ type ShippingCalculatePayload = {
 
 export async function getShippingCalculate(
     data: ShippingCalculatePayload
-): Promise<any> {
+): Promise<ShippingMethod[]> {
     const response = await api.post(
         "/api/store/orders/shipping-calculate",
         data
+    );
+
+    return response.data;
+}
+
+export async function getOrderByPublicToken(token: string): Promise<Order> {
+    const response = await api.get(
+        `/api/store/orders/public-token/${token}`
     );
 
     return response.data;

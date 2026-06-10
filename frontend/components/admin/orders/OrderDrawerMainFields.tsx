@@ -56,6 +56,12 @@ export function OrderDrawerMainFields({order}: {order: Order}) {
             </span>
         </Field>
         <Field>
+            <FieldLabel>Public Token</FieldLabel>
+            <span className="text-md text-muted-foreground">
+                {order.public_token ?? "no public token"}
+            </span>
+        </Field>
+        <Field>
             <FieldLabel>Notes</FieldLabel>
             <div className="h-[15vh] resize-y overflow-auto overflow-auto rounded-lg border bg-muted/30 p-4">
                 <pre className="text-xs font-mono whitespace-pre-wrap break-all">

@@ -1,38 +1,61 @@
 ARG NODE_VERSION=24
 
-# ---------- Base stage for development ----------
-FROM node:${NODE_VERSION}-slim AS base
+# ---------- Deps stage ----------
+FROM node:${NODE_VERSION}-slim AS deps
 
-WORKDIR /web
+WORKDIR /frontend
 
-COPY frontend/package.json frontend/package-lock.json* ./
-RUN npm install --legacy-peer-deps
+RUN echo "NODE_ENV=production"
 
-ENV NEXT_TELEMETRY_DISABLED=1
+COPY frontend/ ./
+
+# install ALL deps (dev + prod) для build
+RUN npm ci --legacy-peer-deps
+
+# --- Dev stage ---
+FROM node:${NODE_VERSION}-slim  AS dev
+
+WORKDIR /frontend
+
+COPY frontend/ ./
+RUN npm ci --legacy-peer-deps
+
+ENV NODE_ENV=development
 
 EXPOSE 3000
 
 # Add aliases
-ADD aliases.sh /etc/profile.d/aliases.sh
+COPY aliases.sh /etc/profile.d/aliases.sh
 
-# --- Production stage ---
-FROM base AS dev
-
-ENV NODE_ENV=development
-
-# tail -f /dev/null the Node.js process does not start at all, so the queue is ignored
-# CMD ["tail", "-f", "/dev/null"]
 CMD ["npm", "run", "dev"]
 
-# --- Production stage ---
-FROM base AS production
+# --- Builder stage ---
+FROM node:${NODE_VERSION}-slim  AS builder
+
+WORKDIR /frontend
+
+COPY frontend/ ./
+COPY --from=deps /frontend/node_modules ./node_modules
 
 ENV NODE_ENV=production
 
-# Run the build step during image build
 RUN npm run build
-
-# Generate sitemap.xml and robots.txt using next-sitemap ("postbuild": "next-sitemap --config next-sitemap.config.cjs")
 # RUN npm run postbuild
+
+# --- Production stage ---
+FROM node:${NODE_VERSION}-slim  AS production
+
+WORKDIR /frontend
+
+ENV NODE_ENV=production
+
+# only production deps
+COPY frontend/ ./
+RUN npm ci --omit=dev --legacy-peer-deps
+
+# copy just the built from builder
+COPY --from=builder /frontend/.next ./.next
+
+EXPOSE 3000
 
 CMD ["npm", "run", "start"]

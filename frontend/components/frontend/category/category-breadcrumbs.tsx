@@ -21,7 +21,7 @@ function buildBreadcrumbs(slug: string[], categories?: Category[]) {
     });
 }
 export function CategoryBreadcrumbs({ slug }: { slug: string[] }) {
-    const { data: categories, isLoading } = useCategories();
+    const { data: categories } = useCategories();
     
     const items = buildBreadcrumbs(slug, categories);
 

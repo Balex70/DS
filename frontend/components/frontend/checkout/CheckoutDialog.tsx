@@ -40,11 +40,17 @@ const steps = {
     },
 };
 
+type Props = {
+    checkoutOpen: boolean;
+    setCheckoutOpen: (v: boolean) => void;
+    checkoutStatus: string;
+}
+
 export function CheckoutDialog({
     checkoutOpen,
     setCheckoutOpen,
     checkoutStatus,
-}: any) {
+}: Props) {
     const step = steps[checkoutStatus as keyof typeof steps];
     const Icon = step?.icon ?? Loader2;
 

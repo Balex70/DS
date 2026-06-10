@@ -7,7 +7,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { useEffect, useState } from "react"
-import { getCookie } from "@/helpers/general"
+import { getCookie, getErrorStringFromCatch } from "@/helpers/general"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Category } from "@/types/category"
@@ -80,15 +80,15 @@ export function EditCategoryDrawer({
             if (!res.ok) {
                 const data = await res.json()
 
-                setError(data.message || 'Login failed')
+                setError(data.message || 'Failed to update category')
                 return
             }
 
             onSuccess();
             onOpenChange(false);
 
-          } catch (_err) {
-            // do nothing
+          } catch (err: unknown) {
+            setError(getErrorStringFromCatch(err))
           } finally {
             setLoading(false)
           }

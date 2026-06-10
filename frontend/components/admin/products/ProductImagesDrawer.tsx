@@ -47,7 +47,7 @@ export function ProductImagesDrawer({
             </div>
 
             {/* RIGHT: TABS */}
-            {product.images?.length > 0 && (
+            {product.images !== undefined && product.images?.length > 0 && (
               <div className="w-full max-w-52">
                 <Tabs defaultValue="original">
 
@@ -60,7 +60,7 @@ export function ProductImagesDrawer({
                   <TabsContent value="original">
                     <Carousel className="w-full sm:max-w-xs mt-2">
                       <CarouselContent>
-                        {product.images.map((img, idx) => (
+                        {product.images !== undefined && product.images.map((img, idx) => (
                           <CarouselItem key={idx}>
                             <div className="p-1">
                               <Card>
@@ -87,7 +87,7 @@ export function ProductImagesDrawer({
                   <TabsContent value="ai">
                     <Carousel className="w-full sm:max-w-xs mt-2">
                       <CarouselContent>
-                        {product.images.filter(img => img.ai_url).map((img, idx) => (
+                        {product.images !== undefined && product.images.filter(img => img.ai_url).map((img, idx) => (
                           <CarouselItem key={idx}>
                             <div className="p-1">
                               <Card>

@@ -10,6 +10,8 @@ import { OrderFilters } from './OrderFilters';
 import { DsStatus, Meta, Order, OrderStatus } from '@/types/order';
 import { PaymentStatus } from '@/types/payment';
 import { Input } from '@/components/ui/input';
+import { getErrorStringFromCatch } from '@/helpers/general';
+import NotFoundCard from '@/components/common/NotFoundCard';
 
 function ListOrders () {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -24,6 +26,7 @@ function ListOrders () {
   const [status, setStatus] = useState<OrderStatus | null>(null)
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus | null>(null)
   const [dsStatus, setDsStatus] = useState<DsStatus | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   /**
    * Debounce search
@@ -72,8 +75,8 @@ function ListOrders () {
       setOrders(ordersRes.data ?? [])
       setMeta(ordersRes.meta ?? null)
 
-    } catch (_err) {
-      // do nothing
+    } catch (err: unknown) {
+      setError(getErrorStringFromCatch(err))
     } finally {
       setLoading(false)
     }
@@ -92,6 +95,15 @@ function ListOrders () {
   useEffect(() => {
       fetchOrders({ page, search: debouncedSearch, status, paymentStatus, dsStatus })
   }, [page, debouncedSearch, status, paymentStatus, dsStatus])
+
+  if (error) {
+    return (
+      <NotFoundCard
+          title="Error fetching orders"
+          description={error}
+      />
+    )
+  }
 
   return (
     <div className="w-full main-bg flex flex-col border-b-0 rounded-none">
@@ -149,14 +161,6 @@ function ListOrders () {
         open={viewOpen}
         onOpenChange={setViewOpen}
         order={selectedOrder}
-        onRefresh={() =>
-          fetchOrders({
-            page,
-            status,
-            paymentStatus,
-            dsStatus,
-          })
-        }
       />
 
     </div>

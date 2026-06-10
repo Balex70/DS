@@ -30,7 +30,7 @@ export default function NotFound() {
       </p>
 
       <p className="text-muted-foreground max-w-md mb-8">
-        The page you're looking for wandered off somewhere on the internet.
+        The page you&apos;re looking for wandered off somewhere on the internet.
         Maybe a Minion pressed the wrong button.
       </p>
 

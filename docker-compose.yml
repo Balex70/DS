@@ -32,17 +32,6 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
-  test_db:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: ${TEST_DB_DATABASE}
-      POSTGRES_USER: ${TEST_DB_USERNAME}
-      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD}
-    ports:
-      - "${TEST_DB_PORT}:5432"
-    volumes:
-      - test_db_data:/var/lib/postgresql/data
-
   redis:
     image: redis:alpine
     ports:
@@ -65,8 +54,6 @@ services:
       - backend
       - db
       - redis
-    volumes:
-      - .:/var/www/html
+
 volumes:
   db_data:
-  test_db_data:

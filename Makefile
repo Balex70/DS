@@ -24,11 +24,20 @@ show-config:
 build:
 	$(DOCKER_COMPOSE) build
 
+prod-build:
+	$(DOCKER_COMPOSE_PROD) build
+
 up:
 	$(DOCKER_COMPOSE) up -d
-	
+
+prod-up:
+	$(DOCKER_COMPOSE_PROD) up -d
+
 stop:
 	$(DOCKER_COMPOSE) stop
+
+prod-stop:
+	$(DOCKER_COMPOSE_PROD) stop
 
 restart:
 	$(DOCKER_COMPOSE) restart
@@ -78,3 +87,6 @@ backend-test:
 	
 testo:
 	bin/artisan test /app/tests/Feature/Controllers/CategoryControllerTest.php
+
+lint:
+	$(DOCKER_COMPOSE) exec frontend /bin/sh -c "npm run lint"

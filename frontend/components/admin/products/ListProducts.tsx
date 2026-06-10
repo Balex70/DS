@@ -10,6 +10,8 @@ import { DeleteProductDrawer } from './DeleteProductDrawer';
 import { Meta, Product } from '@/types/product';
 import { ProductPagination } from './ProductPagination';
 import { ProductFilters } from './ProductFilters';
+import { getErrorStringFromCatch } from '@/helpers/general';
+import NotFoundCard from '@/components/common/NotFoundCard';
 
 function ListProducts () {
   const [products, setProducts] = useState<Product[]>([]);
@@ -25,6 +27,7 @@ function ListProducts () {
   const [aiTextsProcessed, setAiTextsProcessed] = useState<string | null>(null)
   const [aiImagesProcessed, setAiImagesProcessed] = useState<string | null>(null)
   const [categoryIds, setCategoryIds] = useState<number[]>([])
+  const [error, setError] = useState<string | null>(null)
   
   const fetchProducts = async (params?: {
     page?: number,
@@ -62,8 +65,8 @@ function ListProducts () {
       setProducts(productsRes.data ?? [])
       setMeta(productsRes.meta ?? null)
 
-    } catch (_err) {
-      // do nothing
+    } catch (err: unknown) {
+      setError(getErrorStringFromCatch(err))
     } finally {
       setLoading(false)
     }
@@ -72,6 +75,15 @@ function ListProducts () {
   useEffect(() => {
       fetchProducts({ page, enriched, aiTextsProcessed, aiImagesProcessed, categoryIds })
   }, [page, enriched, aiTextsProcessed, aiImagesProcessed, categoryIds])
+
+  if (error) {
+    return (
+      <NotFoundCard
+        title="Error fetching products"
+        description={error}
+      />
+    )
+  }
 
   return (
     <div className="w-full main-bg flex flex-col border-b-0 rounded-none">
