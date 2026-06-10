@@ -10,7 +10,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/web  # Mount only the `web` folder, not the entire project
+      - ./frontend:/frontend  # Mount only the `frontend` folder, not the entire project
 
   queue:
     volumes:
