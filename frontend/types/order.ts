@@ -24,6 +24,7 @@ interface OrderInterface {
     shipping_state?: string;
     shipping_postal_code?: string;
     shipping_country: string;
+    public_token: string;
     notes?: string;
     created_at: string;
     updated_at: string;

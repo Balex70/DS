@@ -22,3 +22,11 @@ export async function getShippingCalculate(
 
     return response.data;
 }
+
+export async function getOrderByPublicToken(token: string): Promise<Order> {
+    const response = await api.get(
+        `/api/store/orders/public-token/${token}`
+    );
+
+    return response.data;
+}

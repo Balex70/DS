@@ -24,6 +24,9 @@ show-config:
 build:
 	$(DOCKER_COMPOSE) build
 
+prod-build:
+	$(DOCKER_COMPOSE_PROD) build
+
 up:
 	$(DOCKER_COMPOSE) up -d
 
