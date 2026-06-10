@@ -161,14 +161,6 @@ function ListOrders () {
         open={viewOpen}
         onOpenChange={setViewOpen}
         order={selectedOrder}
-        onRefresh={() =>
-          fetchOrders({
-            page,
-            status,
-            paymentStatus,
-            dsStatus,
-          })
-        }
       />
 
     </div>

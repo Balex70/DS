@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000'],
+    'allowed_origins' => ['http://localhost:3000', 'https://moonstone-gratuity-nursing.ngrok-free.dev'],
 
     'allowed_origins_patterns' => [],
 

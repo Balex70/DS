@@ -1,6 +1,7 @@
 import { Order } from "./order"
 
 export type PaymentStatus =
+    | "draft"
     | "pending"
     | "paid"
     | "failed"

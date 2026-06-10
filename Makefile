@@ -26,9 +26,15 @@ build:
 
 up:
 	$(DOCKER_COMPOSE) up -d
-	
+
+prod-up:
+	$(DOCKER_COMPOSE_PROD) up -d
+
 stop:
 	$(DOCKER_COMPOSE) stop
+
+prod-stop:
+	$(DOCKER_COMPOSE_PROD) stop
 
 restart:
 	$(DOCKER_COMPOSE) restart

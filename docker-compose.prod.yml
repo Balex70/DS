@@ -1,0 +1,23 @@
+services:
+  backend:
+    ports:
+      - "8000:80"
+    volumes:
+      - ./backend:/app
+  
+  frontend:
+    build:
+      context: .  # Ensure build context is correct (root folder)
+      dockerfile: docker/frontend/Dockerfile
+      target: production
+    environment:
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
+      NODE_ENV: production # production for npm run build
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/web  # Mount only the `web` folder, not the entire project
+
+  queue:
+    volumes:
+      - ./backend:/app

@@ -1,3 +1,4 @@
+# Runs only if use 'docker compose' without -f
 services:
   backend:
     ports:
@@ -14,3 +15,17 @@ services:
   queue:
     volumes:
       - ./backend:/app
+
+  test_db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ${TEST_DB_DATABASE}
+      POSTGRES_USER: ${TEST_DB_USERNAME}
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD}
+    ports:
+      - "${TEST_DB_PORT}:5432"
+    volumes:
+      - test_db_data:/var/lib/postgresql/data
+
+volumes:
+  test_db_data:
