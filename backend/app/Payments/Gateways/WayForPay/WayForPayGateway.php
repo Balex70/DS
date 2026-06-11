@@ -139,7 +139,7 @@ class WayForPayGateway extends AbstractGateway
 
     public function getPriority(): int
     {
-        return 100;
+        return 50;
     }
 
     public function getPaymentMethods(): array
