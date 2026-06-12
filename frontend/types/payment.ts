@@ -11,6 +11,7 @@ export type PaymentStatus =
 export type PaymentMethods =
     | "stripe"
     | "wayforpay"
+    | "liqpay"
 
 export type Payment = {
     id: number
@@ -27,8 +28,9 @@ export type Payment = {
 }
 
 export type PaymentResponse = {
-    redirect_url?: string
-    transaction_id?: string
+    redirect_url?: string;
+    transaction_id?: string;
+    payload?: Record<string, unknown>;
 }
 
 export type AvailableGatewayResponse = {

@@ -62,6 +62,7 @@ class PaymentController extends Controller
 
         return response()->json([
             'redirect_url' => $paymentResponse->redirectUrl,
+            'payload' => $paymentResponse->payload,
         ]);
     }
 

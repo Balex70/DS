@@ -6,6 +6,7 @@ use App\Payments\DTO\PaymentRequestDTO;
 use App\Payments\DTO\PaymentResponseDTO;
 use App\Payments\Gateways\AbstractGateway;
 use Illuminate\Support\Str;
+use LiqPay;
 
 class LiqPayGateway extends AbstractGateway
 {
@@ -28,8 +29,8 @@ class LiqPayGateway extends AbstractGateway
             && $this->supportsMethod($methods);
     }
 
-    public function createPayment(PaymentRequestDTO $request): PaymentResponseDTO {
-
+    public function createPayment(PaymentRequestDTO $request): PaymentResponseDTO
+    {
         $this->log([
             'liqpay' => 'create_payment',
             'order' => $request->orderId,
@@ -38,7 +39,9 @@ class LiqPayGateway extends AbstractGateway
         $publicKey = config('payments.liqpay.public_key');
         $privateKey = config('payments.liqpay.private_key');
 
-        $orderId = 'ORDER_' . $request->orderId . '_PAY_' . Str::uuid();
+        $liqpay = new LiqPay($publicKey, $privateKey);
+
+        $orderReference = 'ORDER_' . $request->orderId . '_PAY_' . Str::uuid();
 
         $amount = number_format(
             $request->amount / 100,
@@ -49,62 +52,65 @@ class LiqPayGateway extends AbstractGateway
 
         $params = [
             'version' => 3,
-            'public_key' => $publicKey,
-
             'action' => 'pay',
-
             'amount' => $amount,
             'currency' => $request->currency,
-
             'description' => 'Order #' . $request->orderId,
-            'order_id' => $orderId,
+            'order_id' => $orderReference,
 
-            'result_url' =>
-                config('payments.liqpay.return_url')
+            'result_url' => config('payments.liqpay.return_url')
                 . '/payment-result?token='
                 . $request->public_token,
 
-            'server_url' =>
-                config('payments.liqpay.server_url'),
+            'server_url' => config('payments.liqpay.server_url'),
 
-            'language' => 'uk',
+            'language' => 'en',
 
             'customer' => $request->email,
         ];
 
-        $data = base64_encode(
-            json_encode(
-                $params,
-                JSON_UNESCAPED_UNICODE
-            )
-        );
-
-        $signature = base64_encode(
-            sha1(
-                $privateKey . $data . $privateKey,
-                true
-            )
-        );
+        /*
+         * Generate checkout data/signature using SDK
+         */
+        $data = $liqpay->cnb_form_raw($params);
 
         return new PaymentResponseDTO(
             success: true,
-            transactionId: $orderId,
-
-            /*
-             * Frontend will submit POST form
-             */
-            redirectUrl: 'https://www.liqpay.ua/api/3/checkout',
-
-            raw: [
-                'data' => $data,
-                'signature' => $signature,
+            transactionId: $orderReference,
+            redirectUrl: $data['url'], // 'https://www.liqpay.ua/api/3/checkout'
+            payload: [
+                'data' => $data['data'],
+                'signature' => $data['signature'],
             ]
         );
     }
 
     public function verify(string $transactionId): bool
     {
-        return true;
+        try {
+            $liqpay = new LiqPay(
+                config('payments.liqpay.public_key'),
+                config('payments.liqpay.private_key')
+            );
+
+            $response = $liqpay->api('payment/status', [
+                'version' => 3,
+                'action' => 'status',
+                'order_id' => $transactionId,
+            ]);
+
+            return in_array(
+                $response->status ?? null,
+                ['success', 'sandbox']
+            );
+        } catch (\Throwable $e) {
+            logger()->error('LiqPay verification failed', [
+                'transaction_id' => $transactionId,
+                'message' => $e->getMessage(),
+            ]);
+
+            return false;
+        }
     }
 
     public function refund(string $transactionId, float $amount): bool {
