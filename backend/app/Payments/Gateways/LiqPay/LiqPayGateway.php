@@ -3,13 +3,14 @@
 namespace App\Payments\Gateways\LiqPay;
 
 use App\Enums\PaymentStatusEnum;
+use App\Events\PaymentChangedStatus;
 use App\Models\Payment;
 use App\Payments\DTO\PaymentRequestDTO;
 use App\Payments\DTO\PaymentResponseDTO;
 use App\Payments\Gateways\AbstractGateway;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use LiqPay;
-use Illuminate\Http\Request;
 
 class LiqPayGateway extends AbstractGateway
 {
@@ -128,12 +129,16 @@ class LiqPayGateway extends AbstractGateway
             abort(404);
         }
 
+        $statusToUpdate = $this->mapStatus(
+            $payload['status']
+        );
+
         $payment->update([
-            'status' => $this->mapStatus(
-                $payload['status']
-            ),
+            'status' => $statusToUpdate,
             'gateway_payment_id' => $payload['payment_id'] ?? null,
         ]);
+
+        PaymentChangedStatus::dispatch($payment->order, $statusToUpdate);
     }
 
     private function mapStatus(string $status): PaymentStatusEnum
