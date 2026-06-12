@@ -1,6 +1,7 @@
 <?php
 namespace App\Payments\Contracts;
 
+use Illuminate\Http\Request;
 use App\Payments\DTO\PaymentRequestDTO;
 use App\Payments\DTO\PaymentResponseDTO;
 
@@ -11,6 +12,8 @@ interface PaymentGatewayInterface
     public function isAvailable(string $country, ?string $currency = null, array $methods = []): bool;
 
     public function createPayment(PaymentRequestDTO $request): PaymentResponseDTO;
+
+    public function handleWebhook(Request $request): void;
 
     public function verify(string $transactionId): bool;
 

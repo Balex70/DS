@@ -81,4 +81,5 @@ Route::prefix('store')->group(function () {
     // Payments
     Route::post('payments/{order}/create', [StorePaymentController::class, 'create']);
     Route::post('payments/available-gateway', [StorePaymentController::class, 'availableGateway']);
+    Route::post('payments/{gateway}/webhook', [StorePaymentController::class, 'webhook']);
 });

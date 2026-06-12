@@ -2,11 +2,14 @@
 
 namespace App\Payments\Gateways\LiqPay;
 
+use App\Enums\PaymentStatusEnum;
+use App\Models\Payment;
 use App\Payments\DTO\PaymentRequestDTO;
 use App\Payments\DTO\PaymentResponseDTO;
 use App\Payments\Gateways\AbstractGateway;
 use Illuminate\Support\Str;
 use LiqPay;
+use Illuminate\Http\Request;
 
 class LiqPayGateway extends AbstractGateway
 {
@@ -85,6 +88,109 @@ class LiqPayGateway extends AbstractGateway
         );
     }
 
+    public function handleWebhook(Request $request): void
+    {
+        $data = $request->input('data');
+        $signature = $request->input('signature');
+
+        $privateKey = config('payments.liqpay.private_key');
+
+        $expectedSignature = base64_encode(
+            sha1(
+                $privateKey . $data . $privateKey,
+                true
+            )
+        );
+
+        // Verify signature
+        if (!hash_equals($expectedSignature, $signature)) {
+            $this->log([
+                'liqpay' => 'handleWebhook - invalid signature'
+            ]);
+            abort(403);
+        }
+
+        $payload = json_decode(
+            base64_decode($data),
+            true
+        );
+
+        // Verify transaction exists
+        $payment = Payment::where(
+            'transaction_id',
+            $payload['order_id']
+        )->first();
+
+        if (! $payment) {
+            $this->log([
+                'liqpay' => 'handleWebhook - payment with not found: ' + $payload['order_id']
+            ]);
+            abort(404);
+        }
+
+        $payment->update([
+            'status' => $this->mapStatus(
+                $payload['status']
+            ),
+            'gateway_payment_id' => $payload['payment_id'] ?? null,
+        ]);
+    }
+
+    private function mapStatus(string $status): PaymentStatusEnum
+    {
+        return match ($status) {
+
+            /*
+            * Success
+            */
+            'success',
+            'subscribed',
+            'sandbox',
+            'wait_compensation' => PaymentStatusEnum::PAID,
+
+            /*
+            * Final failures
+            */
+            'error',
+            'failure',
+            'unsubscribed' => PaymentStatusEnum::FAILED,
+
+            /*
+            * Refund
+            */
+            'reversed' => PaymentStatusEnum::REFUNDED,
+
+            /*
+            * Still in progress
+            */
+            'prepared',
+            'processing',
+            '3ds_verify',
+            'captcha_verify',
+            'cvv_verify',
+            'ivr_verify',
+            'otp_verify',
+            'password_verify',
+            'phone_verify',
+            'pin_verify',
+            'receiver_verify',
+            'sender_verify',
+            'senderapp_verify',
+            'wait_qr',
+            'wait_sender',
+            'cash_wait',
+            'hold_wait',
+            'invoice_wait',
+            'wait_accept',
+            'wait_card',
+            'wait_lc',
+            'wait_reserve',
+            'wait_secure' => PaymentStatusEnum::PENDING,
+
+            default => PaymentStatusEnum::PENDING,
+        };
+    }
+
     public function verify(string $transactionId): bool
     {
         try {
@@ -101,7 +207,7 @@ class LiqPayGateway extends AbstractGateway
 
             return in_array(
                 $response->status ?? null,
-                ['success', 'sandbox']
+                ['success', 'subscribed', 'sandbox', 'wait_compensation']
             );
         } catch (\Throwable $e) {
             logger()->error('LiqPay verification failed', [

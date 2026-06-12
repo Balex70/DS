@@ -66,6 +66,13 @@ class PaymentController extends Controller
         ]);
     }
 
+    public function webhook(string $gateway, Request $request)
+    {
+        $driver = $this->manager->driver($gateway);
+
+        return $driver->handleWebhook($request);
+    }
+
     public function availableGateway(Request $request): ?array
     {
         $gateway = $this->manager->availableGateway(

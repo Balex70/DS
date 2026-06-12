@@ -4,6 +4,7 @@ namespace App\Payments\Gateways\Stripe;
 use App\Payments\DTO\PaymentRequestDTO;
 use App\Payments\DTO\PaymentResponseDTO;
 use App\Payments\Gateways\AbstractGateway;
+use Illuminate\Http\Request;
 
 class StripeGateway extends AbstractGateway
 {
@@ -56,6 +57,10 @@ class StripeGateway extends AbstractGateway
             // redirectUrl: 'https://stripe.com/checkout/...'
             redirectUrl: null
         );
+    }
+
+    public function handleWebhook(Request $request): void
+    {
     }
 
     public function verify(string $transactionId): bool

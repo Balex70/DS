@@ -4,6 +4,7 @@ namespace App\Payments\Gateways\WayForPay;
 use App\Payments\DTO\PaymentRequestDTO;
 use App\Payments\DTO\PaymentResponseDTO;
 use App\Payments\Gateways\AbstractGateway;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -107,8 +108,12 @@ class WayForPayGateway extends AbstractGateway
             success: true,
             transactionId: $orderReference,
             redirectUrl: $data['invoiceUrl'],
-            raw: $data
+            payload: $data
         );
+    }
+
+    public function handleWebhook(Request $request): void
+    {
     }
 
     public function verify(string $transactionId): bool
