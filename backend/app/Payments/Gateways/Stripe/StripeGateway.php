@@ -63,7 +63,7 @@ class StripeGateway extends AbstractGateway
     {
     }
 
-    public function verify(string $transactionId): bool
+    public function updateStatus(string $transactionId): bool
     {
         return true;
     }

@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PaymentResource;
 use App\Models\Payment;
+use App\Payments\PaymentManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class PaymentController extends Controller
 {
+    public function __construct(
+        private PaymentManager $manager
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -38,5 +43,20 @@ class PaymentController extends Controller
         return PaymentResource::collection(
             $query->paginate(10)
         );
+    }
+
+    public function updateStatus(Payment $payment) {
+        // TODO: add authorize and policy for this route
+
+        // return response()->json($payment);
+        $driver = $this->manager->driver($payment->gateway);
+
+        return $driver->updateStatus($payment->transaction_id) ?
+            response()->json([
+                'message' => true,
+            ]) :
+            response()->json([
+                'message' => false,
+            ]);
     }
 }

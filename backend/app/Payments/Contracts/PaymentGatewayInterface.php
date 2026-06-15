@@ -15,7 +15,7 @@ interface PaymentGatewayInterface
 
     public function handleWebhook(Request $request): void;
 
-    public function verify(string $transactionId): bool;
+    public function updateStatus(string $transactionId): bool;
 
     public function refund(string $transactionId, float $amount): bool;
 

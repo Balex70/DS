@@ -56,6 +56,7 @@ Route::get('orders', [OrderController::class, 'index'])->middleware('auth:sanctu
 
 // Payments
 Route::get('payments', [PaymentController::class, 'index'])->middleware('auth:sanctum');
+Route::post('payments/{payment}/update-status', [PaymentController::class, 'updateStatus'])->middleware('auth:sanctum');
 
 // Store Order
 Route::prefix('store')->group(function () {

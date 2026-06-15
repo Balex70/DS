@@ -196,8 +196,17 @@ class LiqPayGateway extends AbstractGateway
         };
     }
 
-    public function verify(string $transactionId): bool
+    public function updateStatus(string $transactionId): bool
     {
+        $payment = Payment::where(
+            'transaction_id',
+            $transactionId
+        )->first();
+
+        if (!$payment) {
+            return false;
+        }
+
         try {
             $liqpay = new LiqPay(
                 config('payments.liqpay.public_key'),
@@ -210,10 +219,16 @@ class LiqPayGateway extends AbstractGateway
                 'order_id' => $transactionId,
             ]);
 
-            return in_array(
-                $response->status ?? null,
-                ['success', 'subscribed', 'sandbox', 'wait_compensation']
+            $statusToUpdate = $this->mapStatus(
+                $response->status
             );
+
+            $payment->update([
+                'status' => $statusToUpdate,
+            ]);
+
+            PaymentChangedStatus::dispatch($payment->order, $statusToUpdate);
+            return true;
         } catch (\Throwable $e) {
             logger()->error('LiqPay verification failed', [
                 'transaction_id' => $transactionId,
