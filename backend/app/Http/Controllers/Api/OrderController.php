@@ -7,11 +7,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class OrderController extends Controller
 {
+    public function __construct(private OrderService $service) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -56,6 +59,14 @@ class OrderController extends Controller
         return response()->json(
             $order->load(['items'])
         );
+    }
+
+    public function sendOrder(Order $order)
+    {
+        // TODO: check if order can be send
+        $order->load('items.product');
+
+        $this->service->sendOrder($order);
     }
 
     /**

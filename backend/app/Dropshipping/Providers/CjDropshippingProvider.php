@@ -3,13 +3,15 @@ namespace App\Dropshipping\Providers;
 
 use App\Dropshipping\Contracts\DropshippingProviderInterface;
 use App\Dropshipping\Services\CjCategoryService;
+use App\Dropshipping\Services\CjOrderService;
 use App\Dropshipping\Services\CjProductService;
 
 class CjDropshippingProvider implements DropshippingProviderInterface
 {
     public function __construct(
         private CjCategoryService $categories,
-        private CjProductService $products
+        private CjProductService $products,
+        private CjOrderService $order
     ) {}
 
     public function getName(): string
@@ -37,6 +39,11 @@ class CjDropshippingProvider implements DropshippingProviderInterface
     public function calculateShipping(array $payload): array
     {
         return $this->products->calculateShipping($payload);
+    }
+
+    public function createOrder(array $payload): array
+    {
+        return $this->order->create($payload);
     }
 
     public function activateProduct(string $externalId): bool

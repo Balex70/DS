@@ -103,4 +103,35 @@ class CjApiClient
 
         return $json['data'] ?? [];
     }
+
+    public function createOrder(array $payload): array
+    {
+        $token = $this->authService->getValidAccessToken();
+
+        if (!$token) {
+            throw new \Exception('CJ authentication failed: no valid token available');
+        }
+
+        // $platformToken = config('services.cjdropshipping.platform_token');
+
+        $response = Http::withHeaders([
+            'CJ-Access-Token' => $token,
+            // 'platformToken' => $platformToken,
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ])->post(
+            "{$this->baseUrl}/shopping/order/createOrderV3",
+            $payload
+        );
+
+        $json = $response->json();
+
+        if (!isset($json['code']) || $json['code'] !== 200) {
+            throw new \Exception(
+                'CJ Order API error: ' . ($json['message'] ?? 'Unknown error')
+            );
+        }
+
+        return $json['data'] ?? [];
+    }
 }
