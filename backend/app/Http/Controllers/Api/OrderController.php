@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enums\OrderStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -40,9 +41,9 @@ class OrderController extends Controller
                 });
             })
             ->latest()
-            ->paginate(20);
+            ->paginate(10);
 
-        return response()->json($orders);
+        return OrderResource::collection($orders);
     }
 
     /**
