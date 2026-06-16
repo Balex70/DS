@@ -29,7 +29,7 @@ class StoreOrderRequest extends FormRequest
 
             // Currency / payment
             'currency' => ['nullable', 'string', 'size:3'],
-            'payment_method' => ['nullable', 'string', Rule::in(['stripe', 'wayforpay', 'paypal', 'cod', 'bank_transfer'])],
+            'payment_method' => ['nullable', 'string', Rule::in(['stripe', 'wayforpay', 'paypal', 'liqpay'])],
 
             // Shipping info (required)
             'shipping_full_name' => ['required', 'string', 'max:255'],

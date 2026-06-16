@@ -7,6 +7,6 @@ class PaymentResponseDTO
         public readonly bool $success,
         public readonly ?string $transactionId,
         public readonly ?string $redirectUrl,
-        public readonly array $raw = [],
+        public readonly array $payload = [],
     ) {}
 }

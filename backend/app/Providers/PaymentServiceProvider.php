@@ -1,6 +1,7 @@
 <?php
 namespace App\Providers;
 
+use App\Payments\Gateways\LiqPay\LiqPayGateway;
 use App\Payments\Gateways\Stripe\StripeGateway;
 use App\Payments\Gateways\WayForPay\WayForPayGateway;
 use App\Payments\PaymentManager;
@@ -19,6 +20,7 @@ class PaymentServiceProvider extends ServiceProvider
         $this->app->tag([
             StripeGateway::class,
             WayForPayGateway::class,
+            LiqPayGateway::class
         ], 'payment.gateways');
     }
 

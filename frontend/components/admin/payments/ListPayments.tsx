@@ -149,6 +149,7 @@ function ListPayments () {
         open={viewOpen}
         onOpenChange={setViewOpen}
         payment={selectedPayment}
+        onRefresh={fetchPayments}
       />
     </div>
   )

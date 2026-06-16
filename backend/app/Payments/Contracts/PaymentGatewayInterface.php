@@ -1,6 +1,7 @@
 <?php
 namespace App\Payments\Contracts;
 
+use Illuminate\Http\Request;
 use App\Payments\DTO\PaymentRequestDTO;
 use App\Payments\DTO\PaymentResponseDTO;
 
@@ -12,7 +13,9 @@ interface PaymentGatewayInterface
 
     public function createPayment(PaymentRequestDTO $request): PaymentResponseDTO;
 
-    public function verify(string $transactionId): bool;
+    public function handleWebhook(Request $request): void;
+
+    public function updateStatus(string $transactionId): bool;
 
     public function refund(string $transactionId, float $amount): bool;
 

@@ -34,12 +34,6 @@ class PaymentManager
         ?string $currency = null,
         array $methods = []
     ): ?PaymentGatewayInterface {
-        foreach ($this->gateways as $gateway) {
-            if ($gateway->isAvailable($country, $currency, $methods)) {
-                return $gateway;
-            }
-        }
-
         $available = collect($this->gateways)
             ->filter(fn ($gateway) =>
                 $gateway->isAvailable(

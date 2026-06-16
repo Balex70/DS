@@ -62,7 +62,15 @@ class PaymentController extends Controller
 
         return response()->json([
             'redirect_url' => $paymentResponse->redirectUrl,
+            'payload' => $paymentResponse->payload,
         ]);
+    }
+
+    public function webhook(string $gateway, Request $request)
+    {
+        $driver = $this->manager->driver($gateway);
+
+        return $driver->handleWebhook($request);
     }
 
     public function availableGateway(Request $request): ?array

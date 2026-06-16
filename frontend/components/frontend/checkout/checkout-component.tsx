@@ -14,6 +14,7 @@ import { CheckoutStatus, Order, OrderPayload } from "@/types/order";
 import { useCreatePayment } from "@/hooks/use-create-payment";
 import { useAvailableGateway } from "@/hooks/use-available-gateway";
 import { CheckoutDialog } from "./CheckoutDialog";
+import { SendToPaymentGateway } from "./SendToPaymentGateway";
 
 export function CheckoutComponent() {
     const { data: cart, isLoading } = useCart();
@@ -73,7 +74,7 @@ export function CheckoutComponent() {
                     }
 
                     setCheckoutStatus("redirecting");
-                    window.location.href = paymentResponse.redirect_url;
+                    SendToPaymentGateway(gateway, paymentResponse);
                 },
                 onError: () => {
                     setCheckoutStatus("failed");

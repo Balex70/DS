@@ -56,6 +56,7 @@ Route::get('orders', [OrderController::class, 'index'])->middleware('auth:sanctu
 
 // Payments
 Route::get('payments', [PaymentController::class, 'index'])->middleware('auth:sanctum');
+Route::post('payments/{payment}/update-status', [PaymentController::class, 'updateStatus'])->middleware('auth:sanctum');
 
 // Store Order
 Route::prefix('store')->group(function () {
@@ -81,4 +82,5 @@ Route::prefix('store')->group(function () {
     // Payments
     Route::post('payments/{order}/create', [StorePaymentController::class, 'create']);
     Route::post('payments/available-gateway', [StorePaymentController::class, 'availableGateway']);
+    Route::post('payments/{gateway}/webhook', [StorePaymentController::class, 'webhook']);
 });
