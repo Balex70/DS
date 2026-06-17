@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\OrderDsStatusEnum;
 use App\Enums\OrderStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrderRequest;
@@ -73,6 +74,30 @@ class OrderController extends Controller
         $order->load('items');
 
         $this->service->sendOrder($order);
+    }
+
+    public function checkOrderStatusInDSProvider(Order $order)
+    {
+        $responseData = $this->service->checkOrderStatusInDSProvider($order);
+        if (!$responseData['success']) {
+            $order->ds_status = OrderDsStatusEnum::FAILED; // TODO: recheck, I think it should be FAILD only real failed, not just when API failed
+            $order->save();
+            return response()->json([
+                'success' => false,
+                'message' => $responseData['message'],
+            ], 422);
+        }
+
+        // Update order statuses
+        // TODO: recheck change status and dsStatus, mapping correctly
+        $order->status = $this->service->toOrderStatus($responseData['data']['orderStatus']);
+        $order->ds_status = $this->service->toDsStatus($responseData['data']['orderStatus']);
+        $order->save();
+
+        return response()->json([
+            'success' => true,
+            'data' => $responseData,
+        ]);
     }
 
     /**

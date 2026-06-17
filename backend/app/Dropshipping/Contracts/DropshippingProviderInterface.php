@@ -15,6 +15,8 @@ interface DropshippingProviderInterface
 
     public function createOrder(array $payload): array;
 
+    public function checkOrderStatus(array $payload): array;
+
     public function activateProduct(string $externalId): bool;
 
     public function deactivateProduct(string $externalId): bool;

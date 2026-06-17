@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Dropshipping\DropshippingManager;
+use App\Enums\OrderDsStatusEnum;
+use App\Enums\OrderStatusEnum;
 use App\Models\Order;
 
 class OrderService
@@ -46,5 +48,68 @@ class OrderService
         ];
         
         $provider->createOrder($payload);
+    }
+
+    public function checkOrderStatusInDSProvider(Order $order)
+    {
+        $provider = $this->manager->driver();
+
+        $payload = [
+            'orderId' => $order->id
+        ];
+
+        return $provider->checkOrderStatus($payload);
+    }
+
+    public function toOrderStatus(string $dsStatus): OrderStatusEnum {
+        // https://developers.cjdropshipping.com/en/api/api2/api/shopping.html#order-status
+        // TODO: create mappers for each ds providers
+        return match ($dsStatus) {
+            'CREATED',
+            'IN_CART',
+            'UNPAID',
+            'UNSHIPPED'
+                => OrderStatusEnum::PROCESSING,
+
+            'SHIPPED'
+                => OrderStatusEnum::SHIPPED,
+
+            'DELIVERED'
+                => OrderStatusEnum::DELIVERED,
+
+            'CANCELLED'
+                => OrderStatusEnum::CANCELED,
+
+            default
+                => OrderStatusEnum::PROCESSING,
+        };
+    }
+
+    public function toDsStatus(string $dsStatus): OrderDsStatusEnum {
+        // https://developers.cjdropshipping.com/en/api/api2/api/shopping.html#order-status
+        // TODO: create mappers for each ds providers
+        return match ($dsStatus) {
+            'CREATED',
+            'IN_CART'
+                => OrderDsStatusEnum::CREATED,
+
+            'UNPAID'
+                => OrderDsStatusEnum::UNPAID,
+
+            'UNSHIPPED'
+                => OrderDsStatusEnum::PROCESSING,
+
+            'SHIPPED'
+                => OrderDsStatusEnum::SHIPPED,
+
+            'DELIVERED'
+                => OrderDsStatusEnum::DELIVERED,
+
+            'CANCELLED'
+                => OrderDsStatusEnum::CANCELLED,
+
+            default
+                => OrderDsStatusEnum::FAILED,
+        };
     }
 }

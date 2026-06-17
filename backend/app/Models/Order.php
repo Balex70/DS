@@ -34,7 +34,7 @@ class Order extends Model
         return [
             'status' => OrderStatusEnum::class,
             'payment_status' => PaymentStatusEnum::class,
-            'sd_status' => OrderDsStatusEnum::class
+            'ds_status' => OrderDsStatusEnum::class
         ];
     }
 
@@ -81,7 +81,7 @@ class Order extends Model
         }
 
         // check if order has already been sent
-        if ($this->ds_status !== null) {
+        if ($this->ds_status !== null && $this->ds_status !== OrderDsStatusEnum::FAILED) {
             $errors[] = 'Order has already been sent to supplier';
         }
 

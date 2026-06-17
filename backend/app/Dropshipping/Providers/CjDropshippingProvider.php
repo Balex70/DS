@@ -46,6 +46,11 @@ class CjDropshippingProvider implements DropshippingProviderInterface
         return $this->order->create($payload);
     }
 
+    public function checkOrderStatus(array $payload): array
+    {
+        return $this->order->checkStatus($payload['orderId']);
+    }
+
     public function activateProduct(string $externalId): bool
     {
         // CJ-specific logic
