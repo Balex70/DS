@@ -22,11 +22,12 @@ class ChangePaymentStatusForOrder
     {
         $order = $event->order->fresh();
 
-        // Change payment status only if the order is not canceled or refunded or fulfilled
+        // Change payment status only if the order is not canceled or refunded or shipped or delivered
         if (in_array($order->status, [
             OrderStatusEnum::CANCELED,
             OrderStatusEnum::REFUNDED,
-            OrderStatusEnum::FULFILLED,
+            OrderStatusEnum::SHIPPED,
+            OrderStatusEnum::DELIVERED
         ], true)) {
             return;
         }

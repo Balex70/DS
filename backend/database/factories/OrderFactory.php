@@ -27,7 +27,8 @@ class OrderFactory extends Factory
             OrderStatusEnum::PENDING,
             OrderStatusEnum::PAID,
             OrderStatusEnum::PROCESSING,
-            OrderStatusEnum::FULFILLED,
+            OrderStatusEnum::SHIPPED,
+            OrderStatusEnum::DELIVERED,
             OrderStatusEnum::CANCELED,
             OrderStatusEnum::REFUNDED,
         ]);
@@ -93,9 +94,8 @@ class OrderFactory extends Factory
             'sent_to_ds_provider' => $this->faker->boolean(30),
             'sent_to_ds_provider_at' => $this->faker->optional()->dateTimeBetween('-10 days', 'now'),
 
-            'fulfilled_at' => $status === OrderStatusEnum::FULFILLED
-                ? $this->faker->dateTimeBetween('-5 days', 'now')
-                : null,
+            // shipped_at
+            // delivered_at
 
             'notes' => $this->faker->optional()->sentence(),
         ];
@@ -113,15 +113,30 @@ class OrderFactory extends Factory
     }
 
     /**
-     * State: fulfilled order
+     * State: shipped order -> shipped and in transit
      */
-    public function fulfilled(): static
+    public function shipped(): static
     {
         return $this->state(fn () => [
-            'status' => OrderStatusEnum::FULFILLED,
+            'status' => OrderStatusEnum::SHIPPED,
+            'payment_status' => PaymentStatusEnum::PAID,
+            'ds_status' => OrderDsStatusEnum::SHIPPED,
+            'shipped_at' => now(),
+            'sent_to_ds_provider' => true,
+            'sent_to_ds_provider_at' => now()->subDays(rand(1, 5)),
+        ]);
+    }
+
+    /**
+     * State: shipped order -> shipped and in transit
+     */
+    public function delivered(): static
+    {
+        return $this->state(fn () => [
+            'status' => OrderStatusEnum::DELIVERED,
             'payment_status' => PaymentStatusEnum::PAID,
             'ds_status' => OrderDsStatusEnum::DELIVERED,
-            'fulfilled_at' => now(),
+            'delivered_at' => now(),
             'sent_to_ds_provider' => true,
             'sent_to_ds_provider_at' => now()->subDays(rand(1, 5)),
         ]);

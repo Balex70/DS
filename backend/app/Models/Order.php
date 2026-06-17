@@ -22,7 +22,7 @@ use Laravel\Sanctum\HasApiTokens;
     'order_number', 'status', 'payment_method', 'payment_status',
     'shipping_full_name', 'shipping_phone', 'shipping_email', 'shipping_address_line1',
     'shipping_address_line2', 'shipping_city', 'shipping_state', 'shipping_postal_code', 'shipping_country',
-    'note'
+    'note', 'shipped_at', 'delivered_at',
 ])]
 class Order extends Model
 {
@@ -46,6 +46,56 @@ class Order extends Model
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function canBeSendToDsProvider(): array
+    {
+        $errors = [];
+
+        // check payment statues
+        if ($this->payment_status !== PaymentStatusEnum::PAID) {
+            $errors[] = 'Order is not paid';
+        }
+
+        // check order status
+        if ($this->status === OrderStatusEnum::DRAFT) {
+            $errors[] = 'Order is drafted only';
+        }
+        if ($this->status === OrderStatusEnum::PENDING) {
+            $errors[] = 'Order is not paid yet, check payments';
+        }
+        if ($this->status === OrderStatusEnum::PROCESSING) {
+            $errors[] = 'Order is processing';
+        }
+        if ($this->status === OrderStatusEnum::SHIPPED) {
+            $errors[] = 'Order is shipped already';
+        }
+        if ($this->status === OrderStatusEnum::DELIVERED) {
+            $errors[] = 'Order is delivered already';
+        }
+        if ($this->status === OrderStatusEnum::CANCELED) {
+            $errors[] = 'Order is canceled';
+        }
+        if ($this->status === OrderStatusEnum::REFUNDED) {
+            $errors[] = 'Order is refunded';
+        }
+
+        // check if order has already been sent
+        if ($this->status !== null) {
+            $errors[] = 'Order has already been sent to supplier';
+        }
+        if (!empty($this->ds_order_id)) {
+            $errors[] = 'Order has already been sent to supplier';
+        }
+
+        if ($this->items()->count() === 0) {
+            $errors[] = 'Order has no items';
+        }
+
+        return [
+            'allowed' => empty($errors),
+            'errors' => $errors,
+        ];
     }
 
     protected static function booted(): void

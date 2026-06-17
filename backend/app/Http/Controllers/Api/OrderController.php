@@ -94,10 +94,15 @@ class OrderController extends Controller
     {
         Gate::authorize('delete', $order);
 
-        // Safety check: prevent deleting fulfilled CJ orders
-        if ($order->status === OrderStatusEnum::FULFILLED) {
+        // Safety check: prevent deleting CJ orders
+        if (
+            $order->status === OrderStatusEnum::PENDING ||
+            $order->status === OrderStatusEnum::PAID ||
+            $order->status === OrderStatusEnum::PROCESSING ||
+            $order->status === OrderStatusEnum::SHIPPED ||
+            $order->status === OrderStatusEnum::DELIVERED) {
             return response()->json([
-                'message' => 'Cannot delete fulfilled orders.',
+                'message' => 'Cannot delete order with status ' . $order->status . '.',
             ], 422);
         }
 

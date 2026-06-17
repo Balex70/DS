@@ -35,7 +35,8 @@ class UpdateOrderRequest extends FormRequest
                     OrderStatusEnum::PENDING,
                     OrderStatusEnum::PAID,
                     OrderStatusEnum::PROCESSING,
-                    OrderStatusEnum::FULFILLED,
+                    OrderStatusEnum::SHIPPED,
+                    OrderStatusEnum::DELIVERED,
                     OrderStatusEnum::CANCELED,
                     OrderStatusEnum::REFUNDED,
                 ]),
@@ -62,7 +63,8 @@ class UpdateOrderRequest extends FormRequest
             // Flags
             'sent_to_ds_provider' => ['sometimes', 'boolean'],
             'sent_to_ds_provider_at' => ['sometimes', 'nullable', 'date'],
-            'fulfilled_at' => ['sometimes', 'nullable', 'date'],
+            'shipped_at' => ['sometimes', 'nullable', 'date'],
+            'delivered_at' => ['sometimes', 'nullable', 'date'],
 
             // Payment status (admin/system only)
             'payment_status' => [

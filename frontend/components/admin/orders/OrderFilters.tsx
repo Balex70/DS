@@ -32,10 +32,12 @@ const ORDER_STATUSES: {
     label: string
 }[] = [
     { value: "__all__", label: "All" },
+    { value: "draft", label: "Draft" },
     { value: "pending", label: "Pending" },
     { value: "paid", label: "Paid" },
     { value: "processing", label: "Processing" },
-    { value: "fulfilled", label: "Fulfilled" },
+    { value: "shipped", label: "shipped" },
+    { value: "delivered", label: "delivered" },
     { value: "canceled", label: "Canceled" },
     { value: "refunded", label: "Refunded" },
 ]
