@@ -81,10 +81,7 @@ class Order extends Model
         }
 
         // check if order has already been sent
-        if ($this->status !== null) {
-            $errors[] = 'Order has already been sent to supplier';
-        }
-        if (!empty($this->ds_order_id)) {
+        if ($this->ds_status !== null) {
             $errors[] = 'Order has already been sent to supplier';
         }
 

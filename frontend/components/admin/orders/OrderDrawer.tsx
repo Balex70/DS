@@ -20,6 +20,7 @@ import { OrderDrawerPaymentFields } from "./OrderDrawerPaymentFields"
 import { OrderDrawerItemsFields } from "./OrderDrawerItemsFields"
 import { PriceRenderer } from "@/components/custom/PriceRenderer"
 import { getCookie } from "@/helpers/general"
+import { toast } from "sonner";
 
 export function OrderDrawer({
   open,
@@ -32,13 +33,14 @@ export function OrderDrawer({
   order: Order | null
   onRefresh: () => void
 }) {
-    const [isAction, setIsAction] = useState(false)
+    const [isSendOrder, setIsSendOrder] = useState(false)
+    const [errorSendOrder, setErrorSendOrder] = useState<string | null>(null)
 
     const handleSendOrder = async () => {
         if (!order) return
-
+        setErrorSendOrder(null)
         try {
-            setIsAction(true)
+            setIsSendOrder(true)
 
             // get the csrf token
             await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/sanctum/csrf-cookie`, {
@@ -53,20 +55,43 @@ export function OrderDrawer({
             };
 
             // payment status update
-            await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/orders/${order.id}/send`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/orders/${order.id}/send`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: headers,
                 cache: 'no-cache', // 'no-cache' if you want it fresh each time
             })
 
+            if (!res.ok) {
+                const contentType = res.headers.get('content-type') || '';
+                if (contentType.includes('application/json')) {
+                    const errorJson = await res.json();
+                    if (Array.isArray(errorJson.errors)) {
+                        errorJson.errors.forEach((error: string, index: number) => {
+                            setTimeout(() => toast.error(error), index * 2000);
+                        });
+                    } else {
+                        toast.error(errorJson.errors || 'Unknown API error');
+                    }
+                } else {
+                    // HTML / text response → system-level issue (not for client)
+                    const rawText = await res.text();
+                    setErrorSendOrder(rawText.slice(0, 400))
+                }
+            }
+
             await onRefresh()
-            setIsAction(true)
+            setIsSendOrder(true)
         } catch (e) {
-            console.error("Status update failed", e)
+            setErrorSendOrder("Status update failed" + e)
         } finally {
-            setIsAction(false)
+            setIsSendOrder(false)
         }
+    }
+
+    if (errorSendOrder) {
+        toast.error(errorSendOrder)
+        setErrorSendOrder(null)
     }
 
     return (
@@ -78,9 +103,9 @@ export function OrderDrawer({
 
             {order && (
                 <CardContent className="space-y-4">
-                    <Button onClick={handleSendOrder} disabled={isAction}>
-                        {isAction && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        {isAction ? "Sending..." : "Send order (create order in DS provider)"}
+                    <Button onClick={handleSendOrder} disabled={isSendOrder}>
+                        {isSendOrder && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {isSendOrder ? "Sending..." : "Send order (create order in DS provider)"}
                     </Button>
                     <div className="flex space-x-4">
                         <FieldGroup className="flex flex-col gap-4 min-w-0">

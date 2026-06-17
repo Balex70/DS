@@ -63,7 +63,13 @@ class OrderController extends Controller
 
     public function sendOrder(Order $order)
     {
-        // TODO: check if order can be send
+        // check if order can be send
+        $canBeSend = $order->canBeSendToDsProvider();
+
+        if (!$canBeSend['allowed']) {
+            return response()->json($canBeSend, 422);
+        }
+
         $order->load('items');
 
         $this->service->sendOrder($order);
