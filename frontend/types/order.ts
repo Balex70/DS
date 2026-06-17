@@ -79,11 +79,12 @@ export type OrderStatus =
     | "refunded"
 
 export type DsStatus =
-    | "pending"
-    | "paid"
+    | "created"
+    | "unpaid"
     | "processing"
     | "shipped"
     | "delivered"
+    | "cancelled"
     | "failed"
 
 export type CheckoutStatus =

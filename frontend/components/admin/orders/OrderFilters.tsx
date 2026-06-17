@@ -54,15 +54,16 @@ const PAYMENT_STATUSES: {
 ]
 
 const DS_STATUSES: {
-    value: string
+    value: DsStatus | "__all__"
     label: string
 }[] = [
     { value: "__all__", label: "All" },
-    { value: "pending", label: "Pending" },
-    { value: "paid", label: "Paid" },
+    { value: "created", label: "Created" },
+    { value: "unpaid", label: "Unpaid" },
     { value: "processing", label: "Processing" },
     { value: "shipped", label: "Shipped" },
     { value: "delivered", label: "Delivered" },
+    { value: "cancelled", label: "Cancelled" },
     { value: "failed", label: "Failed" },
 ]
 

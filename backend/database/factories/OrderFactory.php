@@ -41,11 +41,12 @@ class OrderFactory extends Factory
         ]);
 
         $dsStatus = $this->faker->randomElement([
-            OrderDsStatusEnum::PENDING,
-            OrderDsStatusEnum::PAID,
+            OrderDsStatusEnum::CREATED,
+            OrderDsStatusEnum::UNPAID,
             OrderDsStatusEnum::PROCESSING,
             OrderDsStatusEnum::SHIPPED,
             OrderDsStatusEnum::DELIVERED,
+            OrderDsStatusEnum::CANCELLED,
             OrderDsStatusEnum::FAILED,
         ]);
 

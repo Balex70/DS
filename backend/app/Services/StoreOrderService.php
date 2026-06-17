@@ -68,7 +68,6 @@ class StoreOrderService
                     'order_number' => 'ORD-' . strtoupper(Str::random(10)),
                     'customer_id' => $customer ? $customer->id : null,
                     'ds_provider' => $data['ds_provider'] ?? 'cj',
-                    'ds_status' => OrderDsStatusEnum::PENDING,
                     'status' => OrderStatusEnum::DRAFT,
                     'payment_status' => PaymentStatusEnum::DRAFT,
                 ];
