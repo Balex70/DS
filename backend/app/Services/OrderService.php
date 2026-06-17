@@ -15,8 +15,6 @@ class OrderService
     {
         $provider = $this->manager->driver();
         
-        \Log::info($order->toArray());
-        dd('die');
         $payload = [
             'order_number' => $order->id,
             'shipping' => [
@@ -40,17 +38,13 @@ class OrderService
 
             'items' => array_map(function ($item) {
                 return [
-                    'vid' => $item['product']['external_id'],
-                    // 'vid' => '1383296520174047232',
+                    'vid' => $item['vid'],
                     'quantity' => $item['quantity'],
-                    'line_item_id' => 'test-lineItemId-1111',
                 ];
             }, $order->items->toArray()),
             
         ];
         
-        \Log::info($payload);
-
-        // $productDetails = $provider->createOrder($payload);
+        $provider->createOrder($payload);
     }
 }

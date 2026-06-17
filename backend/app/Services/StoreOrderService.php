@@ -80,6 +80,8 @@ class StoreOrderService
             foreach ($items as $item) {
                 $order->items()->create([
                     'product_id' => $item['product_id'] ?? null,
+                    'vid' => $item['vid'] ?? null,
+                    'sku' => $item['sku'] ?? null,
                     'title' => $item['title'],
                     'quantity' => $item['quantity'],
                     'price' => $item['price'],

@@ -112,11 +112,8 @@ class CjApiClient
             throw new \Exception('CJ authentication failed: no valid token available');
         }
 
-        // $platformToken = config('services.cjdropshipping.platform_token');
-
         $response = Http::withHeaders([
             'CJ-Access-Token' => $token,
-            // 'platformToken' => $platformToken,
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ])->post(

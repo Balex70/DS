@@ -64,7 +64,7 @@ class OrderController extends Controller
     public function sendOrder(Order $order)
     {
         // TODO: check if order can be send
-        $order->load('items.product');
+        $order->load('items');
 
         $this->service->sendOrder($order);
     }

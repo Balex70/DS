@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable([
-    'order_id', 'product_id', 'title', 'quantity', 'price', 'total',
+    'order_id', 'vid', 'sku', 'product_id', 'title', 'quantity', 'price', 'total',
 ])]
 class OrderItem extends Model
 {
