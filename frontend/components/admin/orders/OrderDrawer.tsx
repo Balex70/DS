@@ -85,6 +85,7 @@ export function OrderDrawer({
                 }
             }
 
+            toast.success("Order sent to DS provider successfully");
             await onRefresh()
             setIsSendOrder(true)
         } catch (e) {
