@@ -4,6 +4,7 @@ import { ShippingMethod } from "@/types/shipping";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useMemo, useState } from "react";
 import { getMaxDays, getMinDays } from "@/helpers/shipping";
+import { ShippingTierBadge } from "./shippingTiers";
 
 type Props = {
     methods: ShippingMethod[];
@@ -117,9 +118,7 @@ export function ShippingMethodsSelector({
 
                             <div>
                                 <div className="flex items-center gap-2">
-                                    <span className="font-medium">
-                                        {method.name}
-                                    </span>
+                                    <ShippingTierBadge method={method} />
 
                                     <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">
                                         {label}
@@ -184,9 +183,7 @@ export function ShippingMethodsSelector({
                                             />
 
                                             <div>
-                                                <div className="font-medium">
-                                                    {method.name}
-                                                </div>
+                                                <ShippingTierBadge method={method} />
 
                                                 {method.estimated_delivery && (
                                                     <div className="text-sm text-muted-foreground">
