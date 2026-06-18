@@ -103,4 +103,68 @@ class CjApiClient
 
         return $json['data'] ?? [];
     }
+
+    public function createOrder(array $payload): array
+    {
+        $token = $this->authService->getValidAccessToken();
+
+        if (!$token) {
+            throw new \Exception('CJ authentication failed: no valid token available');
+        }
+
+        $response = Http::withHeaders([
+            'CJ-Access-Token' => $token,
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ])->post(
+            "{$this->baseUrl}/shopping/order/createOrderV3",
+            $payload
+        );
+
+        $json = $response->json();
+
+        if (!isset($json['code']) || $json['code'] !== 200) {
+            throw new \Exception(
+                'CJ Order API error: ' . ($json['message'] ?? 'Unknown error')
+            );
+        }
+
+        return $json['data'] ?? [];
+    }
+
+    public function checkOrderStatus(int $orderId): array
+    {
+        $token = $this->authService->getValidAccessToken();
+
+        if (!$token) {
+            throw new \Exception('CJ authentication failed: no valid token available');
+        }
+
+        $response = Http::withHeaders([
+            'CJ-Access-Token' => $token,
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ])->get(
+            "{$this->baseUrl}/shopping/order/getOrderDetail?orderId=210711100018043276",
+            [
+                'orderId' => $orderId
+            ]
+        );
+
+        $json = $response->json();
+
+        if (!isset($json['code']) || $json['code'] !== 200) {
+            return [
+                'success' => false,
+                'message' => $json['message'] ?? 'Unknown error',
+                'data' => null,
+            ];
+        }
+
+        return [
+            'success' => true,
+            'message' => null,
+            'data' => $json['data'] ?? [],
+        ];
+    }
 }

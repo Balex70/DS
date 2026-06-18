@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers\Api\Store;
 
-use App\Enums\OrderDsStatusEnum;
-use App\Enums\OrderStatusEnum;
-use App\Enums\PaymentStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
-use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use App\Services\CartService;
 use App\Services\StoreOrderService;

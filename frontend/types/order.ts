@@ -71,19 +71,21 @@ interface OrderPayloadInterface {
 };
 
 export type OrderStatus =
-    | "pending"
-    | "paid"
+    | "draft"
+    | "created"
     | "processing"
-    | "fulfilled"
+    | "shipped"
+    | "delivered"
     | "canceled"
     | "refunded"
 
 export type DsStatus =
-    | "pending"
-    | "paid"
+    | "created"
+    | "unpaid"
     | "processing"
     | "shipped"
     | "delivered"
+    | "cancelled"
     | "failed"
 
 export type CheckoutStatus =

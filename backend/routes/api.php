@@ -53,6 +53,8 @@ Route::prefix('customer')->group(function () {
 
 // Orders
 Route::get('orders', [OrderController::class, 'index'])->middleware('auth:sanctum');
+Route::post('orders/{order}/send', [OrderController::class, 'sendOrder'])->middleware('auth:sanctum');
+Route::post('orders/{order}/check-ds-status', [OrderController::class, 'checkOrderStatusInDSProvider'])->middleware('auth:sanctum');
 
 // Payments
 Route::get('payments', [PaymentController::class, 'index'])->middleware('auth:sanctum');

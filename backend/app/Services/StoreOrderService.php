@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Dropshipping\DropshippingManager;
-use App\Enums\OrderDsStatusEnum;
 use App\Enums\OrderStatusEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Models\Order;
@@ -68,7 +67,6 @@ class StoreOrderService
                     'order_number' => 'ORD-' . strtoupper(Str::random(10)),
                     'customer_id' => $customer ? $customer->id : null,
                     'ds_provider' => $data['ds_provider'] ?? 'cj',
-                    'ds_status' => OrderDsStatusEnum::PENDING,
                     'status' => OrderStatusEnum::DRAFT,
                     'payment_status' => PaymentStatusEnum::DRAFT,
                 ];
@@ -80,6 +78,8 @@ class StoreOrderService
             foreach ($items as $item) {
                 $order->items()->create([
                     'product_id' => $item['product_id'] ?? null,
+                    'vid' => $item['vid'] ?? null,
+                    'sku' => $item['sku'] ?? null,
                     'title' => $item['title'],
                     'quantity' => $item['quantity'],
                     'price' => $item['price'],

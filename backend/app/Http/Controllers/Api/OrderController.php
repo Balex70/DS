@@ -5,12 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Enums\OrderStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class OrderController extends Controller
 {
+    public function __construct(private OrderService $service) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -40,9 +44,9 @@ class OrderController extends Controller
                 });
             })
             ->latest()
-            ->paginate(20);
+            ->paginate(10);
 
-        return response()->json($orders);
+        return OrderResource::collection($orders);
     }
 
     /**
@@ -55,6 +59,42 @@ class OrderController extends Controller
         return response()->json(
             $order->load(['items'])
         );
+    }
+
+    public function sendOrder(Order $order)
+    {
+        // check if order can be send
+        $canBeSend = $order->canBeSendToDsProvider();
+
+        if (!$canBeSend['allowed']) {
+            return response()->json($canBeSend, 422);
+        }
+
+        $order->load('items');
+
+        $this->service->sendOrder($order);
+    }
+
+    public function checkOrderStatusInDSProvider(Order $order)
+    {
+        $responseData = $this->service->checkOrderStatusInDSProvider($order);
+        if (!$responseData['success']) {
+            return response()->json([
+                'success' => false,
+                'message' => $responseData['message'],
+            ], 422);
+        }
+
+        // Update order statuses
+        // TODO: recheck change status and dsStatus, mapping correctly
+        $order->status = $this->service->toOrderStatus($responseData['data']['orderStatus']);
+        $order->ds_status = $this->service->toDsStatus($responseData['data']['orderStatus']);
+        $order->save();
+
+        return response()->json([
+            'success' => true,
+            'data' => $responseData,
+        ]);
     }
 
     /**
@@ -82,10 +122,14 @@ class OrderController extends Controller
     {
         Gate::authorize('delete', $order);
 
-        // Safety check: prevent deleting fulfilled CJ orders
-        if ($order->status === OrderStatusEnum::FULFILLED) {
+        // Safety check: prevent deleting CJ orders
+        if (
+            $order->status === OrderStatusEnum::CREATED ||
+            $order->status === OrderStatusEnum::PROCESSING ||
+            $order->status === OrderStatusEnum::SHIPPED ||
+            $order->status === OrderStatusEnum::DELIVERED) {
             return response()->json([
-                'message' => 'Cannot delete fulfilled orders.',
+                'message' => 'Cannot delete order with status ' . $order->status . '.',
             ], 422);
         }
 
