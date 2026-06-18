@@ -15,6 +15,10 @@ const CARRIERS: Record<string, Carrier> = {
         name: "Ukrposhta",
         logo: "/carriers/ukrposhta.svg",
     },
+    meest: {
+        id: "meest",
+        logo: "/carriers/meest.svg",
+    },
     dhl: {
         id: "dhl",
         logo: "/carriers/dhl.svg",
@@ -27,7 +31,7 @@ const CARRIERS: Record<string, Carrier> = {
 };
 
 const COUNTRY_CARRIERS: Record<string, string[]> = {
-    UA: ["nova_poshta", "ukrposhta"],
+    UA: ["nova_poshta", "ukrposhta", "meest"],
     US: ["usps"],
     DE: ["dhl"],
 };
