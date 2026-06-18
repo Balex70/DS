@@ -24,8 +24,7 @@ class OrderFactory extends Factory
         $total = $subtotal + $shipping;
 
         $status = $this->faker->randomElement([
-            OrderStatusEnum::PENDING,
-            OrderStatusEnum::PAID,
+            OrderStatusEnum::CREATED,
             OrderStatusEnum::PROCESSING,
             OrderStatusEnum::SHIPPED,
             OrderStatusEnum::DELIVERED,
@@ -107,7 +106,7 @@ class OrderFactory extends Factory
     public function paid(): static
     {
         return $this->state(fn () => [
-            'status' => OrderStatusEnum::PAID,
+            'status' => OrderStatusEnum::CREATED,
             'payment_status' => PaymentStatusEnum::PAID,
         ]);
     }

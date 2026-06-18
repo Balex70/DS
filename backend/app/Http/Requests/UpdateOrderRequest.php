@@ -32,8 +32,7 @@ class UpdateOrderRequest extends FormRequest
                 'sometimes',
                 'string',
                 Rule::in([
-                    OrderStatusEnum::PENDING,
-                    OrderStatusEnum::PAID,
+                    OrderStatusEnum::CREATED,
                     OrderStatusEnum::PROCESSING,
                     OrderStatusEnum::SHIPPED,
                     OrderStatusEnum::DELIVERED,

@@ -72,8 +72,7 @@ interface OrderPayloadInterface {
 
 export type OrderStatus =
     | "draft"
-    | "pending"
-    | "paid"
+    | "created"
     | "processing"
     | "shipped"
     | "delivered"

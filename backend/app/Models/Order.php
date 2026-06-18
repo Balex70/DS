@@ -61,9 +61,6 @@ class Order extends Model
         if ($this->status === OrderStatusEnum::DRAFT) {
             $errors[] = 'Order is drafted only';
         }
-        if ($this->status === OrderStatusEnum::PENDING) {
-            $errors[] = 'Order is not paid yet, check payments';
-        }
         if ($this->status === OrderStatusEnum::PROCESSING) {
             $errors[] = 'Order is processing';
         }

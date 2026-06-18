@@ -5,8 +5,6 @@ namespace App\Listeners;
 use App\Enums\OrderStatusEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Events\PaymentInitiated;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class LockDraftOrder
 {
@@ -25,10 +23,10 @@ class LockDraftOrder
     {
         $order = $event->order->fresh();
 
-        // Lock the order by changing it from DRAFT to PENDING
+        // Lock the order by changing it from DRAFT to CREATED
         if ($order->status === OrderStatusEnum::DRAFT) {
             $order->update([
-                'status' => OrderStatusEnum::PENDING,
+                'status' => OrderStatusEnum::CREATED,
                 'payment_status' => PaymentStatusEnum::PENDING
             ]);
         }

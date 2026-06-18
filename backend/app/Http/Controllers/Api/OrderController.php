@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\OrderDsStatusEnum;
 use App\Enums\OrderStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrderRequest;
@@ -125,8 +124,7 @@ class OrderController extends Controller
 
         // Safety check: prevent deleting CJ orders
         if (
-            $order->status === OrderStatusEnum::PENDING ||
-            $order->status === OrderStatusEnum::PAID ||
+            $order->status === OrderStatusEnum::CREATED ||
             $order->status === OrderStatusEnum::PROCESSING ||
             $order->status === OrderStatusEnum::SHIPPED ||
             $order->status === OrderStatusEnum::DELIVERED) {

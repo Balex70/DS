@@ -33,8 +33,7 @@ const ORDER_STATUSES: {
 }[] = [
     { value: "__all__", label: "All" },
     { value: "draft", label: "Draft" },
-    { value: "pending", label: "Pending" },
-    { value: "paid", label: "Paid" },
+    { value: "created", label: "Created" },
     { value: "processing", label: "Processing" },
     { value: "shipped", label: "shipped" },
     { value: "delivered", label: "delivered" },
