@@ -23,6 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FinalCarriers } from "./FinalCarriers";
 
 type Props = {
     form: OrderPayload;
@@ -349,11 +350,15 @@ export function ShippingForm({
                         Loading shipping methods...
                     </p>
                 ) : (
-                    <ShippingMethodsSelector
-                        methods={shippingOptions}
-                        value={shippingMethod}
-                        onChange={setShippingMethod}
-                    />
+                    <>
+                        <FinalCarriers country={form.shipping_country} />
+
+                        <ShippingMethodsSelector
+                            methods={shippingOptions}
+                            value={shippingMethod}
+                            onChange={setShippingMethod}
+                        />
+                    </>
                 )}
             </div>
         </div>
