@@ -10,7 +10,7 @@ export const COUNTRIES = [
         { code: "BE", name: "Belgium" },
         // { code: "BG", name: "Bulgaria" },
         { code: "HR", name: "Croatia" },
-        { code: "CY", name: "Cyprus" },
+        // { code: "CY", name: "Cyprus" },
         { code: "CZ", name: "Czechia" },
         { code: "DK", name: "Denmark" },
         { code: "EE", name: "Estonia" },
