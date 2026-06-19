@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { getCountryCarriers, Carrier } from "./carriers";
 
 function CarrierBadge({ carrier }: {carrier: Carrier}) {
