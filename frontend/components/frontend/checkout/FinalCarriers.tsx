@@ -9,8 +9,9 @@ function CarrierBadge({ carrier }: {carrier: Carrier}) {
             <Image
                 src={carrier.logo}
                 alt={carrier.name ?? carrier.id}
-                width={hasLabel ? 18 : 80}
-                height={hasLabel ? 18 : 32}
+                width={hasLabel ? 18 : 80} // actually not used but needed for next/image
+                height={hasLabel ? 18 : 32} // actually not used but needed for next/image
+                className="max-h-6 w-auto object-contain"
             />
 
             {hasLabel && <span>{carrier.name}</span>}
