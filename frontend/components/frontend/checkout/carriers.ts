@@ -123,6 +123,18 @@ const CARRIERS: Record<string, Carrier> = {
         id: "polish_post",
         logo: "/carriers/polish_post.svg",
     },
+    correos: {
+        id: "correos",
+        logo: "/carriers/correos.svg",
+    },
+    seur: {
+        id: "seur",
+        logo: "/carriers/seur.svg",
+    },
+    mrw: {
+        id: "mrw",
+        logo: "/carriers/mrw.svg",
+    },
 };
 
 const COUNTRY_CARRIERS: Record<string, string[]> = {
@@ -141,6 +153,7 @@ const COUNTRY_CARRIERS: Record<string, string[]> = {
     IT: ["poste_italiane", "dpd", "gls", "dhl"],
     NL: ["post_nl", "dhl", "dpd", "gls", "in_post"],
     PL: ["polish_post", "in_post", "dpd", "dhl"],
+    ES: ["correos", "seur", "mrw", "gls"],
 };
 
 export function getCountryCarriers(country?: string): Carrier[] {
