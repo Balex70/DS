@@ -35,12 +35,24 @@ const CARRIERS: Record<string, Carrier> = {
         id: "fedex",
         logo: "/carriers/fedex.svg",
     },
+    austrian_post: {
+        id: "austrian_post",
+        logo: "/carriers/austrian_post.svg",
+    },
+    dpd: {
+        id: "dpd",
+        logo: "/carriers/dpd.svg",
+    },
+    gls: {
+        id: "gls",
+        logo: "/carriers/gls.svg",
+    },
 };
 
 const COUNTRY_CARRIERS: Record<string, string[]> = {
     UA: ["nova_poshta", "ukrposhta", "meest"],
     US: ["usps", "ups", "fedex", "dhl"],
-    DE: ["dhl"],
+    AT: ["austrian_post", "dpd", "gls", "dhl"],
 };
 
 export function getCountryCarriers(country?: string): Carrier[] {

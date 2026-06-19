@@ -6,13 +6,12 @@ function CarrierBadge({ carrier }: {carrier: Carrier}) {
 
     return (
         <div className="inline-flex items-center gap-2 rounded-full border bg-background px-3 py-1 text-xs">
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
                 src={carrier.logo}
                 alt={carrier.name ?? carrier.id}
-                width={hasLabel ? 18 : 80} // actually not used but needed for next/image
-                height={hasLabel ? 18 : 32} // actually not used but needed for next/image
-                className="max-h-6 w-auto object-contain"
-            />
+                className="h-6 w-auto object-contain"
+                />
 
             {hasLabel && <span>{carrier.name}</span>}
         </div>
