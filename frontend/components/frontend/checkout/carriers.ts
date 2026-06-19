@@ -191,6 +191,18 @@ const CARRIERS: Record<string, Carrier> = {
         id: "toll",
         logo: "/carriers/toll.svg",
     },
+    nz_post: {
+        id: "nz_post",
+        logo: "/carriers/nz_post.png",
+    },
+    pbt: {
+        id: "pbt",
+        logo: "/carriers/pbt.svg",
+    },
+    post_haste: {
+        id: "post_haste",
+        logo: "/carriers/post_haste.svg",
+    },
 };
 
 const COUNTRY_CARRIERS: Record<string, string[]> = {
@@ -217,6 +229,7 @@ const COUNTRY_CARRIERS: Record<string, string[]> = {
     IS: ["posturinn", "dhl", "ups", "fedex"],
     CA: ["canada_post", "purolator", "ups", "intelcom", "canpar", "fedex"],
     AU: ["australia_post", "aramex", "toll", "dhl", "fedex"],
+    NZ: ["nz_post", "pbt", "aramex", "post_haste"],
 };
 
 export function getCountryCarriers(country?: string): Carrier[] {
