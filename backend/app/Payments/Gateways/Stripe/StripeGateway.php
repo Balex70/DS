@@ -8,21 +8,7 @@ use Illuminate\Http\Request;
 
 class StripeGateway extends AbstractGateway
 {
-    private const SUPPORTED_COUNTRIES = [
-        // EU
-        'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR',
-        'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL',
-        'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE',
-
-        // EEA / Europe (non-EU but commonly supported by Stripe)
-        'NO', 'IS', 'LI', 'CH', 'GB',
-
-        // North America
-        'US', 'CA',
-
-        // Oceania
-        'AU', 'NZ',
-    ];
+    private const SUPPORTED_COUNTRIES = [];
 
     public function getName(): string
     {
