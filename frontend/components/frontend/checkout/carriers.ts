@@ -155,6 +155,10 @@ const CARRIERS: Record<string, Carrier> = {
         id: "swiss_post",
         logo: "/carriers/swiss_post.svg",
     },
+    posten_norge: {
+        id: "posten_norge",
+        logo: "/carriers/posten_norge.svg",
+    },
 };
 
 const COUNTRY_CARRIERS: Record<string, string[]> = {
@@ -177,6 +181,7 @@ const COUNTRY_CARRIERS: Record<string, string[]> = {
     SE: ["postnord", "dhl", "db_schenker", "dpd", "gls"],
     GB: ["royal_mail", "evri", "dpd", "yodel"],
     CH: ["swiss_post", "dhl", "dpd"],
+    NO: ["posten_norge", "dhl", "postnord"],
 };
 
 export function getCountryCarriers(country?: string): Carrier[] {
