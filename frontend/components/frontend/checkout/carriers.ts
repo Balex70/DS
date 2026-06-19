@@ -99,6 +99,10 @@ const CARRIERS: Record<string, Carrier> = {
         id: "chronopost",
         logo: "/carriers/chronopost.svg",
     },
+    hermes: {
+        id: "hermes",
+        logo: "/carriers/hermes.svg",
+    },
 };
 
 const COUNTRY_CARRIERS: Record<string, string[]> = {
@@ -112,6 +116,7 @@ const COUNTRY_CARRIERS: Record<string, string[]> = {
     EE: ["omniva", "smartposti", "dpd"],
     FI: ["posti_group", "matkahuolto", "dpd", "gls"],
     FR: ["colissimo", "chronopost", "dpd", "gls"],
+    DE: ["dhl", "hermes", "dpd", "gls"],
 };
 
 export function getCountryCarriers(country?: string): Carrier[] {
