@@ -83,6 +83,14 @@ const CARRIERS: Record<string, Carrier> = {
         id: "smartposti",
         logo: "/carriers/smartposti.avif",
     },
+    posti_group: {
+        id: "posti_group",
+        logo: "/carriers/posti_group.svg",
+    },
+    matkahuolto: {
+        id: "matkahuolto",
+        logo: "/carriers/matkahuolto.svg",
+    },
 };
 
 const COUNTRY_CARRIERS: Record<string, string[]> = {
@@ -94,6 +102,7 @@ const COUNTRY_CARRIERS: Record<string, string[]> = {
     CZ: ["czech_post", "zasilkovna", "ppl", "dpd"],
     DK: ["postnord", "gls", "dao", "dpd", "dhl"],
     EE: ["omniva", "smartposti", "dpd"],
+    FI: ["posti_group", "matkahuolto", "dpd", "gls"],
 };
 
 export function getCountryCarriers(country?: string): Carrier[] {
