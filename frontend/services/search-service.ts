@@ -16,5 +16,5 @@ export async function search(
         },
     });
 
-    return response.data.data;
+    return response.data;
 }

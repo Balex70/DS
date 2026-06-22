@@ -13,6 +13,7 @@ export function Search() {
     const debouncedQuery = useDebounce(query);
     const { data, isLoading } = useSearch(debouncedQuery);
     const router = useRouter()
+
     return (
         <>
             <SearchBar
@@ -32,7 +33,7 @@ export function Search() {
                                 router.push(`/product/${p.id}`)
                             }
                             onSelectCategory={(c) =>
-                                router.push(`/category/${c.slug}`)
+                                router.push(`/category/${c.full_path}`)
                             }
                         />
                     }

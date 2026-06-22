@@ -69,7 +69,7 @@ export function SearchResults({
                                 }
                                 className="w-full text-left px-2 py-1.5 rounded-md text-sm hover:bg-muted flex justify-between"
                             >
-                                <span>{product.name_processed}</span>
+                                <span>{product.name_processed ?? product.name_raw}</span>
 
                                 {product.price && (
                                     <span className="text-xs text-muted-foreground">
