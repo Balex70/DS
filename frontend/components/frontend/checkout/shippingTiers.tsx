@@ -35,7 +35,7 @@ export const SHIPPING_TIER_META: Record<
     },
 };
 
-const KNOWN_CARRIERS = [
+const KNOWN_LOGISTIC_PROVIDER = [
     "DHL",
     "USPS",
     "UPS",
@@ -57,20 +57,20 @@ const KNOWN_CARRIERS = [
     "EMS",
 ] as const;
 
-export function getCarrierFromMethodName(name: string): string | null {
+export function getCompanyFromMethodName(name: string): string | null {
     const lower = name.toLowerCase();
 
-    const carrier = KNOWN_CARRIERS.find((carrier) =>
-        lower.includes(carrier.toLowerCase())
+    const provider = KNOWN_LOGISTIC_PROVIDER.find((provider) =>
+        lower.includes(provider.toLowerCase())
     );
 
-    return carrier ?? null;
+    return provider ?? null;
 }
 
 export function ShippingTierBadge({method}: {method: ShippingMethod}) {
     const tier = getShippingTier(method);   
     const meta = SHIPPING_TIER_META[tier];
-    const carrier = getCarrierFromMethodName(method.name);
+    const provider = getCompanyFromMethodName(method.name);
 
     return (
         <div className="flex items-center gap-1">
@@ -78,9 +78,9 @@ export function ShippingTierBadge({method}: {method: ShippingMethod}) {
                 {meta.label}
             </span>
 
-            {carrier && (
+            {provider && (
                 <span className="font-medium text-muted-foreground">
-                    ({carrier})
+                    ({provider})
                 </span>
             )}
         </div>
