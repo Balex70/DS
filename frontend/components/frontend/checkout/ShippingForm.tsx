@@ -49,7 +49,7 @@ export function ShippingForm({
         shipping_country: string;
         shipping_postal_code?: string;
     } | null>(null);
-    const { data: shippingOptions = [], isLoading } =  useShippingCalculate(payload, cartKey);
+    const { data: shippingOptions = [], isLoading, isFetching } =  useShippingCalculate(payload, cartKey);
     const getError = (field: string) => errors[field]?.[0];
 
     // trigger shipping calculation when address changes
@@ -245,15 +245,12 @@ export function ShippingForm({
                                                             key={country.code}
                                                             value={country.name}
                                                             onSelect={() => {
-                                                                setForm({
-                                                                    ...form,
+                                                                setShippingMethod(undefined);
+                                                                setPayload(null);
+                                                                setForm(prev => ({
+                                                                    ...prev,
                                                                     shipping_country: country.code,
-                                                                });
-
-                                                                if (!country.code) {
-                                                                    setShippingMethod(undefined);
-                                                                    setPayload(null);
-                                                                }
+                                                                }));
                                                             }}
                                                         >
                                                             <Check
@@ -294,13 +291,13 @@ export function ShippingForm({
                     <p className="text-sm text-muted-foreground">
                         Enter country to see shipping options
                     </p>
-                ) : isLoading ? (
+                ) : isLoading || isFetching ? (
                     <p className="text-sm text-muted-foreground">
                         Loading shipping methods...
                     </p>
                 ) : (
                     <>
-                        <FinalCarriers country={form.shipping_country} />
+                        {shippingMethod && <FinalCarriers country={form.shipping_country} />}
 
                         <ShippingMethodsSelector
                             methods={shippingOptions}
