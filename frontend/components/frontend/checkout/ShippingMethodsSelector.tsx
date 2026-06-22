@@ -4,6 +4,7 @@ import { ShippingMethod } from "@/types/shipping";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useMemo, useState } from "react";
 import { getMaxDays, getMinDays } from "@/helpers/shipping";
+import { ShippingTierBadge } from "./shippingTiers";
 
 type Props = {
     methods: ShippingMethod[];
@@ -67,37 +68,38 @@ export function ShippingMethodsSelector({
         };
     }, [methods]);
 
-    const featured = [
-        {
-            label: "Recommended",
-            method: groupedMethods.recommended,
-        },
-        {
-            label: "Cheapest",
-            method: groupedMethods.cheapest,
-        },
-        {
-            label: "Fastest",
-            method: groupedMethods.fastest,
-        },
-    ].filter(
-        (
-            item
-        ): item is {
-            label: string;
-            method: ShippingMethod;
-        } => Boolean(item.method)
-    );
+    const featured = methods
+        .map((method) => {
+            const labels: string[] = [];
+
+            if (method.id === groupedMethods.recommended?.id) {
+                labels.push("Recommended");
+            }
+
+            if (method.id === groupedMethods.cheapest?.id) {
+                labels.push("Cheapest");
+            }
+
+            if (method.id === groupedMethods.fastest?.id) {
+                labels.push("Fastest");
+            }
+
+            return {
+                method,
+                labels,
+            };
+        })
+        .filter((item) => item.labels.length > 0);
 
     return (
         <div className="space-y-3 mt-8">
             {/* FEATURED METHODS */}
-            {featured.map(({ label, method }) => {
+            {featured.map(({ method, labels }) => {
                 const selected = value?.id === method.id;
 
                 return (
                     <label
-                        key={`${label}-${method.id}`}
+                        key={`${method.id}`}
                         className={`
                             flex cursor-pointer items-start justify-between rounded-xl border p-4 transition
                             ${
@@ -117,13 +119,18 @@ export function ShippingMethodsSelector({
 
                             <div>
                                 <div className="flex items-center gap-2">
-                                    <span className="font-medium">
-                                        {method.name}
-                                    </span>
+                                    <ShippingTierBadge method={method} />
 
-                                    <span className="rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                                        {label}
-                                    </span>
+                                    <div className="flex gap-1">
+                                        {labels.map((label) => (
+                                            <span
+                                                key={label}
+                                                className="rounded-sm bg-gray-200 px-2 py-0.5 text-xs text-muted-foreground"
+                                            >
+                                                {label}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
 
                                 {method.estimated_delivery && (
@@ -184,9 +191,7 @@ export function ShippingMethodsSelector({
                                             />
 
                                             <div>
-                                                <div className="font-medium">
-                                                    {method.name}
-                                                </div>
+                                                <ShippingTierBadge method={method} />
 
                                                 {method.estimated_delivery && (
                                                     <div className="text-sm text-muted-foreground">

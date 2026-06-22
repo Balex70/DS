@@ -14,6 +14,24 @@ use LiqPay;
 
 class LiqPayGateway extends AbstractGateway
 {
+    private const SUPPORTED_COUNTRIES = [
+        // Ukraine
+        'UA',
+        // EU
+        'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR',
+        'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL',
+        'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE',
+
+        // EEA / Europe (non-EU)
+        'NO', 'IS', 'LI', 'CH', 'GB',
+
+        // North America
+        'US', 'CA',
+
+        // Oceania
+        'AU', 'NZ',
+    ];
+
     public function getName(): string
     {
         return 'liqpay';
@@ -244,7 +262,7 @@ class LiqPayGateway extends AbstractGateway
     }
 
     public function supportsCountry(string $country): bool {
-        return $country === 'UA';
+        return in_array($country, self::SUPPORTED_COUNTRIES, true);
     }
 
     public function supportsCurrency(string $currency): bool {
