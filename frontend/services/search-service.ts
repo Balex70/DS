@@ -7,6 +7,12 @@ export interface SearchResult {
     categories: Category[];
 }
 
+export interface GetSearchProductsParams {
+    q: string;
+    page?: number;
+    sort?: string;
+}
+
 interface PaginatedFullSearchResponse<T> {
     data: T[];
     meta: Meta;
@@ -25,12 +31,10 @@ export async function search(
 }
 
 export async function fullSearch(
-    query: string
+    params: GetSearchProductsParams
 ): Promise<PaginatedFullSearchResponse<Product>> {
     const response = await api.get("/api/store/full-search", {
-        params: {
-            q: query,
-        },
+        params,
     });
 
     return response.data;

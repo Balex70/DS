@@ -68,26 +68,20 @@ class SearchController extends Controller
             ]);
         }
 
-        $page = (int) $request->get('page', 1);
-
-        $cacheKey = "full-search:{$search}:page:{$page}";
-
-        $data = Cache::remember($cacheKey, 30, function () use ($search) {
-
-            $query = Product::query()
-                ->with(['variants'])
-                ->select(['id', 'name_raw', 'name_processed', 'price', 'slug'])
+        $query = Product::query()
+                ->with(['variants', 'cheapestVariant'])
+                ->select(['id', 'name_raw', 'name_processed', 'price', 'slug', 'warehouse_inventory_num'])
                 ->where(function ($q) use ($search) {
                     $q->where('name_processed', 'ILIKE', "%{$search}%")
                     ->orWhere('name_raw', 'ILIKE', "%{$search}%")
                     ->orWhereHas('variants', function ($vq) use ($search) {
                         $vq->where('name', 'ILIKE', "%{$search}%");
                     });
-                });
+                })
+                ->latest();
 
-            return $query->paginate(24)->toArray();
-        });
-
-        return response()->json($data);
+        return ProductResource::collection(
+            $query->paginate(10)
+        );
     }
 }
