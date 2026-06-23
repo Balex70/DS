@@ -29,11 +29,15 @@ export function Search() {
                         <SearchResults
                             products={data?.products}
                             categories={data?.categories}
-                            onSelectProduct={(p) =>
-                                router.push(`/product/${p.id}`)
+                            onSelectProduct={(p) => {
+                                    setQuery(""); // clears the input and hides results
+                                    router.push(`/product/${p.id}`)
+                                }
                             }
-                            onSelectCategory={(c) =>
-                                router.push(`/category/${c.full_path}`)
+                            onSelectCategory={(c) => {
+                                    setQuery(""); // clears the input and hides results
+                                    router.push(`/category/${c.full_path}`)
+                                }
                             }
                         />
                     }
