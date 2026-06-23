@@ -3,6 +3,7 @@
 import { Product } from "@/types/product";
 import { Category } from "@/types/category";
 import { Card } from "@/components/ui/card";
+import { PriceRenderer } from "@/components/custom/PriceRenderer";
 
 interface SearchResultsProps {
     products?: Product[];
@@ -22,14 +23,14 @@ export function SearchResults({
 
     if (!hasResults) {
         return (
-            <Card className="mt-2 p-3 text-sm text-muted-foreground">
+            <Card className="mt-0 p-3 text-sm text-muted-foreground">
                 No results found
             </Card>
         );
     }
 
     return (
-        <Card className="mt-2 p-2 space-y-3">
+        <Card className="mt-0 p-2 space-y-3 rounded-md">
             {/* Categories */}
             {categories.length > 0 && (
                 <div>
@@ -73,7 +74,7 @@ export function SearchResults({
 
                                 {product.price && (
                                     <span className="text-xs text-muted-foreground">
-                                        ${product.price}
+                                        <PriceRenderer value={product.price} />
                                     </span>
                                 )}
                             </button>

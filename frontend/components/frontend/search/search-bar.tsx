@@ -19,7 +19,7 @@ export function SearchBar({
             <Input
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
-                placeholder="Search products..."
+                placeholder="Search..."
                 className="pl-9"
             />
         </div>

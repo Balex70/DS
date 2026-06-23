@@ -15,17 +15,16 @@ export function Search() {
     const router = useRouter()
 
     return (
-        <>
+        <div className="relative w-full">
             <SearchBar
                 value={query}
                 onChange={setQuery}
             />
 
             {debouncedQuery && (
-                <div className="absolute z-50 w-full">
-                    {isLoading
-                        ? <Spinner />
-                        :
+                <div className="absolute left-0 top-full z-50 mt-1 w-full">
+                    {!isLoading
+                        &&
                         <SearchResults
                             products={data?.products}
                             categories={data?.categories}
@@ -44,6 +43,6 @@ export function Search() {
                     
                 </div>
             )}
-        </>
+        </div>
     )
 };
