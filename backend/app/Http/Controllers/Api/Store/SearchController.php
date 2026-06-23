@@ -37,7 +37,7 @@ class SearchController extends Controller
                         $vq->where('name', 'ILIKE', "%{$search}%");
                     });
                 })
-                ->limit(15)
+                ->limit(10)
                 ->get();
 
             $categories = Category::query()

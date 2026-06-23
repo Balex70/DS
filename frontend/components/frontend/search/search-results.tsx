@@ -31,6 +31,35 @@ export function SearchResults({
 
     return (
         <Card className="mt-0 p-2 space-y-3 rounded-md">
+            {/* Products */}
+            {products.length > 0 && (
+                <div>
+                    <div className="px-2 text-xs font-medium text-muted-foreground mb-1">
+                        Products
+                    </div>
+
+                    <div className="space-y-1">
+                        {products.map((product) => (
+                            <button
+                                key={product.id}
+                                onClick={() =>
+                                    onSelectProduct(product)
+                                }
+                                className="w-full text-left px-2 py-1.5 rounded-md text-sm hover:bg-muted flex justify-between"
+                            >
+                                <span className="truncate">{product.name_processed ?? product.name_raw}</span>
+
+                                {product.price && (
+                                    <span className="text-xs text-muted-foreground">
+                                        <PriceRenderer value={product.price} />
+                                    </span>
+                                )}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             {/* Categories */}
             {categories.length > 0 && (
                 <div>
@@ -48,35 +77,6 @@ export function SearchResults({
                                 className="w-full text-left px-2 py-1.5 rounded-md text-sm hover:bg-muted"
                             >
                                 {category.name}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            {/* Products */}
-            {products.length > 0 && (
-                <div>
-                    <div className="px-2 text-xs font-medium text-muted-foreground mb-1">
-                        Products
-                    </div>
-
-                    <div className="space-y-1">
-                        {products.map((product) => (
-                            <button
-                                key={product.id}
-                                onClick={() =>
-                                    onSelectProduct(product)
-                                }
-                                className="w-full text-left px-2 py-1.5 rounded-md text-sm hover:bg-muted flex justify-between"
-                            >
-                                <span>{product.name_processed ?? product.name_raw}</span>
-
-                                {product.price && (
-                                    <span className="text-xs text-muted-foreground">
-                                        <PriceRenderer value={product.price} />
-                                    </span>
-                                )}
                             </button>
                         ))}
                     </div>
