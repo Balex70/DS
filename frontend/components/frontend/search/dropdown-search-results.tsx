@@ -5,19 +5,19 @@ import { Category } from "@/types/category";
 import { Card } from "@/components/ui/card";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 
-interface SearchResultsProps {
+interface DropdownSearchResultsProps {
     products?: Product[];
     categories?: Category[];
     onSelectProduct: (product: Product) => void;
     onSelectCategory: (category: Category) => void;
 }
 
-export function SearchResults({
+export function DropdownSearchResults({
     products = [],
     categories = [],
     onSelectProduct,
     onSelectCategory,
-}: SearchResultsProps) {
+}: DropdownSearchResultsProps) {
     const hasResults =
         products.length > 0 || categories.length > 0;
 

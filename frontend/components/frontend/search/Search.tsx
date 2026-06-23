@@ -5,7 +5,7 @@ import { useSearch } from "@/hooks/use-search";
 import { useState } from "react";
 import { SearchBar } from "./search-bar";
 import { Spinner } from "@/components/ui/spinner";
-import { SearchResults } from "./search-results";
+import { DropdownSearchResults } from "./dropdown-search-results";
 import { useRouter } from "next/navigation";
 
 export function Search() {
@@ -25,7 +25,7 @@ export function Search() {
                 <div className="absolute left-0 top-full z-50 mt-1 w-full">
                     {!isLoading
                         &&
-                        <SearchResults
+                        <DropdownSearchResults
                             products={data?.products}
                             categories={data?.categories}
                             onSelectProduct={(p) => {

@@ -1,7 +1,13 @@
 'use client'
 
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupButton,
+    InputGroupInput,
+} from "@/components/ui/input-group";
 
 interface SearchBarProps {
     value: string;
@@ -12,16 +18,43 @@ export function SearchBar({
     value,
     onChange,
 }: SearchBarProps) {
-    return (
-        <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+    const router = useRouter();
 
-            <Input
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                placeholder="Search..."
-                className="pl-9"
-            />
-        </div>
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const query = value.trim();
+
+        if (!query) {
+            return;
+        }
+
+        router.push(`/search?q=${encodeURIComponent(query)}`);
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <InputGroup>
+                <InputGroupInput
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    placeholder="Search..."
+                />
+                <InputGroupAddon align="inline-end">
+                <InputGroupButton
+                    size="icon-xs"
+                    aria-label="Clear"
+                    onClick={() => onChange("")}>
+                    <X />
+                </InputGroupButton>
+                <InputGroupButton
+                    variant="secondary"
+                    onClick={handleSubmit}
+                    >
+                    Search
+                </InputGroupButton>
+                </InputGroupAddon>
+            </InputGroup>
+        </form>
     );
 }

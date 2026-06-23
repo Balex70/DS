@@ -89,4 +89,5 @@ Route::prefix('store')->group(function () {
 
     // Search
     Route::get('search', [StoreSearchController::class, 'search']);
+    Route::get('full-search', [StoreSearchController::class, 'fullSearch']);
 });
