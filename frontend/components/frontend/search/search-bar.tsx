@@ -12,11 +12,15 @@ import {
 interface SearchBarProps {
     value: string;
     onChange: (value: string) => void;
+    onFocus?: () => void;
+    onClickSearch: () => void;
 }
 
 export function SearchBar({
     value,
     onChange,
+    onFocus,
+    onClickSearch
 }: SearchBarProps) {
     const router = useRouter();
 
@@ -24,11 +28,11 @@ export function SearchBar({
         e.preventDefault();
 
         const query = value.trim();
-
         if (!query) {
             return;
         }
 
+        onClickSearch();
         router.push(`/search?q=${encodeURIComponent(query)}`);
     };
 
@@ -38,6 +42,7 @@ export function SearchBar({
                 <InputGroupInput
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
+                    onFocus={onFocus}
                     placeholder="Search..."
                 />
                 <InputGroupAddon align="inline-end">
@@ -49,7 +54,7 @@ export function SearchBar({
                 </InputGroupButton>
                 <InputGroupButton
                     variant="secondary"
-                    onClick={handleSubmit}
+                    type="submit"
                     >
                     Search
                 </InputGroupButton>
