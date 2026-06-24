@@ -1,8 +1,8 @@
-import { SearchBar } from "./search-bar";
 import { CustomerMenu } from "./customer-menu";
 import Link from "next/link";
 import { MegaMenu } from "./megamenu/mega-menu";
 import { CartButton } from "./cart/cart-button";
+import { Search } from "./search/Search";
 
 export function Header() {
     return (
@@ -17,7 +17,7 @@ export function Header() {
                 </div>
 
                 <div className="flex-1">
-                    <SearchBar />
+                    <Search />
                 </div>
 
                 <div className="flex items-center gap-2">

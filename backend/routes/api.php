@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Store\CategoryController as StoreCategoryController
 use App\Http\Controllers\Api\Store\OrderController as StoreOrderController;
 use App\Http\Controllers\Api\Store\PaymentController as StorePaymentController;
 use App\Http\Controllers\Api\Store\ProductController as StoreProductController;
+use App\Http\Controllers\Api\Store\SearchController as StoreSearchController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Middleware\EnsureCartToken;
 use Illuminate\Http\Request;
@@ -85,4 +86,8 @@ Route::prefix('store')->group(function () {
     Route::post('payments/{order}/create', [StorePaymentController::class, 'create']);
     Route::post('payments/available-gateway', [StorePaymentController::class, 'availableGateway']);
     Route::post('payments/{gateway}/webhook', [StorePaymentController::class, 'webhook']);
+
+    // Search
+    Route::get('search', [StoreSearchController::class, 'search']);
+    Route::get('full-search', [StoreSearchController::class, 'fullSearch']);
 });
