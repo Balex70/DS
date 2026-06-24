@@ -1,7 +1,4 @@
-import { Separator } from "@/components/ui/separator";
-import { SubcategoriesSection } from "@/components/frontend/category/subcategories-section";
-import { CategoryHeaderSection } from "@/components/frontend/category/category-header-section";
-import { ProductsSection } from "@/components/frontend/category/products-section";
+import { CategoryComponent } from "@/components/frontend/category/category-component";
 
 export default async function CategoryPage({
     params,
@@ -11,18 +8,6 @@ export default async function CategoryPage({
     const { slug } = await params;
 
     return (
-        <div className="space-y-6">
-            {/* Header / Category Info */}
-            <CategoryHeaderSection slug={slug} />
-
-            {/* Subcategories */}
-            <SubcategoriesSection slug={slug} />
-
-            <Separator />
-
-            {/* Products */}
-            <ProductsSection slug={slug} />
-
-        </div>
+        <CategoryComponent slug={slug} />
     );
 }

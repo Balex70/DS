@@ -6,6 +6,7 @@ use App\Dropshipping\DropshippingManager;
 use App\Dropshipping\Mappers\CjProductMapper;
 use App\Enums\ProductAiStatusEnum;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ProductService
@@ -85,5 +86,26 @@ class ProductService
                 ['external_id']
             );
         });
+    }
+
+    /*
+    * 1) Used as base query for getting products in category page
+    * 2) Used as base query for getting filters in category page
+    */
+    public function baseCategoryQuery(Request $request)
+    {
+        $query = Product::query();
+
+        $slugArray = $request->category;
+        $lastSlug = end($slugArray);
+        $slugs = app(CategoryService::class)->getChildrenSlugs($lastSlug);
+
+        if ($request->filled('category')) {
+            $query->whereHas('categories', function ($q) use ($slugs) {
+                $q->whereIn('slug', $slugs);
+            });
+        }
+
+        return $query;
     }
 }

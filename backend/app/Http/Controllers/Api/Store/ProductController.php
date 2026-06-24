@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Api\Store;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
-use App\Models\Category;
 use App\Models\Product;
-use App\Services\CategoryService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 
@@ -14,28 +12,14 @@ class ProductController extends Controller
 {
     public function __construct(
         private ProductService $service,
-        private CategoryService $categories
     ) {}
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $query = Product::query();
-
-        $slugArray = $request->category;
-        $lastSlug = end($slugArray);
-        $slugs = $this->categories->getChildrenSlugs($lastSlug);
-
-        if ($request->filled('category')) {
-            $query->whereHas('categories', function ($q) use ($slugs) {
-                $q->whereIn('slug', $slugs);
-            });
-        }
-
-        // $query->has('bigImage'); // temporary, need to figure out
-        $query->with('cheapestVariant');
-        $query->latest();
+        $query = $this->service->baseCategoryQuery($request);
+        $query->with('cheapestVariant')->latest();
 
         return ProductResource::collection(
             $query->paginate(24)
@@ -50,5 +34,35 @@ class ProductController extends Controller
                 ->orderBy('price'),
         ]);
         return new ProductResource($product);
+    }
+
+    public function filters(Request $request)
+    {
+        $base = $this->service->baseCategoryQuery($request);
+
+        // PRICE RANGE
+        $price = $base
+            ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+            ->selectRaw('MIN(products.price) as min, MAX(products.price) as max')
+            ->first();
+
+        // MATERIALS
+        // $materials = (clone $base)
+        //     ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+        //     ->whereNotNull('material')
+        //     ->distinct()
+        //     ->pluck('material');
+
+        // WEIGHT RANGE
+        // $weight = $base
+        //     ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+        //     ->selectRaw('MIN(product_variants.weight) as min, MAX(product_variants.weight) as max')
+        //     ->first();
+
+        return response()->json([
+            'price' => $price,
+            'materials' => [],
+            'weight' => [],
+        ]);
     }
 }
