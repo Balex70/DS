@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type PriceFilterProps = {
     min: number;
@@ -45,7 +45,7 @@ export function PriceFilter({
                     }
                 }
             />
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
                 <Input
                     type="number"
                     value={toDisplay(localValue[0])}
@@ -72,7 +72,7 @@ export function PriceFilter({
                     }}
                     className="text-sm"
                 />
-
+                <span className="text-muted-foreground font-medium">–</span>
                 <Input
                     type="number"
                     value={toDisplay(localValue[1])}
