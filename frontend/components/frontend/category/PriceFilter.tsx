@@ -1,5 +1,6 @@
 "use client";
 
+import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 
@@ -35,8 +36,8 @@ export function PriceFilter({
             />
 
             <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span>${value[0]}</span>
-                <span>${value[1]}</span>
+                <span><PriceRenderer value={value[0]} /></span>
+                <span><PriceRenderer value={value[1]} /></span>
             </div>
             <Button
                 onClick={() => setPriceApplied()}

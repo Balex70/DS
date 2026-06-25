@@ -19,7 +19,29 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $query = $this->service->baseCategoryQuery($request);
-        $query->with('cheapestVariant')->latest();
+        $query->with('cheapestVariant');
+
+        match ($request->sort ?? 'latest') {
+            'latest' => $query->latest(),
+            'price_asc' => $query->orderBy('price'),
+            'price_desc' => $query->orderByDesc('price'),
+            default => $query->latest(),
+        };
+
+        if($request->filled('price') && count($request->price) === 2) {
+            $query->whereBetween('price', [
+                $request->price[0],
+                $request->price[1],
+            ]);
+
+            // TODO: can use variants but not sure if necessary for now (and it slower and requires show price range in products list)
+            // $query->whereHas('variants', function ($q) use ($request) {
+            //     $q->whereBetween('price', [
+            //         $request->price[0],
+            //         $request->price[1],
+            //     ]);
+            // });
+        }
 
         return ProductResource::collection(
             $query->paginate(24)

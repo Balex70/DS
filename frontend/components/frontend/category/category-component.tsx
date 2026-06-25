@@ -23,6 +23,8 @@ export function CategoryComponent({ slug }: Props) {
         filterData?.price.min ?? 0,
         filterData?.price.max ?? 10000,
     ]);
+    const minPrice = filterData?.price.min ?? 0;
+    const maxPrice = filterData?.price.max ?? 10000;
 
     const productsQuery = useProducts({
         category: slug,
@@ -34,6 +36,8 @@ export function CategoryComponent({ slug }: Props) {
         <>
             <aside className="hidden w-72 shrink-0 lg:block">
                 <CategorySidebar
+                    minPrice={minPrice}
+                    maxPrice={maxPrice}
                     price={priceDraft}
                     onPriceChange={setPriceDraft}
                     setPriceApplied={() => setPrice(priceDraft)}

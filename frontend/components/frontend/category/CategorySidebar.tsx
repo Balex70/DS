@@ -4,12 +4,14 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { PriceFilter } from "./PriceFilter";
 
 type Props = {
+    minPrice: number;
+    maxPrice: number;
     price: [number, number];
     onPriceChange: (value: [number, number]) => void
     setPriceApplied: () => void
 };
 
-export function CategorySidebar({price, onPriceChange, setPriceApplied}: Props) {
+export function CategorySidebar({minPrice, maxPrice, price, onPriceChange, setPriceApplied}: Props) {
     return (
         <div className="rounded-lg border bg-card">
             <div className="border-b p-4">
@@ -21,8 +23,8 @@ export function CategorySidebar({price, onPriceChange, setPriceApplied}: Props) 
             <ScrollArea className="h-[calc(100vh-12rem)]">
                 <div>
                     <PriceFilter
-                        min={0}
-                        max={10000}
+                        min={minPrice}
+                        max={maxPrice}
                         value={price}
                         onChange={onPriceChange}
                         setPriceApplied={setPriceApplied}
