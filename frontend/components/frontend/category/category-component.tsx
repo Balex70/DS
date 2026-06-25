@@ -15,14 +15,19 @@ type Props = {
 
 export function CategoryComponent({ slug }: Props) {
     const { data: filterData, isLoading: isFilterLoading } = useProductFilters({category: slug});
-    const [priceDraft, setPriceDraft] = useState<[number, number]>([
-        filterData?.price.min ?? 0,
-        filterData?.price.max ?? 10000,
-    ]);
-    const [price, setPrice] = useState<[number, number]>([
-        filterData?.price.min ?? 0,
-        filterData?.price.max ?? 10000,
-    ]);
+    const [priceDraft, setPriceDraft] = useState<[number, number]>([0, 10000]);
+    const [price, setPrice] = useState<[number, number]>([0, 10000]);
+
+    if (!isFilterLoading && filterData && price[0] === 0 && price[1] === 10000) {
+        const range: [number, number] = [
+            filterData.price.min,
+            filterData.price.max,
+        ];
+
+        setPriceDraft(range);
+        setPrice(range);
+    }
+
     const minPrice = filterData?.price.min ?? 0;
     const maxPrice = filterData?.price.max ?? 10000;
 
@@ -35,13 +40,15 @@ export function CategoryComponent({ slug }: Props) {
     return (
         <>
             <aside className="hidden w-72 shrink-0 lg:block">
-                <CategorySidebar
-                    minPrice={minPrice}
-                    maxPrice={maxPrice}
-                    price={priceDraft}
-                    onPriceChange={setPriceDraft}
-                    setPriceApplied={() => setPrice(priceDraft)}
-                />
+                {!isFilterLoading &&
+                    <CategorySidebar
+                        minPrice={minPrice}
+                        maxPrice={maxPrice}
+                        price={priceDraft}
+                        onPriceChange={setPriceDraft}
+                        setPriceApplied={() => setPrice(priceDraft)}
+                    />
+                }
             </aside>
 
             <main className="min-w-0 flex-1">
