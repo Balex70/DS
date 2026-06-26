@@ -1,24 +1,28 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { useProducts } from "@/hooks/use-products";
 import { ProductCard } from "./product-card";
+import { Product } from "@/types/product";
 
 type Props = {
-    slug: string[];
+    data?: {
+        pages: {
+            data: Product[];
+        }[];
+    };
+    isLoading: boolean;
+    fetchNextPage: () => void;
+    hasNextPage?: boolean;
+    isFetchingNextPage: boolean;
 };
 
-export function ProductsSection({ slug }: Props) {
-    const {
-        data,
-        isLoading,
-        fetchNextPage,
-        hasNextPage,
-        isFetchingNextPage,
-    } = useProducts({
-        category: slug,
-        sort: "latest",
-    });
+export function ProductsSection({
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+}: Props) {
 
     const products = data?.pages.flatMap(page => page.data) ?? [];
 

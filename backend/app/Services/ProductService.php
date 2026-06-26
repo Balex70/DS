@@ -6,6 +6,7 @@ use App\Dropshipping\DropshippingManager;
 use App\Dropshipping\Mappers\CjProductMapper;
 use App\Enums\ProductAiStatusEnum;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ProductService
@@ -40,6 +41,23 @@ class ProductService
                 'product_weight' => $mappedDetails['product_weight'],
                 'packing_weight' => $mappedDetails['packing_weight'],
             ]);
+
+            // Store and sync materials
+            if (!empty($mappedDetails['material'])) {
+                $materials = array_values(array_filter($mappedDetails['material'] ?? []));
+                DB::table('materials')->upsert(
+                    array_map(fn ($name) => ['name' => $name], $materials),
+                    ['name']
+                );
+
+                $productMaterials = DB::table('materials')
+                    ->whereIn('name', $materials)
+                    ->pluck('id');
+
+                if (!empty($materials)) {
+                    $productToEnrich->materials()->syncWithoutDetaching($productMaterials);
+                }
+            }
 
             // Store big image
             if (!empty($mappedDetails['big_image'])) {
@@ -85,5 +103,26 @@ class ProductService
                 ['external_id']
             );
         });
+    }
+
+    /*
+    * 1) Used as base query for getting products in category page
+    * 2) Used as base query for getting filters in category page
+    */
+    public function baseCategoryQuery(Request $request)
+    {
+        $query = Product::query();
+
+        $slugArray = $request->category;
+        $lastSlug = end($slugArray);
+        $slugs = app(CategoryService::class)->getChildrenSlugs($lastSlug);
+
+        if ($request->filled('category')) {
+            $query->whereHas('categories', function ($q) use ($slugs) {
+                $q->whereIn('slug', $slugs);
+            });
+        }
+
+        return $query;
     }
 }

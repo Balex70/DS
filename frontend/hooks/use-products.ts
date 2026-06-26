@@ -3,7 +3,12 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getProducts } from "@/services/product-service";
 
-export function useProducts(params: { category: string[]; sort: string }) {
+export function useProducts(params: {
+    category: string[];
+    sort: string;
+    price?: [number, number];
+    activeMaterials?: string[];
+}) {
     return useInfiniteQuery({
         queryKey: ["products", params],
         queryFn: ({ pageParam = 1 }) =>

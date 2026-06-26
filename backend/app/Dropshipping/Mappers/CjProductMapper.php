@@ -49,6 +49,8 @@ class CjProductMapper
             'product_weight' => $data['productWeight'] ?? null,
             'packing_weight' => $data['packingWeight'] ?? null,
 
+            'material' => $this->parseMaterial($data['materialNameEnSet'] ?? null),
+
             'big_image' => $data['bigImage'] ?? $base['big_image'] ?? null,
 
             'add_mark_status' => (bool) ($data['addMarkStatus'] ?? $base['add_mark_status'] ?? null),
@@ -112,5 +114,34 @@ class CjProductMapper
     public function priceToCents(string|int|float $value): int
     {
         return (int) round(((float) $value) * 100);
+    }
+
+    public static function parseMaterial(string|array|null $raw): ?array
+    {
+        if (!$raw) {
+            return null;
+        }
+
+        // already correct format
+        if (is_array($raw)) {
+            return array_values(array_filter($raw));
+        }
+
+        $decoded = json_decode($raw, true);
+
+        // handle double-encoded JSON
+        if (is_string($decoded)) {
+            $decoded = json_decode($decoded, true);
+        }
+
+        if (is_array($decoded)) {
+            return array_values(array_filter($decoded));
+        }
+
+        if (is_string($decoded)) {
+            return [$decoded];
+        }
+
+        return null;
     }
 }
