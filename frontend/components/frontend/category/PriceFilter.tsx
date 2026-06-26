@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
+import { Separator } from "@/components/ui/separator"
 import { useState } from "react";
 
 type PriceFilterProps = {
@@ -101,13 +102,15 @@ export function PriceFilter({
                 />
             </div>
             <Button
+                className="w-full mb-0"
                 onClick={() => {
                     // trigger request to backend with actual price data
                     setPriceApplied()
                 }}
             >
-                Apply filters
+                Apply
             </Button>
+            <Separator className="my-4" />
         </div>
     );
 }

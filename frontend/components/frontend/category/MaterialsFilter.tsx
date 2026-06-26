@@ -24,7 +24,7 @@ export function MaterialsFilter({
         onChange(next);
     };
     return (
-        <div className="space-y-4 pt-2 px-3">
+        <div className="space-y-4 pt-3 px-3">
             <div>
                 <h3 className="text-sm font-medium">
                     Materials
