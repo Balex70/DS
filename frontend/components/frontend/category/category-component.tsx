@@ -17,6 +17,7 @@ export function CategoryComponent({ slug }: Props) {
     const { data: filterData, isLoading: isFilterLoading } = useProductFilters({category: slug});
     const [priceDraft, setPriceDraft] = useState<[number, number]>([0, 10000]);
     const [price, setPrice] = useState<[number, number]>([0, 10000]);
+    const [activeMaterials, setActiveMaterials] = useState<string[]>([]);
 
     if (!isFilterLoading && filterData && price[0] === 0 && price[1] === 10000) {
         const range: [number, number] = [
@@ -35,6 +36,7 @@ export function CategoryComponent({ slug }: Props) {
         category: slug,
         sort: "latest",
         price,
+        activeMaterials
     });
 
     return (
@@ -45,9 +47,11 @@ export function CategoryComponent({ slug }: Props) {
                         minPrice={minPrice}
                         maxPrice={maxPrice}
                         price={priceDraft}
-                        materials={filterData?.materials ?? []}
+                        activeMaterials={activeMaterials}
+                        materialsOptions={filterData?.materials ?? []}
                         onPriceChange={setPriceDraft}
                         setPriceApplied={() => setPrice(priceDraft)}
+                        setActiveMaterials={setActiveMaterials}
                     />
                 }
             </aside>

@@ -8,16 +8,20 @@ type Props = {
     minPrice: number;
     maxPrice: number;
     price: [number, number];
-    materials: string[];
-    onPriceChange: (value: [number, number]) => void
-    setPriceApplied: () => void
+    activeMaterials: string[];
+    materialsOptions: string[];
+    onPriceChange: (value: [number, number]) => void,
+    setPriceApplied: () => void,
+    setActiveMaterials: (value: string[]) => void
 };
 
 export function CategorySidebar({
     minPrice, maxPrice, price,
-    materials,
+    activeMaterials,
+    materialsOptions,
     onPriceChange,
-    setPriceApplied
+    setPriceApplied,
+    setActiveMaterials
 }: Props) {
     return (
         <div className="rounded-lg border bg-card">
@@ -38,7 +42,9 @@ export function CategorySidebar({
                         />
 
                     <MaterialsFilter
-                        value={materials}
+                        activeMaterials={activeMaterials}
+                        materialsOptions={materialsOptions}
+                        onChange={setActiveMaterials}
                         />
 
                     {/* <WeightFilter min={data.weight.min} max={data.weight.max} /> */}

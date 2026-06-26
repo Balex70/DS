@@ -5,6 +5,8 @@ export interface GetProductsParams {
     category?: string[];
     page?: number;
     sort?: string;
+    price?: [number, number];
+    activeMaterials?: string[];
 }
 
 export interface GetProductsFiltersParams {

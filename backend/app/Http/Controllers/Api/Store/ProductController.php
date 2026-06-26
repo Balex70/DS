@@ -44,6 +44,12 @@ class ProductController extends Controller
             // });
         }
 
+        if($request->filled('activeMaterials')) {
+            $query->whereHas('materials', function ($q) use ($request) {
+                $q->whereIn('materials.name', $request->activeMaterials);
+            });
+        }
+
         return ProductResource::collection(
             $query->paginate(24)
         );

@@ -7,6 +7,7 @@ export function useProducts(params: {
     category: string[];
     sort: string;
     price?: [number, number];
+    activeMaterials?: string[];
 }) {
     return useInfiniteQuery({
         queryKey: ["products", params],
