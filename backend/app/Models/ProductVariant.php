@@ -29,4 +29,9 @@ class ProductVariant extends Model
     {
         return $this->belongsTo(ProductImage::class);
     }
+
+    public function translations()
+    {
+        return $this->hasMany(ProductVariantTranslation::class);
+    }
 }

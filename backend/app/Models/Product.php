@@ -60,4 +60,9 @@ class Product extends Model
             ->ofMany('price', 'min')
             ->with('image');
     }
+
+    public function translations()
+    {
+        return $this->hasMany(ProductTranslation::class);
+    }
 }
