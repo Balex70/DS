@@ -45,6 +45,7 @@ export function CategoryComponent({ slug }: Props) {
                         minPrice={minPrice}
                         maxPrice={maxPrice}
                         price={priceDraft}
+                        materials={filterData?.materials ?? []}
                         onPriceChange={setPriceDraft}
                         setPriceApplied={() => setPrice(priceDraft)}
                     />

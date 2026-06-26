@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Material;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -46,6 +47,11 @@ class Product extends Model
     public function variants(): HasMany
     {
         return $this->hasMany(ProductVariant::class);
+    }
+
+    public function materials()
+    {
+        return $this->belongsToMany(Material::class);
     }
 
     public function cheapestVariant(): hasOne

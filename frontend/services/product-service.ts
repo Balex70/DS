@@ -21,10 +21,7 @@ interface PaginatedFilterResponse {
         min: number;
         max: number;
     };
-    materials: {
-        min: number;
-        max: number;
-    };
+    materials: string[];
     weight: {
         min: number;
         max: number;

@@ -2,16 +2,23 @@
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PriceFilter } from "./PriceFilter";
+import { MaterialsFilter } from "./MaterialsFilter";
 
 type Props = {
     minPrice: number;
     maxPrice: number;
     price: [number, number];
+    materials: string[];
     onPriceChange: (value: [number, number]) => void
     setPriceApplied: () => void
 };
 
-export function CategorySidebar({minPrice, maxPrice, price, onPriceChange, setPriceApplied}: Props) {
+export function CategorySidebar({
+    minPrice, maxPrice, price,
+    materials,
+    onPriceChange,
+    setPriceApplied
+}: Props) {
     return (
         <div className="rounded-lg border bg-card">
             <div className="border-b p-4">
@@ -30,9 +37,11 @@ export function CategorySidebar({minPrice, maxPrice, price, onPriceChange, setPr
                         setPriceApplied={setPriceApplied}
                         />
 
-                    {/* <MaterialFilter options={data.materials} />
+                    <MaterialsFilter
+                        value={materials}
+                        />
 
-                    <WeightFilter min={data.weight.min} max={data.weight.max} /> */}
+                    {/* <WeightFilter min={data.weight.min} max={data.weight.max} /> */}
                 </div>
             </ScrollArea>
         </div>

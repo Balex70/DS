@@ -42,6 +42,23 @@ class ProductService
                 'packing_weight' => $mappedDetails['packing_weight'],
             ]);
 
+            // Store and sync materials
+            if (!empty($mappedDetails['material'])) {
+                $materials = array_values(array_filter($mappedDetails['material'] ?? []));
+                DB::table('materials')->upsert(
+                    array_map(fn ($name) => ['name' => $name], $materials),
+                    ['name']
+                );
+
+                $productMaterials = DB::table('materials')
+                    ->whereIn('name', $materials)
+                    ->pluck('id');
+
+                if (!empty($materials)) {
+                    $productToEnrich->materials()->syncWithoutDetaching($productMaterials);
+                }
+            }
+
             // Store big image
             if (!empty($mappedDetails['big_image'])) {
                 $this->imageService->syncOriginal(

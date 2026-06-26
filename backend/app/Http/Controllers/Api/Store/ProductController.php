@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Store;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
+use App\Models\Material;
 use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
@@ -61,19 +62,23 @@ class ProductController extends Controller
     public function filters(Request $request)
     {
         $base = $this->service->baseCategoryQuery($request);
+        $baseWithVariants = $base->join('product_variants', 'products.id', '=', 'product_variants.product_id');
 
-        // PRICE RANGE
-        $price = $base
-            ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+        // PRICE RANGE (clone to avoid query mutation)
+        $price = (clone $baseWithVariants)
             ->selectRaw('MIN(products.price) as min, MAX(products.price) as max')
             ->first();
 
-        // MATERIALS
-        // $materials = (clone $base)
-        //     ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
-        //     ->whereNotNull('material')
-        //     ->distinct()
-        //     ->pluck('material');
+        // MATERIALS (clone to avoid query mutation)
+        $productIds = (clone $base)
+            ->select('products.id')
+            ->distinct()
+            ->pluck('id');
+        $materials = Material::query()
+            ->whereHas('products', function ($q) use ($productIds) {
+                $q->whereIn('products.id', $productIds);
+            })
+            ->pluck('name');
 
         // WEIGHT RANGE
         // $weight = $base
@@ -83,7 +88,7 @@ class ProductController extends Controller
 
         return response()->json([
             'price' => $price,
-            'materials' => [],
+            'materials' => $materials,
             'weight' => [],
         ]);
     }
