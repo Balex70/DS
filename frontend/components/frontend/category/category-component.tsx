@@ -8,6 +8,7 @@ import { CategorySidebar } from "@/components/frontend/category/CategorySidebar"
 import { useProducts } from "@/hooks/use-products";
 import { useState } from "react";
 import { useProductFilters } from "@/hooks/use-product-filters";
+import { SortSelect } from "./SortSelect";
 
 type Props = {
     slug: string[];
@@ -15,6 +16,7 @@ type Props = {
 
 export function CategoryComponent({ slug }: Props) {
     const { data: filterData, isLoading: isFilterLoading } = useProductFilters({category: slug});
+    const [sort, setSort] = useState<"latest" | "price_asc" | "price_desc">("latest");
     const [priceDraft, setPriceDraft] = useState<[number, number]>([0, 10000]);
     const [price, setPrice] = useState<[number, number]>([0, 10000]);
     const [activeMaterials, setActiveMaterials] = useState<string[]>([]);
@@ -34,7 +36,7 @@ export function CategoryComponent({ slug }: Props) {
 
     const productsQuery = useProducts({
         category: slug,
-        sort: "latest",
+        sort,
         price,
         activeMaterials
     });
@@ -66,6 +68,9 @@ export function CategoryComponent({ slug }: Props) {
 
                     <Separator />
 
+                    <div className="px-2 mb-2">
+                        <SortSelect value={sort} onChange={setSort} />
+                    </div>
                     {/* Products */}
                     <ProductsSection
                         data={productsQuery.data}
