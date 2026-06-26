@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Store;
 
+use App\Enums\LocalesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Material;
@@ -21,6 +22,14 @@ class ProductController extends Controller
     {
         $query = $this->service->baseCategoryQuery($request);
         $query->with('cheapestVariant');
+
+        if($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
+            $locale = $request->locale ?? 'en';
+
+            $query->with([
+                'translation' => fn ($q) => $q->where('locale', $locale),
+            ]);
+        }
 
         match ($request->sort ?? 'latest') {
             'latest' => $query->latest(),

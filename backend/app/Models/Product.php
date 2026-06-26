@@ -65,4 +65,9 @@ class Product extends Model
     {
         return $this->hasMany(ProductTranslation::class);
     }
+
+    public function translation()
+    {
+        return $this->hasOne(ProductTranslation::class);
+    }
 }

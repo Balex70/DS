@@ -23,7 +23,8 @@ interface ProductInterface {
   product_weight: string,
   packing_weight: string,
   variants: ProductVariant[];
-  cheapest_variant: ProductVariant
+  cheapest_variant: ProductVariant,
+  translation: ProductTranslationInterface | null
 }
 
 interface ProductImageInterface {
@@ -42,6 +43,12 @@ interface MetaInterface {
   last_page: number,
   from: number,
   to: number
+}
+
+interface ProductTranslationInterface {
+  locale: string,
+  name: string,
+  description: string,
 }
 
 export type ProductVariant = {

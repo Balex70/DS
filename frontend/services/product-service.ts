@@ -3,6 +3,7 @@ import { Meta, Product } from "@/types/product";
 
 export interface GetProductsParams {
     category?: string[];
+    locale: string;
     page?: number;
     sort?: string;
     price?: [number, number];

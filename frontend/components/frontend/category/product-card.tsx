@@ -54,7 +54,7 @@ export function ProductCard({ product }: Props) {
 
             <CardContent className="space-y-2 p-3">
                 <h3 className="line-clamp-2 text-sm font-medium">
-                    {product.name_processed ? product.name_processed : product.name_raw}
+                    {product.translation ? product.translation?.name : product.name_processed ? product.name_processed : product.name_raw}
                 </h3>
 
                 <div className="text-lg font-semibold">

@@ -36,6 +36,7 @@ export function CategoryComponent({ slug }: Props) {
 
     const productsQuery = useProducts({
         category: slug,
+        locale: 'uk_UA',
         sort,
         price,
         activeMaterials
