@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { useTranslations } from 'next-intl'
 
 import { useCategories } from "@/hooks/use-categories";
 import { useMemo, useState } from "react";
@@ -18,6 +19,7 @@ import { useMemo, useState } from "react";
 export function MegaMenu() {
     const { data: categories, isLoading } = useCategories();
     const [open, setOpen] = useState(false);
+    const t = useTranslations('frontend')
 
     // Root categories
     const rootCategories = useMemo(() =>
@@ -55,7 +57,7 @@ export function MegaMenu() {
                 className="gap-2"
             >
                 <Menu className="h-4 w-4" />
-                Categories
+                {t('header.catalog')}
             </Button>
         );
     }
@@ -68,7 +70,7 @@ export function MegaMenu() {
                     className="gap-2"
                 >
                     <Menu className="h-4 w-4" />
-                    Categories
+                    {t('header.catalog')}
                 </Button>
             </PopoverTrigger>
 

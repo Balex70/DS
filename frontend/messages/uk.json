@@ -1,0 +1,20 @@
+{
+  "auth": {
+    
+  },
+  "frontend": {
+    "header": {
+      "catalog": "Каталог"
+    },
+    "footer_nav": {
+      "terms_and_conditions": "Умови та положення",
+      "privacy_policy": "Політика конфіденційності",
+      "faq": "Часті запитання",
+      "about_us": "Про нас"
+    },
+    "customer": {
+      "name": "Ім'я",
+      "email": "Електронна пошта"
+    }
+  }
+}

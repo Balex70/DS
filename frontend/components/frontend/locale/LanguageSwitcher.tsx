@@ -1,31 +1,32 @@
 'use client'
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useRouter } from 'next/navigation'
-import { useState } from 'react';
+import { Locale } from '@/i18n/config';
+import { usePathname, useRouter } from 'next/navigation'
+import { useLocale } from 'next-intl';
 
 export default function LanguageSwitcher() {
     const router = useRouter()
-    const [locale, setLocale] = useState('en')
+    const pathname = usePathname();
+    const locale = useLocale();
 
-    const handleChange = (value: string) => {   
-        setLocale(value)
+    function switchLocale(nextLocale: Locale) {
+        const segments = pathname.split('/');
+        segments[1] = nextLocale; // replace locale segment
+        const nextPath = segments.join('/');
 
-        document.cookie = `locale=${value}; path=/; max-age=31536000`
-
-        router.refresh() // re-fetch server components
+        router.push(nextPath);
     }
 
     return (
-        <Select value={locale} onValueChange={handleChange}>
+        <Select value={locale} onValueChange={switchLocale}>
             <SelectTrigger className="w-[60px]">
                 <SelectValue />
             </SelectTrigger>
 
             <SelectContent>
                 <SelectItem value="en">EN</SelectItem>
-                <SelectItem value="pl">PL</SelectItem>
-                <SelectItem value="de">DE</SelectItem>
+                <SelectItem value="uk">UK</SelectItem>
             </SelectContent>
         </Select>
     )
