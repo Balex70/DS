@@ -85,25 +85,15 @@ export function ProductDrawer({
                 </Button>
                 <div className="flex space-x-4">
                     {product.big_image && (
-                    <>
                         <div className="max-w-28 aspect-square overflow-hidden rounded-lg border bg-muted shrink-0">
-                        {product.big_image?.ai_url ? (
                             <NextImageWithReplace
-                                src={product.big_image.ai_url}
+                                src={product.big_image.ai_url ?? product.big_image.original_url}
                                 alt={product.name_raw}
                                 width={200}
                                 height={200}
                                 imageClassName="h-full w-full object-cover"
                             />
-                        ) : (
-                            <img
-                                src={product.big_image.original_url}
-                                alt={product.name_raw}
-                                className="h-full w-full object-cover"
-                            />
-                        )}
                         </div>
-                    </>
                     )}
                     <FieldGroup className="flex flex-col gap-4 min-w-0">
                         <Field className="gap-1">
