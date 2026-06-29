@@ -11,6 +11,8 @@ import { getCookie, getErrorStringFromCatch } from "@/helpers/general"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Product } from "@/types/product"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
 
 export function EditProductDrawer({
   open,
@@ -24,17 +26,59 @@ export function EditProductDrawer({
   onSuccess: () => void
 }) {
     const [nameRaw, setNameRaw] = useState("")
-    const [nameProcessed, setNameProcessed] = useState("")
     const [price, setPrice] = useState(0)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [selectedLocale, setSelectedLocale] = useState("en")
+    const locales = ["en", "uk"]
+
+    const [translations, setTranslations] = useState<
+        Record<
+            string,
+            {
+                name: string
+                description: string
+            }
+        >
+    >({})
+
+    const updateTranslation = (
+        locale: string,
+        field: "name" | "description",
+        value: string,
+    ) => {
+        setTranslations((prev) => ({
+            ...prev,
+            [locale]: {
+                ...(prev[locale] ?? {
+                    name: "",
+                    description: "",
+                }),
+                [field]: value,
+            },
+        }))
+    }
     
     useEffect(() => {
-        if (product) {
-            setNameRaw(product.name_raw)
-            setNameProcessed(product.name_processed)
-            setPrice(product.price)
+        if (!product) {
+            return
         }
+        setNameRaw(product.name_raw)
+
+        locales.forEach(locale => {
+            updateTranslation(
+                locale,
+                "name",
+                locale === "en" ? product.name_processed : product.translations.find(t => t.locale === locale)?.name ?? "",
+            )
+
+            updateTranslation(
+                locale,
+                "description",
+                locale === "en" ? product.description_processed : product.translations.find(t => t.locale === locale)?.description ?? "",
+            )
+        });
+        setPrice(product.price)
     }, [product])
     const handleSaveProduct = async () => {
         setLoading(true)
@@ -60,7 +104,7 @@ export function EditProductDrawer({
                 headers: headers,
                 body: JSON.stringify({
                     name_raw: nameRaw,
-                    name_processed: nameProcessed,
+                    translations: translations,
                     price: price,
                     
                 }),
@@ -91,6 +135,23 @@ export function EditProductDrawer({
             <SheetTitle>Edit product</SheetTitle>
             </SheetHeader>
 
+            <Tabs
+                className="mt-4 mx-4"
+                value={selectedLocale}
+                onValueChange={setSelectedLocale}
+            >
+                <TabsList>
+                    {locales.map((locale) => (
+                        <TabsTrigger
+                            key={locale}
+                            value={locale}
+                        >
+                            {locale.toUpperCase()}
+                        </TabsTrigger>
+                    ))}
+                </TabsList>
+            </Tabs>
+
             {product && (
             <form
                 className="space-y-4 mt-4 mx-4"
@@ -104,14 +165,37 @@ export function EditProductDrawer({
                         <FieldLabel htmlFor="form-rhf-demo-title">
                             Name Raw
                         </FieldLabel>
-                        <Input id="name_raw" value={nameRaw} onChange={(e) => setNameRaw(e.target.value)}/>
+                        <Input disabled id="name_raw" value={nameRaw} onChange={(e) => setNameRaw(e.target.value)}/>
                     </Field>
                     
                     <Field>
-                        <FieldLabel htmlFor="form-rhf-demo-title">
-                            Name processed
-                        </FieldLabel>
-                        <Input id="name_processed" value={nameProcessed} onChange={(e) => setNameProcessed(e.target.value)}/>
+                        <FieldLabel>Name (name processed)</FieldLabel>
+
+                        <Input
+                            value={translations[selectedLocale]?.name ?? ""}
+                            onChange={(e) =>
+                                updateTranslation(
+                                    selectedLocale,
+                                    "name",
+                                    e.target.value,
+                                )
+                            }
+                        />
+                    </Field>
+
+                    <Field>
+                        <FieldLabel>Description (description processed)</FieldLabel>
+
+                        <Textarea
+                            value={translations[selectedLocale]?.description ?? ""}
+                            onChange={(e) =>
+                                updateTranslation(
+                                    selectedLocale,
+                                    "description",
+                                    e.target.value,
+                                )
+                            }
+                        />
                     </Field>
                     
                     <Field>

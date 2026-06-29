@@ -31,6 +31,7 @@ class UpdateProductRequest extends FormRequest
             'price' => ['sometimes', 'numeric'],
             'now_price' => ['sometimes', 'numeric'],
             'suggested_price' => ['sometimes', 'numeric'],
+            'translations' => ['sometimes', 'array'],
         ];
     }
 }

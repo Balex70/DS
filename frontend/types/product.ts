@@ -25,6 +25,7 @@ interface ProductInterface {
   variants: ProductVariant[];
   cheapest_variant: ProductVariant,
   translation: ProductTranslationInterface | null
+  translations: ProductTranslationInterface[]
 }
 
 interface ProductImageInterface {
@@ -63,6 +64,11 @@ export type ProductVariant = {
     weight: string;
     volume: string;
     image?: ProductImageInterface;
+}
+
+export type ProductTranslation = {
+    name: string
+    description: string
 }
 
 export type Product = ProductInterface
