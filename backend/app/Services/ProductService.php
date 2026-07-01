@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Dropshipping\DropshippingManager;
 use App\Dropshipping\Mappers\CjProductMapper;
 use App\Enums\ProductAiStatusEnum;
+use App\Enums\ProductVariantAiStatusEnum;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -94,6 +95,7 @@ class ProductService
                     'image_id'     => $productImages[$variant['image']] ?? null,
                     'created_at' => $now,
                     'updated_at' => $now,
+                    'ai_status' => ProductVariantAiStatusEnum::QUEUED,
                 ];
             }, $mappedDetails['variants']);
 

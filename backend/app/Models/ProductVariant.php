@@ -16,7 +16,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'stock',
     'weight',
     'volume',
-    'image_id'
+    'image_id',
+    'name_processed',
+    'key_processed',
+    'ai_status'
 ])]
 class ProductVariant extends Model
 {
