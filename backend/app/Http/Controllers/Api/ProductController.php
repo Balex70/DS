@@ -137,7 +137,7 @@ class ProductController extends Controller
     public function aiTextsNext()
     {
         $productToProcess = DB::transaction(function () {
-            $nextProduct = Product::where('ai_status', 'queued')
+            $nextProduct = Product::where('ai_status', ProductAiStatusEnum::QUEUED)
                 ->whereNotNull('last_enrichment_at')
                 ->orderBy('id')
                 ->lockForUpdate()
@@ -165,6 +165,34 @@ class ProductController extends Controller
         ]);
     }
 
+    public function aiTextsTranslateNext(string $locale)
+    {
+        $productToProcess = DB::transaction(function () use ($locale) {
+            $query = Product::where('ai_status', ProductAiStatusEnum::DONE)
+                ->whereDoesntHave('translations', function ($q) use ($locale) {
+                    $q->where('locale', $locale);
+                });
+
+            $product = $query
+                ->with('translations')
+                ->orderBy('id')
+                ->lockForUpdate()
+                ->first();
+
+            return $product;
+        });
+
+        if (!$productToProcess) {
+            return response()->json(null, 204);
+        }
+
+        return response()->json([
+            'id' => $productToProcess->id,
+            'product_name' => $productToProcess->name_processed,
+            'description' => $productToProcess->description_processed
+        ]);
+    }
+
     public function aiTextsComplete(Product $product, Request $request)
     {
         $product->update([
@@ -173,6 +201,27 @@ class ProductController extends Controller
             'ai_texts_at' => now(),
             'ai_status' => ProductAiStatusEnum::DONE
         ]);
+
+        return response()->json(['ok' => true]);
+    }
+
+    public function aiTextsTranslateComplete(Product $product, Request $request)
+    {
+        $data = $request->all();
+
+        // 2. Sync translations
+        if (isset($data['locale'])) {
+            $product->translations()->updateOrCreate(
+                [
+                    'locale' => $data['locale'],
+                ],
+                [
+                    'name' => $data['title'] ?? null,
+                    'description' => $data['description'] ?? null,
+                    'translated_at' => now(),
+                ]
+            );
+        }
 
         return response()->json(['ok' => true]);
     }
