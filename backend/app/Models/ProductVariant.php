@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'volume',
     'image_id',
     'name_processed',
-    'key_processed',
     'ai_status'
 ])]
 class ProductVariant extends Model

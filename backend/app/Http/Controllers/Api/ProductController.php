@@ -192,8 +192,8 @@ class ProductController extends Controller
 
         return response()->json([
             'id' => $productVariantToProcess->id,
+            'product_id' => $productVariantToProcess->product_id,
             'variant_name' => $productVariantToProcess->name,
-            'variant_key' => $productVariantToProcess->key
         ]);
     }
 
@@ -241,7 +241,6 @@ class ProductController extends Controller
     {
         $productVariant->update([
             'name_processed' => $request->title,
-            'key_processed' => $request->key,
             'ai_status' => ProductVariantAiStatusEnum::DONE
         ]);
 
