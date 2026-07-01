@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\ProductAiStatusEnum;
+use App\Enums\ProductVariantAiStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -162,6 +164,36 @@ class ProductController extends Controller
             'id' => $productToProcess->id,
             'product_name' => $productToProcess->name_raw,
             'description' => $productToProcess->description_raw
+        ]);
+    }
+
+    public function aiVariantTextsNext()
+    {
+        $productVariantToProcess = DB::transaction(function () {
+            $nextProductVariant = ProductVariant::where('ai_status', ProductVariantAiStatusEnum::QUEUED)
+                ->orderBy('id')
+                ->lockForUpdate()
+                ->first();
+
+            if (!$nextProductVariant) {
+                return null;
+            }
+
+            $nextProductVariant->update([
+                'ai_status' => ProductVariantAiStatusEnum::PROCESSING
+            ]);
+
+            return $nextProductVariant;
+        });
+
+        if (!$productVariantToProcess) {
+            return response()->json(null, 204);
+        }
+
+        return response()->json([
+            'id' => $productVariantToProcess->id,
+            'variant_name' => $productVariantToProcess->name,
+            'variant_key' => $productVariantToProcess->key
         ]);
     }
 
