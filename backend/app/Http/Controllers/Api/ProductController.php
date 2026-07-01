@@ -237,6 +237,17 @@ class ProductController extends Controller
         return response()->json(['ok' => true]);
     }
 
+    public function aiVariantTextsComplete(ProductVariant $productVariant, Request $request)
+    {
+        $productVariant->update([
+            'name_processed' => $request->title,
+            'key_processed' => $request->key,
+            'ai_status' => ProductVariantAiStatusEnum::DONE
+        ]);
+
+        return response()->json(['ok' => true]);
+    }
+
     public function aiTextsTranslateComplete(Product $product, Request $request)
     {
         $data = $request->all();
