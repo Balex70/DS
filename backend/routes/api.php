@@ -36,6 +36,7 @@ Route::middleware(['auth:sanctum', 'abilities:ai:texts'])->group(function () {
     Route::post('products/ai-texts/{product}/complete', [ProductController::class, 'aiTextsComplete']);
     Route::post('products/ai-variant-texts/{productVariant}/complete', [ProductController::class, 'aiVariantTextsComplete']);
     Route::post('products/ai-texts-translate/{product}/complete', [ProductController::class, 'aiTextsTranslateComplete']);
+    Route::post('products/ai-variant-texts-translate/{productVariant}/complete', [ProductController::class, 'aiVariantTextsTranslateComplete']);
 });
 Route::middleware(['auth:sanctum', 'abilities:ai:images'])->group(function () {
     Route::get('products/ai-images/next', [AiImagesController::class, 'next']);

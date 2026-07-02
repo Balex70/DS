@@ -295,4 +295,24 @@ class ProductController extends Controller
 
         return response()->json(['ok' => true]);
     }
+
+    public function aiVariantTextsTranslateComplete(ProductVariant $productVariant, Request $request)
+    {
+        $data = $request->all();
+
+        // 2. Sync translations
+        if (isset($data['locale'])) {
+            $productVariant->translations()->updateOrCreate(
+                [
+                    'locale' => $data['locale'],
+                ],
+                [
+                    'name' => $data['title'] ?? null,
+                    'translated_at' => now(),
+                ]
+            );
+        }
+
+        return response()->json(['ok' => true]);
+    }
 }
