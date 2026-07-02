@@ -52,11 +52,13 @@ export function ProductDetail({ productId }: Props) {
 
     const galleryMainImage = selectedVariant?.image ?? product.big_image;
 
+    const title = selectedVariant.name_processed ?? selectedVariant.name ?? product.name_processed ?? product.name_raw;  // TODO: need to be change to translated name
+
     const handleAddToCart = async () => {
         addToCart({
             product_id: selectedVariant.id,
             vid: selectedVariant.external_id,
-            title: selectedVariant.name ?? product.name_processed ?? product.name_raw, // TODO: need to be change to selected variant name_processed after finish with ai_texts endpoint for variants (selectedVariant.name_processed ?? selectedVariant.name_raw)
+            title: title,
             sku: selectedVariant.sku,
             quantity: 1,
             price: selectedVariant.price, // product.price,
@@ -72,13 +74,13 @@ export function ProductDetail({ productId }: Props) {
             <ProductGallery
                 bigImage={galleryMainImage}
                 images={product.images}
-                productName={product.name_processed ?? product.name_raw}
+                productName={title}
             />
 
             {/* INFO */}
             <div className="space-y-4">
                 <h1 className="text-2xl font-semibold">
-                    {product.name_processed ?? product.name_raw}
+                    {title}
                 </h1>
 
                 <div className="text-3xl font-bold">

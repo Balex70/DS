@@ -58,6 +58,7 @@ export type ProductVariant = {
     external_id: string;
     sku: string;
     name: string;
+    name_processed: string;
     key: string;
     price: number;
     stock: number;

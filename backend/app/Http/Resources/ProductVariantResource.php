@@ -15,6 +15,7 @@ class ProductVariantResource extends JsonResource
             'external_id' => $this->external_id,
             'sku' => $this->sku,
             'name' => $this->name,
+            'name_processed' => $this->name_processed,
             'key' => $this->key,
             'price' => $this->price,
             'stock' => $this->stock,
