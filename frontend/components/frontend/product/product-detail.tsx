@@ -6,6 +6,7 @@ import { useAddToCart } from "@/hooks/use-add-to-cart";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useLocale } from 'next-intl';
 
 type Props = {
     productId: string;
@@ -15,6 +16,7 @@ export function ProductDetail({ productId }: Props) {
     const { data: product, error, isLoading } = useProduct(productId);
     const { mutate: addToCart, isPending } = useAddToCart();
     const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
+    const locale = useLocale();
 
     if (error?.response?.status === 404) {
         return (
@@ -49,10 +51,11 @@ export function ProductDetail({ productId }: Props) {
         ?? product?.variants?.[0];
 
     const activeVariantId = selectedVariant?.id;
-
     const galleryMainImage = selectedVariant?.image ?? product.big_image;
+    const variantTranslation = selectedVariant?.translations.find((item) => item.locale === locale);
+    const translation = product?.translations.find((item) => item.locale === locale);
 
-    const title = selectedVariant.name_processed ?? selectedVariant.name ?? product.name_processed ?? product.name_raw;  // TODO: need to be change to translated name
+    const title = variantTranslation?.name ?? selectedVariant.name_processed ?? selectedVariant.name ?? product.name_processed ?? product.name_raw;  // TODO: use variant_id instead title in case user change locale show correct title
 
     const handleAddToCart = async () => {
         addToCart({
@@ -98,7 +101,7 @@ export function ProductDetail({ productId }: Props) {
                 {/* DESCRIPTION (if you have it) */}
                 {product.description_processed && (
                     <div className="prose max-w-none text-sm text-muted-foreground">
-                        {product.description_processed}
+                        {translation?.description ?? product.description_processed ?? product.description_raw}
                     </div>
                 )}
 

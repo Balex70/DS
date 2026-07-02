@@ -65,11 +65,18 @@ export type ProductVariant = {
     weight: string;
     volume: string;
     image?: ProductImageInterface;
+    translations: ProductVariantTranslation[]
 }
 
 export type ProductTranslation = {
     name: string
     description: string
+}
+
+export type ProductVariantTranslation = {
+    locale: string
+    name: string
+    product_variant_id: number
 }
 
 export type Product = ProductInterface

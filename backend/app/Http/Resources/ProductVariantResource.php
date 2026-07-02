@@ -25,6 +25,8 @@ class ProductVariantResource extends JsonResource
             'image' => new ProductImageResource(
                 $this->whenLoaded('image')
             ),
+
+            'translations' => $this->translations,
         ];
     }
 }

@@ -23,6 +23,7 @@ class ProductResource extends JsonResource
             'variants' => ProductVariantResource::collection(
                 $this->whenLoaded('variants')
             ),
+            'translations' => $this->translations
         ];
     }
 }

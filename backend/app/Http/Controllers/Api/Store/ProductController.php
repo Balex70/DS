@@ -68,8 +68,9 @@ class ProductController extends Controller
     {
         $product->load([
             'variants' => fn ($query) => $query
-                ->with('image')
+                ->with('image', 'translations')
                 ->orderBy('price'),
+            'translations'
         ]);
         return new ProductResource($product);
     }
