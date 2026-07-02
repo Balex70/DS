@@ -225,6 +225,34 @@ class ProductController extends Controller
         ]);
     }
 
+    public function aiVariantTextsTranslateNext(string $locale)
+    {
+        $productVariantToProcess = DB::transaction(function () use ($locale) {
+            $query = ProductVariant::where('ai_status', ProductVariantAiStatusEnum::DONE)
+                ->whereDoesntHave('translations', function ($q) use ($locale) {
+                    $q->where('locale', $locale);
+                });
+
+            $product = $query
+                ->with('translations')
+                ->orderBy('id')
+                ->lockForUpdate()
+                ->first();
+
+            return $product;
+        });
+
+        if (!$productVariantToProcess) {
+            return response()->json(null, 204);
+        }
+
+        return response()->json([
+            'id' => $productVariantToProcess->id,
+            'product_id' => $productVariantToProcess->product_id,
+            'variant_name' => $productVariantToProcess->name
+        ]);
+    }
+
     public function aiTextsComplete(Product $product, Request $request)
     {
         $product->update([
