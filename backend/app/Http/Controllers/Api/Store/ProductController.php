@@ -90,12 +90,18 @@ class ProductController extends Controller
             ->select('products.id')
             ->distinct()
             ->pluck('id');
-        $materials = Material::query()
+        $materialsQuery = Material::query()
             ->whereHas('products', function ($q) use ($productIds) {
                 $q->whereIn('products.id', $productIds);
-            })
-            ->select('id', 'name')
-            ->get();
+            });
+        if($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
+            $locale = $request->locale ?? 'en';
+
+            $materialsQuery->with([
+                'translation' => fn ($q) => $q->where('locale', $locale),
+            ]);
+        }
+        $materials = $materialsQuery->select('id', 'name')->get();
 
         // WEIGHT RANGE
         // $weight = $base

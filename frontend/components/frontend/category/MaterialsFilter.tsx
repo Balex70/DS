@@ -47,7 +47,7 @@ export function MaterialsFilter({
                                 htmlFor={id}
                                 className="text-sm font-normal cursor-pointer"
                             >
-                                {material.name}
+                                {material.translation?.name ?? material.name}
                             </Label>
                         </div>
                     );

@@ -13,6 +13,7 @@ export interface GetProductsParams {
 
 export interface GetProductsFiltersParams {
     category?: string[];
+    locale?: string;
 }
 
 interface PaginatedResponse<T> {

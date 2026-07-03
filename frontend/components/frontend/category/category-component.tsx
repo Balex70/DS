@@ -16,12 +16,12 @@ type Props = {
 };
 
 export function CategoryComponent({ slug }: Props) {
-    const { data: filterData, isLoading: isFilterLoading } = useProductFilters({category: slug});
+    const locale = useLocale();
+    const { data: filterData, isLoading: isFilterLoading } = useProductFilters({category: slug, locale: locale});
     const [sort, setSort] = useState<"latest" | "price_asc" | "price_desc">("latest"); // TODO: use type here
     const [priceDraft, setPriceDraft] = useState<[number, number]>([0, 10000]);
     const [price, setPrice] = useState<[number, number]>([0, 10000]);
     const [activeMaterials, setActiveMaterials] = useState<number[]>([]);
-    const locale = useLocale();
 
     if (!isFilterLoading && filterData && price[0] === 0 && price[1] === 10000) {
         const range: [number, number] = [
