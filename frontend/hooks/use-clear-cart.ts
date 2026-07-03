@@ -12,7 +12,9 @@ export function useClearCart() {
 
         onSuccess: () => {
             // instantly reset cache
-            queryClient.setQueryData(["cart"], { items: [] });
+            queryClient.invalidateQueries({
+                queryKey: ["cart"],
+            });
         },
     });
 }
