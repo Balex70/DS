@@ -8,7 +8,7 @@ export function useProducts(params: {
     locale: string;
     sort: string;
     price?: [number, number];
-    activeMaterials?: string[];
+    activeMaterials?: number[];
 }) {
     return useInfiniteQuery({
         queryKey: ["products", params],

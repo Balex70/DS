@@ -20,7 +20,7 @@ export function CategoryComponent({ slug }: Props) {
     const [sort, setSort] = useState<"latest" | "price_asc" | "price_desc">("latest"); // TODO: use type here
     const [priceDraft, setPriceDraft] = useState<[number, number]>([0, 10000]);
     const [price, setPrice] = useState<[number, number]>([0, 10000]);
-    const [activeMaterials, setActiveMaterials] = useState<string[]>([]);
+    const [activeMaterials, setActiveMaterials] = useState<number[]>([]);
     const locale = useLocale();
 
     if (!isFilterLoading && filterData && price[0] === 0 && price[1] === 10000) {

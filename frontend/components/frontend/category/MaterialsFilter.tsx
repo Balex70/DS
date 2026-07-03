@@ -2,11 +2,12 @@
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { MaterialOption } from "@/types/material";
 
 type MaterialsFilterProps = {
-    activeMaterials: string[];
-    materialsOptions: string[];
-    onChange: (next: string[]) => void;
+    activeMaterials: number[];
+    materialsOptions: MaterialOption[];
+    onChange: (next: number[]) => void;
 };
 
 export function MaterialsFilter({
@@ -14,12 +15,12 @@ export function MaterialsFilter({
     materialsOptions,
     onChange,
 }: MaterialsFilterProps) {
-    const toggleMaterial = (material: string) => {
-        const isSelected = activeMaterials.includes(material);
+    const toggleMaterial = (materialId: number) => {
+        const isSelected = activeMaterials.includes(materialId);
 
         const next = isSelected
-            ? activeMaterials.filter((m) => m !== material)
-            : [...activeMaterials, material];
+            ? activeMaterials.filter((id) => id !== materialId)
+            : [...activeMaterials, materialId];
 
         onChange(next);
     };
@@ -33,20 +34,20 @@ export function MaterialsFilter({
 
             <div className="space-y-2">
                 {materialsOptions.map((material) => {
-                    const id = `material-${material}`;
+                    const id = `material-${material.id}`;
 
                     return (
-                        <div key={material} className="flex items-center space-x-2">
+                        <div key={material.id} className="flex items-center space-x-2">
                             <Checkbox
                                 id={id}
-                                checked={activeMaterials.includes(material)}
-                                onCheckedChange={() => toggleMaterial(material)}
+                                checked={activeMaterials.includes(material.id)}
+                                onCheckedChange={() => toggleMaterial(material.id)}
                             />
                             <Label
                                 htmlFor={id}
                                 className="text-sm font-normal cursor-pointer"
                             >
-                                {material}
+                                {material.name}
                             </Label>
                         </div>
                     );

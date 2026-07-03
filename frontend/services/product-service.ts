@@ -1,4 +1,5 @@
 import { api } from "@/lib/axios";
+import { MaterialOption } from "@/types/material";
 import { Meta, Product } from "@/types/product";
 
 export interface GetProductsParams {
@@ -7,7 +8,7 @@ export interface GetProductsParams {
     page?: number;
     sort?: string;
     price?: [number, number];
-    activeMaterials?: string[];
+    activeMaterials?: number[];
 }
 
 export interface GetProductsFiltersParams {
@@ -24,7 +25,7 @@ interface PaginatedFilterResponse {
         min: number;
         max: number;
     };
-    materials: string[];
+    materials: MaterialOption[];
     weight: {
         min: number;
         max: number;

@@ -3,16 +3,17 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PriceFilter } from "./PriceFilter";
 import { MaterialsFilter } from "./MaterialsFilter";
+import { MaterialOption } from "@/types/material";
 
 type Props = {
     minPrice: number;
     maxPrice: number;
     price: [number, number];
-    activeMaterials: string[];
-    materialsOptions: string[];
+    activeMaterials: number[];
+    materialsOptions: MaterialOption[];
     onPriceChange: (value: [number, number]) => void,
     setPriceApplied: () => void,
-    setActiveMaterials: (value: string[]) => void
+    setActiveMaterials: (value: number[]) => void
 };
 
 export function CategorySidebar({

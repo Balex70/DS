@@ -55,7 +55,7 @@ class ProductController extends Controller
 
         if($request->filled('activeMaterials')) {
             $query->whereHas('materials', function ($q) use ($request) {
-                $q->whereIn('materials.name', $request->activeMaterials);
+                $q->whereIn('materials.id', $request->activeMaterials);
             });
         }
 
@@ -94,7 +94,8 @@ class ProductController extends Controller
             ->whereHas('products', function ($q) use ($productIds) {
                 $q->whereIn('products.id', $productIds);
             })
-            ->pluck('name');
+            ->select('id', 'name')
+            ->get();
 
         // WEIGHT RANGE
         // $weight = $base
