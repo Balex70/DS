@@ -55,7 +55,7 @@ export function ProductDetail({ productId }: Props) {
     const variantTranslation = selectedVariant?.translations.find((item) => item.locale === locale);
     const translation = product?.translations.find((item) => item.locale === locale);
 
-    const title = variantTranslation?.name ?? selectedVariant.name_processed ?? selectedVariant.name ?? product.name_processed ?? product.name_raw;  // TODO: use variant_id instead title in case user change locale show correct title
+    const title = variantTranslation?.name ?? selectedVariant.name_processed ?? selectedVariant.name ?? product.name_processed ?? product.name_raw;
 
     const handleAddToCart = async () => {
         addToCart({

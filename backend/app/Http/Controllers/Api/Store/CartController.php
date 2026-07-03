@@ -31,7 +31,7 @@ class CartController extends Controller
 
             $hydratedItems[] = [
                 ...$cartItem,
-                'title' => $productVariant?->translation?->name ?? $productVariant?->name ?? $cartItem['title'], // TODO: remove default title
+                'title' => $productVariant?->translation?->name ?? $productVariant?->name ?? $cartItem['title'],
             ];
         }
 
