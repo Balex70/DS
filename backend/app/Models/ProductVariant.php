@@ -36,4 +36,9 @@ class ProductVariant extends Model
     {
         return $this->hasMany(ProductVariantTranslation::class);
     }
+
+    public function translation()
+    {
+        return $this->hasOne(ProductVariantTranslation::class);
+    }
 }

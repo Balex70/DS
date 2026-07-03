@@ -15,9 +15,13 @@ import { useCreatePayment } from "@/hooks/use-create-payment";
 import { useAvailableGateway } from "@/hooks/use-available-gateway";
 import { CheckoutDialog } from "./CheckoutDialog";
 import { SendToPaymentGateway } from "./SendToPaymentGateway";
+import { useLocale } from "next-intl";
 
 export function CheckoutComponent() {
-    const { data: cart, isLoading } = useCart();
+    const locale = useLocale();
+    const { data: cart, isLoading } = useCart({
+        locale: locale
+    });
     const { mutate: createOrder } = useCreateOrder();
     const { mutate: createPayment } = useCreatePayment();
     const [shippingMethod, setShippingMethod] = useState<ShippingMethod | undefined>(undefined);

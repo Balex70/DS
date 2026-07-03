@@ -8,6 +8,7 @@ import { useCart } from "@/hooks/use-cart";
 import { useClearCart } from "@/hooks/use-clear-cart";
 import { CartItemsDrawer } from "./CartItemsDrawer";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
+import { useLocale } from "next-intl";
 
 type Props = {
     open: boolean;
@@ -18,7 +19,10 @@ export function CartDrawer({
     open,
     onOpenChange,
 }: Props) {
-    const { data: cart, isLoading } = useCart();
+    const locale = useLocale();
+    const { data: cart, isLoading } = useCart({
+        locale: locale
+    });
     const { mutate: clearCart, isPending } = useClearCart();
 
     const items = cart?.items ?? [];

@@ -8,11 +8,11 @@ export type Cart = {
     items: CartItemPayload[];
 };
 
-export function useCart() {
+export function useCart(params: { locale: string }) {
     return useQuery<Cart>({
-        queryKey: ["cart"],
+        queryKey: ["cart", params],
         queryFn: async () => {
-            const response = await getCart();
+            const response = await getCart(params);
 
             return response.data;
         },

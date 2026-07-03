@@ -1,7 +1,9 @@
 <?php
 namespace App\Http\Controllers\Api\Store;
 
+use App\Enums\LocalesEnum;
 use App\Http\Controllers\Controller;
+use App\Models\ProductVariant;
 use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
@@ -16,9 +18,26 @@ class CartController extends Controller
             return response()->json(['items' => []]);
         }
 
-        return response()->json(
-            $cartService->get($token)
-        );
+        $cartEntity = $cartService->get($token);
+        $hydratedItems = [];
+
+        foreach ($cartEntity['items'] as $cartItem) {
+            if($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
+                $locale = $request->locale ?? 'en';
+                $productVariant = ProductVariant::with([
+                    'translation' => fn ($q) => $q->where('locale', $locale),
+                ])->find($cartItem['product_id']);
+            }
+
+            $hydratedItems[] = [
+                ...$cartItem,
+                'title' => $productVariant?->translation?->name ?? $productVariant?->name ?? $cartItem['title'], // TODO: remove default title
+            ];
+        }
+
+        return response()->json([
+            'items' => $hydratedItems
+        ]);
     }
 
     public function add(Request $request, CartService $cartService)
