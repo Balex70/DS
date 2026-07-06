@@ -3,9 +3,10 @@
 use App\Http\Controllers\Api\AiImagesController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\Store\CartController;
 use App\Http\Controllers\Api\Store\CategoryController as StoreCategoryController;
 use App\Http\Controllers\Api\Store\OrderController as StoreOrderController;
@@ -66,6 +67,9 @@ Route::post('orders/{order}/check-ds-status', [OrderController::class, 'checkOrd
 // Payments
 Route::get('payments', [PaymentController::class, 'index'])->middleware('auth:sanctum');
 Route::post('payments/{payment}/update-status', [PaymentController::class, 'updateStatus'])->middleware('auth:sanctum');
+
+// Materials
+Route::get('materials', [MaterialController::class, 'index'])->middleware('auth:sanctum');
 
 // Store Order
 Route::prefix('store')->group(function () {
