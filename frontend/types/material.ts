@@ -10,6 +10,10 @@ export type MaterialOption = {
 export type Material = {
     id: number,
     name: string
+    translations: {
+        locale: string,
+        name: string
+    }[]
 }
 
 export type Meta = {

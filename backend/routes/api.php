@@ -70,6 +70,7 @@ Route::post('payments/{payment}/update-status', [PaymentController::class, 'upda
 
 // Materials
 Route::get('materials', [MaterialController::class, 'index'])->middleware('auth:sanctum');
+Route::patch('materials/{material}', [MaterialController::class, 'update'])->middleware('auth:sanctum');
 
 // Store Order
 Route::prefix('store')->group(function () {
