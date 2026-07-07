@@ -51,6 +51,7 @@ export function ShippingForm({
     } | null>(null);
     const { data: shippingOptions = [], isLoading, isFetching } =  useShippingCalculate(payload, cartKey);
     const getError = (field: string) => errors[field]?.[0];
+    const [openCountryPopover, setOpenCountryPopover] = useState(false);
 
     // trigger shipping calculation when address changes
     useEffect(() => {
@@ -213,7 +214,7 @@ export function ShippingForm({
                     </div>
 
                     <div className="space-y-1">
-                        <Popover>
+                        <Popover open={openCountryPopover} onOpenChange={setOpenCountryPopover}>
                             <PopoverTrigger asChild>
                                 <Button
                                     variant="outline"
@@ -251,6 +252,7 @@ export function ShippingForm({
                                                                     ...prev,
                                                                     shipping_country: country.code,
                                                                 }));
+                                                                setOpenCountryPopover(false);
                                                             }}
                                                         >
                                                             <Check
