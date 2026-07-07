@@ -15,6 +15,15 @@ class UpdateCategoryRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->filled('translations') && is_string($this->translations)) {
+            $this->merge([
+                'translations' => json_decode($this->translations, true),
+            ]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,7 +33,9 @@ class UpdateCategoryRequest extends FormRequest
     {
         return [
             "name" => ['sometimes', 'max:255'],
+            "description" => ['sometimes', 'max:1255'],
             "image" => ['nullable', 'image', 'max:2048'],
+            "translations" => ['sometimes', 'array'],
         ];
     }
 }

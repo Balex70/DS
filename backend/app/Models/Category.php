@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 
 #[Fillable([
     'name',
+    'description',
     'external_id',
     'parent_id',
     'provider',
@@ -77,5 +78,15 @@ class Category extends Model
         }
 
         return $slug;
+    }
+
+    public function translations()
+    {
+        return $this->hasMany(CategoryTranslation::class);
+    }
+
+    public function translation()
+    {
+        return $this->hasOne(CategoryTranslation::class);
     }
 }

@@ -106,7 +106,6 @@ export function EditProductDrawer({
                     name_raw: nameRaw,
                     translations: translations,
                     price: price,
-                    
                 }),
                 cache: 'no-cache', // 'no-cache' if you want it fresh each time
             })
