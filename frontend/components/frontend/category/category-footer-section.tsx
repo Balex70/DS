@@ -7,7 +7,7 @@ type Props = {
     slug: string[];
 };
 
-export function CategoryHeaderSection({ slug }: Props) {
+export function CategoryFooterSection({ slug }: Props) {
     const { data: categories, isLoading } = useCategories();
     const locale = useLocale();
 
@@ -18,22 +18,22 @@ export function CategoryHeaderSection({ slug }: Props) {
     if (isLoading) {
         return (
             <div className="space-y-2">
-                <h1 className="text-2xl font-semibold">...</h1>
+                <p className="text-md text-muted-foreground">
+                    ...
+                </p>
             </div>
         );
     }
 
     if (!category) {
-        return (
-            <p className="text-sm text-muted-foreground">
-                Category not found.
-            </p>
-        );
+        return;
     }
 
     return (
         <div className="space-y-2">
-            <h1 className="text-2xl font-semibold">{translation?.name ?? category.name}</h1>
+            <p className="text-md text-muted-foreground">
+                {translation?.description ?? category.description}
+            </p>
         </div>
     );
 }

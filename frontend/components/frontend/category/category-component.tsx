@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useProductFilters } from "@/hooks/use-product-filters";
 import { SortSelect } from "./SortSelect";
 import { useLocale } from 'next-intl';
+import { CategoryFooterSection } from "./category-footer-section";
 
 type Props = {
     slug: string[];
@@ -83,6 +84,8 @@ export function CategoryComponent({ slug }: Props) {
                         isFetchingNextPage={productsQuery.isFetchingNextPage}
                     />
 
+                    {/* Footer / Category description */}
+                    <CategoryFooterSection slug={slug} />
                 </div>
             </main>
         </>
