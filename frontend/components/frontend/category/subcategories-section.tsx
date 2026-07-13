@@ -7,6 +7,7 @@ import CategoryImage from "./CategoryImage";
 import Image from 'next/image'
 import { Separator } from "@/components/ui/separator";
 import { CategoryBreadcrumbs } from "./category-breadcrumbs";
+import { useLocale } from "next-intl";
 
 type Props = {
     slug: string[];
@@ -14,6 +15,7 @@ type Props = {
 
 export function SubcategoriesSection({ slug }: Props) {
     const { data: categories, isLoading } = useCategories();
+    const locale = useLocale();
     
     const lastSlug = slug[slug.length - 1];
     const category = categories?.find((c) => c.slug === lastSlug);
@@ -56,44 +58,47 @@ export function SubcategoriesSection({ slug }: Props) {
             <Separator />
             <CategoryBreadcrumbs slug={slug} />
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
-                {subcategories.map((category) => (
-                    <Link
-                        key={category.id}
-                        href={`/category/${category.full_path}`}
-                        className="block"
-                    >
-                        <Card className="h-10 overflow-hidden py-0 hover:bg-muted/50 transition rounded-md">
-                            <CardContent className="flex h-full items-center gap-3 p-0">
+                {subcategories.map((category) => {
+                    const translation = category?.translations.find((item) => item.locale === locale);
+                    return (
+                        <Link
+                            key={category.id}
+                            href={`/category/${category.full_path}`}
+                            className="block"
+                        >
+                            <Card className="h-10 overflow-hidden py-0 hover:bg-muted/50 transition rounded-md">
+                                <CardContent className="flex h-full items-center gap-3 p-0">
 
-                                {/* Wide image */}
-                                <div className="relative h-full w-14 shrink-0 overflow-hidden bg-muted">
-                                    {category.image ? (
-                                        <CategoryImage
-                                            src={`/storage/${category.image}`}
-                                            alt={category.name}
-                                            imageClassName="object-cover"
-                                        />
-                                    ) : (
-                                        <Image
-                                            src="/categories/placeholder.jpg"
-                                            alt={category.name}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    )}
-                                </div>
-
-                                {/* Name */}
-                                <div className="min-w-0 flex-1">
-                                    <div className="truncate text-sm font-medium">
-                                        {category.name}
+                                    {/* Wide image */}
+                                    <div className="relative h-full w-14 shrink-0 overflow-hidden bg-muted">
+                                        {category.image ? (
+                                            <CategoryImage
+                                                src={`/storage/${category.image}`}
+                                                alt={translation?.name ?? category.name}
+                                                imageClassName="object-cover"
+                                            />
+                                        ) : (
+                                            <Image
+                                                src="/categories/placeholder.jpg"
+                                                alt={translation?.name ?? category.name}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        )}
                                     </div>
-                                </div>
 
-                            </CardContent>
-                        </Card>
-                    </Link>
-                ))}
+                                    {/* Name */}
+                                    <div className="min-w-0 flex-1">
+                                        <div className="truncate text-sm font-medium">
+                                            {translation?.name ?? category.name}
+                                        </div>
+                                    </div>
+
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    );
+                })}
             </div>
         </>
     );
