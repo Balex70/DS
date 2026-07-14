@@ -18,6 +18,7 @@ import { ProductDrawerSecondaryFields } from "./ProductDrawerSecondaryFields"
 import NextImageWithReplace from "@/components/custom/NextImageWithReplace"
 import { ProductDrawerRawDataField } from "./ProductDrawerRawDataField"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
+import ListProductVariants from "../productVariants/ListProductVariants"
 
 export function ProductDrawer({
   open,
@@ -85,25 +86,15 @@ export function ProductDrawer({
                 </Button>
                 <div className="flex space-x-4">
                     {product.big_image && (
-                    <>
                         <div className="max-w-28 aspect-square overflow-hidden rounded-lg border bg-muted shrink-0">
-                        {product.big_image?.ai_url ? (
                             <NextImageWithReplace
-                                src={product.big_image.ai_url}
+                                src={product.big_image.ai_url ?? product.big_image.original_url}
                                 alt={product.name_raw}
                                 width={200}
                                 height={200}
                                 imageClassName="h-full w-full object-cover"
                             />
-                        ) : (
-                            <img
-                                src={product.big_image.original_url}
-                                alt={product.name_raw}
-                                className="h-full w-full object-cover"
-                            />
-                        )}
                         </div>
-                    </>
                     )}
                     <FieldGroup className="flex flex-col gap-4 min-w-0">
                         <Field className="gap-1">
@@ -125,6 +116,7 @@ export function ProductDrawer({
                         <TabsTrigger value="main">Main</TabsTrigger>
                         <TabsTrigger value="secondary">Secondary</TabsTrigger>
                         <TabsTrigger value="images">Images</TabsTrigger>
+                        <TabsTrigger value="variants">Variants</TabsTrigger>
                         <TabsTrigger value="raw">Raw Data</TabsTrigger>
                     </TabsList>
                     <TabsContent value="main">
@@ -135,6 +127,9 @@ export function ProductDrawer({
                     </TabsContent>
                     <TabsContent value="images">
                         <ProductImagesDrawer product={product}/>
+                    </TabsContent>
+                    <TabsContent value="variants">
+                        <ListProductVariants productId={product.id}/>
                     </TabsContent>
                     <TabsContent value="raw">
                         <ProductDrawerRawDataField product={product} />

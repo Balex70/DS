@@ -11,8 +11,10 @@ export function useRemoveFromCart() {
             return res.data;
         },
 
-        onSuccess: (cart) => {
-            queryClient.setQueryData(["cart"], cart);
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["cart"],
+            });
         },
     });
 }

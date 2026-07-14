@@ -23,7 +23,9 @@ interface ProductInterface {
   product_weight: string,
   packing_weight: string,
   variants: ProductVariant[];
-  cheapest_variant: ProductVariant
+  cheapest_variant: ProductVariant,
+  translation: ProductTranslationInterface | null
+  translations: ProductTranslationInterface[]
 }
 
 interface ProductImageInterface {
@@ -44,18 +46,38 @@ interface MetaInterface {
   to: number
 }
 
+interface ProductTranslationInterface {
+  locale: string,
+  name: string,
+  description: string,
+}
+
 export type ProductVariant = {
     id: string;
     product_id: string;
     external_id: string;
     sku: string;
     name: string;
+    name_processed: string;
     key: string;
     price: number;
     stock: number;
     weight: string;
     volume: string;
     image?: ProductImageInterface;
+    translations: ProductVariantTranslation[]
+    ai_status: string
+}
+
+export type ProductTranslation = {
+    name: string
+    description: string
+}
+
+export type ProductVariantTranslation = {
+    locale: string
+    name: string
+    product_variant_id: number
 }
 
 export type Product = ProductInterface

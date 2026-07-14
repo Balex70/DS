@@ -17,12 +17,14 @@ class StoreCategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'description' => $this->description,
             'parent_id' => $this->parent_id,
             'provider' => $this->provider,
             'active' => $this->active,
             'slug' => $this->slug,
             'image' => $this->image,
             'full_path' => $this->full_path,
+            'translations' => $this->translations
         ];
         // return parent::toArray($request);
     }

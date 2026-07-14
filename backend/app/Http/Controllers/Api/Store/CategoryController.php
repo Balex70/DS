@@ -16,6 +16,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return StoreCategoryResource::collection(Category::orderBy('id')->get());
+        $query = Category::orderBy('id');
+        $query->with('translations');
+        return StoreCategoryResource::collection($query->get());
     }
 }

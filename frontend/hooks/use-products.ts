@@ -5,9 +5,10 @@ import { getProducts } from "@/services/product-service";
 
 export function useProducts(params: {
     category: string[];
+    locale: string;
     sort: string;
     price?: [number, number];
-    activeMaterials?: string[];
+    activeMaterials?: number[];
 }) {
     return useInfiniteQuery({
         queryKey: ["products", params],

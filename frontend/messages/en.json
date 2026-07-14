@@ -1,0 +1,20 @@
+{
+  "auth": {
+    
+  },
+  "frontend": {
+    "header": {
+      "catalog": "Catalog"
+    },
+    "footer_nav": {
+      "terms_and_conditions": "Terms and Conditions",
+      "privacy_policy": "Privacy Policy",
+      "faq": "FAQ",
+      "about_us": "About us"
+    },
+    "customer": {
+      "name": "Name",
+      "email": "Email"
+    }
+  }
+}

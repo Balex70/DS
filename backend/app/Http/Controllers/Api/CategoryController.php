@@ -10,6 +10,8 @@ use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use App\Services\CategoryService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
@@ -27,7 +29,10 @@ class CategoryController extends Controller
     public function index()
     {
         Gate::authorize('viewAny', Category::class);
-        return CategoryResource::collection(Category::orderBy('id')->get());
+
+        $query = Category::orderBy('id');
+        $query->with('translations');
+        return CategoryResource::collection($query->get());
     }
 
     /**
@@ -39,7 +44,6 @@ class CategoryController extends Controller
 
         // handle image upload
         if ($request->hasFile('image')) {
-
             // delete old image if exists
             if ($category->image) {
                 Storage::disk('public')->delete($category->image);
@@ -50,10 +54,34 @@ class CategoryController extends Controller
             $path = $request->file('image')->store("categories/{$category->id}", 'public');
             // Storage::disk('public')->put($fileName, $contents);
 
-            $data['image'] = $path;
+            $category->update([
+                'image' => $path
+            ]);
         }
 
-        $category->update($data);
+        // 1. Update base product fields | en
+        $category->update([
+            'name' => $data['translations']['en']['name'],
+            'description' => $data['translations']['en']['description'],
+        ]);
+
+        // 2. Sync translations
+        if (!empty($data['translations'])) {
+            foreach ($data['translations'] as $locale => $translation) {
+                if ($locale === 'en') {
+                    continue;
+                }
+                $category->translations()->updateOrCreate(
+                    [
+                        'locale' => $locale,
+                    ],
+                    [
+                        'name' => $translation['name'],
+                        'description' => $translation['description'] ?? null,
+                    ]
+                );
+            }
+        }
 
         return new CategoryResource($category);
     }

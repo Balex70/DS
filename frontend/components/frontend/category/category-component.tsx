@@ -9,17 +9,20 @@ import { useProducts } from "@/hooks/use-products";
 import { useState } from "react";
 import { useProductFilters } from "@/hooks/use-product-filters";
 import { SortSelect } from "./SortSelect";
+import { useLocale } from 'next-intl';
+import { CategoryFooterSection } from "./category-footer-section";
 
 type Props = {
     slug: string[];
 };
 
 export function CategoryComponent({ slug }: Props) {
-    const { data: filterData, isLoading: isFilterLoading } = useProductFilters({category: slug});
-    const [sort, setSort] = useState<"latest" | "price_asc" | "price_desc">("latest");
+    const locale = useLocale();
+    const { data: filterData, isLoading: isFilterLoading } = useProductFilters({category: slug, locale: locale});
+    const [sort, setSort] = useState<"latest" | "price_asc" | "price_desc">("latest"); // TODO: use type here
     const [priceDraft, setPriceDraft] = useState<[number, number]>([0, 10000]);
     const [price, setPrice] = useState<[number, number]>([0, 10000]);
-    const [activeMaterials, setActiveMaterials] = useState<string[]>([]);
+    const [activeMaterials, setActiveMaterials] = useState<number[]>([]);
 
     if (!isFilterLoading && filterData && price[0] === 0 && price[1] === 10000) {
         const range: [number, number] = [
@@ -36,6 +39,7 @@ export function CategoryComponent({ slug }: Props) {
 
     const productsQuery = useProducts({
         category: slug,
+        locale,
         sort,
         price,
         activeMaterials
@@ -80,6 +84,8 @@ export function CategoryComponent({ slug }: Props) {
                         isFetchingNextPage={productsQuery.isFetchingNextPage}
                     />
 
+                    {/* Footer / Category description */}
+                    <CategoryFooterSection slug={slug} />
                 </div>
             </main>
         </>

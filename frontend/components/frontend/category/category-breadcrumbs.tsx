@@ -10,20 +10,23 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useCategories } from "@/hooks/use-categories";
 import { Category } from "@/types/category";
+import { useLocale } from "next-intl";
 
-function buildBreadcrumbs(slug: string[], categories?: Category[]) {
+function buildBreadcrumbs(slug: string[], categories?: Category[], locale?: string) {
     return slug.map((segment, index) => {
-        const name = categories?.find((c) => c.slug === segment)?.name;
+        const category = categories?.find((c) => c.slug === segment);
+        const translation = category?.translations.find((item) => item.locale === locale);
         return {
-            label: name || segment,
+            label: (translation?.name ?? category?.name) || segment,
             href: "/category/" + slug.slice(0, index + 1).join("/"),
         };
     });
 }
 export function CategoryBreadcrumbs({ slug }: { slug: string[] }) {
     const { data: categories } = useCategories();
+    const locale = useLocale();
     
-    const items = buildBreadcrumbs(slug, categories);
+    const items = buildBreadcrumbs(slug, categories, locale);
 
     return (
         <Breadcrumb>

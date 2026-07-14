@@ -16,7 +16,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'stock',
     'weight',
     'volume',
-    'image_id'
+    'image_id',
+    'name_processed',
+    'ai_status'
 ])]
 class ProductVariant extends Model
 {
@@ -28,5 +30,15 @@ class ProductVariant extends Model
     public function image(): BelongsTo
     {
         return $this->belongsTo(ProductImage::class);
+    }
+
+    public function translations()
+    {
+        return $this->hasMany(ProductVariantTranslation::class);
+    }
+
+    public function translation()
+    {
+        return $this->hasOne(ProductVariantTranslation::class);
     }
 }

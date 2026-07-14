@@ -6,6 +6,7 @@ import { useAddToCart } from "@/hooks/use-add-to-cart";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useLocale } from 'next-intl';
 
 type Props = {
     productId: string;
@@ -15,6 +16,7 @@ export function ProductDetail({ productId }: Props) {
     const { data: product, error, isLoading } = useProduct(productId);
     const { mutate: addToCart, isPending } = useAddToCart();
     const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
+    const locale = useLocale();
 
     if (error?.response?.status === 404) {
         return (
@@ -49,14 +51,17 @@ export function ProductDetail({ productId }: Props) {
         ?? product?.variants?.[0];
 
     const activeVariantId = selectedVariant?.id;
-
     const galleryMainImage = selectedVariant?.image ?? product.big_image;
+    const variantTranslation = selectedVariant?.translations.find((item) => item.locale === locale);
+    const translation = product?.translations.find((item) => item.locale === locale);
+
+    const title = variantTranslation?.name ?? selectedVariant.name_processed ?? selectedVariant.name ?? product.name_processed ?? product.name_raw;
 
     const handleAddToCart = async () => {
         addToCart({
             product_id: selectedVariant.id,
             vid: selectedVariant.external_id,
-            title: selectedVariant.name ?? product.name_processed ?? product.name_raw, // TODO: need to be change to selected variant name_processed after finish with ai_texts endpoint for variants (selectedVariant.name_processed ?? selectedVariant.name_raw)
+            title: title,
             sku: selectedVariant.sku,
             quantity: 1,
             price: selectedVariant.price, // product.price,
@@ -72,13 +77,13 @@ export function ProductDetail({ productId }: Props) {
             <ProductGallery
                 bigImage={galleryMainImage}
                 images={product.images}
-                productName={product.name_processed ?? product.name_raw}
+                productName={title}
             />
 
             {/* INFO */}
             <div className="space-y-4">
                 <h1 className="text-2xl font-semibold">
-                    {product.name_processed ?? product.name_raw}
+                    {title}
                 </h1>
 
                 <div className="text-3xl font-bold">
@@ -96,7 +101,7 @@ export function ProductDetail({ productId }: Props) {
                 {/* DESCRIPTION (if you have it) */}
                 {product.description_processed && (
                     <div className="prose max-w-none text-sm text-muted-foreground">
-                        {product.description_processed}
+                        {translation?.description ?? product.description_processed ?? product.description_raw}
                     </div>
                 )}
 

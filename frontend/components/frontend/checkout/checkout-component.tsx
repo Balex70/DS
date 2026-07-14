@@ -15,9 +15,14 @@ import { useCreatePayment } from "@/hooks/use-create-payment";
 import { useAvailableGateway } from "@/hooks/use-available-gateway";
 import { CheckoutDialog } from "./CheckoutDialog";
 import { SendToPaymentGateway } from "./SendToPaymentGateway";
+import { useLocale } from "next-intl";
+import { detectCountry } from "@/helpers/geo";
 
 export function CheckoutComponent() {
-    const { data: cart, isLoading } = useCart();
+    const locale = useLocale();
+    const { data: cart, isLoading } = useCart({
+        locale: locale
+    });
     const { mutate: createOrder } = useCreateOrder();
     const { mutate: createPayment } = useCreatePayment();
     const [shippingMethod, setShippingMethod] = useState<ShippingMethod | undefined>(undefined);
@@ -46,7 +51,7 @@ export function CheckoutComponent() {
         shipping_city: "",
         shipping_state: "",
         shipping_postal_code: "",
-        shipping_country: "",
+        shipping_country: detectCountry(),
         notes: "",
     });
 

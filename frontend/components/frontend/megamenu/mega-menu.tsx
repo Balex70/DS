@@ -11,13 +11,17 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { useTranslations } from 'next-intl'
 
 import { useCategories } from "@/hooks/use-categories";
 import { useMemo, useState } from "react";
+import { useLocale } from "next-intl";
 
 export function MegaMenu() {
     const { data: categories, isLoading } = useCategories();
     const [open, setOpen] = useState(false);
+    const t = useTranslations('frontend')
+    const locale = useLocale();
 
     // Root categories
     const rootCategories = useMemo(() =>
@@ -55,7 +59,7 @@ export function MegaMenu() {
                 className="gap-2"
             >
                 <Menu className="h-4 w-4" />
-                Categories
+                {t('header.catalog')}
             </Button>
         );
     }
@@ -68,7 +72,7 @@ export function MegaMenu() {
                     className="gap-2"
                 >
                     <Menu className="h-4 w-4" />
-                    Categories
+                    {t('header.catalog')}
                 </Button>
             </PopoverTrigger>
 
@@ -82,8 +86,8 @@ export function MegaMenu() {
                         <ScrollArea className="h-full">
                             <div className="p-2">
                                 {rootCategories.map((category) => {
-                                    const isActive =
-                                        category.id === activeRootId;
+                                    const isActive = category.id === activeRootId;
+                                    const translation = category?.translations.find((item) => item.locale === locale);
 
                                     return (
                                         <Link
@@ -98,7 +102,7 @@ export function MegaMenu() {
                                                     : "hover:bg-background"
                                             )}
                                         >
-                                            <span className="truncate">{category.name}</span>
+                                            <span className="truncate">{translation?.name ?? category.name}</span>
 
                                             <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
                                         </Link>
@@ -118,6 +122,7 @@ export function MegaMenu() {
                                             categories?.filter(
                                                 (c) => c.parent_id === second.id && c.active
                                             ) ?? [];
+                                        const secondTranslation = second?.translations.find((item) => item.locale === locale);
 
                                         return (
                                             <div
@@ -130,21 +135,24 @@ export function MegaMenu() {
                                                     onClick={() => setOpen(false)}
                                                     className="block font-semibold text-sm mb-2 hover:underline"
                                                 >
-                                                    {second.name}
+                                                    {secondTranslation?.name ?? second.name}
                                                 </Link>
 
                                                 {/* THIRD LEVEL */}
                                                 <div className="space-y-1">
-                                                    {thirdLevelCategories.map((third) => (
-                                                        <Link
-                                                            key={third.id}
-                                                            href={`/category/${third.full_path}`}
-                                                            onClick={() => setOpen(false)}
-                                                            className="block text-sm text-muted-foreground hover:text-foreground"
-                                                        >
-                                                            {third.name}
-                                                        </Link>
-                                                    ))}
+                                                    {thirdLevelCategories.map((third) => {
+                                                        const thirdTranslation = third?.translations.find((item) => item.locale === locale);
+                                                        return (
+                                                            <Link
+                                                                key={third.id}
+                                                                href={`/category/${third.full_path}`}
+                                                                onClick={() => setOpen(false)}
+                                                                className="block text-sm text-muted-foreground hover:text-foreground"
+                                                            >
+                                                                {thirdTranslation?.name ?? third.name}
+                                                            </Link>
+                                                        )
+                                                    })}
                                                 </div>
                                             </div>
                                         );

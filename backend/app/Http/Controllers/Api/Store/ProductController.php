@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Store;
 
+use App\Enums\LocalesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Material;
@@ -21,6 +22,14 @@ class ProductController extends Controller
     {
         $query = $this->service->baseCategoryQuery($request);
         $query->with('cheapestVariant');
+
+        if($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
+            $locale = $request->locale ?? 'en';
+
+            $query->with([
+                'translation' => fn ($q) => $q->where('locale', $locale),
+            ]);
+        }
 
         match ($request->sort ?? 'latest') {
             'latest' => $query->latest(),
@@ -46,7 +55,7 @@ class ProductController extends Controller
 
         if($request->filled('activeMaterials')) {
             $query->whereHas('materials', function ($q) use ($request) {
-                $q->whereIn('materials.name', $request->activeMaterials);
+                $q->whereIn('materials.id', $request->activeMaterials);
             });
         }
 
@@ -59,8 +68,9 @@ class ProductController extends Controller
     {
         $product->load([
             'variants' => fn ($query) => $query
-                ->with('image')
+                ->with('image', 'translations')
                 ->orderBy('price'),
+            'translations'
         ]);
         return new ProductResource($product);
     }
@@ -80,11 +90,18 @@ class ProductController extends Controller
             ->select('products.id')
             ->distinct()
             ->pluck('id');
-        $materials = Material::query()
+        $materialsQuery = Material::query()
             ->whereHas('products', function ($q) use ($productIds) {
                 $q->whereIn('products.id', $productIds);
-            })
-            ->pluck('name');
+            });
+        if($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
+            $locale = $request->locale ?? 'en';
+
+            $materialsQuery->with([
+                'translation' => fn ($q) => $q->where('locale', $locale),
+            ]);
+        }
+        $materials = $materialsQuery->select('id', 'name')->get();
 
         // WEIGHT RANGE
         // $weight = $base

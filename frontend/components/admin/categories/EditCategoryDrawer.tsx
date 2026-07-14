@@ -12,6 +12,9 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Category } from "@/types/category"
 import NextImageWithReplace from "@/components/custom/NextImageWithReplace"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
+import { toast } from "sonner";
 
 export function EditCategoryDrawer({
   open,
@@ -24,16 +27,57 @@ export function EditCategoryDrawer({
   category: Category | null
   onSuccess: () => void
 }) {
-    const [name, setName] = useState("")
     const [image, setImage] = useState<File | null>(null)
     const [preview, setPreview] = useState<string | null>(null)
     const [previewType, setPreviewType] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [selectedLocale, setSelectedLocale] = useState("en")
+    const locales = ["en", "uk"]
+    const [translations, setTranslations] = useState<
+        Record<
+            string,
+            {
+                name: string,
+                description: string
+            }
+        >
+    >({})
     
+    const updateTranslation = (
+        locale: string,
+        field: "name" | "description",
+        value: string,
+    ) => {
+        setTranslations((prev) => ({
+            ...prev,
+            [locale]: {
+                ...(prev[locale] ?? {
+                    name: "",
+                    description: "",
+                }),
+                [field]: value,
+            },
+        }))
+    }
+
     useEffect(() => {
         if (category) {
-            setName(category.name)
+            locales.forEach(locale => {
+                updateTranslation(
+                    locale,
+                    "name",
+                    locale === "en" ? category.name : category.translations.find(t => t.locale === locale)?.name ?? "",
+                )
+            });
+            locales.forEach(locale => {
+                updateTranslation(
+                    locale,
+                    "description",
+                    locale === "en" ? category.description : category.translations.find(t => t.locale === locale)?.description ?? "",
+                )
+            });
+
             if (category.image) {
                 setPreview(`${category.image}`)
                 setPreviewType('origin')
@@ -44,6 +88,7 @@ export function EditCategoryDrawer({
             setImage(null)
         }
     }, [category])
+
     const handleSaveCategory = async () => {
         setLoading(true)
         setError(null)
@@ -56,7 +101,7 @@ export function EditCategoryDrawer({
             });
             
             const formData = new FormData()
-            formData.append("name", name)
+            formData.append("translations", JSON.stringify(translations));
 
             if (image) {
                 formData.append("image", image)
@@ -84,6 +129,7 @@ export function EditCategoryDrawer({
                 return
             }
 
+            toast.success("Category Updated");
             onSuccess();
             onOpenChange(false);
 
@@ -94,6 +140,11 @@ export function EditCategoryDrawer({
           }
     }
 
+    if (error) {
+        toast.error(error)
+        setError(null)
+    }
+
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent side="right" style={{ maxWidth: '40vw' }}>
@@ -102,6 +153,22 @@ export function EditCategoryDrawer({
             <SheetTitle>External ID: {category?.external_id}</SheetTitle>
             </SheetHeader>
 
+            <Tabs
+                className="mt-4 mx-4"
+                value={selectedLocale}
+                onValueChange={setSelectedLocale}
+            >
+                <TabsList>
+                    {locales.map((locale) => (
+                        <TabsTrigger
+                            key={locale}
+                            value={locale}
+                        >
+                            {locale.toUpperCase()}
+                        </TabsTrigger>
+                    ))}
+                </TabsList>
+            </Tabs>
             {category && (
             <form
                 className="space-y-4 mt-4 mx-4"
@@ -115,9 +182,34 @@ export function EditCategoryDrawer({
                         <FieldLabel htmlFor="form-rhf-demo-title">
                             Name
                         </FieldLabel>
-                        <Input id="name_raw" value={name} onChange={(e) => setName(e.target.value)}/>
+                        <Input
+                            value={translations[selectedLocale]?.name ?? ""}
+                            onChange={(e) =>
+                                updateTranslation(
+                                    selectedLocale,
+                                    "name",
+                                    e.target.value,
+                                )
+                            }
+                        />
                     </Field>
-                    
+
+                    <Field>
+                        <FieldLabel htmlFor="form-rhf-demo-title">
+                            Description
+                        </FieldLabel>
+                        <Textarea
+                            value={translations[selectedLocale]?.description ?? ""}
+                            onChange={(e) =>
+                                updateTranslation(
+                                    selectedLocale,
+                                    "description",
+                                    e.target.value,
+                                )
+                            }
+                        />
+                    </Field>
+
                     <Field>
                         <FieldLabel>
                             Category Image
@@ -142,7 +234,7 @@ export function EditCategoryDrawer({
                         (previewType === 'origin' ? (
                             <NextImageWithReplace
                                 src={preview}
-                                alt={name}
+                                alt={'name'}
                                 width={200}
                                 height={200}
                                 imageClassName="object-cover rounded-md border"
@@ -150,7 +242,7 @@ export function EditCategoryDrawer({
                             ) : (
                                 <img
                                     src={preview}
-                                    alt={name}
+                                    alt={'name'}
                                     width={200}
                                     height={200}
                                     className="object-cover rounded-md border"

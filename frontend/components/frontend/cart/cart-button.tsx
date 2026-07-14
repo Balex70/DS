@@ -5,9 +5,13 @@ import { useCart } from "@/hooks/use-cart";
 import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { CartDrawer } from "./CartDrawer";
+import { useLocale } from "next-intl";
 
 export function CartButton() {
-    const { data } = useCart();
+    const locale = useLocale();
+    const { data } = useCart({
+        locale: locale
+    });
     const [open, setOpen] = useState(false);
 
     const itemsCount =

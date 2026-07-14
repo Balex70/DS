@@ -9,8 +9,8 @@ export async function updateCartItem(data: Pick<CartItemPayload, "product_id" | 
     return api.post("/api/store/cart/update", data);
 }
 
-export async function getCart() {
-    return api.get("/api/store/cart");
+export async function getCart(params: {locale: string}) {
+    return api.get("/api/store/cart", {params});
 }
 
 export async function clearCart() {

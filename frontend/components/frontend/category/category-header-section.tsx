@@ -1,6 +1,7 @@
 "use client";
 
 import { useCategories } from "@/hooks/use-categories";
+import { useLocale } from "next-intl";
 
 type Props = {
     slug: string[];
@@ -8,17 +9,16 @@ type Props = {
 
 export function CategoryHeaderSection({ slug }: Props) {
     const { data: categories, isLoading } = useCategories();
-    
+    const locale = useLocale();
+
     const lastSlug = slug[slug.length - 1];
     const category = categories?.find((c) => c.slug === lastSlug);
+    const translation = category?.translations.find((item) => item.locale === locale);
 
     if (isLoading) {
         return (
             <div className="space-y-2">
-                <h1 className="text-2xl font-semibold">Category Title</h1>
-                <p className="text-sm text-muted-foreground">
-                    Category description goes here. This will later come from API.
-                </p>
+                <h1 className="text-2xl font-semibold">...</h1>
             </div>
         );
     }
@@ -33,10 +33,7 @@ export function CategoryHeaderSection({ slug }: Props) {
 
     return (
         <div className="space-y-2">
-            <h1 className="text-2xl font-semibold">{category.name}</h1>
-            <p className="text-sm text-muted-foreground">
-                Category description goes here. This will later come from API.
-            </p>
+            <h1 className="text-2xl font-semibold">{translation?.name ?? category.name}</h1>
         </div>
     );
 }
