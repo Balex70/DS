@@ -5,28 +5,36 @@ import { DataTable } from './dataTable';
 import { columns } from "./columns"
 import Loader from '@/components/common/Loader';
 import { EditProductVariantDrawer } from './EditProductVariantDrawer';
-import { ProductVariant } from '@/types/product';
+import { Meta, ProductVariant } from '@/types/product';
 import { getErrorStringFromCatch } from '@/helpers/general';
 import NotFoundCard from '@/components/common/NotFoundCard';
+import { ProductVariantPagination } from './ProductVariantPagination';
 
 function ListProductVariants ({ productId }: {productId: string}) {
   const [productVariants, setProductVariants] = useState<ProductVariant[]>([]);
+  const [meta, setMeta] = useState<Meta | null>(null)
+  const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(true)
   const [selectedProductVariant, setSelectedProductVariant] = useState<ProductVariant | null>(null)
   const [editOpen, setEditOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   
-  const fetchProductVariants = async (productId: string) => {
+  const fetchProductVariants = async (params: {
+    productId: string,
+    page?: number,
+  }) => {
     try {
       setLoading(true)
 
+      const query = new URLSearchParams()
+      if (params?.page) query.append("page", String(params.page))
       const headers = {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
       };
 
       // fetch product variants
-      const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/product-variants/${productId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/product-variants/${params.productId}?${query.toString()}`, {
           method: 'GET',
           credentials: 'include',
           headers: headers,
@@ -36,6 +44,7 @@ function ListProductVariants ({ productId }: {productId: string}) {
       const productVariantsRes = await res.json()
 
       setProductVariants(productVariantsRes.data ?? [])
+      setMeta(productVariantsRes.meta ?? null)
 
     } catch (err: unknown) {
       setError(getErrorStringFromCatch(err))
@@ -45,12 +54,12 @@ function ListProductVariants ({ productId }: {productId: string}) {
   }
 
   const handleSuccess = () => {
-    fetchProductVariants(productId);
+    fetchProductVariants({page, productId});
   };
 
   useEffect(() => {
-      fetchProductVariants(productId)
-  }, [productId])
+      fetchProductVariants({page, productId})
+  }, [page, productId])
 
   if (error) {
     return (
@@ -75,6 +84,16 @@ function ListProductVariants ({ productId }: {productId: string}) {
                 setEditOpen(true)
               }}
             />
+            <div className="flex gap-3 mt-4">
+              {meta && (
+                <ProductVariantPagination
+                  meta={meta}
+                  onPageChange={(page) => {
+                    setPage(page)
+                  }}
+                />
+              )}
+            </div>
           </>
       )}
 

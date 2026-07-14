@@ -20,12 +20,12 @@ class ProductVariantController extends Controller
     {
         Gate::authorize('viewAny', ProductVariant::class);
 
-        $query = $product->variants->load([
-            'translations'
-        ]);
+        $variants = $product->variants()
+            ->with('translations')
+            ->paginate(8);
 
         return ProductVariantResource::collection(
-            $query->all()
+            $variants
         );
     }
 
