@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useFullSearch } from "@/hooks/use-full-search";
 import { ProductCard } from "../category/product-card";
 
-interface SearchComponentProps {
+type SearchComponentProps = {
     q: string | undefined;
 }
 

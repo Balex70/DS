@@ -14,7 +14,7 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import { BadgeX } from "lucide-react"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-interface Props {
+type Props = {
     open: boolean
     onOpenChange: (open: boolean) => void
     status: string | null

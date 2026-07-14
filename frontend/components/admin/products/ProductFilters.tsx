@@ -16,7 +16,7 @@ import { BadgeX } from "lucide-react"
 import { useAdminCategories } from "@/hooks/use-admin-categories";
 import { CategoryMultiSelect } from "./CategoryMultiSelect";
 
-interface Props {
+type Props = {
     open: boolean
     onOpenChange: (open: boolean) => void
     enriched: string | null

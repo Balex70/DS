@@ -9,7 +9,7 @@ import {
     InputGroupInput,
 } from "@/components/ui/input-group";
 
-interface SearchBarProps {
+type SearchBarProps = {
     value: string;
     onChange: (value: string) => void;
     onFocus?: () => void;

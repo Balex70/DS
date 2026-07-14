@@ -2,7 +2,7 @@ import { api } from "@/lib/axios";
 import { MaterialOption } from "@/types/material";
 import { Meta, Product } from "@/types/product";
 
-export interface GetProductsParams {
+export type GetProductsParams = {
     category?: string[];
     locale: string;
     page?: number;
@@ -11,17 +11,17 @@ export interface GetProductsParams {
     activeMaterials?: number[];
 }
 
-export interface GetProductsFiltersParams {
+export type GetProductsFiltersParams = {
     category?: string[];
     locale?: string;
 }
 
-interface PaginatedResponse<T> {
+type PaginatedResponse<T> = {
     data: T[];
     meta: Meta;
 }
 
-interface PaginatedFilterResponse {
+type PaginatedFilterResponse = {
     price: {
         min: number;
         max: number;

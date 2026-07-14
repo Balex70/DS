@@ -2,18 +2,18 @@ import { api } from "@/lib/axios";
 import { Category } from "@/types/category";
 import { Meta, Product } from "@/types/product";
 
-export interface SearchResult {
+export type SearchResult = {
     products: Product[];
     categories: Category[];
 }
 
-export interface GetSearchProductsParams {
+export type GetSearchProductsParams = {
     q: string;
     page?: number;
     sort?: string;
 }
 
-interface PaginatedFullSearchResponse<T> {
+type PaginatedFullSearchResponse<T> = {
     data: T[];
     meta: Meta;
 }

@@ -1,4 +1,4 @@
-interface OrderInterface {
+export type Order = {
     id: number;
     order_number: string;
     customer_id?: number;
@@ -30,7 +30,7 @@ interface OrderInterface {
     updated_at: string;
 }
 
-interface MetaInterface {
+export type Meta = {
   total: number,
   per_page: number,
   current_page: number,
@@ -39,7 +39,7 @@ interface MetaInterface {
   to: number
 }
 
-interface OrderItem {
+type OrderItem = {
     order_id: number;
     product_id?: number;
     title: string;
@@ -49,7 +49,7 @@ interface OrderItem {
     variant_data?: string;
 }
 
-interface OrderPayloadInterface {
+export type OrderPayload = {
     shipping_full_name: string;
     shipping_phone: string;
     shipping_email: string;
@@ -94,7 +94,3 @@ export type CheckoutStatus =
     | "creating-payment"
     | "redirecting"
     | "failed"
-
-export type Order = OrderInterface
-export type Meta = MetaInterface
-export type OrderPayload = OrderPayloadInterface

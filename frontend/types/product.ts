@@ -1,4 +1,4 @@
-interface ProductInterface {
+export type Product = {
   id: string,
   name_raw: string,
   name_processed: string,
@@ -14,8 +14,8 @@ interface ProductInterface {
   ai_images_at: Date|null,
   ai_texts_at: Date|null,
   ai_status: string,
-  big_image?: ProductImageInterface,
-  images?: ProductImageInterface[],
+  big_image?: ProductImageType,
+  images?: ProductImageType[],
   slug: string,
   warehouse_inventory_num: number,
   raw_data: string,
@@ -24,11 +24,11 @@ interface ProductInterface {
   packing_weight: string,
   variants: ProductVariant[];
   cheapest_variant: ProductVariant,
-  translation: ProductTranslationInterface | null
-  translations: ProductTranslationInterface[]
+  translation: ProductTranslation | null
+  translations: ProductTranslation[]
 }
 
-interface ProductImageInterface {
+export type ProductImageType = {
   id: string,
   url: string,
   original_url: string,
@@ -37,7 +37,7 @@ interface ProductImageInterface {
   status: string
 }
 
-interface MetaInterface {
+export type Meta = {
   total: number,
   per_page: number,
   current_page: number,
@@ -46,7 +46,7 @@ interface MetaInterface {
   to: number
 }
 
-interface ProductTranslationInterface {
+export type ProductTranslation = {
   locale: string,
   name: string,
   description: string,
@@ -64,14 +64,9 @@ export type ProductVariant = {
     stock: number;
     weight: string;
     volume: string;
-    image?: ProductImageInterface;
+    image?: ProductImageType;
     translations: ProductVariantTranslation[]
     ai_status: string
-}
-
-export type ProductTranslation = {
-    name: string
-    description: string
 }
 
 export type ProductVariantTranslation = {
@@ -79,7 +74,3 @@ export type ProductVariantTranslation = {
     name: string
     product_variant_id: number
 }
-
-export type Product = ProductInterface
-export type Meta = MetaInterface
-export type ProductImageType = ProductImageInterface

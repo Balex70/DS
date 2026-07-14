@@ -9,7 +9,7 @@ import {
 
 import { Meta } from "@/types/order"
 
-interface Props {
+type Props = {
   meta: Meta
   onPageChange: (page: number) => void
 }

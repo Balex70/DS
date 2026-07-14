@@ -1,4 +1,4 @@
-interface CategoryInterface {
+export type Category = {
   id: number,
   name: string,
   description: string,
@@ -16,5 +16,3 @@ interface CategoryInterface {
     description: string
   }[]
 }
-
-export type Category = CategoryInterface
