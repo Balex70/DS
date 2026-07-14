@@ -21,6 +21,7 @@ class ProductVariantResource extends JsonResource
             'stock' => $this->stock,
             'weight' => $this->weight,
             'volume' => $this->volume,
+            'ai_status' => $this->ai_status,
 
             'image' => new ProductImageResource(
                 $this->whenLoaded('image')

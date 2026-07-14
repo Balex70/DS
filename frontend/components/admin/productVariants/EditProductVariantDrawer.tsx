@@ -18,12 +18,12 @@ export function EditProductVariantDrawer({
   open,
   onOpenChange,
   productVariant,
-//   onSuccess
+  onSuccess
 }: {
   open: boolean
   onOpenChange: (v: boolean) => void
   productVariant: ProductVariant | null
-//   onSuccess: (id: string) => void
+  onSuccess: () => void
 }) {
     const [name, setName] = useState("")
     const [price, setPrice] = useState(0)
@@ -37,14 +37,13 @@ export function EditProductVariantDrawer({
             string,
             {
                 name: string
-                description: string
             }
         >
     >({})
 
     const updateTranslation = (
         locale: string,
-        field: "name" | "description",
+        field: "name",
         value: string,
     ) => {
         setTranslations((prev) => ({
@@ -52,7 +51,6 @@ export function EditProductVariantDrawer({
             [locale]: {
                 ...(prev[locale] ?? {
                     name: "",
-                    description: "",
                 }),
                 [field]: value,
             },
@@ -71,12 +69,6 @@ export function EditProductVariantDrawer({
                 "name",
                 locale === "en" ? productVariant.name_processed : productVariant.translations.find(t => t.locale === locale)?.name ?? "",
             )
-
-            // updateTranslation(
-            //     locale,
-            //     "description",
-            //     locale === "en" ? productVariant.description_processed : productVariant.translations.find(t => t.locale === locale)?.description ?? "",
-            // )
         });
         setPrice(productVariant.price)
     }, [productVariant])
@@ -117,7 +109,7 @@ export function EditProductVariantDrawer({
                 return
             }
 
-            // onSuccess();
+            onSuccess();
             onOpenChange(false);
 
         } catch (err: unknown) {
@@ -182,21 +174,6 @@ export function EditProductVariantDrawer({
                         />
                     </Field>
 
-                    <Field>
-                        <FieldLabel>Description (description processed)</FieldLabel>
-
-                        <Textarea
-                            value={translations[selectedLocale]?.description ?? ""}
-                            onChange={(e) =>
-                                updateTranslation(
-                                    selectedLocale,
-                                    "description",
-                                    e.target.value,
-                                )
-                            }
-                        />
-                    </Field>
-                    
                     <Field>
                         <FieldLabel htmlFor="form-rhf-demo-title">
                             Price

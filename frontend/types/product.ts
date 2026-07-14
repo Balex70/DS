@@ -66,6 +66,7 @@ export type ProductVariant = {
     volume: string;
     image?: ProductImageInterface;
     translations: ProductVariantTranslation[]
+    ai_status: string
 }
 
 export type ProductTranslation = {

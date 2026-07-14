@@ -44,6 +44,10 @@ function ListProductVariants ({ productId }: {productId: string}) {
     }
   }
 
+  const handleSuccess = () => {
+    fetchProductVariants(productId);
+  };
+
   useEffect(() => {
       fetchProductVariants(productId)
   }, [productId])
@@ -78,7 +82,7 @@ function ListProductVariants ({ productId }: {productId: string}) {
         open={editOpen}
         onOpenChange={setEditOpen}
         productVariant={selectedProductVariant}
-        // onSuccess={fetchProductVariants(productId)}
+        onSuccess={handleSuccess}
       />
     </div>
   )
