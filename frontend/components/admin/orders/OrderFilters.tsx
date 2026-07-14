@@ -16,7 +16,7 @@ import { DsStatus, OrderStatus } from "@/types/order"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { PaymentStatus } from "@/types/payment"
 
-interface Props {
+type Props = {
     open: boolean
     onOpenChange: (open: boolean) => void
     status: OrderStatus | null

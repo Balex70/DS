@@ -5,7 +5,7 @@ import { Category } from "@/types/category";
 import { Card } from "@/components/ui/card";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 
-interface DropdownSearchResultsProps {
+type DropdownSearchResultsProps = {
     products?: Product[];
     categories?: Category[];
     onSelectProduct: (product: Product) => void;
