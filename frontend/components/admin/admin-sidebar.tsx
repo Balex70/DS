@@ -110,7 +110,7 @@ export function AdminSidebar() {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/settings" className="flex items-center gap-2">
+                  <Link href="/admin/settings" className="flex items-center gap-2">
                     <Settings />
                     <span>Settings</span>
                   </Link>

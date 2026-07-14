@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AiImagesController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CurrencyController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\OrderController;
@@ -76,6 +77,9 @@ Route::post('payments/{payment}/update-status', [PaymentController::class, 'upda
 // Materials
 Route::get('materials', [MaterialController::class, 'index'])->middleware('auth:sanctum');
 Route::patch('materials/{material}', [MaterialController::class, 'update'])->middleware('auth:sanctum');
+
+// Route::apiResource('currency', CurrencyController::class)->middleware('auth:sanctum');
+Route::get('currency/sync-rate', [CurrencyController::class, 'syncRate'])->middleware('auth:sanctum');
 
 // Store Order
 Route::prefix('store')->group(function () {
