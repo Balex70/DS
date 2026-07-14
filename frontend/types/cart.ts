@@ -1,4 +1,4 @@
-interface CartItemPayloadInterface {
+export type CartItemPayload = {
   product_id: string;
   vid: string;
   title: string;
@@ -9,5 +9,3 @@ interface CartItemPayloadInterface {
   product_weight?: string;
   packing_weight?: string;
 }
-
-export type CartItemPayload = CartItemPayloadInterface
