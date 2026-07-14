@@ -18,6 +18,7 @@ import { ProductDrawerSecondaryFields } from "./ProductDrawerSecondaryFields"
 import NextImageWithReplace from "@/components/custom/NextImageWithReplace"
 import { ProductDrawerRawDataField } from "./ProductDrawerRawDataField"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
+import ListProductVariants from "../productVariants/ListProductVariants"
 
 export function ProductDrawer({
   open,
@@ -115,6 +116,7 @@ export function ProductDrawer({
                         <TabsTrigger value="main">Main</TabsTrigger>
                         <TabsTrigger value="secondary">Secondary</TabsTrigger>
                         <TabsTrigger value="images">Images</TabsTrigger>
+                        <TabsTrigger value="variants">Variants</TabsTrigger>
                         <TabsTrigger value="raw">Raw Data</TabsTrigger>
                     </TabsList>
                     <TabsContent value="main">
@@ -125,6 +127,9 @@ export function ProductDrawer({
                     </TabsContent>
                     <TabsContent value="images">
                         <ProductImagesDrawer product={product}/>
+                    </TabsContent>
+                    <TabsContent value="variants">
+                        <ListProductVariants productId={product.id}/>
                     </TabsContent>
                     <TabsContent value="raw">
                         <ProductDrawerRawDataField product={product} />

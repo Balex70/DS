@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ProductVariantController;
 use App\Http\Controllers\Api\Store\CartController;
 use App\Http\Controllers\Api\Store\CategoryController as StoreCategoryController;
 use App\Http\Controllers\Api\Store\OrderController as StoreOrderController;
@@ -43,6 +44,10 @@ Route::middleware(['auth:sanctum', 'abilities:ai:images'])->group(function () {
     Route::get('products/ai-images/next', [AiImagesController::class, 'next']);
     Route::post('products/ai-images/{id}/complete', [AiImagesController::class, 'complete']);
 });
+
+// Product Variants
+Route::get('product-variants/{product}', [ProductVariantController::class, 'index'])->middleware('auth:sanctum');
+Route::patch('product-variants/{productVariant}', [ProductVariantController::class, 'update'])->middleware('auth:sanctum');
 
 // Customer
 Route::prefix('customer')->group(function () {
