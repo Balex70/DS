@@ -4,6 +4,7 @@ import { MegaMenu } from "./megamenu/mega-menu";
 import { CartButton } from "./cart/cart-button";
 import { Search } from "./search/Search";
 import LanguageSwitcher from "./locale/LanguageSwitcher";
+import CurrencySwitcher from "./currency/CurrencySwitcher";
 
 export function Header() {
     return (
@@ -22,6 +23,7 @@ export function Header() {
                 </div>
 
                 <div className="flex items-center gap-2">
+                    <CurrencySwitcher />
                     <LanguageSwitcher />
                     <CustomerMenu />
                     <CartButton />

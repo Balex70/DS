@@ -17,15 +17,18 @@ class PrivatBankProvider implements CurrencyProviderInterface
         return $to === 'UAH';
     }
 
-    public function getRate(string $from, string $to): ExchangeRate
+    public function getRate(string $from, string $to): ExchangeRate | null
     {
         $cur = Currency::where('from_currency', $from)->where('to_currency', $to)->first();
+        if (!$cur) {
+            return null;
+        }
 
         return new ExchangeRate(
             from: $from,
             to: $to,
             rate: $cur->rate / ExchangeRate::SCALE,
-            updatedAt: $cur->rate_updated_at,
+            rateUpdatedAt: $cur->rate_updated_at,
             provider: 'privatbank',
         );
     }

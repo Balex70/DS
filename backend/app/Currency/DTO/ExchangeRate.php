@@ -8,7 +8,7 @@ class ExchangeRate
         public readonly string $from,
         public readonly string $to,
         public readonly float $rate,
-        public readonly \DateTimeInterface $updatedAt,
+        public readonly \DateTimeInterface $rateUpdatedAt,
         public readonly string $provider,
     ) {}
 }

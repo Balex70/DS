@@ -6,6 +6,7 @@ export type Product = {
   description_raw: string,
   description_processed: string,
   price: number,
+  currency_price: number;
   now_price: number,
   suggested_price: number,
   is_collect: boolean,
@@ -61,6 +62,7 @@ export type ProductVariant = {
     name_processed: string;
     key: string;
     price: number;
+    currency_price: number;
     stock: number;
     weight: string;
     volume: string;

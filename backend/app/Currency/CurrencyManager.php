@@ -9,15 +9,21 @@ class CurrencyManager
     {
     }
 
-    public function getRate(string $from, string $to): ExchangeRate
+    public function getRate(string $from, string $to): ExchangeRate | null
     {
-        foreach ($this->providers as $provider) {
-            if ($provider->supports($from, $to)) {
-                return $provider->getRate($from, $to);
+        foreach ($this->providers as $provider) { // TODO: cache
+            if (! $provider->supports($from, $to)) {
+                continue;
+            }
+
+            $rate = $provider->getRate($from, $to);
+
+            if ($rate !== null) {
+                return $rate;
             }
         }
 
-        throw new \Exception("No provider supports {$from} -> {$to}");
+        return null;
     }
     
     public function syncRate(): void

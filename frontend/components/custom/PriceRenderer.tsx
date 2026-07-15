@@ -1,18 +1,21 @@
+import { CURRENCIES, CurrencyCode } from "@/types/currency";
+
 type Props = {
     value: number | string | null | undefined; // cents
-    currency?: string;
+    currency?: CurrencyCode;
     showDecimals?: boolean;
     className?: string;
 };
 
 function formatPrice(
     cents: number,
-    currency: string,
+    currency: CurrencyCode,
     showDecimals: boolean
 ) {
     const dollars = cents / 100;
+    const { locale } = CURRENCIES[currency];
 
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat(locale, {
         style: "currency",
         currency,
         minimumFractionDigits: showDecimals ? 2 : 0,

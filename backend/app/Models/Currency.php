@@ -11,4 +11,8 @@ class Currency extends Model
 {
     /** @use HasFactory<\Database\Factories\CurrencyFactory> */
     use HasFactory;
+
+    protected $casts = [
+        'rate_updated_at' => 'datetime',
+    ];
 }
