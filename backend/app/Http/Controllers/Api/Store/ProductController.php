@@ -61,8 +61,20 @@ class ProductController extends Controller
             });
         }
 
+        $products = $query->paginate(24);
+
+        if($request->filled('currency')) {
+            $products->each(function (Product $product) use ($request) {
+                $product->currency_price = $this->converter->convert(
+                    $product->price,
+                    'USD',
+                    $request->currency,
+                );
+            });
+        }
+
         return ProductResource::collection(
-            $query->paginate(24)
+            $products
         );
     }
 

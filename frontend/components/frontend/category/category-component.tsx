@@ -11,6 +11,7 @@ import { useProductFilters } from "@/hooks/use-product-filters";
 import { SortSelect } from "./SortSelect";
 import { useLocale } from 'next-intl';
 import { CategoryFooterSection } from "./category-footer-section";
+import { useCurrency } from "@/context/CurrencyContext";
 
 type Props = {
     slug: string[];
@@ -18,6 +19,7 @@ type Props = {
 
 export function CategoryComponent({ slug }: Props) {
     const locale = useLocale();
+    const { currency } = useCurrency();
     const { data: filterData, isLoading: isFilterLoading } = useProductFilters({category: slug, locale: locale});
     const [sort, setSort] = useState<"latest" | "price_asc" | "price_desc">("latest"); // TODO: use type here
     const [priceDraft, setPriceDraft] = useState<[number, number]>([0, 10000]);
@@ -42,7 +44,8 @@ export function CategoryComponent({ slug }: Props) {
         locale,
         sort,
         price,
-        activeMaterials
+        activeMaterials,
+        currency
     });
 
     return (
