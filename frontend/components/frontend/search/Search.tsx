@@ -6,12 +6,14 @@ import { useEffect, useRef, useState } from "react";
 import { SearchBar } from "./search-bar";
 import { DropdownSearchResults } from "./dropdown-search-results";
 import { useRouter } from "next/navigation";
+import { useCurrency } from "@/context/CurrencyContext";
 
 export function Search() {
     const [query, setQuery] = useState("");
     const [showResults, setShowResults] = useState(false);
     const debouncedQuery = useDebounce(query);
-    const { data, isLoading } = useSearch(debouncedQuery);
+    const { currency } = useCurrency();
+    const { data, isLoading } = useSearch(debouncedQuery, currency);
     const router = useRouter()
     const containerRef = useRef<HTMLDivElement>(null);
 

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\Store;
 
+use App\Currency\Services\PriceConverter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
@@ -10,6 +11,9 @@ use Illuminate\Support\Facades\Cache;
 
 class SearchController extends Controller
 {
+    public function __construct(
+        private PriceConverter $converter
+    ) {}
     public function search(Request $request)
     {
         $validated = $request->validate([
@@ -27,7 +31,7 @@ class SearchController extends Controller
 
         $cacheKey = "search:{$search}";
 
-        return Cache::remember($cacheKey, 30, function () use ($search) {
+        return Cache::remember($cacheKey, 30, function () use ($search, $request) {
             $products = Product::query()
                 ->with(['variants'])
                 ->select(['id', 'name_raw', 'name_processed', 'price', 'slug'])
@@ -41,12 +45,21 @@ class SearchController extends Controller
                 ->limit(10)
                 ->get();
 
+            if($request->filled('currency')) {
+                $products->each(function (Product $product) use ($request) {
+                    $product->currency_price = $this->converter->convert(
+                        $product->price,
+                        'USD',
+                        $request->currency,
+                    );
+                });
+            }
+
             $categories = Category::query()
                 ->select(['id', 'name', 'slug', 'full_path'])
                 ->where('name', 'ILIKE', "%{$search}%")
                 ->limit(5)
                 ->get();
-
             return [
                 'products' => $products,
                 'categories' => $categories,
