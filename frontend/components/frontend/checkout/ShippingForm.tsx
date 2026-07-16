@@ -76,12 +76,15 @@ export function ShippingForm({
             return;
         }
 
-        const stillValid =
-            shippingMethod &&
-            shippingOptions.some((m: ShippingMethod) => m.id === shippingMethod.id);
+        const updated = shippingOptions.find(
+            m => m.id === shippingMethod?.id
+        );
 
-        // if current method is still valid → keep it
-        if (stillValid) return;
+        // if current method is still valid keep it but set to trigger re-render
+        if (updated) {
+            setShippingMethod(updated);
+            return;
+        }
 
         setShippingMethod(shippingOptions[0]);
     }, [shippingOptions, shippingMethod, setShippingMethod]);
