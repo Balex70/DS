@@ -9,6 +9,8 @@ import { useClearCart } from "@/hooks/use-clear-cart";
 import { CartItemsDrawer } from "./CartItemsDrawer";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useLocale } from "next-intl";
+import { useCurrency } from "@/context/CurrencyContext";
+import { CartItemPayload } from "@/types/cart";
 
 type Props = {
     open: boolean;
@@ -20,8 +22,10 @@ export function CartDrawer({
     onOpenChange,
 }: Props) {
     const locale = useLocale();
+    const { currency } = useCurrency();
     const { data: cart, isLoading } = useCart({
-        locale: locale
+        locale: locale,
+        currency: currency
     });
     const { mutate: clearCart, isPending } = useClearCart();
 
@@ -36,6 +40,23 @@ export function CartDrawer({
         (sum, item) => sum + item.price * item.quantity,
         0
     );
+
+    // Calculate subtotal for currency price
+    function hasCurrencyPrice(
+        item: CartItemPayload
+    ): item is CartItemPayload {
+        return item.currency_price !== undefined;
+    }
+    let currencySubtotal: number | undefined;
+    if (currency !== "USD") {
+        currencySubtotal =
+            items.every(hasCurrencyPrice)
+                ? items.reduce(
+                    (sum, item) => sum + (item.currency_price ?? 0) * item.quantity,
+                    0
+                )
+                : undefined;
+    }
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
@@ -93,6 +114,16 @@ export function CartDrawer({
 
                             <span className="text-lg font-semibold">
                                 <PriceRenderer value={subtotal} />
+                                {currency !== "USD" && currencySubtotal !== undefined && (
+                                    <span className="block text-xs font-normal text-muted-foreground">
+                                        (
+                                        <PriceRenderer
+                                            value={currencySubtotal}
+                                            currency={currency}
+                                        />
+                                        )
+                                    </span>
+                                )}
                             </span>
                         </div>
 
