@@ -13,11 +13,15 @@ type ShippingCalculatePayload = {
 };
 
 export async function getShippingCalculate(
-    data: ShippingCalculatePayload
+    data: ShippingCalculatePayload,
+    currency?: string
 ): Promise<ShippingMethod[]> {
     const response = await api.post(
         "/api/store/orders/shipping-calculate",
-        data
+        {
+            ...data,
+            currency,
+        }
     );
 
     return response.data;

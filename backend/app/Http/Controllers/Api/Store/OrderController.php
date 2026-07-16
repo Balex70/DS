@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Store;
 
+use App\Enums\CurrenciesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\Order;
@@ -72,6 +73,10 @@ class OrderController extends Controller
             'items' => $items,
             'shippingData' => $shippingData
         ];
+
+        if($request->filled('currency') && $request->currency !== CurrenciesEnum::USD->value) {
+            return $this->storeOrderService->calculateShipping($payload, $request->currency);
+        }
 
         $shippingOptions = $this->storeOrderService->calculateShipping($payload);
 

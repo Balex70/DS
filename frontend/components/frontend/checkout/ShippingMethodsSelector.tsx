@@ -5,6 +5,7 @@ import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useMemo, useState } from "react";
 import { getMaxDays, getMinDays } from "@/helpers/shipping";
 import { ShippingTierBadge } from "./shippingTiers";
+import { useCurrency } from "@/context/CurrencyContext";
 
 type Props = {
     methods: ShippingMethod[];
@@ -18,6 +19,7 @@ export function ShippingMethodsSelector({
     onChange,
 }: Props) {
     const [showAll, setShowAll] = useState(false);
+    const { currency } = useCurrency();
 
     const groupedMethods = useMemo(() => {
         if (methods.length === 0) {
@@ -144,6 +146,16 @@ export function ShippingMethodsSelector({
 
                         <div className="font-semibold">
                             <PriceRenderer value={method.price} />
+                            {(currency !== "USD" && method.currency_price) && (
+                                <span className="block text-xs font-normal text-muted-foreground">
+                                    (
+                                    <PriceRenderer
+                                        value={method.currency_price}
+                                        currency={currency}
+                                    />
+                                    )
+                                </span>
+                            )}
                         </div>
                     </label>
                 );
@@ -208,6 +220,16 @@ export function ShippingMethodsSelector({
                                             <PriceRenderer
                                                 value={method.price}
                                             />
+                                            {(currency !== "USD" && method.currency_price) && (
+                                                <span className="block text-xs font-normal text-muted-foreground">
+                                                    (
+                                                    <PriceRenderer
+                                                        value={method.currency_price}
+                                                        currency={currency}
+                                                    />
+                                                    )
+                                                </span>
+                                            )}
                                         </div>
                                     </label>
                                 );

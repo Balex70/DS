@@ -25,6 +25,7 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FinalCarriers } from "./FinalCarriers";
 import { COUNTRIES, getSelectedCountry } from "./countries";
+import { useCurrency } from "@/context/CurrencyContext";
 
 type Props = {
     form: OrderPayload;
@@ -49,7 +50,8 @@ export function ShippingForm({
         shipping_country: string;
         shipping_postal_code?: string;
     } | null>(null);
-    const { data: shippingOptions = [], isLoading, isFetching } =  useShippingCalculate(payload, cartKey);
+    const { currency } = useCurrency();
+    const { data: shippingOptions = [], isLoading, isFetching } =  useShippingCalculate(payload, cartKey, currency);
     const getError = (field: string) => errors[field]?.[0];
     const [openCountryPopover, setOpenCountryPopover] = useState(false);
 

@@ -17,11 +17,15 @@ import { CheckoutDialog } from "./CheckoutDialog";
 import { SendToPaymentGateway } from "./SendToPaymentGateway";
 import { useLocale } from "next-intl";
 import { detectCountry } from "@/helpers/geo";
+import { useCurrency } from "@/context/CurrencyContext";
+import { CartItemPayload } from "@/types/cart";
 
 export function CheckoutComponent() {
     const locale = useLocale();
+    const { currency } = useCurrency();
     const { data: cart, isLoading } = useCart({
-        locale: locale
+        locale: locale,
+        currency: currency
     });
     const { mutate: createOrder } = useCreateOrder();
     const { mutate: createPayment } = useCreatePayment();
@@ -41,6 +45,22 @@ export function CheckoutComponent() {
         (sum, item) => sum + item.price * item.quantity,
         0
     );
+
+    function hasCurrencyPrice(
+        item: CartItemPayload
+    ): item is CartItemPayload {
+        return item.currency_price !== undefined;
+    }
+    let currencySubtotal: number | undefined;
+    if (currency !== "USD") {
+        currencySubtotal =
+            items.every(hasCurrencyPrice)
+                ? items.reduce(
+                    (sum, item) => sum + (item.currency_price ?? 0) * item.quantity,
+                    0
+                )
+                : undefined;
+    }
 
     const [form, setForm] = useState<OrderPayload>({
         shipping_full_name: "",
@@ -146,6 +166,7 @@ export function CheckoutComponent() {
                     <OrderSummary
                         country={form.shipping_country}
                         subtotal={subtotal}
+                        currencySubtotal={currencySubtotal}
                         shippingMethod={shippingMethod}
                         gateway={gateway}
                         checkoutStatus={checkoutStatus}
