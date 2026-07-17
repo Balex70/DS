@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers\Api\Store;
 
+use App\Currency\Services\PriceConverter;
+use App\Enums\CurrenciesEnum;
 use App\Enums\LocalesEnum;
 use App\Http\Controllers\Controller;
 use App\Models\ProductVariant;
@@ -10,6 +12,10 @@ use Illuminate\Support\Facades\Cookie;
 
 class CartController extends Controller
 {
+    public function __construct(
+        private PriceConverter $converter
+    ) {}
+
     public function show(Request $request, CartService $cartService)
     {
         $token = $request->attributes->get('cart_token');
@@ -29,10 +35,21 @@ class CartController extends Controller
                 ])->find($cartItem['product_id']);
             }
 
-            $hydratedItems[] = [
+            $hydratedItem = [
                 ...$cartItem,
                 'title' => $productVariant?->translation?->name ?? $productVariant?->name ?? $cartItem['title'],
             ];
+
+            if($request->filled('currency') && $request->currency !== CurrenciesEnum::USD->value) {
+                $currencyPrice = $this->converter->convert(
+                        $cartItem['price'],
+                        CurrenciesEnum::USD->value,
+                        $request->currency, //
+                    );
+                $hydratedItem['currency_price'] = $currencyPrice;
+            }
+
+            $hydratedItems[] = $hydratedItem;
         }
 
         return response()->json([

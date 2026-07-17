@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\CurrenciesEnum;
 use App\Enums\OrderDsStatusEnum;
 use App\Enums\OrderStatusEnum;
 use App\Enums\PaymentStatusEnum;
@@ -67,7 +68,7 @@ class OrderFactory extends Factory
             'shipping_cost' => $shipping,
             'total' => $total,
 
-            'currency' => 'USD',
+            'currency' => CurrenciesEnum::USD->value,
 
             'status' => $status,
 

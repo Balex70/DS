@@ -8,6 +8,7 @@ import { Trash2 } from "lucide-react";
 import { useUpdateCartItem } from "@/hooks/use-update-cart-item";
 import { CartItemPayload } from "@/types/cart";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
+import { useCurrency } from "@/context/CurrencyContext";
 
 type Props = {
     items: CartItemPayload[];
@@ -16,6 +17,7 @@ type Props = {
 export function CartItemsDrawer({items}: Props) {
     const { mutate: removeItem, isPending: isRemovePending } = useRemoveFromCart();
     const { mutate: updateQty } = useUpdateCartItem();
+    const { currency } = useCurrency();
 
     return (
         <ScrollArea className="flex-1 min-h-0 pr-2">
@@ -84,6 +86,16 @@ export function CartItemsDrawer({items}: Props) {
 
                                 <span className="font-medium">
                                     <PriceRenderer value={item.price * item.quantity} />
+                                    {(currency !== "USD" && item.currency_price) && (
+                                        <span className="block text-xs font-normal text-muted-foreground">
+                                            (
+                                            <PriceRenderer
+                                                value={item.currency_price * item.quantity}
+                                                currency={currency}
+                                            />
+                                            )
+                                        </span>
+                                    )}
                                 </span>
                             </div>
                         </div>

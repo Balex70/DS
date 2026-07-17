@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Currency\Services\PriceConverter;
 use App\Dropshipping\DropshippingManager;
+use App\Enums\CurrenciesEnum;
 use App\Enums\OrderStatusEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Models\Order;
@@ -13,6 +15,7 @@ class StoreOrderService
 {
     public function __construct(
         private DropshippingManager $manager,
+        private PriceConverter $converter
     ) {}
     
     public function upsertOrderByCheckoutToken(array $data, mixed $items, string $cartToken): Order
@@ -35,7 +38,7 @@ class StoreOrderService
                 'shipping_cost' => $shipping,
                 'total' => $total,
 
-                'currency' => $data['currency'] ?? 'USD',
+                'currency' => $data['currency'] ?? CurrenciesEnum::USD->value,
                 'payment_method' => $data['payment_method'] ?? null,
 
                 'shipping_method' => $data['shipping_method'],
@@ -92,10 +95,24 @@ class StoreOrderService
         });
     }
 
-    public function calculateShipping(array $payload): array
+    public function calculateShipping(array $payload, string | null $currency = null): array
     {
         $provider = $this->manager->driver();
 
-        return $provider->calculateShipping($payload);
+        $shippingOptions = $provider->calculateShipping($payload);
+
+        if($currency && $currency !== CurrenciesEnum::USD->value) {
+            return array_map(function ($item) use ($currency) {
+                $item['currency_price'] = $this->converter->convert(
+                    $item['price'],
+                    CurrenciesEnum::USD->value,
+                    $currency,
+                );
+
+                return $item;
+            }, $shippingOptions);
+        }
+
+        return $shippingOptions;
     }
 }

@@ -43,8 +43,11 @@ export async function getProducts(
     return response.data;
 }
 
-export async function getProduct(id: string | number): Promise<Product> {
-    const response = await api.get(`/api/store/products/${id}`);
+export async function getProduct(id: string | number, currency?: string): Promise<Product> {
+    const query = new URLSearchParams()
+    if (currency) query.append("currency", String(currency))
+
+    const response = await api.get(`/api/store/products/${id}/?${query.toString()}`);
     return response.data.data;
 }
 

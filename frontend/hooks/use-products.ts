@@ -2,6 +2,7 @@
 
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getProducts } from "@/services/product-service";
+import { CurrencyCode } from "@/types/currency";
 
 export function useProducts(params: {
     category: string[];
@@ -9,6 +10,7 @@ export function useProducts(params: {
     sort: string;
     price?: [number, number];
     activeMaterials?: number[];
+    currency: CurrencyCode
 }) {
     return useInfiniteQuery({
         queryKey: ["products", params],

@@ -15,8 +15,10 @@ class ProductResource extends JsonResource
     public function toArray(Request $request): array
     {
         $product = parent::toArray($request);
+        $currency = $request->currency ?? null;
         return [
             ...$product,
+            'currency_price' => $this->currency_price,
             'images' => $this->images->map(function ($image) {
                 return new ProductImageResource($image);
             }),

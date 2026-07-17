@@ -6,6 +6,7 @@ import ProductImage from "./ProductImage";
 import Link from "next/link";
 import { useAddToCart } from "@/hooks/use-add-to-cart";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
+import { useCurrency } from "@/context/CurrencyContext";
 
 type Props = {
     product: Product;
@@ -13,6 +14,7 @@ type Props = {
 
 export function ProductCard({ product }: Props) {
     const { mutate: addToCart, isPending } = useAddToCart();
+    const { currency } = useCurrency();
 
     const cheapestVariantImage = product.cheapest_variant?.image?.original_url ?? product.big_image?.original_url ?? undefined;
 
@@ -59,6 +61,16 @@ export function ProductCard({ product }: Props) {
 
                 <div className="text-lg font-semibold">
                     <PriceRenderer value={product.price} />
+                    {(currency !== "USD" && product.currency_price) && (
+                        <span className="ml-2 text-sm font-normal text-muted-foreground">
+                            (
+                            <PriceRenderer
+                                value={product.currency_price}
+                                currency={currency}
+                            />
+                            )
+                        </span>
+                    )}
                 </div>
 
                 {product.warehouse_inventory_num > 0 ? (

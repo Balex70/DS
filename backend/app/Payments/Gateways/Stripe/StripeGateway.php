@@ -1,6 +1,7 @@
 <?php
 namespace App\Payments\Gateways\Stripe;
 
+use App\Enums\CurrenciesEnum;
 use App\Payments\DTO\PaymentRequestDTO;
 use App\Payments\DTO\PaymentResponseDTO;
 use App\Payments\Gateways\AbstractGateway;
@@ -67,7 +68,7 @@ class StripeGateway extends AbstractGateway
 
     public function supportsCurrency(string $currency): bool
     {
-        return in_array($currency, ['USD', 'EUR', 'GBP']);
+        return in_array($currency, [CurrenciesEnum::USD->value]);
     }
 
     public function supportsMethod(array $methods): bool

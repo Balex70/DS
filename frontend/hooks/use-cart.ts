@@ -8,7 +8,7 @@ export type Cart = {
     items: CartItemPayload[];
 };
 
-export function useCart(params: { locale: string }) {
+export function useCart(params: { locale: string, currency?: string }) {
     return useQuery<Cart>({
         queryKey: ["cart", params],
         queryFn: async () => {

@@ -1,5 +1,6 @@
 import { api } from "@/lib/axios";
 import { Category } from "@/types/category";
+import { CurrencyCode } from "@/types/currency";
 import { Meta, Product } from "@/types/product";
 
 export type SearchResult = {
@@ -19,13 +20,14 @@ type PaginatedFullSearchResponse<T> = {
 }
 
 export async function search(
-    query: string
+    query: string,
+    currency?: CurrencyCode
 ): Promise<SearchResult> {
-    const response = await api.get("/api/store/search", {
-        params: {
-            q: query,
-        },
-    });
+    const queryParams = new URLSearchParams()
+    queryParams.append("q", query)
+    if (currency) queryParams.append("currency", String(currency))
+
+    const response = await api.get(`/api/store/search?${queryParams.toString()}`);
 
     return response.data;
 }

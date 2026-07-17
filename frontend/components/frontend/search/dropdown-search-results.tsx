@@ -4,6 +4,7 @@ import { Product } from "@/types/product";
 import { Category } from "@/types/category";
 import { Card } from "@/components/ui/card";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
+import { useCurrency } from "@/context/CurrencyContext";
 
 type DropdownSearchResultsProps = {
     products?: Product[];
@@ -18,6 +19,7 @@ export function DropdownSearchResults({
     onSelectProduct,
     onSelectCategory,
 }: DropdownSearchResultsProps) {
+    const { currency } = useCurrency();
     const hasResults =
         products.length > 0 || categories.length > 0;
 
@@ -52,6 +54,16 @@ export function DropdownSearchResults({
                                 {product.price && (
                                     <span className="text-xs text-muted-foreground">
                                         <PriceRenderer value={product.price} />
+                                        {(currency !== "USD" && product.currency_price) && (
+                                            <span className="ml-2 text-xs font-normal text-muted-foreground">
+                                                (
+                                                <PriceRenderer
+                                                    value={product.currency_price}
+                                                    currency={currency}
+                                                />
+                                                )
+                                            </span>
+                                        )}
                                     </span>
                                 )}
                             </button>

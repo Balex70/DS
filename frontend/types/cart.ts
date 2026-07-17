@@ -5,6 +5,7 @@ export type CartItemPayload = {
   sku: string;
   quantity: number;
   price: number;
+  currency_price?: number;
   image?: string;
   product_weight?: string;
   packing_weight?: string;

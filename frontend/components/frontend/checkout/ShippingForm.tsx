@@ -25,6 +25,7 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FinalCarriers } from "./FinalCarriers";
 import { COUNTRIES, getSelectedCountry } from "./countries";
+import { useCurrency } from "@/context/CurrencyContext";
 
 type Props = {
     form: OrderPayload;
@@ -49,7 +50,8 @@ export function ShippingForm({
         shipping_country: string;
         shipping_postal_code?: string;
     } | null>(null);
-    const { data: shippingOptions = [], isLoading, isFetching } =  useShippingCalculate(payload, cartKey);
+    const { currency } = useCurrency();
+    const { data: shippingOptions = [], isLoading, isFetching } =  useShippingCalculate(payload, cartKey, currency);
     const getError = (field: string) => errors[field]?.[0];
     const [openCountryPopover, setOpenCountryPopover] = useState(false);
 
@@ -74,12 +76,15 @@ export function ShippingForm({
             return;
         }
 
-        const stillValid =
-            shippingMethod &&
-            shippingOptions.some((m: ShippingMethod) => m.id === shippingMethod.id);
+        const updated = shippingOptions.find(
+            m => m.id === shippingMethod?.id
+        );
 
-        // if current method is still valid → keep it
-        if (stillValid) return;
+        // if current method is still valid keep it but set to trigger re-render
+        if (updated) {
+            setShippingMethod(updated);
+            return;
+        }
 
         setShippingMethod(shippingOptions[0]);
     }, [shippingOptions, shippingMethod, setShippingMethod]);

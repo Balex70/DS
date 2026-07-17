@@ -7,13 +7,15 @@ import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useLocale } from 'next-intl';
+import { useCurrency } from "@/context/CurrencyContext";
 
 type Props = {
     productId: string;
 };
 
 export function ProductDetail({ productId }: Props) {
-    const { data: product, error, isLoading } = useProduct(productId);
+    const { currency } = useCurrency();
+    const { data: product, error, isLoading } = useProduct(productId, currency);
     const { mutate: addToCart, isPending } = useAddToCart();
     const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
     const locale = useLocale();
@@ -86,8 +88,18 @@ export function ProductDetail({ productId }: Props) {
                     {title}
                 </h1>
 
-                <div className="text-3xl font-bold">
-                    <PriceRenderer value={selectedVariant?.price ?? product.price} />
+                <div className="text-3xl font-bold flex-col">
+                    <PriceRenderer value={selectedVariant?.price ?? product.price} className="text-2xl font-semibold"/>
+                    {(currency !== "USD" && selectedVariant?.currency_price && product.currency_price) && (
+                        <span className="ml-2 text-sm font-normal text-muted-foreground">
+                            (
+                            <PriceRenderer
+                                value={selectedVariant?.currency_price ?? product.currency_price}
+                                currency={currency}
+                            />
+                            )
+                        </span>
+                    )}
                 </div>
 
                 <div>

@@ -2,6 +2,7 @@
 
 namespace App\Payments\Gateways\LiqPay;
 
+use App\Enums\CurrenciesEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Events\PaymentChangedStatus;
 use App\Models\Payment;
@@ -268,7 +269,7 @@ class LiqPayGateway extends AbstractGateway
     public function supportsCurrency(string $currency): bool {
         return in_array(
             $currency,
-            ['UAH', 'USD', 'EUR']
+            [CurrenciesEnum::USD->value, CurrenciesEnum::UAH->value],
         );
     }
 

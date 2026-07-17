@@ -1,6 +1,7 @@
 <?php
 namespace App\Payments\Gateways\WayForPay;
 
+use App\Enums\CurrenciesEnum;
 use App\Payments\DTO\PaymentRequestDTO;
 use App\Payments\DTO\PaymentResponseDTO;
 use App\Payments\Gateways\AbstractGateway;
@@ -133,7 +134,7 @@ class WayForPayGateway extends AbstractGateway
 
     public function supportsCurrency(string $currency): bool
     {
-        return in_array($currency, ['UAH', 'USD']);
+        return in_array($currency, [CurrenciesEnum::USD->value, CurrenciesEnum::UAH->value]);
     }
 
     public function supportsMethod(array $methods): bool

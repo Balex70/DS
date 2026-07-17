@@ -32,6 +32,8 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'payments.delete']);
         Permission::firstOrCreate(['name' => 'materials.edit']);
         Permission::firstOrCreate(['name' => 'materials.delete']);
+        Permission::firstOrCreate(['name' => 'currency.edit']);
+        Permission::firstOrCreate(['name' => 'currency.delete']);
         Permission::firstOrCreate(['name' => 'view dashboard']);
 
         // roles

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\Store;
 
+use App\Currency\Services\PriceConverter;
+use App\Enums\CurrenciesEnum;
 use App\Enums\LocalesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
@@ -14,6 +16,7 @@ class ProductController extends Controller
 {
     public function __construct(
         private ProductService $service,
+        private PriceConverter $converter
     ) {}
     /**
      * Display a listing of the resource.
@@ -59,12 +62,24 @@ class ProductController extends Controller
             });
         }
 
+        $products = $query->paginate(24);
+
+        if($request->filled('currency')) {
+            $products->each(function (Product $product) use ($request) {
+                $product->currency_price = $this->converter->convert(
+                    $product->price,
+                    CurrenciesEnum::USD->value,
+                    $request->currency,
+                );
+            });
+        }
+
         return ProductResource::collection(
-            $query->paginate(24)
+            $products
         );
     }
 
-    public function show(Product $product)
+    public function show(Request $request, Product $product)
     {
         $product->load([
             'variants' => fn ($query) => $query
@@ -72,6 +87,22 @@ class ProductController extends Controller
                 ->orderBy('price'),
             'translations'
         ]);
+
+        if($request->filled('currency')) {
+            $product->currency_price = $this->converter->convert(
+                $product->price,
+                CurrenciesEnum::USD->value,
+                $request->currency,
+            );
+            $product->variants->each(function ($variant) use ($request) {
+                $variant->currency_price = $this->converter->convert(
+                    $variant->price,
+                    CurrenciesEnum::USD->value,
+                    $request->currency,
+                );
+            });
+        }
+
         return new ProductResource($product);
     }
 

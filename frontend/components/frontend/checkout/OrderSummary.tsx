@@ -6,10 +6,12 @@ import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { ShippingMethod } from "@/types/shipping";
 import { AvailableGatewayResponse } from "@/types/payment";
 import { CheckoutStatus } from "@/types/order";
+import { useCurrency } from "@/context/CurrencyContext";
 
 type Props = {
     country?: string;
     subtotal: number;
+    currencySubtotal?: number;
     shippingMethod?: ShippingMethod,
     gateway: AvailableGatewayResponse;
     checkoutStatus: CheckoutStatus;
@@ -19,13 +21,20 @@ type Props = {
 export function OrderSummary({
     country,
     subtotal,
+    currencySubtotal,
     shippingMethod,
     gateway,
     checkoutStatus,
     onSubmit,
 }: Props) {
+    const { currency } = useCurrency();
     const shippingCost = shippingMethod?.price ?? 0;
     const total = subtotal + shippingCost;
+
+    let currencyTotal: number | undefined = undefined;
+    if(currencySubtotal !== undefined && shippingMethod?.currency_price !== undefined) {
+        currencyTotal = currencySubtotal + shippingMethod?.currency_price
+    }
 
     const hasCountry = !!country;
     const noShipping = !shippingMethod;
@@ -65,19 +74,55 @@ export function OrderSummary({
 
             <div className="flex justify-between">
                 <span>Subtotal</span>
-                <PriceRenderer value={subtotal} />
+                <span className="text-sm">
+                    <PriceRenderer value={subtotal} />
+                    {currency !== "USD" && currencySubtotal !== undefined && (
+                        <span className="ml-2 text-xs font-normal text-muted-foreground">
+                            (
+                            <PriceRenderer
+                                value={currencySubtotal}
+                                currency={currency}
+                            />
+                            )
+                        </span>
+                    )}
+                </span>
             </div>
 
             <div className="flex justify-between">
                 <span>Shipping {shippingMethod && `(${shippingMethod.name})`}</span>
-                <PriceRenderer value={shippingCost} />
+                <span className="text-sm">
+                    <PriceRenderer value={shippingCost} />
+                    {shippingMethod?.currency_price !== undefined && (
+                        <span className="ml-2 text-xs font-normal text-muted-foreground">
+                            (
+                            <PriceRenderer
+                                value={shippingMethod?.currency_price}
+                                currency={currency}
+                            />
+                            )
+                        </span>
+                    )}
+                </span>
             </div>
 
             <Separator className="my-4" />
 
             <div className="flex justify-between text-lg font-semibold">
                 <span>Total</span>
-                <PriceRenderer value={total} />
+                <span className="text-sm">
+                    <PriceRenderer value={total} />
+                    {currency !== "USD" && currencyTotal !== undefined && (
+                        <span className="ml-2 text-xs font-normal text-muted-foreground">
+                            (
+                            <PriceRenderer
+                                value={currencyTotal}
+                                currency={currency}
+                            />
+                            )
+                        </span>
+                    )}
+                </span>
             </div>
 
             <Button
