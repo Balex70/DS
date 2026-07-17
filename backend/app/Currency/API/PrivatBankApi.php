@@ -2,6 +2,7 @@
 
 namespace App\Currency\API;
 
+use App\Enums\CurrenciesEnum;
 use Illuminate\Support\Facades\Http;
 
 class PrivatBankApi
@@ -23,7 +24,7 @@ class PrivatBankApi
         }
 
         $usd = collect($apiResponse->json())
-            ->firstWhere('ccy', 'USD');
+            ->firstWhere('ccy', CurrenciesEnum::USD->value);
 
         if (!$usd) {
             throw new \Exception('USD exchange rate not found.');

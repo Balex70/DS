@@ -2,6 +2,7 @@
 namespace App\Currency\Contracts;
 
 use App\Currency\DTO\ExchangeRate;
+use App\Enums\CurrenciesEnum;
 
 interface CurrencyProviderInterface
 {
@@ -9,5 +10,5 @@ interface CurrencyProviderInterface
     
     public function getRate(string $from, string $to): ExchangeRate | null;
     
-    public function syncRate(string $from, string $to): void;
+    public function syncRate(CurrenciesEnum $from, CurrenciesEnum $to): void;
 }

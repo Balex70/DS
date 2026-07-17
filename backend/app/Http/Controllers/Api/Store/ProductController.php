@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Store;
 
 use App\Currency\Services\PriceConverter;
+use App\Enums\CurrenciesEnum;
 use App\Enums\LocalesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
@@ -67,7 +68,7 @@ class ProductController extends Controller
             $products->each(function (Product $product) use ($request) {
                 $product->currency_price = $this->converter->convert(
                     $product->price,
-                    'USD',
+                    CurrenciesEnum::USD->value,
                     $request->currency,
                 );
             });
@@ -90,13 +91,13 @@ class ProductController extends Controller
         if($request->filled('currency')) {
             $product->currency_price = $this->converter->convert(
                 $product->price,
-                'USD',
+                CurrenciesEnum::USD->value,
                 $request->currency,
             );
             $product->variants->each(function ($variant) use ($request) {
                 $variant->currency_price = $this->converter->convert(
                     $variant->price,
-                    'USD',
+                    CurrenciesEnum::USD->value,
                     $request->currency,
                 );
             });

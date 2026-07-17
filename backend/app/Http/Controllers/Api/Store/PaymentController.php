@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\Store;
 
+use App\Enums\CurrenciesEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Events\PaymentInitiated;
 use App\Http\Controllers\Controller;
@@ -31,7 +32,7 @@ class PaymentController extends Controller
                 orderId: $order->id,
                 public_token: $order->public_token,
                 amount: $order->total,
-                currency: $order->currency ?? 'USD',
+                currency: $order->currency ?? CurrenciesEnum::USD->value,
                 country: $order->shipping_country,
                 email: $order->shipping_email,
                 methods: [],

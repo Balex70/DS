@@ -38,7 +38,7 @@ class StoreOrderService
                 'shipping_cost' => $shipping,
                 'total' => $total,
 
-                'currency' => $data['currency'] ?? 'USD',
+                'currency' => $data['currency'] ?? CurrenciesEnum::USD->value,
                 'payment_method' => $data['payment_method'] ?? null,
 
                 'shipping_method' => $data['shipping_method'],

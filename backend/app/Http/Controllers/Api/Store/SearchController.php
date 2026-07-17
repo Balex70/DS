@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api\Store;
 
 use App\Currency\Services\PriceConverter;
+use App\Enums\CurrenciesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
@@ -49,7 +50,7 @@ class SearchController extends Controller
                 $products->each(function (Product $product) use ($request) {
                     $product->currency_price = $this->converter->convert(
                         $product->price,
-                        'USD',
+                        CurrenciesEnum::USD->value,
                         $request->currency,
                     );
                 });

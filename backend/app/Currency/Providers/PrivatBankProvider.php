@@ -1,9 +1,10 @@
 <?php
 namespace App\Currency\Providers;
 
+use App\Currency\API\PrivatBankApi;
 use App\Currency\Contracts\CurrencyProviderInterface;
 use App\Currency\DTO\ExchangeRate;
-use App\Currency\API\PrivatBankApi;
+use App\Enums\CurrenciesEnum;
 use App\Models\Currency;
 
 class PrivatBankProvider implements CurrencyProviderInterface
@@ -33,14 +34,14 @@ class PrivatBankProvider implements CurrencyProviderInterface
         );
     }
     
-    public function syncRate(string $from = 'USD', string $to = 'UAH'): void
+    public function syncRate(CurrenciesEnum $from = CurrenciesEnum::USD, CurrenciesEnum $to = CurrenciesEnum::UAH): void
     {
         $res = $this->privatBankApi->fetchUsdRate();
 
         $rate = (int) round($res['sale'] * ExchangeRate::SCALE);
         Currency::upsert([
-            'from_currency' => $from,
-            'to_currency' => $to,
+            'from_currency' => $from->value,
+            'to_currency' => $to->value,
             'rate' => $rate,
             'rate_updated_at' => now(),
         ], ['from_currency', 'to_currency'], ['rate', 'rate_updated_at']);
