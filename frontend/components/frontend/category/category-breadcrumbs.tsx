@@ -11,6 +11,7 @@ import {
 import { useCategories } from "@/hooks/use-categories";
 import { Category } from "@/types/category";
 import { useLocale } from "next-intl";
+import { Fragment } from "react";
 
 function buildBreadcrumbs(slug: string[], categories?: Category[], locale?: string) {
     return slug.map((segment, index) => {
@@ -38,21 +39,23 @@ export function CategoryBreadcrumbs({ slug }: { slug: string[] }) {
                 </BreadcrumbItem>
 
                 {items.map((item, index) => (
-                    <BreadcrumbItem key={item.href}>
+                    <Fragment key={item.href}>
                         <BreadcrumbSeparator />
 
-                        {index === items.length - 1 ? (
-                            <span className="font-medium text-foreground">
-                                {item.label}
-                            </span>
-                        ) : (
-                            <BreadcrumbLink asChild>
-                                <Link href={item.href}>
+                        <BreadcrumbItem>
+                            {index === items.length - 1 ? (
+                                <span className="font-medium text-foreground">
                                     {item.label}
-                                </Link>
-                            </BreadcrumbLink>
-                        )}
-                    </BreadcrumbItem>
+                                </span>
+                            ) : (
+                                <BreadcrumbLink asChild>
+                                    <Link href={item.href}>
+                                        {item.label}
+                                    </Link>
+                                </BreadcrumbLink>
+                            )}
+                        </BreadcrumbItem>
+                    </Fragment>
                 ))}
             </BreadcrumbList>
         </Breadcrumb>
