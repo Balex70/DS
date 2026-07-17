@@ -33,6 +33,11 @@ type PaginatedFilterResponse = {
     }
 }
 
+export type GetLatestProductsParams = {
+    locale?: string;
+    currency?: string;
+}
+
 export async function getProducts(
     params?: GetProductsParams
 ): Promise<PaginatedResponse<Product>> {
@@ -59,4 +64,14 @@ export async function getProductsFilters(
     });
 
     return response.data;
+}
+
+export async function getLatestProducts(
+    params?: GetLatestProductsParams
+): Promise<Product[]> {
+    const response = await api.get("/api/store/products/latest", {
+        params,
+    });
+
+    return response.data.data;
 }
