@@ -19,6 +19,8 @@ use Illuminate\Support\Str;
     'slug',
     'image',
     'full_path',
+    'active',
+    'is_visible',
 ])]
 class Category extends Model
 {

@@ -152,6 +152,9 @@ class ProductController extends Controller
         $query = Product::query();
         $query->whereNotNull('last_enrichment_at');
         $query->where('ai_status', 'done');
+        $query->whereHas('categories', function ($q) {
+            $q->where('is_visible', true);
+        });
         $query->with('cheapestVariant');
 
         if($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {

@@ -99,6 +99,9 @@ class CategoryController extends Controller
         Category::whereNotIn('id', $request->ids)
             ->update(['active' => false]);
 
+        // Recalculate category visibility
+        $this->categoryService->recalculateCategoryVisibility();
+
         return response()->json(['success' => true]);
     }
 

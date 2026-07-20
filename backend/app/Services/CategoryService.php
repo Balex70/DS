@@ -50,6 +50,40 @@ class CategoryService
         );
     }
 
+    public function recalculateCategoryVisibility() {
+        $categories = Category::all()->keyBy('id');
+
+        $children = [];
+
+        foreach ($categories as $category) {
+            $children[$category->parent_id][] = $category;
+        }
+
+        $this->updateChildren(
+            $children,
+            null,
+            true
+        );
+    }
+
+    private function updateChildren(array $children, ?int $parentId, bool $parentVisible): void
+    {
+        foreach ($children[$parentId] ?? [] as $category) {
+
+            $visible = $parentVisible && $category->active;
+
+            $category->update([
+                'is_visible' => $visible,
+            ]);
+
+            $this->updateChildren(
+                $children,
+                $category->id,
+                $visible
+            );
+        }
+    }
+
     private function getChildrenRecursively(Category $category, $allCategories): array
     {
         $slugs = [$category->slug];
