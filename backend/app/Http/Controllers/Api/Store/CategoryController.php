@@ -51,6 +51,9 @@ class CategoryController extends Controller
                 ->whereHas('categories', function ($q) use ($slugs) {
                     $q->whereIn('slug', $slugs);
                 })
+                ->whereHas('categories', function ($q) {
+                    $q->where('is_visible', true);
+                })
                 ->with([
                     'cheapestVariant',
                     'bigImage',
