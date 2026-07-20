@@ -85,6 +85,7 @@ Route::get('currency/sync-rate', [CurrencyController::class, 'syncRate'])->middl
 Route::prefix('store')->group(function () {
     // Categories
     Route::get('categories', [StoreCategoryController::class, 'index']);
+    Route::get('category-section', [StoreCategoryController::class, 'categorySection']);
 
     // Products
     Route::get('products', [StoreProductController::class, 'index']);

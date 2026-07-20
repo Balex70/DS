@@ -24,7 +24,10 @@ class StoreCategoryResource extends JsonResource
             'slug' => $this->slug,
             'image' => $this->image,
             'full_path' => $this->full_path,
-            'translations' => $this->translations
+            'translations' => $this->translations,
+            'products' => ProductResource::collection(
+                $this->whenLoaded('products')
+            )
         ];
         // return parent::toArray($request);
     }

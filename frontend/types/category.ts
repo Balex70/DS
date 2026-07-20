@@ -1,3 +1,5 @@
+import { Product } from "./product"
+
 export type Category = {
   id: number,
   name: string,
@@ -14,5 +16,6 @@ export type Category = {
     locale: string,
     name: string,
     description: string
-  }[]
+  }[],
+  products?: Product[]
 }
