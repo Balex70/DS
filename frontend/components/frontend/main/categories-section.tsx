@@ -1,11 +1,15 @@
 "use client";
 
+import { useCurrency } from "@/context/CurrencyContext";
 import { CategorySection } from "./category-section";
 import { useCategorySection } from "@/hooks/use-category-section";
 import { Category } from "@/types/category";
+import { useLocale } from "next-intl";
 
 export function CategoriesSection() {
-    const { data: categories, isLoading } = useCategorySection();    
+    const locale = useLocale();
+    const { currency } = useCurrency();
+    const { data: categories, isLoading } = useCategorySection({locale: locale, currency: currency});
     
     if (!categories?.length) {
         return null;

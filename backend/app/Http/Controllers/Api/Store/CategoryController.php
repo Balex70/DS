@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers\Api\Store;
 
+use App\Currency\Services\PriceConverter;
+use App\Enums\CurrenciesEnum;
+use App\Enums\LocalesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StoreCategoryResource;
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\CategoryService;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
     public function __construct(
-        protected CategoryService $categoryService
+        protected CategoryService $categoryService,
+        private PriceConverter $converter
     )
     {}
 
@@ -29,7 +34,7 @@ class CategoryController extends Controller
     /**
      * Display a listing for category section in home page
      */
-    public function categorySection()
+    public function categorySection(Request $request)
     {
         $categories = Category::query()
             ->where('active', true)
@@ -37,10 +42,10 @@ class CategoryController extends Controller
             ->with('translations')
             ->get();
 
-        $categories->each(function ($category) {
+        $categories->each(function ($category) use ($request) {
             $slugs = $this->categoryService->getChildrenSlugs($category->slug);
 
-            $products = Product::query()
+            $productsQuery = Product::query()
                 ->whereNotNull('last_enrichment_at')
                 ->where('ai_status', 'done')
                 ->whereHas('categories', function ($q) use ($slugs) {
@@ -49,10 +54,29 @@ class CategoryController extends Controller
                 ->with([
                     'cheapestVariant',
                     'bigImage',
-                ])
-                ->latest()
+                ]);
+
+            if($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
+                $locale = $request->locale ?? 'en';
+
+                $productsQuery->with([
+                    'translation' => fn ($q) => $q->where('locale', $locale),
+                ]);
+            }
+
+            $products = $productsQuery->latest()
                 ->limit(8)
                 ->get();
+
+            if($request->filled('currency')) {
+                $products->each(function (Product $product) use ($request) {
+                    $product->currency_price = $this->converter->convert(
+                        $product->price,
+                        CurrenciesEnum::USD->value,
+                        $request->currency,
+                    );
+                });
+            }
 
             $category->setRelation('products', $products);
         });
