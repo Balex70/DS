@@ -1,4 +1,4 @@
-import { CustomerMenu } from "./customer-menu";
+import { CustomerMenu } from "./customer/customer-menu";
 import Link from "next/link";
 import { MegaMenu } from "./megamenu/mega-menu";
 import { CartButton } from "./cart/cart-button";
