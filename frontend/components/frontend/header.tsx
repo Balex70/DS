@@ -8,20 +8,39 @@ import HeaderSwitcher from "./header-switcher";
 export function Header() {
     return (
         <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
-            <div className="container mx-auto flex h-16 items-center gap-4 px-4">
+            <div className="
+                container
+                mx-auto
+                flex
+                h-auto
+                flex-wrap
+                items-center
+                gap-3
+                px-4
+                py-3
+                md:h-16
+                md:flex-nowrap
+                md:py-0">
+
+                {/* Logo */}
                 <div className="text-xl font-bold">
-                    <Link href="/"><h3>CJ Store</h3></Link>
+                    <Link href="/">
+                        <h3>CJ Store</h3>
+                    </Link>
                 </div>
 
+                {/* Mega menu */}
                 <div className="shrink-0">
                     <MegaMenu />
                 </div>
 
-                <div className="flex-1">
+                {/* Search */}
+                <div className="order-last w-full md:order-none md:flex-1">
                     <Search />
                 </div>
 
-                <div className="flex items-center gap-2">
+                {/* Right actions */}
+                <div className="ml-auto flex items-center gap-2">
                     <HeaderSwitcher />
                     <CustomerMenu />
                     <CartButton />
