@@ -13,12 +13,14 @@ import { Locale } from "@/i18n/config";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../../ui/dropdown-menu";
 import { Check, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LOCALES } from "@/config/locales";
+import { CURRENCIES } from "@/config/currencies";
 
 export default function HeaderSwitcher() {
     const router = useRouter();
     const pathname = usePathname();
 
-    const locale = useLocale();
+    const activeLocale = useLocale();
     const { currency, setCurrency } = useCurrency();
 
     function switchLocale(nextLocale: Locale) {
@@ -32,49 +34,36 @@ export default function HeaderSwitcher() {
             <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost">
-                            <Globe /> {locale.toUpperCase()} / {currency}
+                            <Globe /> {activeLocale.toUpperCase()} / {currency}
                         </Button>
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent className="w-64">
 
                         <DropdownMenuLabel>Language</DropdownMenuLabel>
-
-                        <DropdownMenuItem onClick={() => switchLocale("en")}>
-                            <Check className={cn(
-                                "mr-2 h-4 w-4",
-                                locale === "en" ? "opacity-100" : "opacity-0"
-                            )}/>
-                            English
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem onClick={() => switchLocale("uk")}>
-                            <Check className={cn(
-                                "mr-2 h-4 w-4",
-                                locale === "uk" ? "opacity-100" : "opacity-0"
-                            )}/>
-                            Українська
-                        </DropdownMenuItem>
+                        {LOCALES.map(locale => (
+                            <DropdownMenuItem key={locale.code} onClick={() => switchLocale(locale.code)}>
+                                <Check className={cn(
+                                    "mr-2 h-4 w-4",
+                                    locale.code === activeLocale ? "opacity-100" : "opacity-0"
+                                )}/>
+                                {locale.label}
+                            </DropdownMenuItem>
+                        ))}
 
                         <DropdownMenuSeparator />
 
                         <DropdownMenuLabel>Currency</DropdownMenuLabel>
 
-                        <DropdownMenuItem onClick={() => setCurrency("USD")}>
-                            <Check className={cn(
-                                "mr-2 h-4 w-4",
-                                currency === "USD" ? "opacity-100" : "opacity-0"
-                            )}/>
-                            USD
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem onClick={() => setCurrency("UAH")}>
-                            <Check className={cn(
-                                "mr-2 h-4 w-4",
-                                currency === "UAH" ? "opacity-100" : "opacity-0"
-                            )}/>
-                            UAH
-                        </DropdownMenuItem>
+                        {CURRENCIES.map(cur => (
+                            <DropdownMenuItem key={cur.code} onClick={() => setCurrency(cur.code)}>
+                                <Check className={cn(
+                                    "mr-2 h-4 w-4",
+                                    cur.code === currency ? "opacity-100" : "opacity-0"
+                                )}/>
+                                {cur.label}
+                            </DropdownMenuItem>
+                        ))}
 
                     </DropdownMenuContent>
                 </DropdownMenu>
