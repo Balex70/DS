@@ -3,7 +3,7 @@ import Link from "next/link";
 import { MegaMenu } from "./megamenu/mega-menu";
 import { CartButton } from "./cart/cart-button";
 import { Search } from "./search/Search";
-import HeaderSwitcher from "./header-switcher";
+import HeaderSwitcher from "./switcher/header-switcher";
 
 export function Header() {
     return (
@@ -41,8 +41,11 @@ export function Header() {
 
                 {/* Right actions */}
                 <div className="ml-auto flex items-center gap-2">
-                    <HeaderSwitcher />
-                    <CustomerMenu />
+                    <div className="hidden md:flex items-center gap-2">
+                        <HeaderSwitcher />
+                        <CustomerMenu />
+                    </div>
+
                     <CartButton />
                 </div>
             </div>

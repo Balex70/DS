@@ -10,7 +10,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useCurrency } from "@/context/CurrencyContext";
 import { Locale } from "@/i18n/config";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../../ui/dropdown-menu";
 import { Check, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
 

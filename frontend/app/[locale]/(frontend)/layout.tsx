@@ -1,4 +1,5 @@
 import { Header } from "@/components/frontend/header";
+import { MobileBottomBar } from "@/components/frontend/mobile-bottom-bar";
 import { CurrencyContextWrapper } from "@/context/CurrencyContextWrapper";
 import { QueryProvider } from "@/providers/query-provider";
 import { NextIntlClientProvider } from 'next-intl';
@@ -18,6 +19,8 @@ export default function Layout({
                         <div className="container mx-auto px-4 py-6">
                             {children}
                         </div>
+
+                        <MobileBottomBar />
                     </div>
                 </QueryProvider>
             </CurrencyContextWrapper>
