@@ -1,5 +1,5 @@
 import { MaincategoriesSection } from "@/components/frontend/category/maincategories-section";
-import { HeroCarousel } from "@/components/frontend/hero-carousel";
+import { HeroCarousel } from "@/components/frontend/main/hero-carousel";
 import { CategoriesSection } from "@/components/frontend/main/categories-section";
 
 export default function HomePage() {

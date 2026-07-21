@@ -12,8 +12,8 @@ import Autoplay from "embla-carousel-autoplay";
 import { useLatestProducts } from "@/hooks/use-latest-products";
 import { useLocale } from "next-intl";
 import { useCurrency } from "@/context/CurrencyContext";
-import { PriceRenderer } from "../custom/PriceRenderer";
-import HeroCarouselImage from "../custom/HeroCarouselImage";
+import { PriceRenderer } from "@/components/custom/PriceRenderer";
+import HeroCarouselImage from "@/components/custom/HeroCarouselImage";
 
 export function HeroCarousel() {
     const locale = useLocale();
