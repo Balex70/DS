@@ -42,16 +42,11 @@ export function CategorySection({
                 </Button>
             </div>
 
-            <div className="flex flex-wrap gap-5">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                 {products.map((product) => (
                     <div
                         key={product.id}
-                        className="
-                            w-[calc(50%-0.5rem)]
-                            sm:w-[180px]
-                            md:w-[190px]
-                            lg:w-[200px]
-                            shrink-0"
+                        className="w-full"
                     >
                         <ProductCard product={product} />
                     </div>
