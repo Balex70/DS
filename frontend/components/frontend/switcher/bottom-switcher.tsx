@@ -45,7 +45,7 @@ export default function BottomSwitcher() {
 
             <SheetContent side="bottom" className="!h-dvh max-h-dvh w-full rounded-none">
                 <SheetHeader className="pb-0">
-                    <SheetTitle><Globe /> {locale.toUpperCase()} / {currency}</SheetTitle>
+                    <SheetTitle className="inline-flex items-center"><Globe className="mr-2 h-4 w-4" /> {locale.toUpperCase()} / {currency}</SheetTitle>
                 </SheetHeader>
                 
                 <Separator className="my-0" />
