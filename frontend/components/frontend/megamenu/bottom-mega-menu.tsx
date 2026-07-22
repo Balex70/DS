@@ -1,8 +1,8 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { LayoutGrid } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { LayoutGrid, X } from "lucide-react";
+import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { MobileCatalog } from "./mobile-catalog";
 import { useState } from "react";
@@ -28,7 +28,20 @@ export default function BottomMegaMenu() {
 
             <SheetContent side="bottom" className="!h-dvh max-h-dvh w-full rounded-none">
                 <SheetHeader className="pb-0">
-                    <SheetTitle>Catalog</SheetTitle>
+                    <div className="flex items-center justify-between">
+                        <SheetTitle className="inline-flex items-center">
+                            Catalog
+                        </SheetTitle>
+
+                        <SheetClose asChild>
+                            <Button
+                                variant="ghost"
+                                className="h-8 w-8 p-0"
+                            >
+                                <X className="!h-6 !w-6" />
+                            </Button>
+                        </SheetClose>
+                    </div>
                 </SheetHeader>
                 
                 <Separator className="my-0" />
