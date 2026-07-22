@@ -4,8 +4,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "next-intl";
 import { useCurrency } from "@/context/CurrencyContext";
-import { ShoppingCart, X } from "lucide-react";
-import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { ShoppingCart } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/use-cart";
 import { useClearCart } from "@/hooks/use-clear-cart";
@@ -13,6 +13,7 @@ import { CartItemPayload } from "@/types/cart";
 import { CartItemsDrawer } from "./CartItemsDrawer";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useState } from "react";
+import BottomSheetHeader from "../bottom-sheet-header";
 
 export default function BottomCart() {
     const locale = useLocale();
@@ -76,22 +77,7 @@ export default function BottomCart() {
             </SheetTrigger>
 
             <SheetContent side="bottom" className="!h-dvh max-h-dvh w-full rounded-none">
-                <SheetHeader className="pb-0">
-                    <div className="flex items-center justify-between">
-                        <SheetTitle className="inline-flex items-center">
-                            Cart
-                        </SheetTitle>
-
-                        <SheetClose asChild>
-                            <Button
-                                variant="ghost"
-                                className="h-8 w-8 p-0"
-                            >
-                                <X className="!h-6 !w-6" />
-                            </Button>
-                        </SheetClose>
-                    </div>
-                </SheetHeader>
+                <BottomSheetHeader>Cart</BottomSheetHeader>
                 
                 <Separator className="my-0" />
 

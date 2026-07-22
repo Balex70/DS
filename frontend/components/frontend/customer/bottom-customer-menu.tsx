@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { User, X } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { User } from "lucide-react";
+import BottomSheetHeader from "../bottom-sheet-header";
 
 export function BottomCustomerMenu() {
     return (
@@ -23,22 +24,7 @@ export function BottomCustomerMenu() {
             </SheetTrigger>
 
             <SheetContent side="bottom" className="!h-dvh max-h-dvh w-full rounded-none">
-                <SheetHeader className="pb-0">
-                    <div className="flex items-center justify-between">
-                        <SheetTitle className="inline-flex items-center">
-                            Customer
-                        </SheetTitle>
-
-                        <SheetClose asChild>
-                            <Button
-                                variant="ghost"
-                                className="h-8 w-8 p-0"
-                            >
-                                <X className="!h-6 !w-6" />
-                            </Button>
-                        </SheetClose>
-                    </div>
-                </SheetHeader>
+                <BottomSheetHeader>Customer</BottomSheetHeader>
                 
                 <Separator className="my-0" />
 
