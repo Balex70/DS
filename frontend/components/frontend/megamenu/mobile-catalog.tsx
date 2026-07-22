@@ -6,7 +6,7 @@ import { Category } from "@/types/category";
 import { MobileCategoryGrid } from "./mobile-category-grid";
 import { MobileSubcategoryGrid } from "./mobile-subcategory-grid";
 
-export function MobileCatalog() {
+export function MobileCatalog({onClose}: {onClose: () => void}) {
     const { data: categories, isLoading } = useCategories();
     const [selectedRoot, setSelectedRoot] = useState<Category | null>(null);
     const maincategories = categories?.filter((c) => c.parent_id === null);
@@ -31,6 +31,7 @@ export function MobileCatalog() {
             root={selectedRoot}
             categories={categories ?? []}
             onBack={() => setSelectedRoot(null)}
+            onClose={onClose}
         />
     );
 }

@@ -17,12 +17,14 @@ interface Props {
     root: Category;
     categories: Category[];
     onBack: () => void;
+    onClose: () => void
 }
 
 export function MobileSubcategoryGrid({
     root,
     categories,
     onBack,
+    onClose
 }: Props) {
     const locale = useLocale();
     const rootTranslation = root?.translations.find((item) => item.locale === locale);
@@ -95,6 +97,7 @@ export function MobileSubcategoryGrid({
                                                 key={third.id}
                                                 href={`/category/${third.full_path}`}
                                                 className="px-8 py-3 text-sm text-muted-foreground hover:bg-muted"
+                                                onClick={onClose}
                                             >
                                                 {thirdTranslation?.name ?? third.name}
                                             </Link>
@@ -103,6 +106,7 @@ export function MobileSubcategoryGrid({
                                 </div>
                                 <Link
                                     href={`/category/${second.full_path}`}
+                                    onClick={onClose}
                                     className="
                                         mt-2
                                         flex

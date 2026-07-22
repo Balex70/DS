@@ -5,10 +5,12 @@ import { LayoutGrid } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { MobileCatalog } from "./mobile-catalog";
+import { useState } from "react";
 
 export default function BottomMegaMenu() {
+    const [open, setOpen] = useState(false);
     return (
-        <Sheet>
+        <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
                 <Button
                     variant="ghost"
@@ -32,7 +34,7 @@ export default function BottomMegaMenu() {
                 <Separator className="my-0" />
 
                 <div className="flex-1 min-h-0">
-                    <MobileCatalog />
+                    <MobileCatalog onClose={() => setOpen(false)}/>
                 </div>
             </SheetContent>
         </Sheet>
