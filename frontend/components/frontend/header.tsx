@@ -23,7 +23,7 @@ export function Header() {
                 md:py-0">
 
                 {/* Logo */}
-                <div className="text-xl font-bold">
+                <div className="order-2 shrink-0 text-xl font-bold sm:order-none">
                     <Link href="/">
                         <h3>CJ Store</h3>
                     </Link>
@@ -35,7 +35,7 @@ export function Header() {
                 </div>
 
                 {/* Search */}
-                <div className="order-last w-full md:order-none md:flex-1">
+                <div className="order-3 flex-1 min-w-0 sm:order-none md:flex-1">
                     <Search />
                 </div>
 
