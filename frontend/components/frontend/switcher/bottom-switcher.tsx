@@ -5,8 +5,8 @@ import { useRouter, usePathname } from "next/navigation";
 import { useLocale } from "next-intl";
 import { useCurrency } from "@/context/CurrencyContext";
 import { Locale } from "@/i18n/config";
-import { Globe } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Globe, X } from "lucide-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -43,9 +43,23 @@ export default function BottomSwitcher() {
                 </Button>
             </SheetTrigger>
 
-            <SheetContent side="bottom" className="!h-dvh max-h-dvh w-full rounded-none">
+            <SheetContent side="bottom" className="!h-dvh max-h-dvh w-full rounded-none" showCloseButton={false}>
                 <SheetHeader className="pb-0">
-                    <SheetTitle className="inline-flex items-center"><Globe className="mr-2 h-4 w-4" /> {locale.toUpperCase()} / {currency}</SheetTitle>
+                    <div className="flex items-center justify-between">
+                        <SheetTitle className="inline-flex items-center">
+                            <Globe className="mr-2 h-4 w-4" />
+                            {locale.toUpperCase()} / {currency}
+                        </SheetTitle>
+
+                        <SheetClose asChild>
+                            <Button
+                                variant="ghost"
+                                className="h-8 w-8 p-0"
+                            >
+                                <X className="!h-6 !w-6" />
+                            </Button>
+                        </SheetClose>
+                    </div>
                 </SheetHeader>
                 
                 <Separator className="my-0" />
