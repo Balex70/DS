@@ -2,6 +2,7 @@
 
 import { Separator } from "../ui/separator";
 import { BottomCustomerMenu } from "./customer/bottom-customer-menu";
+import BottomMegaMenu from "./megamenu/bottom-mega-menu";
 import BottomSwitcher from "./switcher/bottom-switcher";
 
 export function MobileBottomBar() {
@@ -21,6 +22,8 @@ export function MobileBottomBar() {
             md:hidden
             pb-[env(safe-area-inset-bottom)]
             ">
+            <BottomMegaMenu />
+            <Separator orientation="vertical" className="!h-10 !self-center" />
             <BottomSwitcher />
             <Separator orientation="vertical" className="!h-10 !self-center" />
             <BottomCustomerMenu />

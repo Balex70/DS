@@ -9,6 +9,7 @@ export type Category = {
   parent_id?: number,
   children?: Category[],
   active: boolean,
+  is_visible: boolean,
   slug: string,
   image: string,
   full_path: string,

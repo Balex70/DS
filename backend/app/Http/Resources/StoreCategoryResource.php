@@ -21,6 +21,7 @@ class StoreCategoryResource extends JsonResource
             'parent_id' => $this->parent_id,
             'provider' => $this->provider,
             'active' => $this->active,
+            'is_visible' => $this->is_visible,
             'slug' => $this->slug,
             'image' => $this->image,
             'full_path' => $this->full_path,
