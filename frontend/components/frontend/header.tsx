@@ -44,9 +44,8 @@ export function Header() {
                     <div className="hidden md:flex items-center gap-2">
                         <HeaderSwitcher />
                         <CustomerMenu />
+                        <CartButton />
                     </div>
-
-                    <CartButton />
                 </div>
             </div>
         </header>

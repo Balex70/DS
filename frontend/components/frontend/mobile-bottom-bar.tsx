@@ -1,6 +1,7 @@
 'use client';
 
 import { Separator } from "../ui/separator";
+import BottomCart from "./cart/bottom-cart";
 import { BottomCustomerMenu } from "./customer/bottom-customer-menu";
 import BottomMegaMenu from "./megamenu/bottom-mega-menu";
 import BottomSwitcher from "./switcher/bottom-switcher";
@@ -27,6 +28,8 @@ export function MobileBottomBar() {
             <BottomSwitcher />
             <Separator orientation="vertical" className="!h-10 !self-center" />
             <BottomCustomerMenu />
+            <Separator orientation="vertical" className="!h-10 !self-center" />
+            <BottomCart />
         </div>
     );
 }
