@@ -30,7 +30,7 @@ export function Header() {
                 </div>
 
                 {/* Mega menu */}
-                <div className="shrink-0">
+                <div className="hidden md:block shrink-0">
                     <MegaMenu />
                 </div>
 
