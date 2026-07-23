@@ -18,7 +18,7 @@ function buildBreadcrumbs(slug: string[], categories?: Category[], locale?: stri
         const category = categories?.find((c) => c.slug === segment);
         const translation = category?.translations.find((item) => item.locale === locale);
         return {
-            label: (translation?.name ?? category?.name) || segment,
+            label: ((translation?.name != undefined && translation?.name != '') ? translation?.name : category?.name) || segment,
             href: "/category/" + slug.slice(0, index + 1).join("/"),
         };
     });
