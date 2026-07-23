@@ -4,6 +4,7 @@ import { MegaMenu } from "./megamenu/mega-menu";
 import { CartButton } from "./cart/cart-button";
 import { Search } from "./search/Search";
 import HeaderSwitcher from "./switcher/header-switcher";
+import { MobileSearch } from "./search/mobile-search";
 
 export function Header() {
     return (
@@ -35,8 +36,11 @@ export function Header() {
                 </div>
 
                 {/* Search */}
-                <div className="order-3 flex-1 min-w-0 sm:order-none md:flex-1">
+                <div className="hidden md:flex flex-1 min-w-0 order-none">
                     <Search />
+                </div>
+                <div className="flex flex-1 min-w-0 order-3 md:hidden">
+                    <MobileSearch />
                 </div>
 
                 {/* Right actions */}
