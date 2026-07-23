@@ -69,6 +69,7 @@ export function MobileSubcategoryGrid({
                                 key={second.id}
                                 href={`/category/${second.full_path}`}
                                 className="flex h-12 items-center border-b px-4 text-sm font-medium hover:bg-muted"
+                                onClick={onClose}
                             >
                                 {secondTranslation?.name ?? second.name}
                             </Link>
