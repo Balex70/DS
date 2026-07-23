@@ -40,12 +40,6 @@ export function MobileSearch() {
                         className="self-stretch flex p-0"
                         >
                         <InputGroupButton
-                            size="icon-xs"
-                            aria-label="Clear"
-                            onClick={() => setOpen(true)}>
-                            <X />
-                        </InputGroupButton>
-                        <InputGroupButton
                             className="h-full px-3 !rounded-r-md mr-1 bg-sky-500 hover:bg-sky-600 text-white"
                             variant="secondary"
                             type="submit"

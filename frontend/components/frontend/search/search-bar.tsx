@@ -8,6 +8,7 @@ import {
     InputGroupButton,
     InputGroupInput,
 } from "@/components/ui/input-group";
+import { Separator } from "@/components/ui/separator";
 
 type SearchBarProps = {
     value: string;
@@ -49,12 +50,19 @@ export function SearchBar({
                     align="inline-end"
                     className="self-stretch flex p-0"
                     >
-                    <InputGroupButton
-                        size="icon-xs"
-                        aria-label="Clear"
-                        onClick={() => onChange("")}>
-                        <X />
-                    </InputGroupButton>
+                    {value &&
+                        <>
+                            <InputGroupButton
+                                size="icon-xs"
+                                aria-label="Clear"
+                                onClick={() => onChange("")}
+                            >
+                                <X />
+                            </InputGroupButton>
+
+                            <Separator orientation="vertical" className="my-2 self-stretch" />
+                        </>
+                    }
                     <InputGroupButton
                         className="h-full px-3 !rounded-r-md mr-1 bg-sky-500 hover:bg-sky-600 text-white"
                         variant="secondary"
