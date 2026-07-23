@@ -66,7 +66,7 @@ export function CategoryComponent({ slug }: Props) {
             </aside>
 
             <main className="min-w-0 flex-1">
-                <div className="space-y-6">
+                <div className="space-y-3 lg:space-y-6">
                     {/* Header / Category Info */}
                     <CategoryHeaderSection slug={slug} />
 
