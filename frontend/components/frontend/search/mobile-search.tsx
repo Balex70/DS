@@ -6,7 +6,7 @@ import { useState } from "react";
 import { SearchBar } from "./search-bar";
 import { useRouter } from "next/navigation";
 import { useCurrency } from "@/context/CurrencyContext";
-import { X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { Sheet, SheetClose, SheetContent, SheetHeader } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -35,20 +35,24 @@ export function MobileSearch() {
                         onFocus={() => setOpen(true)}
                         placeholder="Search..."
                     />
-                    <InputGroupAddon align="inline-end">
-                    <InputGroupButton
-                        size="icon-xs"
-                        aria-label="Clear"
-                        onClick={() => setOpen(true)}>
-                        <X />
-                    </InputGroupButton>
-                    <InputGroupButton
-                        variant="secondary"
-                        type="submit"
-                        onClick={() => setOpen(true)}
+                    <InputGroupAddon
+                        align="inline-end"
+                        className="self-stretch flex p-0"
                         >
-                        Search
-                    </InputGroupButton>
+                        <InputGroupButton
+                            size="icon-xs"
+                            aria-label="Clear"
+                            onClick={() => setOpen(true)}>
+                            <X />
+                        </InputGroupButton>
+                        <InputGroupButton
+                            className="h-full px-3 !rounded-r-md mr-1 bg-sky-500 hover:bg-sky-600 text-white"
+                            variant="secondary"
+                            type="submit"
+                            onClick={() => setOpen(true)}
+                            >
+                            <Search className="!h-5 !w-5" />
+                        </InputGroupButton>
                     </InputGroupAddon>
                 </InputGroup>
             </form>
