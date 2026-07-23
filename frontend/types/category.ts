@@ -20,3 +20,5 @@ export type Category = {
   }[],
   products?: Product[]
 }
+
+export type SortSelectValue = "latest" | "price_asc" | "price_desc";

@@ -12,6 +12,7 @@ import { SortSelect } from "./SortSelect";
 import { useLocale } from 'next-intl';
 import { CategoryFooterSection } from "./category-footer-section";
 import { useCurrency } from "@/context/CurrencyContext";
+import { MobileSortSelect } from "./MobileSortSelect";
 
 type Props = {
     slug: string[];
@@ -76,7 +77,15 @@ export function CategoryComponent({ slug }: Props) {
                     <Separator />
 
                     <div className="px-2 mb-2">
-                        <SortSelect value={sort} onChange={setSort} />
+                        {/* Desktop */}
+                        <div className="hidden sm:block">
+                            <SortSelect value={sort} onChange={setSort} />
+                        </div>
+
+                        {/* Mobile */}
+                        <div className="block justify-end sm:hidden">
+                            <MobileSortSelect value={sort} onChange={setSort} />
+                        </div>
                     </div>
                     {/* Products */}
                     <ProductsSection

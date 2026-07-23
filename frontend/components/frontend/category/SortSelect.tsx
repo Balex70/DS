@@ -7,13 +7,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { SortSelectValue } from "@/types/category";
 import { ArrowUpDown } from "lucide-react";
 
-type SortValue = "latest" | "price_asc" | "price_desc";
-
 type Props = {
-    value: SortValue;
-    onChange: (value: SortValue) => void;
+    value: SortSelectValue;
+    onChange: (value: SortSelectValue) => void;
 };
 
 export function SortSelect({ value, onChange }: Props) {
