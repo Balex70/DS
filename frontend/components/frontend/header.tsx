@@ -5,6 +5,7 @@ import { CartButton } from "./cart/cart-button";
 import { Search } from "./search/Search";
 import HeaderSwitcher from "./switcher/header-switcher";
 import { MobileSearch } from "./search/mobile-search";
+import Image from "next/image";
 
 export function Header() {
     return (
@@ -18,15 +19,33 @@ export function Header() {
                 items-center
                 gap-3
                 px-4
-                py-3
+                py-1
                 md:h-16
                 md:flex-nowrap
                 md:py-0">
 
                 {/* Logo */}
-                <div className="order-2 shrink-0 text-xl font-bold sm:order-none">
+                <div className="order-2 shrink-0 sm:order-none">
                     <Link href="/">
-                        <h3>CJ Store</h3>
+                        {/* Desktop */}
+                        <Image
+                            src="/logo.svg"
+                            alt="CJ Store"
+                            width={55}
+                            height={55}
+                            className="hidden md:block"
+                            priority
+                        />
+
+                        {/* Mobile */}
+                        <Image
+                            src="/mobile_logo.svg"
+                            alt="CJ Store mobile"
+                            width={50}
+                            height={50}
+                            className="block md:hidden"
+                            priority
+                        />
                     </Link>
                 </div>
 
