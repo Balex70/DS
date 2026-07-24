@@ -8,6 +8,8 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useLocale } from 'next-intl';
 import { useCurrency } from "@/context/CurrencyContext";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import MobileVariantSelector from "./mobile-variant-selector";
 
 type Props = {
     productId: string;
@@ -17,7 +19,7 @@ export function ProductDetail({ productId }: Props) {
     const { currency } = useCurrency();
     const { data: product, error, isLoading } = useProduct(productId, currency);
     const { mutate: addToCart, isPending } = useAddToCart();
-    const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
+    const [selectedVariantId, setSelectedVariantId] = useState<number | null>(null);
     const locale = useLocale();
 
     if (error?.response?.status === 404) {
@@ -102,50 +104,6 @@ export function ProductDetail({ productId }: Props) {
                     )}
                 </div>
 
-                <div>
-                    {(selectedVariant?.stock ?? product.warehouse_inventory_num) > 0 ? (
-                        <p className="text-green-600">In stock</p>
-                    ) : (
-                        <p className="text-red-500">Out of stock</p>
-                    )}
-                </div>
-
-                {/* DESCRIPTION (if you have it) */}
-                {product.description_processed && (
-                    <div className="prose max-w-none text-sm text-muted-foreground">
-                        {translation?.description ?? product.description_processed ?? product.description_raw}
-                    </div>
-                )}
-
-                {product.variants?.length > 0 && (
-                    <div className="space-y-2">
-                        <div className="text-sm font-medium text-muted-foreground">
-                            Variant
-                        </div>
-
-                        <div className="flex flex-wrap gap-2">
-                            {product.variants.map((variant) => {
-                                const isSelected = variant.id === activeVariantId;
-
-                                return (
-                                    <button
-                                        key={variant.id}
-                                        onClick={() => setSelectedVariantId(variant.id)}
-                                        className={cn(
-                                            "rounded-lg border px-3 py-1.5 text-sm transition-all",
-                                            isSelected
-                                                ? "cursor-default border-green-600 bg-green-50 text-black"
-                                                : "cursor-pointer border-muted bg-background text-foreground hover:border-gray-100 hover:bg-gray-100 hover:text-black"
-                                        )}
-                                    >
-                                        {variant.key}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
-                )}
-
                 {/* ACTIONS */}
                 <div className="flex gap-3 pt-4">
                     <button
@@ -155,11 +113,71 @@ export function ProductDetail({ productId }: Props) {
                     >
                         {isPending ? "Adding..." : "Add to cart"}
                     </button>
-
-                    <button className="rounded-md border px-4 py-2">
-                        Buy now
-                    </button>
                 </div>
+
+                {product.variants?.length > 0 && (
+                    <div className="space-y-2">
+                        <div className="text-sm font-medium text-muted-foreground">
+                            Options
+                        </div>
+                        {product.variants?.length > 10 ? (
+                            <>
+                                <div className="hidden lg:block">
+                                    <Select
+                                        value={activeVariantId?.toString()}
+                                        onValueChange={(value) => setSelectedVariantId(Number(value))}
+                                        >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select variant" />
+                                        </SelectTrigger>
+
+                                        <SelectContent>
+                                            {product.variants.map((variant) => (
+                                                <SelectItem
+                                                    key={variant.id}
+                                                    value={variant.id.toString()}
+                                                >
+                                                    {variant.key}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="lg:hidden">
+                                    <MobileVariantSelector variants={product.variants} selectedVariant={selectedVariant} setSelectedVariantId={setSelectedVariantId} />
+                                </div>
+                            </>
+                        ) : (
+                            <div className="flex flex-wrap gap-2">
+                                {product.variants.map((variant) => {
+                                    const isSelected = variant.id === activeVariantId;
+
+                                    return (
+                                        <button
+                                            key={variant.id}
+                                            onClick={() => setSelectedVariantId(variant.id)}
+                                            className={cn(
+                                                "rounded-2xl border px-3 py-1.5 text-sm transition-all",
+                                                isSelected
+                                                    ? "cursor-default border-green-600 bg-green-50 text-black"
+                                                    : "cursor-pointer border-muted bg-background text-foreground hover:border-gray-100 hover:bg-gray-100 hover:text-black"
+                                            )}
+                                        >
+                                            {variant.key}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* DESCRIPTION (if you have it) */}
+                {product.description_processed && (
+                    <div className="prose max-w-none text-sm text-muted-foreground">
+                        {translation?.description ?? product.description_processed ?? product.description_raw}
+                    </div>
+                )}
             </div>
         </div>
     );

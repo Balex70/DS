@@ -1,5 +1,5 @@
 export type Product = {
-  id: string,
+  id: number,
   name_raw: string,
   name_processed: string,
   sku: string,
@@ -54,8 +54,8 @@ export type ProductTranslation = {
 }
 
 export type ProductVariant = {
-    id: string;
-    product_id: string;
+    id: number;
+    product_id: number;
     external_id: string;
     sku: string;
     name: string;
