@@ -7,7 +7,7 @@ export default async function ProductPage({
 }) {
     const { id } = await params;
     return (
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto pb-12">
             <ProductDetail productId={id} />
         </div>
     );
