@@ -11,7 +11,8 @@ type PriceFilterProps = {
     max: number;
     value: [number, number];
     onChange: (value: [number, number]) => void;
-    setPriceApplied: () => void
+    setPriceApplied: () => void;
+    buttonActive?: boolean
 };
 
 export function PriceFilter({
@@ -19,7 +20,8 @@ export function PriceFilter({
     max,
     value,
     onChange,
-    setPriceApplied
+    setPriceApplied,
+    buttonActive
 }: PriceFilterProps) {
     const toDisplay = (cents: number) => (cents / 100).toString();
     const toCents = (value: number) => Math.round(value * 100);
@@ -101,15 +103,17 @@ export function PriceFilter({
                     className="text-sm"
                 />
             </div>
-            <Button
-                className="w-full mb-0"
-                onClick={() => {
-                    // trigger request to backend with actual price data
-                    setPriceApplied()
-                }}
-            >
-                Apply
-            </Button>
+            {buttonActive &&
+                <Button
+                    className="w-full mb-0"
+                    onClick={() => {
+                        // trigger request to backend with actual price data
+                        setPriceApplied()
+                    }}
+                >
+                    Apply
+                </Button>
+            }
             <Separator className="my-4" />
         </div>
     );

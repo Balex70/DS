@@ -40,6 +40,7 @@ export function CategorySidebar({
                         value={price}
                         onChange={onPriceChange}
                         setPriceApplied={setPriceApplied}
+                        buttonActive={true}
                         />
 
                     <MaterialsFilter

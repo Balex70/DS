@@ -28,7 +28,7 @@ export function MobileSortSelect({ value, onChange }: Props) {
             <SheetTrigger asChild>
                 <Button
                     variant="ghost"
-                    className="h-9 rounded-md border border-input bg-background px-3 shadow-xs hover:bg-accent"
+                    className="h-9 rounded-2xl border border-input bg-background px-3 shadow-xs hover:bg-accent"
                     >
                     <ArrowUpDown className="mr-2 h-4 w-4 text-muted-foreground" />
                     {selected?.label} 

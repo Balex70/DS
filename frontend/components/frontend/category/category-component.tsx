@@ -14,6 +14,7 @@ import { CategoryFooterSection } from "./category-footer-section";
 import { useCurrency } from "@/context/CurrencyContext";
 import { MobileSortSelect } from "./MobileSortSelect";
 import { SortSelectValue } from "@/types/category";
+import { MobileCategorySidebar } from "./MobileCategorySidebar";
 
 type Props = {
     slug: string[];
@@ -79,13 +80,27 @@ export function CategoryComponent({ slug }: Props) {
 
                     <div className="px-2 mb-2">
                         {/* Desktop */}
-                        <div className="hidden sm:block">
+                        <div className="hidden lg:block">
                             <SortSelect value={sort} onChange={setSort} />
                         </div>
 
                         {/* Mobile */}
-                        <div className="block justify-end sm:hidden">
-                            <MobileSortSelect value={sort} onChange={setSort} />
+                        <div className="flex items-center justify-between lg:hidden">
+                            <MobileCategorySidebar
+                                minPrice={minPrice}
+                                maxPrice={maxPrice}
+                                price={priceDraft}
+                                activeMaterials={activeMaterials}
+                                materialsOptions={filterData?.materials ?? []}
+                                onPriceChange={setPriceDraft}
+                                setPriceApplied={() => setPrice(priceDraft)}
+                                setActiveMaterials={setActiveMaterials}
+                            />
+
+                            <MobileSortSelect
+                                value={sort}
+                                onChange={setSort}
+                            />
                         </div>
                     </div>
                     {/* Products */}
