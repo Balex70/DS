@@ -6,6 +6,7 @@ import { Search } from "./search/Search";
 import HeaderSwitcher from "./switcher/header-switcher";
 import { MobileSearch } from "./search/mobile-search";
 import Image from "next/image";
+import MbMegaMenu from "./megamenu/md-mega-menu";
 
 export function Header() {
     return (
@@ -50,8 +51,11 @@ export function Header() {
                 </div>
 
                 {/* Mega menu */}
-                <div className="hidden md:block shrink-0">
+                <div className="hidden lg:block shrink-0">
                     <MegaMenu />
+                </div>
+                <div className="hidden md:block lg:hidden shrink-0">
+                    <MbMegaMenu />
                 </div>
 
                 {/* Search */}

@@ -9,23 +9,19 @@ import { useState } from "react";
 import BottomSheetHeader from "../bottom-sheet-header";
 import { useTranslations } from 'next-intl'
 
-export default function BottomMegaMenu() {
+export default function MbMegaMenu() {
     const [open, setOpen] = useState(false);
     const t = useTranslations('frontend')
+
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
                 <Button
-                    variant="ghost"
-                    className="h-full flex-1 rounded-none"
+                    variant="outline"
+                    className="gap-2"
                 >
-                    <div className="flex flex-col items-center gap-1">
-                        <LayoutGrid className="h-6 w-6 text-muted-foreground" />
-
-                        <span className="text-xs text-muted-foreground">
-                            {t('header.catalog')}
-                        </span>
-                    </div>
+                    <LayoutGrid className="h-4 w-4" />
+                    {t('header.catalog')}
                 </Button>
             </SheetTrigger>
 

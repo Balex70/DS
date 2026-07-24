@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight, Menu } from "lucide-react";
+import { ChevronRight, LayoutGrid } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -58,7 +58,7 @@ export function MegaMenu() {
                 variant="outline"
                 className="gap-2"
             >
-                <Menu className="h-4 w-4" />
+                <LayoutGrid className="h-4 w-4" />
                 {t('header.catalog')}
             </Button>
         );
@@ -71,7 +71,7 @@ export function MegaMenu() {
                     variant="outline"
                     className="gap-2"
                 >
-                    <Menu className="h-4 w-4" />
+                    <LayoutGrid className="h-4 w-4" />
                     {t('header.catalog')}
                 </Button>
             </PopoverTrigger>
