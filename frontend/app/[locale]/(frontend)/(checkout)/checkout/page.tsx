@@ -2,7 +2,7 @@ import { CheckoutComponent } from "@/components/frontend/checkout/checkout-compo
 
 export default async function CheckoutPage() {
     return (
-        <div className="container mx-auto mb-12">
+        <div className="container mx-auto mb-2">
             <CheckoutComponent />
         </div>
     );
