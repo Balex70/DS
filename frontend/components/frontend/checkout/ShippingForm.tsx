@@ -9,6 +9,7 @@ import { ShippingMethodsSelector } from "./ShippingMethodsSelector";
 import { FinalCarriers } from "./FinalCarriers";
 import { useCurrency } from "@/context/CurrencyContext";
 import { SelectCountryForm } from "./SelectCountryForm";
+import MobileSelectCountryForm from "./MobileSelectCountryForm";
 
 type Props = {
     form: OrderPayload;
@@ -199,12 +200,24 @@ export function ShippingForm({
                     </div>
 
                     <div className="space-y-1">
-                        <SelectCountryForm
-                            form={form}
-                            setForm={setForm}
-                            setShippingMethod={setShippingMethod}
-                            setPayload={setPayload}
-                        />
+                        <div className="hidden md:block">
+                            <SelectCountryForm
+                                form={form}
+                                setForm={setForm}
+                                setShippingMethod={setShippingMethod}
+                                setPayload={setPayload}
+                            />
+                        </div>
+
+                        <div className="md:hidden">
+                            <MobileSelectCountryForm
+                                form={form}
+                                setForm={setForm}
+                                setShippingMethod={setShippingMethod}
+                                setPayload={setPayload}
+                            />
+                        </div>
+
                         {getError("shipping_country") && (
                             <p className="text-sm text-red-500 mt-1">
                                 {getError("shipping_country")}
