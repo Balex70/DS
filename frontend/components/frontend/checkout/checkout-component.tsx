@@ -33,6 +33,7 @@ export function CheckoutComponent() {
     const [checkoutOpen, setCheckoutOpen] = useState(false);
     const [checkoutStatus, setCheckoutStatus] = useState<CheckoutStatus>("idle");
     const [errors, setErrors] = useState<Record<string, string[]>>({});
+    const [shippingFormValid, setShippingFormValid] = useState<boolean>(false);
 
     const items = cart?.items ?? [];
 
@@ -155,7 +156,16 @@ export function CheckoutComponent() {
 
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
                 {/* LEFT */}
-                <ShippingForm form={form} setForm={setForm} setCheckoutStatus={setCheckoutStatus} shippingMethod={shippingMethod} setShippingMethod={setShippingMethod} cartKey={cartKey} errors={errors} />
+                <ShippingForm
+                    form={form}
+                    setForm={setForm}
+                    setCheckoutStatus={setCheckoutStatus}
+                    shippingMethod={shippingMethod}
+                    setShippingMethod={setShippingMethod}
+                    cartKey={cartKey}
+                    errors={errors}
+                    setShippingFormValid={setShippingFormValid}
+                    />
 
                 {/* RIGHT */}
                 <div className="space-y-6">
@@ -164,6 +174,7 @@ export function CheckoutComponent() {
                     <PaymentInfo gateway={gateway} isLoading={isLoading} />
 
                     <OrderSummary
+                        shippingFormValid={shippingFormValid}
                         country={form.shipping_country}
                         subtotal={subtotal}
                         currencySubtotal={currencySubtotal}

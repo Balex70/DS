@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useShippingCalculate } from "@/hooks/use-shipping-calculate";
 import { ShippingMethod } from "@/types/shipping";
@@ -10,6 +10,8 @@ import { FinalCarriers } from "./FinalCarriers";
 import { useCurrency } from "@/context/CurrencyContext";
 import { SelectCountryForm } from "./SelectCountryForm";
 import MobileSelectCountryForm from "./MobileSelectCountryForm";
+import { checkoutSchemaValidation, CheckoutValidationType } from "@/helpers/validators/checkout-schema-validation";
+import { z } from "zod";
 
 type Props = {
     form: OrderPayload;
@@ -18,7 +20,8 @@ type Props = {
     shippingMethod: ShippingMethod | undefined;
     setShippingMethod: (method: ShippingMethod | undefined) => void;
     cartKey: string | undefined;
-    errors: Record<string, string[]>
+    errors: Record<string, string[]>;
+    setShippingFormValid: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 export function ShippingForm({
@@ -28,7 +31,8 @@ export function ShippingForm({
     shippingMethod,
     setShippingMethod,
     cartKey,
-    errors
+    errors,
+    setShippingFormValid
 }: Props) {
     const [payload, setPayload] = useState<{
         shipping_country: string;
@@ -36,7 +40,16 @@ export function ShippingForm({
     } | null>(null);
     const { currency } = useCurrency();
     const { data: shippingOptions = [], isLoading, isFetching } =  useShippingCalculate(payload, cartKey, currency);
-    const getError = (field: string) => errors[field]?.[0];
+
+    const feValidationResult = checkoutSchemaValidation.safeParse(form);
+    const feErrors = feValidationResult.success
+        ? {}
+        : z.flattenError(feValidationResult.error).fieldErrors;
+    const getFieldError = (field: keyof OrderPayload) => feErrors[field as keyof CheckoutValidationType]?.[0] ?? errors[field]?.[0];
+
+    const isFormValid = useMemo(() => {
+        return checkoutSchemaValidation.safeParse(form).success;
+    }, [form]);
 
     // trigger shipping calculation when address changes
     useEffect(() => {
@@ -72,6 +85,10 @@ export function ShippingForm({
         setShippingMethod(shippingOptions[0]);
     }, [shippingOptions, shippingMethod, setShippingMethod]);
 
+    useEffect(() => {
+        setShippingFormValid(isFormValid);
+    }, [isFormValid, setShippingFormValid]);
+
     const onFieldChange = <K extends keyof OrderPayload>(field: K, value: OrderPayload[K]) => {
         setForm(prev => ({ ...prev, [field]: value }));
         setCheckoutStatus("idle");
@@ -97,9 +114,9 @@ export function ShippingForm({
                         value={form.shipping_full_name}
                         onChange={(e) => onFieldChange("shipping_full_name", e.target.value)}
                     />
-                    {getError("shipping_full_name") && (
+                    {getFieldError("shipping_full_name") && (
                         <p className="text-sm text-red-500">
-                            {getError("shipping_full_name")}
+                            {getFieldError("shipping_full_name")}
                         </p>
                     )}
                 </div>
@@ -110,9 +127,9 @@ export function ShippingForm({
                         value={form.shipping_phone}
                         onChange={(e) => onFieldChange("shipping_phone", e.target.value)}
                     />
-                    {getError("shipping_phone") && (
+                    {getFieldError("shipping_phone") && (
                         <p className="text-sm text-red-500">
-                            {getError("shipping_phone")}
+                            {getFieldError("shipping_phone")}
                         </p>
                     )}
                 </div>
@@ -124,9 +141,9 @@ export function ShippingForm({
                         value={form.shipping_email}
                         onChange={(e) => onFieldChange("shipping_email", e.target.value)}
                     />
-                    {getError("shipping_email") && (
+                    {getFieldError("shipping_email") && (
                         <p className="text-sm text-red-500">
-                            {getError("shipping_email")}
+                            {getFieldError("shipping_email")}
                         </p>
                     )}
                 </div>
@@ -137,9 +154,9 @@ export function ShippingForm({
                         value={form.shipping_address_line1}
                         onChange={(e) => onFieldChange("shipping_address_line1", e.target.value)}
                     />
-                    {getError("shipping_address_line1") && (
+                    {getFieldError("shipping_address_line1") && (
                         <p className="text-sm text-red-500">
-                            {getError("shipping_address_line1")}
+                            {getFieldError("shipping_address_line1")}
                         </p>
                     )}
                 </div>
@@ -150,9 +167,9 @@ export function ShippingForm({
                         value={form.shipping_address_line2}
                         onChange={(e) => onFieldChange("shipping_address_line2", e.target.value)}
                     />
-                    {getError("shipping_address_line2") && (
+                    {getFieldError("shipping_address_line2") && (
                         <p className="text-sm text-red-500">
-                            {getError("shipping_address_line2")}
+                            {getFieldError("shipping_address_line2")}
                         </p>
                     )}
                 </div>
@@ -164,9 +181,9 @@ export function ShippingForm({
                             value={form.shipping_city}
                             onChange={(e) => onFieldChange("shipping_city", e.target.value)}
                         />
-                        {getError("shipping_city") && (
+                        {getFieldError("shipping_city") && (
                             <p className="text-sm text-red-500">
-                                {getError("shipping_city")}
+                                {getFieldError("shipping_city")}
                             </p>
                         )}
                     </div>
@@ -177,9 +194,9 @@ export function ShippingForm({
                             value={form.shipping_state}
                             onChange={(e) => onFieldChange("shipping_state", e.target.value)}
                         />
-                        {getError("shipping_state") && (
+                        {getFieldError("shipping_state") && (
                             <p className="text-sm text-red-500">
-                                {getError("shipping_state")}
+                                {getFieldError("shipping_state")}
                             </p>
                         )}
                     </div>
@@ -192,9 +209,9 @@ export function ShippingForm({
                             value={form.shipping_postal_code}
                             onChange={(e) => onFieldChange("shipping_postal_code", e.target.value)}
                         />
-                        {getError("shipping_postal_code") && (
+                        {getFieldError("shipping_postal_code") && (
                             <p className="text-sm text-red-500">
-                                {getError("shipping_postal_code")}
+                                {getFieldError("shipping_postal_code")}
                             </p>
                         )}
                     </div>
@@ -218,9 +235,9 @@ export function ShippingForm({
                             />
                         </div>
 
-                        {getError("shipping_country") && (
+                        {getFieldError("shipping_country") && (
                             <p className="text-sm text-red-500 mt-1">
-                                {getError("shipping_country")}
+                                {getFieldError("shipping_country")}
                             </p>
                         )}
                     </div>

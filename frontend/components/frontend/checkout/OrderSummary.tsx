@@ -9,6 +9,7 @@ import { CheckoutStatus } from "@/types/order";
 import { useCurrency } from "@/context/CurrencyContext";
 
 type Props = {
+    shippingFormValid: boolean;
     country?: string;
     subtotal: number;
     currencySubtotal?: number;
@@ -19,6 +20,7 @@ type Props = {
 };
 
 export function OrderSummary({
+    shippingFormValid,
     country,
     subtotal,
     currencySubtotal,
@@ -56,6 +58,8 @@ export function OrderSummary({
         buttonText = "Select Shipping Method";
     } else if (noGateway) {
         buttonText = "Payments Not Available";
+    } else if (!shippingFormValid) {
+        buttonText = "Shipping form is not valid";
     }
 
     const isDisabled =
@@ -64,6 +68,7 @@ export function OrderSummary({
         checkoutStatus === "redirecting" ||
         noShipping ||
         noGateway ||
+        !shippingFormValid ||
         !hasCountry;
 
     return (
