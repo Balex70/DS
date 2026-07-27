@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FinalCarriers } from "./FinalCarriers";
-import { COUNTRIES, getSelectedCountry } from "./countries";
+import { COUNTRIES, getSelectedCountry } from "@/config/countries";
 import { useCurrency } from "@/context/CurrencyContext";
 
 type Props = {
