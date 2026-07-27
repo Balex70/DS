@@ -150,7 +150,7 @@ export function CheckoutComponent() {
     }
 
     return (
-        <div className="container py-10">
+        <div className="container py-0 lg:py-10">
             <h1 className="mb-6 text-3xl font-bold">Checkout</h1>
 
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
