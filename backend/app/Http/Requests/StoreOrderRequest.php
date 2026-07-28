@@ -33,7 +33,7 @@ class StoreOrderRequest extends FormRequest
 
             // Shipping info (required)
             'shipping_full_name' => ['required', 'string', 'max:255'],
-            'shipping_phone' => ['nullable', 'string', 'max:50'],
+            'shipping_phone' => ['required', 'string', 'min:6', 'max:20', 'regex:/^[+\d\s()-]+$/'],
             'shipping_email' => ['required', 'email', 'max:255'],
 
             'shipping_address_line1' => ['required', 'string', 'max:255'],
