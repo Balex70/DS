@@ -51,14 +51,19 @@ type OrderItem = {
 
 export type OrderPayload = {
     shipping_full_name: string;
+    shipping_full_name_latin?: string;
     shipping_phone: string;
     shipping_email: string;
 
     shipping_address_line1: string;
+    shipping_address_line1_latin?: string;
     shipping_address_line2: string;
+    shipping_address_line2_latin?: string;
 
     shipping_city: string;
+    shipping_city_latin?: string;
     shipping_state: string;
+    shipping_state_latin?: string;
     shipping_postal_code: string;
     shipping_country: string;
 

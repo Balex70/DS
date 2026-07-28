@@ -43,13 +43,18 @@ class StoreOrderService
 
                 'shipping_method' => $data['shipping_method'],
                 'shipping_full_name' => $data['shipping_full_name'],
+                'shipping_full_name_latin' => $data['shipping_full_name_latin'] ?? null,
                 'shipping_phone' => $data['shipping_phone'] ?? null,
                 'shipping_email' => $data['shipping_email'] ?? null,
 
                 'shipping_address_line1' => $data['shipping_address_line1'],
+                'shipping_address_line1_latin' => $data['shipping_address_line1_latin'] ?? null,
                 'shipping_address_line2' => $data['shipping_address_line2'] ?? null,
+                'shipping_address_line2_latin' => $data['shipping_address_line2_latin'] ?? null,
                 'shipping_city' => $data['shipping_city'],
+                'shipping_city_latin' => $data['shipping_city_latin'] ?? null,
                 'shipping_state' => $data['shipping_state'] ?? null,
+                'shipping_state_latin' => $data['shipping_state_latin'] ?? null,
                 'shipping_postal_code' => $data['shipping_postal_code'] ?? null,
                 'shipping_country' => $data['shipping_country'],
 

@@ -81,13 +81,18 @@ class OrderFactory extends Factory
             'payment_status' => $paymentStatus,
 
             'shipping_full_name' => $this->faker->name(),
+            'shipping_full_name_latin' => $this->faker->optional()->name(),
             'shipping_phone' => $this->faker->optional()->phoneNumber(),
             'shipping_email' => $this->faker->optional()->safeEmail(),
 
             'shipping_address_line1' => $this->faker->streetAddress(),
+            'shipping_address_line1_latin' => $this->faker->optional()->streetAddress(),
             'shipping_address_line2' => $this->faker->optional()->secondaryAddress(),
+            'shipping_address_line2_latin' => $this->faker->optional()->secondaryAddress(),
             'shipping_city' => $this->faker->city(),
+            'shipping_city_latin' => $this->faker->optional()->city(),
             'shipping_state' => $this->faker->optional()->state(),
+            'shipping_state_latin' => $this->faker->optional()->state(),
             'shipping_postal_code' => $this->faker->postcode(),
             'shipping_country' => $this->faker->randomElement($countries),
 

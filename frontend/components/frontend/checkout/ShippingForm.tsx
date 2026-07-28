@@ -12,6 +12,9 @@ import { SelectCountryForm } from "./SelectCountryForm";
 import MobileSelectCountryForm from "./MobileSelectCountryForm";
 import { checkoutSchemaValidation, CheckoutValidationType } from "@/helpers/validators/checkout-schema-validation";
 import { z } from "zod";
+import { transliterate } from "transliteration";
+import { Button } from "@/components/ui/button";
+import { Pencil } from "lucide-react";
 
 type Props = {
     form: OrderPayload;
@@ -89,8 +92,31 @@ export function ShippingForm({
         setShippingFormValid(isFormValid);
     }, [isFormValid, setShippingFormValid]);
 
+    const latinFields = {
+        shipping_full_name: "shipping_full_name_latin",
+        shipping_address_line1: "shipping_address_line1_latin",
+        shipping_address_line2: "shipping_address_line2_latin",
+        shipping_city: "shipping_city_latin",
+        shipping_state: "shipping_state_latin",
+    } as const;
+
     const onFieldChange = <K extends keyof OrderPayload>(field: K, value: OrderPayload[K]) => {
-        setForm(prev => ({ ...prev, [field]: value }));
+        setForm(prev => {
+            const next = {
+                ...prev,
+                [field]: value,
+            };
+
+            const latinField = latinFields[field as keyof typeof latinFields];
+
+            if (latinField) {
+                next[latinField] = value
+                    ? transliterate(value as string)
+                    : "";
+            }
+
+            return next;
+        });
         setCheckoutStatus("idle");
     }
 
@@ -114,6 +140,22 @@ export function ShippingForm({
                         value={form.shipping_full_name}
                         onChange={(e) => onFieldChange("shipping_full_name", e.target.value)}
                     />
+                    {form.shipping_full_name_latin &&
+                        <div className="mt-1 flex items-center justify-between text-xs text-muted-foreground">
+                            <span>
+                                {form.shipping_full_name_latin}
+                            </span>
+
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-auto px-2 py-0 text-xs"
+                            >
+                                <Pencil className="mr-1 h-3 w-3" />
+                                Edit
+                            </Button>
+                        </div>
+                    }
                     {getFieldError("shipping_full_name") && (
                         <p className="text-sm text-red-500">
                             {getFieldError("shipping_full_name")}
