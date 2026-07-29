@@ -75,6 +75,16 @@ export type OrderPayload = {
     currency?: string;
 };
 
+export const latinFieldsMapper = {
+    shipping_full_name: "shipping_full_name_latin",
+    shipping_address_line1: "shipping_address_line1_latin",
+    shipping_address_line2: "shipping_address_line2_latin",
+    shipping_city: "shipping_city_latin",
+    shipping_state: "shipping_state_latin",
+} as const;
+
+export type LatinFieldType = (typeof latinFieldsMapper)[keyof typeof latinFieldsMapper];
+
 export type OrderStatus =
     | "draft"
     | "created"

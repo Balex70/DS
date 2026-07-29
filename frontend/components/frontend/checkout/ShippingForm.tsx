@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useShippingCalculate } from "@/hooks/use-shipping-calculate";
 import { ShippingMethod } from "@/types/shipping";
-import { CheckoutStatus, OrderPayload } from "@/types/order";
+import { CheckoutStatus, latinFieldsMapper, LatinFieldType, OrderPayload } from "@/types/order";
 import { ShippingMethodsSelector } from "./ShippingMethodsSelector";
 import { FinalCarriers } from "./FinalCarriers";
 import { useCurrency } from "@/context/CurrencyContext";
@@ -13,8 +13,7 @@ import MobileSelectCountryForm from "./MobileSelectCountryForm";
 import { checkoutSchemaValidation, CheckoutValidationType } from "@/helpers/validators/checkout-schema-validation";
 import { z } from "zod";
 import { transliterate } from "transliteration";
-import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import { LatinInputField } from "./LatinInputField";
 
 type Props = {
     form: OrderPayload;
@@ -92,14 +91,6 @@ export function ShippingForm({
         setShippingFormValid(isFormValid);
     }, [isFormValid, setShippingFormValid]);
 
-    const latinFields = {
-        shipping_full_name: "shipping_full_name_latin",
-        shipping_address_line1: "shipping_address_line1_latin",
-        shipping_address_line2: "shipping_address_line2_latin",
-        shipping_city: "shipping_city_latin",
-        shipping_state: "shipping_state_latin",
-    } as const;
-
     const onFieldChange = <K extends keyof OrderPayload>(field: K, value: OrderPayload[K]) => {
         setForm(prev => {
             const next = {
@@ -107,7 +98,7 @@ export function ShippingForm({
                 [field]: value,
             };
 
-            const latinField = latinFields[field as keyof typeof latinFields];
+            const latinField = latinFieldsMapper[field as keyof typeof latinFieldsMapper];
 
             if (latinField) {
                 next[latinField] = value
@@ -117,6 +108,14 @@ export function ShippingForm({
 
             return next;
         });
+        setCheckoutStatus("idle");
+    }
+
+    const onLatinFieldChange = <K extends LatinFieldType>(field: K, value: OrderPayload[K]) => {
+        setForm((prev) => ({
+                ...prev,
+                [field]: value
+        }));
         setCheckoutStatus("idle");
     }
 
@@ -141,20 +140,14 @@ export function ShippingForm({
                         onChange={(e) => onFieldChange("shipping_full_name", e.target.value)}
                     />
                     {form.shipping_full_name_latin &&
-                        <div className="mt-1 flex items-center justify-between text-xs text-muted-foreground">
-                            <span>
-                                {form.shipping_full_name_latin}
-                            </span>
-
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-auto px-2 py-0 text-xs"
-                            >
-                                <Pencil className="mr-1 h-3 w-3" />
-                                Edit
-                            </Button>
-                        </div>
+                        (
+                            <LatinInputField
+                                form={form}
+                                fieldName="shipping_full_name_latin"
+                                initialValue={form.shipping_full_name_latin}
+                                onSave={onLatinFieldChange}
+                            />
+                        )
                     }
                     {getFieldError("shipping_full_name") && (
                         <p className="text-sm text-red-500">
@@ -196,6 +189,16 @@ export function ShippingForm({
                         value={form.shipping_address_line1}
                         onChange={(e) => onFieldChange("shipping_address_line1", e.target.value)}
                     />
+                    {form.shipping_address_line1_latin &&
+                        (
+                            <LatinInputField
+                                form={form}
+                                fieldName="shipping_address_line1_latin"
+                                initialValue={form.shipping_address_line1_latin}
+                                onSave={onLatinFieldChange}
+                            />
+                        )
+                    }
                     {getFieldError("shipping_address_line1") && (
                         <p className="text-sm text-red-500">
                             {getFieldError("shipping_address_line1")}
@@ -209,6 +212,16 @@ export function ShippingForm({
                         value={form.shipping_address_line2}
                         onChange={(e) => onFieldChange("shipping_address_line2", e.target.value)}
                     />
+                    {form.shipping_address_line2_latin &&
+                        (
+                            <LatinInputField
+                                form={form}
+                                fieldName="shipping_address_line2_latin"
+                                initialValue={form.shipping_address_line2_latin}
+                                onSave={onLatinFieldChange}
+                            />
+                        )
+                    }
                     {getFieldError("shipping_address_line2") && (
                         <p className="text-sm text-red-500">
                             {getFieldError("shipping_address_line2")}
@@ -223,6 +236,16 @@ export function ShippingForm({
                             value={form.shipping_city}
                             onChange={(e) => onFieldChange("shipping_city", e.target.value)}
                         />
+                        {form.shipping_city_latin &&
+                            (
+                                <LatinInputField
+                                    form={form}
+                                    fieldName="shipping_city_latin"
+                                    initialValue={form.shipping_city_latin}
+                                    onSave={onLatinFieldChange}
+                                />
+                            )
+                        }
                         {getFieldError("shipping_city") && (
                             <p className="text-sm text-red-500">
                                 {getFieldError("shipping_city")}
@@ -236,6 +259,16 @@ export function ShippingForm({
                             value={form.shipping_state}
                             onChange={(e) => onFieldChange("shipping_state", e.target.value)}
                         />
+                        {form.shipping_state_latin &&
+                            (
+                                <LatinInputField
+                                    form={form}
+                                    fieldName="shipping_state_latin"
+                                    initialValue={form.shipping_state_latin}
+                                    onSave={onLatinFieldChange}
+                                />
+                            )
+                        }
                         {getFieldError("shipping_state") && (
                             <p className="text-sm text-red-500">
                                 {getFieldError("shipping_state")}
