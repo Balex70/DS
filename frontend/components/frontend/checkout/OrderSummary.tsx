@@ -95,7 +95,12 @@ export function OrderSummary({
             </div>
 
             <div className="flex justify-between">
-                <span>Shipping {shippingMethod && `(${shippingMethod.name})`}</span>
+                <div className="flex flex-wrap">
+                    <span>Shipping</span>
+                    {shippingMethod &&
+                        <span>({shippingMethod.name})</span>
+                    }
+                </div>
                 <span className="text-sm">
                     <PriceRenderer value={shippingCost} />
                     {shippingMethod?.currency_price !== undefined && (
