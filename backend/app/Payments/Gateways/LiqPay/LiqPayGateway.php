@@ -3,6 +3,7 @@
 namespace App\Payments\Gateways\LiqPay;
 
 use App\Enums\CurrenciesEnum;
+use App\Enums\PaymentMethodsEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Events\PaymentChangedStatus;
 use App\Models\Payment;
@@ -285,10 +286,10 @@ class LiqPayGateway extends AbstractGateway
     public function getPaymentMethods(): array
     {
         return [
-            'card',
-            'apple_pay',
-            'google_pay',
-            'privat24',
+            PaymentMethodsEnum::CARD->value,
+            PaymentMethodsEnum::APPLE_PAY->value,
+            PaymentMethodsEnum::GOOGLE_PAY->value,
+            PaymentMethodsEnum::PRIVAT24->value,
         ];
     }
 }
