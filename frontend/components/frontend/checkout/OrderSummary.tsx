@@ -10,6 +10,7 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { COUNTRIES } from "@/config/countries";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TriangleAlert } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Props = {
     form: OrderPayload;
@@ -135,54 +136,66 @@ export function OrderSummary({
             <div className="mt-2 flex justify-between">
                 { !isDisabled &&
                     <div className="space-y-1 text-sm text-muted-foreground">
-                        <h3 className="mb-2 font-medium">Shipping details:</h3>
-                        <div className="flex flex-wrap items-baseline gap-1">
-                            <span className="text-xs text-muted-foreground">Full Name:</span>
-                            <span className="text-sm font-semibold">{form.shipping_full_name_latin}</span>
-                        </div>
-                        {form.shipping_phone && (
-                            <div className="flex flex-wrap items-baseline gap-1">
-                                <span className="text-xs text-muted-foreground">Phone:</span>
-                                <span className="text-sm font-semibold">{form.shipping_phone}</span>
-                            </div>
-                        )}
-                        <div className="flex flex-wrap items-baseline gap-1">
-                            <span className="text-xs text-muted-foreground">Email:</span>
-                            <span className="text-sm font-semibold">{form.shipping_email}</span>
-                        </div>
-                        <div className="flex flex-wrap items-baseline gap-1">
-                            <span className="text-xs text-muted-foreground">Address:</span>
-                            <span className="text-sm font-semibold">{form.shipping_address_line1_latin}</span>
-                        </div>
-                        {form.shipping_address_line2_latin && (
-                            <div className="flex flex-wrap items-baseline gap-1">
-                                <span className="text-xs text-muted-foreground">Address (additional):</span>
-                                <span className="text-sm font-semibold">{form.shipping_address_line2_latin}</span>
-                            </div>
-                        )}
-                        <div className="flex flex-wrap items-baseline gap-1">
-                            <span className="text-xs text-muted-foreground">City:</span>
-                            <span className="text-sm font-semibold">{form.shipping_city_latin}</span>
-                        </div>
-                        {form.shipping_state_latin && (
-                            <div className="flex flex-wrap items-baseline gap-1">
-                                <span className="text-xs text-muted-foreground">State:</span>
-                                <span className="text-sm font-semibold">{form.shipping_state_latin}</span>
-                            </div>
-                        )}
-                        {form.shipping_postal_code && (
-                            <div className="flex flex-wrap items-baseline gap-1">
-                                <span className="text-xs text-muted-foreground">Postal Code:</span>
-                                <span className="text-sm font-semibold">{form.shipping_postal_code}</span>
-                            </div>
-                        )}
-                        <div className="flex flex-wrap items-baseline gap-1">
-                            <span className="text-xs text-muted-foreground">Country:</span>
-                            <span className="text-sm font-semibold">{countryName}</span>
-                        </div>
+                        <Card className="mt-2 gap-2 p-2">
+                            <CardHeader className="pb-1 px-1">
+                                <CardTitle className="font-medium text-muted-foreground">
+                                    Shipping details
+                                </CardTitle>
+                                <CardDescription>
+                                    These details will be used for delivery.
+                                </CardDescription>
+                            </CardHeader>
+
+                            <CardContent className="space-y-2 px-1">
+                                <div className="flex flex-wrap items-baseline gap-1">
+                                    <span className="text-xs text-muted-foreground">Full Name:</span>
+                                    <span className="text-sm font-semibold">{form.shipping_full_name_latin}</span>
+                                </div>
+                                {form.shipping_phone && (
+                                    <div className="flex flex-wrap items-baseline gap-1">
+                                        <span className="text-xs text-muted-foreground">Phone:</span>
+                                        <span className="text-sm font-semibold">{form.shipping_phone}</span>
+                                    </div>
+                                )}
+                                <div className="flex flex-wrap items-baseline gap-1">
+                                    <span className="text-xs text-muted-foreground">Email:</span>
+                                    <span className="text-sm font-semibold">{form.shipping_email}</span>
+                                </div>
+                                <div className="flex flex-wrap items-baseline gap-1">
+                                    <span className="text-xs text-muted-foreground">Address:</span>
+                                    <span className="text-sm font-semibold">{form.shipping_address_line1_latin}</span>
+                                </div>
+                                {form.shipping_address_line2_latin && (
+                                    <div className="flex flex-wrap items-baseline gap-1">
+                                        <span className="text-xs text-muted-foreground">Address (additional):</span>
+                                        <span className="text-sm font-semibold">{form.shipping_address_line2_latin}</span>
+                                    </div>
+                                )}
+                                <div className="flex flex-wrap items-baseline gap-1">
+                                    <span className="text-xs text-muted-foreground">City:</span>
+                                    <span className="text-sm font-semibold">{form.shipping_city_latin}</span>
+                                </div>
+                                {form.shipping_state_latin && (
+                                    <div className="flex flex-wrap items-baseline gap-1">
+                                        <span className="text-xs text-muted-foreground">State:</span>
+                                        <span className="text-sm font-semibold">{form.shipping_state_latin}</span>
+                                    </div>
+                                )}
+                                {form.shipping_postal_code && (
+                                    <div className="flex flex-wrap items-baseline gap-1">
+                                        <span className="text-xs text-muted-foreground">Postal Code:</span>
+                                        <span className="text-sm font-semibold">{form.shipping_postal_code}</span>
+                                    </div>
+                                )}
+                                <div className="flex flex-wrap items-baseline gap-1">
+                                    <span className="text-xs text-muted-foreground">Country:</span>
+                                    <span className="text-sm font-semibold">{countryName}</span>
+                                </div>
+                            </CardContent>
+                        </Card>
 
                         <Alert className="mt-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20">
-                            <TriangleAlert className="h-4 w-4" />
+                            <TriangleAlert className="h-4 w-4 !text-yellow-500" />
 
                             <AlertTitle>Please review your shipping details</AlertTitle>
 
