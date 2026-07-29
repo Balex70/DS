@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Input } from "@/components/ui/input";
 import { useShippingCalculate } from "@/hooks/use-shipping-calculate";
 import { ShippingMethod } from "@/types/shipping";
 import { CheckoutStatus, latinFieldsMapper, LatinFieldType, OrderPayload } from "@/types/order";
@@ -13,7 +12,8 @@ import MobileSelectCountryForm from "./MobileSelectCountryForm";
 import { checkoutSchemaValidation, CheckoutValidationType } from "@/helpers/validators/checkout-schema-validation";
 import { z } from "zod";
 import { transliterate } from "transliteration";
-import { LatinInputField } from "./LatinInputField";
+import { InputField } from "./InputField";
+import { FieldLabel } from "@/components/ui/field";
 
 type Props = {
     form: OrderPayload;
@@ -133,165 +133,89 @@ export function ShippingForm({
 
             {/* FORM */}
             <div className="space-y-4">
-                <div className="space-y-1">
-                    <Input
-                        placeholder="Full name"
-                        value={form.shipping_full_name}
-                        onChange={(e) => onFieldChange("shipping_full_name", e.target.value)}
-                    />
-                    {form.shipping_full_name_latin &&
-                        (
-                            <LatinInputField
-                                form={form}
-                                fieldName="shipping_full_name_latin"
-                                initialValue={form.shipping_full_name_latin}
-                                onSave={onLatinFieldChange}
-                            />
-                        )
-                    }
-                    {getFieldError("shipping_full_name") && (
-                        <p className="text-sm text-red-500">
-                            {getFieldError("shipping_full_name")}
-                        </p>
-                    )}
-                </div>
+                <InputField
+                    form={form}
+                    label="Full name"
+                    fieldName="shipping_full_name"
+                    latinFieldName="shipping_full_name_latin"
+                    onFieldChange={onFieldChange}
+                    onLatinFieldChange={onLatinFieldChange}
+                    errors={errors}
+                />
 
-                <div className="space-y-1">
-                    <Input
-                        placeholder="Phone"
-                        value={form.shipping_phone}
-                        onChange={(e) => onFieldChange("shipping_phone", e.target.value)}
-                    />
-                    {getFieldError("shipping_phone") && (
-                        <p className="text-sm text-red-500">
-                            {getFieldError("shipping_phone")}
-                        </p>
-                    )}
-                </div>
+                <InputField
+                    form={form}
+                    label="Phone"
+                    fieldName="shipping_phone"
+                    onFieldChange={onFieldChange}
+                    onLatinFieldChange={onLatinFieldChange}
+                    errors={errors}
+                />
 
-                <div className="space-y-1">
-                    <Input
-                        placeholder="Email"
-                        type="email"
-                        value={form.shipping_email}
-                        onChange={(e) => onFieldChange("shipping_email", e.target.value)}
-                    />
-                    {getFieldError("shipping_email") && (
-                        <p className="text-sm text-red-500">
-                            {getFieldError("shipping_email")}
-                        </p>
-                    )}
-                </div>
+                <InputField
+                    form={form}
+                    label="Email"
+                    fieldName="shipping_email"
+                    onFieldChange={onFieldChange}
+                    onLatinFieldChange={onLatinFieldChange}
+                    errors={errors}
+                />
 
-                <div className="space-y-1">
-                    <Input
-                        placeholder="Address line 1"
-                        value={form.shipping_address_line1}
-                        onChange={(e) => onFieldChange("shipping_address_line1", e.target.value)}
-                    />
-                    {form.shipping_address_line1_latin &&
-                        (
-                            <LatinInputField
-                                form={form}
-                                fieldName="shipping_address_line1_latin"
-                                initialValue={form.shipping_address_line1_latin}
-                                onSave={onLatinFieldChange}
-                            />
-                        )
-                    }
-                    {getFieldError("shipping_address_line1") && (
-                        <p className="text-sm text-red-500">
-                            {getFieldError("shipping_address_line1")}
-                        </p>
-                    )}
-                </div>
+                <InputField
+                    form={form}
+                    label="Address line 1"
+                    fieldName="shipping_address_line1"
+                    latinFieldName="shipping_address_line1_latin"
+                    onFieldChange={onFieldChange}
+                    onLatinFieldChange={onLatinFieldChange}
+                    errors={errors}
+                />
 
-                <div className="space-y-1">
-                    <Input
-                        placeholder="Address line 2"
-                        value={form.shipping_address_line2}
-                        onChange={(e) => onFieldChange("shipping_address_line2", e.target.value)}
+                <InputField
+                    form={form}
+                    label="Address line 2"
+                    fieldName="shipping_address_line2"
+                    latinFieldName="shipping_address_line2_latin"
+                    onFieldChange={onFieldChange}
+                    onLatinFieldChange={onLatinFieldChange}
+                    errors={errors}
+                />
+
+
+                <div className="grid grid-cols-2 gap-4">
+                    <InputField
+                        form={form}
+                        label="City"
+                        fieldName="shipping_city"
+                        latinFieldName="shipping_city_latin"
+                        onFieldChange={onFieldChange}
+                        onLatinFieldChange={onLatinFieldChange}
+                        errors={errors}
                     />
-                    {form.shipping_address_line2_latin &&
-                        (
-                            <LatinInputField
-                                form={form}
-                                fieldName="shipping_address_line2_latin"
-                                initialValue={form.shipping_address_line2_latin}
-                                onSave={onLatinFieldChange}
-                            />
-                        )
-                    }
-                    {getFieldError("shipping_address_line2") && (
-                        <p className="text-sm text-red-500">
-                            {getFieldError("shipping_address_line2")}
-                        </p>
-                    )}
+
+                    <InputField
+                        form={form}
+                        label="State"
+                        fieldName="shipping_state"
+                        latinFieldName="shipping_state_latin"
+                        onFieldChange={onFieldChange}
+                        onLatinFieldChange={onLatinFieldChange}
+                        errors={errors}
+                    />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                        <Input
-                            placeholder="City"
-                            value={form.shipping_city}
-                            onChange={(e) => onFieldChange("shipping_city", e.target.value)}
-                        />
-                        {form.shipping_city_latin &&
-                            (
-                                <LatinInputField
-                                    form={form}
-                                    fieldName="shipping_city_latin"
-                                    initialValue={form.shipping_city_latin}
-                                    onSave={onLatinFieldChange}
-                                />
-                            )
-                        }
-                        {getFieldError("shipping_city") && (
-                            <p className="text-sm text-red-500">
-                                {getFieldError("shipping_city")}
-                            </p>
-                        )}
-                    </div>
+                    <InputField
+                        form={form}
+                        label="Postal code"
+                        fieldName="shipping_postal_code"
+                        onFieldChange={onFieldChange}
+                        onLatinFieldChange={onLatinFieldChange}
+                        errors={errors}
+                    />
 
                     <div className="space-y-1">
-                        <Input
-                            placeholder="State"
-                            value={form.shipping_state}
-                            onChange={(e) => onFieldChange("shipping_state", e.target.value)}
-                        />
-                        {form.shipping_state_latin &&
-                            (
-                                <LatinInputField
-                                    form={form}
-                                    fieldName="shipping_state_latin"
-                                    initialValue={form.shipping_state_latin}
-                                    onSave={onLatinFieldChange}
-                                />
-                            )
-                        }
-                        {getFieldError("shipping_state") && (
-                            <p className="text-sm text-red-500">
-                                {getFieldError("shipping_state")}
-                            </p>
-                        )}
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                        <Input
-                            placeholder="Postal code"
-                            value={form.shipping_postal_code}
-                            onChange={(e) => onFieldChange("shipping_postal_code", e.target.value)}
-                        />
-                        {getFieldError("shipping_postal_code") && (
-                            <p className="text-sm text-red-500">
-                                {getFieldError("shipping_postal_code")}
-                            </p>
-                        )}
-                    </div>
-
-                    <div className="space-y-1">
+                        <FieldLabel className="text-sm text-muted-foreground font-normal">Country:</FieldLabel>
                         <div className="hidden md:block">
                             <SelectCountryForm
                                 form={form}

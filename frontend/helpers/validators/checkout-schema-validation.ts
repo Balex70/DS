@@ -6,6 +6,11 @@ export const checkoutSchemaValidation = z.object({
         .trim()
         .min(1, "Full name is required"),
 
+    shipping_full_name_latin: z
+        .string()
+        .trim()
+        .min(1, "Full name (latin) is required"),
+
     shipping_phone: z
         .string()
         .trim()
@@ -28,10 +33,20 @@ export const checkoutSchemaValidation = z.object({
         .trim()
         .min(1, "Address is required"),
 
+    shipping_address_line1_latin: z
+        .string()
+        .trim()
+        .min(1, "Address (latin) is required"),
+
     shipping_city: z
         .string()
         .trim()
         .min(1, "City is required"),
+
+    shipping_city_latin: z
+        .string()
+        .trim()
+        .min(1, "City (latin) is required"),
 
     shipping_country: z
         .string()
