@@ -132,7 +132,7 @@ export function ShippingForm({
             </div>
 
             {/* FORM */}
-            <div className="space-y-4">
+            <div className="space-y-4" id="checkout-shipping-form">
                 <InputField
                     form={form}
                     label="Full name"

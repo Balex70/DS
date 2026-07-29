@@ -174,6 +174,7 @@ export function CheckoutComponent() {
                     <PaymentInfo gateway={gateway} isLoading={isLoading} />
 
                     <OrderSummary
+                        form={form}
                         shippingFormValid={shippingFormValid}
                         country={form.shipping_country}
                         subtotal={subtotal}

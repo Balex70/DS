@@ -5,10 +5,14 @@ import { Button } from "@/components/ui/button";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { ShippingMethod } from "@/types/shipping";
 import { AvailableGatewayResponse } from "@/types/payment";
-import { CheckoutStatus } from "@/types/order";
+import { CheckoutStatus, OrderPayload } from "@/types/order";
 import { useCurrency } from "@/context/CurrencyContext";
+import { COUNTRIES } from "@/config/countries";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { TriangleAlert } from "lucide-react";
 
 type Props = {
+    form: OrderPayload;
     shippingFormValid: boolean;
     country?: string;
     subtotal: number;
@@ -20,6 +24,7 @@ type Props = {
 };
 
 export function OrderSummary({
+    form,
     shippingFormValid,
     country,
     subtotal,
@@ -71,6 +76,18 @@ export function OrderSummary({
         !shippingFormValid ||
         !hasCountry;
 
+    const countryName = COUNTRIES.find((c) => c.code === country)?.name || country;
+
+    const goToShippingForm = () => {
+        const form = document.getElementById("checkout-shipping-form");
+        form?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
+
+        document.getElementById("shipping_full_name_latin")?.focus();
+    };
+
     return (
         <div className="rounded-xl border p-4">
             <h2 className="mb-4 text-xl font-semibold">Summary</h2>
@@ -114,6 +131,79 @@ export function OrderSummary({
                         </span>
                     )}
                 </span>
+            </div>
+            <div className="mt-2 flex justify-between">
+                { !isDisabled &&
+                    <div className="space-y-1 text-sm text-muted-foreground">
+                        <h3 className="mb-2 font-medium">Shipping details:</h3>
+                        <div className="flex flex-wrap items-baseline gap-1">
+                            <span className="text-xs text-muted-foreground">Full Name:</span>
+                            <span className="text-sm font-semibold">{form.shipping_full_name_latin}</span>
+                        </div>
+                        {form.shipping_phone && (
+                            <div className="flex flex-wrap items-baseline gap-1">
+                                <span className="text-xs text-muted-foreground">Phone:</span>
+                                <span className="text-sm font-semibold">{form.shipping_phone}</span>
+                            </div>
+                        )}
+                        <div className="flex flex-wrap items-baseline gap-1">
+                            <span className="text-xs text-muted-foreground">Email:</span>
+                            <span className="text-sm font-semibold">{form.shipping_email}</span>
+                        </div>
+                        <div className="flex flex-wrap items-baseline gap-1">
+                            <span className="text-xs text-muted-foreground">Address:</span>
+                            <span className="text-sm font-semibold">{form.shipping_address_line1_latin}</span>
+                        </div>
+                        {form.shipping_address_line2_latin && (
+                            <div className="flex flex-wrap items-baseline gap-1">
+                                <span className="text-xs text-muted-foreground">Address (additional):</span>
+                                <span className="text-sm font-semibold">{form.shipping_address_line2_latin}</span>
+                            </div>
+                        )}
+                        <div className="flex flex-wrap items-baseline gap-1">
+                            <span className="text-xs text-muted-foreground">City:</span>
+                            <span className="text-sm font-semibold">{form.shipping_city_latin}</span>
+                        </div>
+                        {form.shipping_state_latin && (
+                            <div className="flex flex-wrap items-baseline gap-1">
+                                <span className="text-xs text-muted-foreground">State:</span>
+                                <span className="text-sm font-semibold">{form.shipping_state_latin}</span>
+                            </div>
+                        )}
+                        {form.shipping_postal_code && (
+                            <div className="flex flex-wrap items-baseline gap-1">
+                                <span className="text-xs text-muted-foreground">Postal Code:</span>
+                                <span className="text-sm font-semibold">{form.shipping_postal_code}</span>
+                            </div>
+                        )}
+                        <div className="flex flex-wrap items-baseline gap-1">
+                            <span className="text-xs text-muted-foreground">Country:</span>
+                            <span className="text-sm font-semibold">{countryName}</span>
+                        </div>
+
+                        <Alert className="mt-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20">
+                            <TriangleAlert className="h-4 w-4" />
+
+                            <AlertTitle>Please review your shipping details</AlertTitle>
+
+                            <AlertDescription className="space-y-3">
+                                <p>
+                                    Please make sure your shipping information is correct and written in
+                                    Latin characters. Incorrect information may delay delivery or cause
+                                    your package to be returned.
+                                </p>
+
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={goToShippingForm}
+                                >
+                                    Edit shipping details
+                                </Button>
+                            </AlertDescription>
+                        </Alert>
+                    </div>
+                }
             </div>
 
             <Separator className="my-4" />
