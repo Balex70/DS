@@ -136,9 +136,8 @@ export function ShippingMethodsSelector({
                                 </div>
 
                                 {method.estimated_delivery && (
-                                    <div className="text-sm text-muted-foreground">
-                                        {method.estimated_delivery} business
-                                        days
+                                    <div className="text-sm text-muted-foreground mt-2">
+                                        {method.estimated_delivery} business days
                                     </div>
                                 )}
                             </div>
@@ -206,11 +205,8 @@ export function ShippingMethodsSelector({
                                                 <ShippingTierBadge method={method} />
 
                                                 {method.estimated_delivery && (
-                                                    <div className="text-sm text-muted-foreground">
-                                                        {
-                                                            method.estimated_delivery
-                                                        }{" "}
-                                                        business days
+                                                    <div className="text-sm text-muted-foreground mt-1">
+                                                        {method.estimated_delivery} business days
                                                     </div>
                                                 )}
                                             </div>
