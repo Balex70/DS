@@ -13,5 +13,6 @@ class PaymentRequestDTO
         public readonly array $methods = [],
         public readonly string $successUrl = '',
         public readonly string $cancelUrl = '',
+        public readonly string $lang = 'en',
     ) {}
 }

@@ -88,7 +88,7 @@ class LiqPayGateway extends AbstractGateway
 
             'server_url' => config('payments.liqpay.server_url'),
 
-            'language' => 'en',
+            'language' => $request->lang ?? 'en',
 
             'customer' => $request->email,
         ];

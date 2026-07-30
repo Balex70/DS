@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Api\Store;
 
 use App\Enums\CurrenciesEnum;
+use App\Enums\LocalesEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Events\PaymentInitiated;
 use App\Http\Controllers\Controller;
@@ -26,6 +27,12 @@ class PaymentController extends Controller
         ]);
 
         $gateway = $this->manager->driver($data['payment_method']);
+        $language = 'en';
+        if($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
+            $locale = $request->locale ?? 'en';
+
+            $language = $locale;
+        }
 
         $paymentResponse = $gateway->createPayment(
             new PaymentRequestDTO(
@@ -36,6 +43,7 @@ class PaymentController extends Controller
                 country: $order->shipping_country,
                 email: $order->shipping_email,
                 methods: [],
+                lang: $language
             )
         );
 

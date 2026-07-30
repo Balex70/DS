@@ -91,6 +91,7 @@ export function CheckoutComponent() {
             {
                 orderId: order.id,
                 payment_method: gateway?.gateway,
+                locale: locale,
             },
             {
                 onSuccess: (paymentResponse: PaymentResponse) => {
