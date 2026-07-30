@@ -8,11 +8,11 @@ import Link from "next/link";
 export function CheckoutPaymentResultComponent({ token }: { token: string | undefined }) {
     const { data: order, isLoading } = useOrderByPublicToken(token);
     return (
-        <div className="container mx-auto max-w-2xl px-4 py-16">
-            <div className="rounded-lg border bg-card p-8 text-center shadow-sm">
-                <CheckCircle2 className="mx-auto mb-6 h-16 w-16 text-green-600" />
+        <div className="container mx-auto max-w-2xl px-0 sm:px-4 py-2 sm:py-14">
+            <div className="rounded-lg border bg-card p-4 sm:p-6 text-center shadow-sm">
+                <CheckCircle2 className="mx-auto mb-4 sm:mb-6 h-12 sm:h-16 w-12 sm:w-16 text-green-600" />
 
-                <h1 className="mb-4 text-3xl font-bold">
+                <h1 className="mb-4 text-xl sm:text-3xl font-bold">
                     Thank you for your order!
                 </h1>
 

@@ -9,7 +9,7 @@ type Props = {
 export default async function CheckoutPaymentResultPage({searchParams}: Props) {
     const { token } = await searchParams
     return (
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto px-0 sm:px-4 py-0">
             <CheckoutPaymentResultComponent token={token} />
         </div>
     );
