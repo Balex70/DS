@@ -1,4 +1,5 @@
 import FooterBottomSection from "./footer-bottom-section";
+import FooterCategoriesSection from "./footer-categories-section";
 import FooterMainSection from "./footer-main-section";
 
 export function Footer() {
@@ -13,8 +14,7 @@ export function Footer() {
                 "
             >
                 <FooterMainSection />
-
-                {/* <FooterCategoriesSection /> */}
+                <FooterCategoriesSection />
                 <FooterBottomSection />
             </div>
         </footer>

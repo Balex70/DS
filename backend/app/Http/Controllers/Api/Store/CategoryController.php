@@ -27,6 +27,7 @@ class CategoryController extends Controller
     {
         $query = Category::orderBy('id');
         $query->where('active', true);
+        $query->where('is_visible', true);
         $query->with('translations');
         return StoreCategoryResource::collection($query->get());
     }
