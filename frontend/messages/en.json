@@ -15,6 +15,21 @@
     "customer": {
       "name": "Name",
       "email": "Email"
+    },
+    "footer": {
+      "company": "Company",
+      "customer_service": "Customer Service",
+      "legal": "Legal",
+      "about_us": "About us",
+      "contact_us": "Contact us",
+      "faq": "FAQ",
+      "shipping_info": "Shipping Information",
+      "returns_refunds": "Returns & Refunds",
+      "order_tracking": "Order Tracking",
+      "payment_methods": "Payment Methods",
+      "privacy_policy": "Privacy Policy",
+      "terms": "Terms and conditions",
+      "cookie_policy": "Cookie Policy"
     }
   }
 }

@@ -1,3 +1,4 @@
+import { Footer } from "@/components/frontend/footer/footer";
 import { Header } from "@/components/frontend/header";
 import { MobileBottomBar } from "@/components/frontend/mobile-bottom-bar";
 import { CurrencyContextWrapper } from "@/context/CurrencyContextWrapper";
@@ -21,6 +22,7 @@ export default function Layout({
                         </div>
 
                         <MobileBottomBar />
+                        <Footer />
                     </div>
                 </QueryProvider>
             </CurrencyContextWrapper>
