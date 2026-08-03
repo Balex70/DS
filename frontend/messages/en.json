@@ -119,6 +119,20 @@
         "return_damage_description": "If your order arrives damaged or you receive the wrong item, please contact us as soon as possible so we can resolve the issue quickly.",
         "return_help": "Need Help?",
         "return_help_description": "If you have any questions about returns or refunds, our support team is always happy to assist you."
+      },
+      "track_order": {
+        "header": "Track Your Order",
+        "description": "Enter your order number and email address to check the latest status of your order.",
+        "form_header": "Order Tracking",
+        "form_description": "This feature is currently being prepared and will be available soon.",
+        "order_number_label": "Order Number",
+        "order_number_placeholder": "Order Number",
+        "email_label": "Email Address",
+        "email_placeholder": "Email Address",
+        "track_button": "Track Order",
+        "warning_label": "Warning",
+        "warning_message": "Until this feature is available, please contact our support team if you'd like an update on your order.",
+        "contact_us_button": "Contact Us"
       }
     },
     "call_to_action": {
