@@ -157,6 +157,18 @@
         "security_description": "We use secure technologies and trusted service providers to help protect your personal information during transmission and storage.",
         "rights": "Your Rights",
         "rights_description": "Depending on your location, you may have the right to access, update, or request the deletion of your personal information. Please contact us if you have any questions regarding your privacy."
+      },
+      "terms_section": {
+        "header": "Terms & Conditions",
+        "description": "These Terms & Conditions outline the rules and conditions for using our website and purchasing products from our store.",
+        "use_website": "Use of Our Website",
+        "use_website_description": "By using our website, you agree to comply with these Terms & Conditions and all applicable laws and regulations.",
+        "orders": "Orders",
+        "orders_description": "All orders are subject to product availability and confirmation. We reserve the right to refuse or cancel orders when necessary.",
+        "payments": "Pricing & Payments",
+        "payments_description": "Product prices and shipping costs are displayed during checkout. Payments are processed securely through our trusted payment providers.",
+        "limitation": "Limitation of Liability",
+        "limitation_description": "We strive to provide accurate information and reliable service, but cannot guarantee that our website will always be error-free or uninterrupted."
       }
     },
     "call_to_action": {
