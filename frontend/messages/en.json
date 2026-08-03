@@ -95,6 +95,18 @@
           "question": "How can I contact support?",
           "answer": "You can reach our support team through the Contact Us page or by emailing us directly. We'll respond as quickly as possible during business hours."
         }
+      },
+      "shipping_section": {
+        "header": "Shipping Information",
+        "description": "Everything you need to know about shipping, delivery estimates, and tracking your order.",
+        "shipping_coverage": "Worldwide Shipping",
+        "shipping_coverage_description": "We ship to most countries around the world. Available shipping options are shown during checkout based on your delivery address.",
+        "shipping_delivery_time": "Delivery Time",
+        "shipping_delivery_time_description": "Delivery time depends on your destination and the shipping method you choose. Estimated delivery dates are displayed before you complete your purchase.",
+        "shipping_cost": "Shipping Costs",
+        "shipping_cost_description": "Shipping costs are calculated automatically during checkout based on your destination, selected shipping method, and the items in your cart.",
+        "shipping_tracking": "Order Tracking",
+        "shipping_tracking_description": "Once your order has been shipped, you'll receive a tracking number by email so you can follow your package until delivery."
       }
     },
     "call_to_action": {
