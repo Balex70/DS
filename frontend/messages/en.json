@@ -145,6 +145,18 @@
         "charge_description": "Payment is processed securely during checkout after you confirm your order.",
         "currencies": "Supported Currencies",
         "currencies_description": "Available currencies are displayed throughout the store. The final payment amount is shown before you complete your purchase."
+      },
+      "privacy_policy_section": {
+        "header": "Privacy Policy",
+        "description": "Your privacy is important to us. This page explains how we collect, use, and protect your personal information when you use our website.",
+        "collect": "Information We Collect",
+        "collect_description": "We collect only the information necessary to process your orders, provide customer support, and improve your shopping experience.",
+        "use": "How We Use Your Information",
+        "use_description": "Your information is used to process orders, communicate with you about your purchases, and provide customer support. We do not sell your personal information.",
+        "security": "Data Security",
+        "security_description": "We use secure technologies and trusted service providers to help protect your personal information during transmission and storage.",
+        "rights": "Your Rights",
+        "rights_description": "Depending on your location, you may have the right to access, update, or request the deletion of your personal information. Please contact us if you have any questions regarding your privacy."
       }
     },
     "call_to_action": {
