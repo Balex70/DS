@@ -133,6 +133,18 @@
         "warning_label": "Warning",
         "warning_message": "Until this feature is available, please contact our support team if you'd like an update on your order.",
         "contact_us_button": "Contact Us"
+      },
+      "payment_methods_section": {
+        "header": "Payment Methods",
+        "description": "We offer secure and reliable payment options to make your checkout experience simple and safe.",
+        "accept": "Accepted Payment Methods",
+        "accept_description": "We accept major credit and debit cards as well as other secure payment methods available during checkout.",
+        "secure": "Secure Payments",
+        "secure_description": "Your payment information is protected using encrypted connections and trusted payment providers. We never store your complete payment card details.",
+        "charge": "When You'll Be Charged",
+        "charge_description": "Payment is processed securely during checkout after you confirm your order.",
+        "currencies": "Supported Currencies",
+        "currencies_description": "Available currencies are displayed throughout the store. The final payment amount is shown before you complete your purchase."
       }
     },
     "call_to_action": {
