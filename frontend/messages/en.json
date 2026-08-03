@@ -169,6 +169,18 @@
         "payments_description": "Product prices and shipping costs are displayed during checkout. Payments are processed securely through our trusted payment providers.",
         "limitation": "Limitation of Liability",
         "limitation_description": "We strive to provide accurate information and reliable service, but cannot guarantee that our website will always be error-free or uninterrupted."
+      },
+      "cookie_policy_section": {
+        "header": "Cookie Policy",
+        "description": "This Cookie Policy explains what cookies are, how we use them, and the choices you have regarding their use on our website.",
+        "what": "What Are Cookies?",
+        "what_description": "Cookies are small text files stored on your device that help websites remember your preferences and improve your browsing experience.",
+        "use": "How We Use Cookies",
+        "use_description": "We use cookies to keep the website functioning properly, remember your preferences, improve performance, and better understand how our website is used.",
+        "manage": "Managing Cookies",
+        "manage_description": "Most web browsers allow you to manage or disable cookies through your browser settings. Please note that disabling certain cookies may affect website functionality.",
+        "your_privacy": "Your Privacy",
+        "your_privacy_description": "We respect your privacy and use cookies responsibly. For more information about how we handle your personal data, please see our Privacy Policy."
       }
     },
     "call_to_action": {
