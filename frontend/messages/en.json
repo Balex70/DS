@@ -67,6 +67,34 @@
         "email": "Email",
         "phone": "Phone",
         "working_hours": "Working hours"
+      },
+      "faq_section": {
+        "header": "Frequently Asked Questions",
+        "description": "Find answers to the most common questions about orders, shipping, payments, returns, and customer support.",
+        "question_1": {
+          "question": "How long does shipping take?",
+          "answer": "Delivery times depend on the selected shipping method and destination country. Estimated delivery dates are displayed during checkout before you place your order."
+        },
+        "question_2": {
+          "question": "How can I track my order?",
+          "answer": "Once your order has been shipped, you'll receive a tracking number by email. You can also use our Order Tracking page to check the latest delivery status."
+        },
+        "question_3": {
+          "question": "What payment methods do you accept?",
+          "answer": "We accept major credit and debit cards along with other secure payment methods available during checkout."
+        },
+        "question_4": {
+          "question": "Can I return an item?",
+          "answer": "Yes. If your order is eligible for return, you can submit a return request according to our Returns & Refund Policy."
+        },
+        "question_5": {
+          "question": "When will I receive my refund?",
+          "answer": "Approved refunds are processed using the original payment method. Processing time depends on your payment provider and may take several business days."
+        },
+        "question_6": {
+          "question": "How can I contact support?",
+          "answer": "You can reach our support team through the Contact Us page or by emailing us directly. We'll respond as quickly as possible during business hours."
+        }
       }
     },
     "call_to_action": {
