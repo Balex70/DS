@@ -60,6 +60,13 @@
           "text_1": "Our mission is to make online shopping more affordable by connecting customers with carefully selected products while reducing unnecessary intermediaries. By streamlining the purchasing process, we can offer competitive prices without compromising on quality or security.",
           "text_2": "We believe everyone deserves access to quality products at fair prices. That's why we're committed to transparent pricing, reliable shipping options, secure payments, and responsive customer support throughout every step of your shopping experience."
         }
+      },
+      "contact_us_section": {
+        "header": "Contact Us",
+        "description": "We're here to help! Reach out to us with any questions or concerns, and we'll be happy to assist you.",
+        "email": "Email",
+        "phone": "Phone",
+        "working_hours": "Working hours"
       }
     },
     "call_to_action": {
