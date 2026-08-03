@@ -107,6 +107,18 @@
         "shipping_cost_description": "Shipping costs are calculated automatically during checkout based on your destination, selected shipping method, and the items in your cart.",
         "shipping_tracking": "Order Tracking",
         "shipping_tracking_description": "Once your order has been shipped, you'll receive a tracking number by email so you can follow your package until delivery."
+      },
+      "returns": {
+        "header": "Returns & Refunds",
+        "description": "We want you to shop with confidence. Below you'll find information about returns, refunds, and what to do if there's an issue with your order.",
+        "return_eligibility": "Return Eligibility",
+        "return_eligibility_description": "Eligible items may be returned according to our return policy. Products should be unused and returned in their original condition whenever possible.",
+        "refund_process": "Refund Process",
+        "refund_process_description": "Once your return has been received and approved, your refund will be issued using the original payment method. Processing times may vary depending on your payment provider.",
+        "return_damage": "Damaged or Incorrect Items",
+        "return_damage_description": "If your order arrives damaged or you receive the wrong item, please contact us as soon as possible so we can resolve the issue quickly.",
+        "return_help": "Need Help?",
+        "return_help_description": "If you have any questions about returns or refunds, our support team is always happy to assist you."
       }
     },
     "call_to_action": {
