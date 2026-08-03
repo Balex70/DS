@@ -30,7 +30,42 @@
       "privacy_policy": "Privacy Policy",
       "terms": "Terms and conditions",
       "cookie_policy": "Cookie Policy",
-      "shop_by_category": "Shop by category"
+      "contacts": "Contact",
+      "working_hours": "Working hours",
+      "shop_by_category": "Shop by category",
+      "copyright": "`name of the store`. All rights reserved.",
+      "about_us_section": {
+        "header": "About us",
+        "short_description": "We believe online shopping should be simple, affordable, and accessible to everyone. By partnering directly with trusted suppliers, we offer a wide selection of quality products at competitive prices, supported by secure payments, transparent shipping, and reliable customer service.",
+        "our_story": {
+          "header": "Our Story",
+          "story_1": "Our journey began with a simple question: why should customers pay extra for unnecessary layers in the supply chain? By embracing the dropshipping model and partnering directly with reliable suppliers, we streamline the purchasing process, reduce overhead, and pass those savings on to our customers through more affordable prices.",
+          "story_2": "Our mission goes beyond offering lower prices. We strive to build a shopping experience based on transparency, reliability, and long-term customer satisfaction. From carefully selected suppliers to secure payments and responsive support, every part of our service is designed with our customers in mind.",
+          "story_3": "Every order is an opportunity to earn our customers' trust. We're committed to continuously improving our store, expanding our selection, and providing an experience defined by honest communication and dependable support."
+        },
+        "why_choose_us": {
+          "header": "Why Choose Us",
+          "description": "We're committed to making your shopping experience simple, secure, and enjoyable.",
+          "reason_1_title": "Competitive Shipping",
+          "reason_1_description": "Our direct supplier network helps reduce shipping costs while providing estimated delivery times before you place your order.",
+          "reason_2_title": "Secure Payments",
+          "reason_2_description": "Your payments are protected using secure and trusted payment providers.",
+          "reason_3_title": "Affordable Prices",
+          "reason_3_description": "By working directly with trusted suppliers, we reduce unnecessary costs and offer quality products at competitive prices.",
+          "reason_4_title": "Customer Support",
+          "reason_4_description": "Our support team is here to answer your questions and help with your orders."
+        },
+        "our_mission": {
+          "header": "Our Mission",
+          "text_1": "Our mission is to make online shopping more affordable by connecting customers with carefully selected products while reducing unnecessary intermediaries. By streamlining the purchasing process, we can offer competitive prices without compromising on quality or security.",
+          "text_2": "We believe everyone deserves access to quality products at fair prices. That's why we're committed to transparent pricing, reliable shipping options, secure payments, and responsive customer support throughout every step of your shopping experience."
+        }
+      }
+    },
+    "call_to_action": {
+      "header": "Have Questions?",
+      "description": "If you need assistance or have any questions about our products, shipping, or your order, we're here to help.",
+      "button_text": "Contact Us"
     }
   }
 }

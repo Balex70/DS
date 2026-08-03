@@ -33,10 +33,11 @@ const footerMainSections = [
 ];
 
 const AddressSection = () => {
+    const t = useTranslations('frontend')
     return (
         <address className="not-italic">
             <h3 className="hidden md:block mb-4 text-sm font-semibold uppercase tracking-wide">
-                Contact
+                {t('footer.contacts')}
             </h3>
 
             <ul className="space-y-3 text-sm text-muted-foreground">
@@ -58,7 +59,7 @@ const AddressSection = () => {
                 </li>
                 <li>
                     <div className="text-sm font-normal text-foreground">
-                    Working Hours
+                    {t('footer.working_hours')}
                     </div>
                     <div>Mon – Fri</div>
                     <div>09:00 – 18:00</div>

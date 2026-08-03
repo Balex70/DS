@@ -1,4 +1,7 @@
+'use client'
+
 import Image from "next/image";
+import { useTranslations } from 'next-intl'
 
 function TrustImage({ src, alt }) {
     return (
@@ -13,12 +16,14 @@ function TrustImage({ src, alt }) {
 }
 
 export default function FooterBottomSection() {
+    const t = useTranslations('frontend')
+
     return (
         <div className="border-t mb-8 md:mb-2">
             <div className="flex flex-col items-center justify-between mt-2 gap-2 lg:flex-row">
                 {/* Copyright */}
                 <p className="text-center text-xs text-muted-foreground lg:text-left">
-                    © {new Date().getFullYear()} `name of the store`. All rights reserved.
+                    © {new Date().getFullYear()} {t('footer.copyright')}
                 </p>
 
                 {/* Payment / Trust */}
