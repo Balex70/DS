@@ -9,13 +9,13 @@ export function AboutComponent() {
     const t = useTranslations('frontend')
 
     return (
-        <div className="container py-2">
-            <div className="mb-12">
+        <div className="mx-auto py-4 lg:py-10">
+            <div className="mb-12 text-center">
                 <h1 className="text-4xl font-bold">
                     {t('footer.about_us_section.header')}
                 </h1>
 
-                <p className="mt-4 max-w-3xl text-muted-foreground">
+                <p className="mx-auto mt-4 max-w-3xl text-muted-foreground">
                     {t('footer.about_us_section.short_description')}
                 </p>
             </div>
