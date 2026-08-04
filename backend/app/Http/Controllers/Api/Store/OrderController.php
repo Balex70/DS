@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Store;
 use App\Enums\CurrenciesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
+use App\Mail\Admin\AdminOrderCreated;
 use App\Mail\Client\ClientOrderCreated;
 use App\Models\Order;
 use App\Services\CartService;
@@ -52,6 +53,7 @@ class OrderController extends Controller
         $order = $this->storeOrderService->upsertOrderByCheckoutToken($data, $items, $token);
 
         Mail::to($request->shipping_email)->queue(new ClientOrderCreated($order));
+        Mail::to(config('mail.admin_address'))->queue(new AdminOrderCreated($order));
 
         return response()->json($order->load('items'), 201);
     }
