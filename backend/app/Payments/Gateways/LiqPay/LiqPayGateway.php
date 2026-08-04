@@ -6,11 +6,13 @@ use App\Enums\CurrenciesEnum;
 use App\Enums\PaymentMethodsEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Events\PaymentChangedStatus;
+use App\Mail\Client\ClientOrderPaid;
 use App\Models\Payment;
 use App\Payments\DTO\PaymentRequestDTO;
 use App\Payments\DTO\PaymentResponseDTO;
 use App\Payments\Gateways\AbstractGateway;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use LiqPay;
 
@@ -159,6 +161,9 @@ class LiqPayGateway extends AbstractGateway
         ]);
 
         PaymentChangedStatus::dispatch($payment->order, $statusToUpdate);
+        if($statusToUpdate === PaymentStatusEnum::PAID) {
+            Mail::to($payment->order->shipping_email)->queue(new ClientOrderPaid($payment->order));
+        }
     }
 
     private function mapStatus(string $status): PaymentStatusEnum
@@ -248,6 +253,10 @@ class LiqPayGateway extends AbstractGateway
             ]);
 
             PaymentChangedStatus::dispatch($payment->order, $statusToUpdate);
+
+            if($statusToUpdate === PaymentStatusEnum::PAID) {
+                Mail::to($payment->order->shipping_email)->queue(new ClientOrderPaid($payment->order));
+            }
             return true;
         } catch (\Throwable $e) {
             logger()->error('LiqPay verification failed', [
