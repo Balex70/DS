@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="68 78 264 264"
+     width="100%"
+     height="100%">
+  <defs>
+    <linearGradient id="toteGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Glow / Ambient Circle -->
+  <circle cx="200" cy="210" r="130" fill="#5f77a8" />
+
+  <!-- Circle -->
+  <circle
+    cx="200"
+    cy="210"
+    r="78"
+    fill="#FACC15"
+  />
+
+  <!-- bottom line -->
+  <path
+      d="M124 210
+        A76 77 0 0 0 276 210"
+      fill="none"
+      stroke="#36da44"
+      stroke-width="0"
+      stroke-linecap="round"
+  />
+
+  <!-- Floating Accent Circle -->
+  <circle
+    cx="200"
+    cy="212"
+    r="38"
+    fill="#f43f3f"
+  />
+</svg>

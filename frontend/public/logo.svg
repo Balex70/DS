@@ -1,40 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="68 78 264 264"
-     width="100%"
-     height="100%">
-  <defs>
-    <linearGradient id="toteGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#4F46E5" />
-      <stop offset="100%" stop-color="#06B6D4" />
-    </linearGradient>
-  </defs>
+     viewBox="0 130 408 240">
 
-  <!-- Background Glow / Ambient Circle -->
-  <circle cx="200" cy="210" r="130" fill="#F3F4F6" />
+    <!-- Speed lines -->
+    <g fill="#96a9c0" opacity=".45">
+        <rect x="10" y="180" width="145" height="14" rx="7"/>
+        <rect x="0" y="235" width="125" height="12" rx="6"/>
+        <rect x="30" y="295" width="155" height="14" rx="7"/>
+    </g>
 
-  <!-- Circle -->
-  <circle
-    cx="200"
-    cy="210"
-    r="62"
-    fill="#FACC15"
-  />
+    <!-- Top -->
+    <polygon
+        fill="#1fd806"
+        points="192,178 315,130 408,180 300,220"/>
 
-  <!-- bottom line -->
-  <path
-      d="M124 210
-        A76 76 0 0 0 276 210"
-      fill="none"
-      stroke="#6980A0"
-      stroke-width="38"
-      stroke-linecap="round"
-  />
+    <!-- Left -->
+    <polygon
+        fill="#FACC15"
+        points="192,188 292,237 292,370 192,321"/>
 
-  <!-- Floating Accent Circle -->
-  <circle
-    cx="250"
-    cy="155"
-    r="30"
-    fill="#F43F5E"
-  />
+    <!-- Right -->
+    <polygon
+        fill="#0284C7"
+        points="308,237 408,190 408,321 308,370"/>
+
 </svg>
