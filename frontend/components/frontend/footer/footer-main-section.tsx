@@ -151,7 +151,7 @@ export default function FooterMainSection() {
                                 tracking-wide
                                 hover:no-underline"
                                 >
-                            {t("footer.contact")}
+                            {t("footer.contacts")}
                         </AccordionTrigger>
 
                         <AccordionContent className="border-t px-4 py-4">
