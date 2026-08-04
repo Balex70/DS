@@ -6,6 +6,7 @@ use App\Enums\CurrenciesEnum;
 use App\Enums\PaymentMethodsEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Events\PaymentChangedStatus;
+use App\Mail\Admin\AdminOrderPaid;
 use App\Mail\Client\ClientOrderPaid;
 use App\Models\Payment;
 use App\Payments\DTO\PaymentRequestDTO;
@@ -163,6 +164,7 @@ class LiqPayGateway extends AbstractGateway
         PaymentChangedStatus::dispatch($payment->order, $statusToUpdate);
         if($statusToUpdate === PaymentStatusEnum::PAID) {
             Mail::to($payment->order->shipping_email)->queue(new ClientOrderPaid($payment->order));
+            Mail::to(config('mail.admin_address'))->queue(new AdminOrderPaid($payment->order));
         }
     }
 
@@ -256,6 +258,7 @@ class LiqPayGateway extends AbstractGateway
 
             if($statusToUpdate === PaymentStatusEnum::PAID) {
                 Mail::to($payment->order->shipping_email)->queue(new ClientOrderPaid($payment->order));
+                Mail::to(config('mail.admin_address'))->queue(new AdminOrderPaid($payment->order));
             }
             return true;
         } catch (\Throwable $e) {
