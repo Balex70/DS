@@ -7,6 +7,7 @@ use App\Enums\OrderStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
+use App\Mail\Admin\AdminOrderShipped;
 use App\Mail\Client\ClientOrderProcessing;
 use App\Mail\Client\ClientOrderShipped;
 use App\Models\Order;
@@ -101,6 +102,7 @@ class OrderController extends Controller
         // Need to send email client and admin about that
         if ($this->service->toDsStatus($responseData['data']['orderStatus']) === OrderDsStatusEnum::SHIPPED) {
             Mail::to($order->shipping_email)->queue(new ClientOrderShipped($order));
+            Mail::to(config('mail.admin_address'))->queue(new AdminOrderShipped($order));
         }
 
         return response()->json([
