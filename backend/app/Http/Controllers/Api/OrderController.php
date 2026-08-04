@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\OrderDsStatusEnum;
 use App\Enums\OrderStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
+use App\Mail\Client\ClientOrderProcessing;
+use App\Mail\Client\ClientOrderShipped;
 use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -73,6 +77,8 @@ class OrderController extends Controller
         $order->load('items');
 
         $this->service->sendOrder($order);
+
+        Mail::to($order->shipping_email)->queue(new ClientOrderProcessing($order));
     }
 
     public function checkOrderStatusInDSProvider(Order $order)
@@ -90,6 +96,12 @@ class OrderController extends Controller
         $order->status = $this->service->toOrderStatus($responseData['data']['orderStatus']);
         $order->ds_status = $this->service->toDsStatus($responseData['data']['orderStatus']);
         $order->save();
+
+        // OrderDsStatusEnum::SHIPPED -> means in transit to the client
+        // Need to send email client and admin about that
+        if ($this->service->toDsStatus($responseData['data']['orderStatus']) === OrderDsStatusEnum::SHIPPED) {
+            Mail::to($order->shipping_email)->queue(new ClientOrderShipped($order));
+        }
 
         return response()->json([
             'success' => true,
