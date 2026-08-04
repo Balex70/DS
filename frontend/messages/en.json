@@ -15,6 +15,178 @@
     "customer": {
       "name": "Name",
       "email": "Email"
+    },
+    "footer": {
+      "company": "Company",
+      "customer_service": "Customer Service",
+      "legal": "Legal",
+      "about_us": "About us",
+      "contact_us": "Contact us",
+      "faq": "FAQ",
+      "shipping_info": "Shipping Information",
+      "returns_refunds": "Returns & Refunds",
+      "order_tracking": "Order Tracking",
+      "payment_methods": "Payment Methods",
+      "privacy_policy": "Privacy Policy",
+      "terms": "Terms and conditions",
+      "cookie_policy": "Cookie Policy",
+      "contacts": "Contact",
+      "working_hours": "Working hours",
+      "shop_by_category": "Shop by category",
+      "copyright": "`name of the store`. All rights reserved.",
+      "about_us_section": {
+        "header": "About us",
+        "short_description": "We believe online shopping should be simple, affordable, and accessible to everyone. By partnering directly with trusted suppliers, we offer a wide selection of quality products at competitive prices, supported by secure payments, transparent shipping, and reliable customer service.",
+        "our_story": {
+          "header": "Our Story",
+          "story_1": "Our journey began with a simple question: why should customers pay extra for unnecessary layers in the supply chain? By embracing the dropshipping model and partnering directly with reliable suppliers, we streamline the purchasing process, reduce overhead, and pass those savings on to our customers through more affordable prices.",
+          "story_2": "Our mission goes beyond offering lower prices. We strive to build a shopping experience based on transparency, reliability, and long-term customer satisfaction. From carefully selected suppliers to secure payments and responsive support, every part of our service is designed with our customers in mind.",
+          "story_3": "Every order is an opportunity to earn our customers' trust. We're committed to continuously improving our store, expanding our selection, and providing an experience defined by honest communication and dependable support."
+        },
+        "why_choose_us": {
+          "header": "Why Choose Us",
+          "description": "We're committed to making your shopping experience simple, secure, and enjoyable.",
+          "reason_1_title": "Competitive Shipping",
+          "reason_1_description": "Our direct supplier network helps reduce shipping costs while providing estimated delivery times before you place your order.",
+          "reason_2_title": "Secure Payments",
+          "reason_2_description": "Your payments are protected using secure and trusted payment providers.",
+          "reason_3_title": "Affordable Prices",
+          "reason_3_description": "By working directly with trusted suppliers, we reduce unnecessary costs and offer quality products at competitive prices.",
+          "reason_4_title": "Customer Support",
+          "reason_4_description": "Our support team is here to answer your questions and help with your orders."
+        },
+        "our_mission": {
+          "header": "Our Mission",
+          "text_1": "Our mission is to make online shopping more affordable by connecting customers with carefully selected products while reducing unnecessary intermediaries. By streamlining the purchasing process, we can offer competitive prices without compromising on quality or security.",
+          "text_2": "We believe everyone deserves access to quality products at fair prices. That's why we're committed to transparent pricing, reliable shipping options, secure payments, and responsive customer support throughout every step of your shopping experience."
+        }
+      },
+      "contact_us_section": {
+        "header": "Contact Us",
+        "description": "We're here to help! Reach out to us with any questions or concerns, and we'll be happy to assist you.",
+        "email": "Email",
+        "phone": "Phone",
+        "working_hours": "Working hours"
+      },
+      "faq_section": {
+        "header": "Frequently Asked Questions",
+        "description": "Find answers to the most common questions about orders, shipping, payments, returns, and customer support.",
+        "question_1": {
+          "question": "How long does shipping take?",
+          "answer": "Delivery times depend on the selected shipping method and destination country. Estimated delivery dates are displayed during checkout before you place your order."
+        },
+        "question_2": {
+          "question": "How can I track my order?",
+          "answer": "Once your order has been shipped, you'll receive a tracking number by email. You can also use our Order Tracking page to check the latest delivery status."
+        },
+        "question_3": {
+          "question": "What payment methods do you accept?",
+          "answer": "We accept major credit and debit cards along with other secure payment methods available during checkout."
+        },
+        "question_4": {
+          "question": "Can I return an item?",
+          "answer": "Yes. If your order is eligible for return, you can submit a return request according to our Returns & Refund Policy."
+        },
+        "question_5": {
+          "question": "When will I receive my refund?",
+          "answer": "Approved refunds are processed using the original payment method. Processing time depends on your payment provider and may take several business days."
+        },
+        "question_6": {
+          "question": "How can I contact support?",
+          "answer": "You can reach our support team through the Contact Us page or by emailing us directly. We'll respond as quickly as possible during business hours."
+        }
+      },
+      "shipping_section": {
+        "header": "Shipping Information",
+        "description": "Everything you need to know about shipping, delivery estimates, and tracking your order.",
+        "shipping_coverage": "Worldwide Shipping",
+        "shipping_coverage_description": "We ship to most countries around the world. Available shipping options are shown during checkout based on your delivery address.",
+        "shipping_delivery_time": "Delivery Time",
+        "shipping_delivery_time_description": "Delivery time depends on your destination and the shipping method you choose. Estimated delivery dates are displayed before you complete your purchase.",
+        "shipping_cost": "Shipping Costs",
+        "shipping_cost_description": "Shipping costs are calculated automatically during checkout based on your destination, selected shipping method, and the items in your cart.",
+        "shipping_tracking": "Order Tracking",
+        "shipping_tracking_description": "Once your order has been shipped, you'll receive a tracking number by email so you can follow your package until delivery."
+      },
+      "returns": {
+        "header": "Returns & Refunds",
+        "description": "We want you to shop with confidence. Below you'll find information about returns, refunds, and what to do if there's an issue with your order.",
+        "return_eligibility": "Return Eligibility",
+        "return_eligibility_description": "Eligible items may be returned according to our return policy. Products should be unused and returned in their original condition whenever possible.",
+        "refund_process": "Refund Process",
+        "refund_process_description": "Once your return has been received and approved, your refund will be issued using the original payment method. Processing times may vary depending on your payment provider.",
+        "return_damage": "Damaged or Incorrect Items",
+        "return_damage_description": "If your order arrives damaged or you receive the wrong item, please contact us as soon as possible so we can resolve the issue quickly.",
+        "return_help": "Need Help?",
+        "return_help_description": "If you have any questions about returns or refunds, our support team is always happy to assist you."
+      },
+      "track_order": {
+        "header": "Track Your Order",
+        "description": "Enter your order number and email address to check the latest status of your order.",
+        "form_header": "Order Tracking",
+        "form_description": "This feature is currently being prepared and will be available soon.",
+        "order_number_label": "Order Number",
+        "order_number_placeholder": "Order Number",
+        "email_label": "Email Address",
+        "email_placeholder": "Email Address",
+        "track_button": "Track Order",
+        "warning_label": "Warning",
+        "warning_message": "Until this feature is available, please contact our support team if you'd like an update on your order.",
+        "contact_us_button": "Contact Us"
+      },
+      "payment_methods_section": {
+        "header": "Payment Methods",
+        "description": "We offer secure and reliable payment options to make your checkout experience simple and safe.",
+        "accept": "Accepted Payment Methods",
+        "accept_description": "We accept major credit and debit cards as well as other secure payment methods available during checkout.",
+        "secure": "Secure Payments",
+        "secure_description": "Your payment information is protected using encrypted connections and trusted payment providers. We never store your complete payment card details.",
+        "charge": "When You'll Be Charged",
+        "charge_description": "Payment is processed securely during checkout after you confirm your order.",
+        "currencies": "Supported Currencies",
+        "currencies_description": "Available currencies are displayed throughout the store. The final payment amount is shown before you complete your purchase."
+      },
+      "privacy_policy_section": {
+        "header": "Privacy Policy",
+        "description": "Your privacy is important to us. This page explains how we collect, use, and protect your personal information when you use our website.",
+        "collect": "Information We Collect",
+        "collect_description": "We collect only the information necessary to process your orders, provide customer support, and improve your shopping experience.",
+        "use": "How We Use Your Information",
+        "use_description": "Your information is used to process orders, communicate with you about your purchases, and provide customer support. We do not sell your personal information.",
+        "security": "Data Security",
+        "security_description": "We use secure technologies and trusted service providers to help protect your personal information during transmission and storage.",
+        "rights": "Your Rights",
+        "rights_description": "Depending on your location, you may have the right to access, update, or request the deletion of your personal information. Please contact us if you have any questions regarding your privacy."
+      },
+      "terms_section": {
+        "header": "Terms & Conditions",
+        "description": "These Terms & Conditions outline the rules and conditions for using our website and purchasing products from our store.",
+        "use_website": "Use of Our Website",
+        "use_website_description": "By using our website, you agree to comply with these Terms & Conditions and all applicable laws and regulations.",
+        "orders": "Orders",
+        "orders_description": "All orders are subject to product availability and confirmation. We reserve the right to refuse or cancel orders when necessary.",
+        "payments": "Pricing & Payments",
+        "payments_description": "Product prices and shipping costs are displayed during checkout. Payments are processed securely through our trusted payment providers.",
+        "limitation": "Limitation of Liability",
+        "limitation_description": "We strive to provide accurate information and reliable service, but cannot guarantee that our website will always be error-free or uninterrupted."
+      },
+      "cookie_policy_section": {
+        "header": "Cookie Policy",
+        "description": "This Cookie Policy explains what cookies are, how we use them, and the choices you have regarding their use on our website.",
+        "what": "What Are Cookies?",
+        "what_description": "Cookies are small text files stored on your device that help websites remember your preferences and improve your browsing experience.",
+        "use": "How We Use Cookies",
+        "use_description": "We use cookies to keep the website functioning properly, remember your preferences, improve performance, and better understand how our website is used.",
+        "manage": "Managing Cookies",
+        "manage_description": "Most web browsers allow you to manage or disable cookies through your browser settings. Please note that disabling certain cookies may affect website functionality.",
+        "your_privacy": "Your Privacy",
+        "your_privacy_description": "We respect your privacy and use cookies responsibly. For more information about how we handle your personal data, please see our Privacy Policy."
+      }
+    },
+    "call_to_action": {
+      "header": "Have Questions?",
+      "description": "If you need assistance or have any questions about our products, shipping, or your order, we're here to help.",
+      "button_text": "Contact Us"
     }
   }
 }

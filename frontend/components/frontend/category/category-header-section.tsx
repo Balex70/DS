@@ -33,7 +33,7 @@ export function CategoryHeaderSection({ slug }: Props) {
 
     return (
         <div className="space-y-2">
-            <h1 className="text-2xl font-semibold">{translation?.name ?? category.name}</h1>
+            <h1 className="text-md md:text-lg font-semibold">{(translation?.name != undefined && translation?.name != '') ? translation?.name : category.name}</h1>
         </div>
     );
 }

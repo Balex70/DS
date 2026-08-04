@@ -1,3 +1,5 @@
+import { Product } from "./product"
+
 export type Category = {
   id: number,
   name: string,
@@ -7,6 +9,7 @@ export type Category = {
   parent_id?: number,
   children?: Category[],
   active: boolean,
+  is_visible: boolean,
   slug: string,
   image: string,
   full_path: string,
@@ -14,5 +17,8 @@ export type Category = {
     locale: string,
     name: string,
     description: string
-  }[]
+  }[],
+  products?: Product[]
 }
+
+export type SortSelectValue = "latest" | "price_asc" | "price_desc";

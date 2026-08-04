@@ -103,8 +103,8 @@ export default function ProductGallery({
                     ))}
                 </CarouselContent>
 
-                <CarouselPrevious className="left-4" />
-                <CarouselNext className="right-4" />
+                <CarouselPrevious className="left-4 size-10 [&>svg]:!size-6" />
+                <CarouselNext className="right-4 size-10 [&>svg]:!size-6" />
             </Carousel>
 
             {/* THUMBNAILS */}

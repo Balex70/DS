@@ -33,13 +33,18 @@ class StoreOrderRequest extends FormRequest
 
             // Shipping info (required)
             'shipping_full_name' => ['required', 'string', 'max:255'],
-            'shipping_phone' => ['nullable', 'string', 'max:50'],
+            'shipping_full_name_latin' => ['nullable', 'string', 'max:255'],
+            'shipping_phone' => ['required', 'string', 'min:6', 'max:20', 'regex:/^[+\d\s()-]+$/'],
             'shipping_email' => ['required', 'email', 'max:255'],
 
             'shipping_address_line1' => ['required', 'string', 'max:255'],
+            'shipping_address_line1_latin' => ['nullable', 'string', 'max:255'],
             'shipping_address_line2' => ['nullable', 'string', 'max:255'],
+            'shipping_address_line2_latin' => ['nullable', 'string', 'max:255'],
             'shipping_city' => ['required', 'string', 'max:255'],
+            'shipping_city_latin' => ['nullable', 'string', 'max:255'],
             'shipping_state' => ['nullable', 'string', 'max:255'],
+            'shipping_state_latin' => ['nullable', 'string', 'max:255'],
             'shipping_postal_code' => ['nullable', 'string', 'max:50'],
             'shipping_country' => ['required', 'string', 'size:2'],
 

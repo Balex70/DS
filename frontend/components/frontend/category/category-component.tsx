@@ -12,6 +12,9 @@ import { SortSelect } from "./SortSelect";
 import { useLocale } from 'next-intl';
 import { CategoryFooterSection } from "./category-footer-section";
 import { useCurrency } from "@/context/CurrencyContext";
+import { MobileSortSelect } from "./MobileSortSelect";
+import { SortSelectValue } from "@/types/category";
+import { MobileCategorySidebar } from "./MobileCategorySidebar";
 
 type Props = {
     slug: string[];
@@ -21,7 +24,7 @@ export function CategoryComponent({ slug }: Props) {
     const locale = useLocale();
     const { currency } = useCurrency();
     const { data: filterData, isLoading: isFilterLoading } = useProductFilters({category: slug, locale: locale});
-    const [sort, setSort] = useState<"latest" | "price_asc" | "price_desc">("latest"); // TODO: use type here
+    const [sort, setSort] = useState<SortSelectValue>("latest");
     const [priceDraft, setPriceDraft] = useState<[number, number]>([0, 10000]);
     const [price, setPrice] = useState<[number, number]>([0, 10000]);
     const [activeMaterials, setActiveMaterials] = useState<number[]>([]);
@@ -66,7 +69,7 @@ export function CategoryComponent({ slug }: Props) {
             </aside>
 
             <main className="min-w-0 flex-1">
-                <div className="space-y-6">
+                <div className="space-y-3 lg:space-y-6">
                     {/* Header / Category Info */}
                     <CategoryHeaderSection slug={slug} />
 
@@ -76,7 +79,29 @@ export function CategoryComponent({ slug }: Props) {
                     <Separator />
 
                     <div className="px-2 mb-2">
-                        <SortSelect value={sort} onChange={setSort} />
+                        {/* Desktop */}
+                        <div className="hidden lg:block">
+                            <SortSelect value={sort} onChange={setSort} />
+                        </div>
+
+                        {/* Mobile */}
+                        <div className="flex items-center justify-between lg:hidden">
+                            <MobileCategorySidebar
+                                minPrice={minPrice}
+                                maxPrice={maxPrice}
+                                price={priceDraft}
+                                activeMaterials={activeMaterials}
+                                materialsOptions={filterData?.materials ?? []}
+                                onPriceChange={setPriceDraft}
+                                setPriceApplied={() => setPrice(priceDraft)}
+                                setActiveMaterials={setActiveMaterials}
+                            />
+
+                            <MobileSortSelect
+                                value={sort}
+                                onChange={setSort}
+                            />
+                        </div>
                     </div>
                     {/* Products */}
                     <ProductsSection

@@ -2,6 +2,7 @@
 namespace App\Payments\Gateways\Stripe;
 
 use App\Enums\CurrenciesEnum;
+use App\Enums\PaymentMethodsEnum;
 use App\Payments\DTO\PaymentRequestDTO;
 use App\Payments\DTO\PaymentResponseDTO;
 use App\Payments\Gateways\AbstractGateway;
@@ -85,10 +86,10 @@ class StripeGateway extends AbstractGateway
     public function getPaymentMethods(): array
     {
         return [
-            'card',
-            'apple_pay',
-            'google_pay',
-            'link',
+            PaymentMethodsEnum::CARD->value,
+            PaymentMethodsEnum::APPLE_PAY->value,
+            PaymentMethodsEnum::GOOGLE_PAY->value,
+            PaymentMethodsEnum::LINK->value,
         ];
     }
 }

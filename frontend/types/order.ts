@@ -16,12 +16,17 @@ export type Order = {
     payment_method: string;
     payment_status: string;
     shipping_full_name: string;
+    shipping_full_name_latin?: string;
     shipping_phone?: string;
     shipping_email?: string;
     shipping_address_line1: string;
+    shipping_address_line1_latin?: string;
     shipping_address_line2?: string;
+    shipping_address_line2_latin?: string;
     shipping_city: string;
+    shipping_city_latin?: string;
     shipping_state?: string;
+    shipping_state_latin?: string;
     shipping_postal_code?: string;
     shipping_country: string;
     public_token: string;
@@ -51,14 +56,19 @@ type OrderItem = {
 
 export type OrderPayload = {
     shipping_full_name: string;
+    shipping_full_name_latin?: string;
     shipping_phone: string;
     shipping_email: string;
 
     shipping_address_line1: string;
+    shipping_address_line1_latin?: string;
     shipping_address_line2: string;
+    shipping_address_line2_latin?: string;
 
     shipping_city: string;
+    shipping_city_latin?: string;
     shipping_state: string;
+    shipping_state_latin?: string;
     shipping_postal_code: string;
     shipping_country: string;
 
@@ -69,6 +79,16 @@ export type OrderPayload = {
     shipping_method?: string;
     currency?: string;
 };
+
+export const latinFieldsMapper = {
+    shipping_full_name: "shipping_full_name_latin",
+    shipping_address_line1: "shipping_address_line1_latin",
+    shipping_address_line2: "shipping_address_line2_latin",
+    shipping_city: "shipping_city_latin",
+    shipping_state: "shipping_state_latin",
+} as const;
+
+export type LatinFieldType = (typeof latinFieldsMapper)[keyof typeof latinFieldsMapper];
 
 export type OrderStatus =
     | "draft"

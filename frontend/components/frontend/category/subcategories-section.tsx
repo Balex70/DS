@@ -66,7 +66,7 @@ export function SubcategoriesSection({ slug }: Props) {
                             href={`/category/${category.full_path}`}
                             className="block"
                         >
-                            <Card className="h-10 overflow-hidden py-0 hover:bg-muted/50 transition rounded-md">
+                            <Card className="h-14 overflow-hidden py-0 hover:bg-muted/50 transition rounded-md">
                                 <CardContent className="flex h-full items-center gap-3 p-0">
 
                                     {/* Wide image */}
@@ -89,8 +89,8 @@ export function SubcategoriesSection({ slug }: Props) {
 
                                     {/* Name */}
                                     <div className="min-w-0 flex-1">
-                                        <div className="truncate text-sm font-medium">
-                                            {translation?.name ?? category.name}
+                                        <div className="line-clamp-2 text-xs md:text-sm font-medium leading-tight mr-3">
+                                            {(translation?.name != undefined && translation?.name != '') ? translation?.name : category.name}
                                         </div>
                                     </div>
 

@@ -1,31 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
+import { useEffect, useMemo, useState } from "react";
 import { useShippingCalculate } from "@/hooks/use-shipping-calculate";
 import { ShippingMethod } from "@/types/shipping";
-import { CheckoutStatus, OrderPayload } from "@/types/order";
+import { CheckoutStatus, latinFieldsMapper, LatinFieldType, OrderPayload } from "@/types/order";
 import { ShippingMethodsSelector } from "./ShippingMethodsSelector";
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-} from "@/components/ui/command";
-
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { FinalCarriers } from "./FinalCarriers";
-import { COUNTRIES, getSelectedCountry } from "./countries";
 import { useCurrency } from "@/context/CurrencyContext";
+import { SelectCountryForm } from "./SelectCountryForm";
+import MobileSelectCountryForm from "./MobileSelectCountryForm";
+import { checkoutSchemaValidation, CheckoutValidationType } from "@/helpers/validators/checkout-schema-validation";
+import { z } from "zod";
+import { transliterate } from "transliteration";
+import { InputField } from "./InputField";
+import { FieldLabel } from "@/components/ui/field";
 
 type Props = {
     form: OrderPayload;
@@ -34,7 +22,8 @@ type Props = {
     shippingMethod: ShippingMethod | undefined;
     setShippingMethod: (method: ShippingMethod | undefined) => void;
     cartKey: string | undefined;
-    errors: Record<string, string[]>
+    errors: Record<string, string[]>;
+    setShippingFormValid: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 export function ShippingForm({
@@ -44,7 +33,8 @@ export function ShippingForm({
     shippingMethod,
     setShippingMethod,
     cartKey,
-    errors
+    errors,
+    setShippingFormValid
 }: Props) {
     const [payload, setPayload] = useState<{
         shipping_country: string;
@@ -52,8 +42,16 @@ export function ShippingForm({
     } | null>(null);
     const { currency } = useCurrency();
     const { data: shippingOptions = [], isLoading, isFetching } =  useShippingCalculate(payload, cartKey, currency);
-    const getError = (field: string) => errors[field]?.[0];
-    const [openCountryPopover, setOpenCountryPopover] = useState(false);
+
+    const feValidationResult = checkoutSchemaValidation.safeParse(form);
+    const feErrors = feValidationResult.success
+        ? {}
+        : z.flattenError(feValidationResult.error).fieldErrors;
+    const getFieldError = (field: keyof OrderPayload) => feErrors[field as keyof CheckoutValidationType]?.[0] ?? errors[field]?.[0];
+
+    const isFormValid = useMemo(() => {
+        return checkoutSchemaValidation.safeParse(form).success;
+    }, [form]);
 
     // trigger shipping calculation when address changes
     useEffect(() => {
@@ -89,12 +87,37 @@ export function ShippingForm({
         setShippingMethod(shippingOptions[0]);
     }, [shippingOptions, shippingMethod, setShippingMethod]);
 
+    useEffect(() => {
+        setShippingFormValid(isFormValid);
+    }, [isFormValid, setShippingFormValid]);
+
     const onFieldChange = <K extends keyof OrderPayload>(field: K, value: OrderPayload[K]) => {
-        setForm(prev => ({ ...prev, [field]: value }));
+        setForm(prev => {
+            const next = {
+                ...prev,
+                [field]: value,
+            };
+
+            const latinField = latinFieldsMapper[field as keyof typeof latinFieldsMapper];
+
+            if (latinField) {
+                next[latinField] = value
+                    ? transliterate(value as string)
+                    : "";
+            }
+
+            return next;
+        });
         setCheckoutStatus("idle");
     }
 
-    const selectedCountry = getSelectedCountry(form.shipping_country);
+    const onLatinFieldChange = <K extends LatinFieldType>(field: K, value: OrderPayload[K]) => {
+        setForm((prev) => ({
+                ...prev,
+                [field]: value
+        }));
+        setCheckoutStatus("idle");
+    }
 
     return (
         <div>
@@ -109,179 +132,111 @@ export function ShippingForm({
             </div>
 
             {/* FORM */}
-            <div className="space-y-4">
-                <div className="space-y-1">
-                    <Input
-                        placeholder="Full name"
-                        value={form.shipping_full_name}
-                        onChange={(e) => onFieldChange("shipping_full_name", e.target.value)}
-                    />
-                    {getError("shipping_full_name") && (
-                        <p className="text-sm text-red-500">
-                            {getError("shipping_full_name")}
-                        </p>
-                    )}
-                </div>
+            <div className="space-y-4" id="checkout-shipping-form">
+                <InputField
+                    form={form}
+                    label="Full name"
+                    fieldName="shipping_full_name"
+                    latinFieldName="shipping_full_name_latin"
+                    onFieldChange={onFieldChange}
+                    onLatinFieldChange={onLatinFieldChange}
+                    errors={errors}
+                />
 
-                <div className="space-y-1">
-                    <Input
-                        placeholder="Phone"
-                        value={form.shipping_phone}
-                        onChange={(e) => onFieldChange("shipping_phone", e.target.value)}
-                    />
-                    {getError("shipping_phone") && (
-                        <p className="text-sm text-red-500">
-                            {getError("shipping_phone")}
-                        </p>
-                    )}
-                </div>
+                <InputField
+                    form={form}
+                    label="Phone"
+                    fieldName="shipping_phone"
+                    onFieldChange={onFieldChange}
+                    onLatinFieldChange={onLatinFieldChange}
+                    errors={errors}
+                />
 
-                <div className="space-y-1">
-                    <Input
-                        placeholder="Email"
-                        type="email"
-                        value={form.shipping_email}
-                        onChange={(e) => onFieldChange("shipping_email", e.target.value)}
-                    />
-                    {getError("shipping_email") && (
-                        <p className="text-sm text-red-500">
-                            {getError("shipping_email")}
-                        </p>
-                    )}
-                </div>
+                <InputField
+                    form={form}
+                    label="Email"
+                    fieldName="shipping_email"
+                    onFieldChange={onFieldChange}
+                    onLatinFieldChange={onLatinFieldChange}
+                    errors={errors}
+                />
 
-                <div className="space-y-1">
-                    <Input
-                        placeholder="Address line 1"
-                        value={form.shipping_address_line1}
-                        onChange={(e) => onFieldChange("shipping_address_line1", e.target.value)}
-                    />
-                    {getError("shipping_address_line1") && (
-                        <p className="text-sm text-red-500">
-                            {getError("shipping_address_line1")}
-                        </p>
-                    )}
-                </div>
+                <InputField
+                    form={form}
+                    label="Address line 1"
+                    fieldName="shipping_address_line1"
+                    latinFieldName="shipping_address_line1_latin"
+                    onFieldChange={onFieldChange}
+                    onLatinFieldChange={onLatinFieldChange}
+                    errors={errors}
+                />
 
-                <div className="space-y-1">
-                    <Input
-                        placeholder="Address line 2"
-                        value={form.shipping_address_line2}
-                        onChange={(e) => onFieldChange("shipping_address_line2", e.target.value)}
+                <InputField
+                    form={form}
+                    label="Address line 2"
+                    fieldName="shipping_address_line2"
+                    latinFieldName="shipping_address_line2_latin"
+                    onFieldChange={onFieldChange}
+                    onLatinFieldChange={onLatinFieldChange}
+                    errors={errors}
+                />
+
+
+                <div className="grid grid-cols-2 gap-4">
+                    <InputField
+                        form={form}
+                        label="City"
+                        fieldName="shipping_city"
+                        latinFieldName="shipping_city_latin"
+                        onFieldChange={onFieldChange}
+                        onLatinFieldChange={onLatinFieldChange}
+                        errors={errors}
                     />
-                    {getError("shipping_address_line2") && (
-                        <p className="text-sm text-red-500">
-                            {getError("shipping_address_line2")}
-                        </p>
-                    )}
+
+                    <InputField
+                        form={form}
+                        label="State"
+                        fieldName="shipping_state"
+                        latinFieldName="shipping_state_latin"
+                        onFieldChange={onFieldChange}
+                        onLatinFieldChange={onLatinFieldChange}
+                        errors={errors}
+                    />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                        <Input
-                            placeholder="City"
-                            value={form.shipping_city}
-                            onChange={(e) => onFieldChange("shipping_city", e.target.value)}
-                        />
-                        {getError("shipping_city") && (
-                            <p className="text-sm text-red-500">
-                                {getError("shipping_city")}
-                            </p>
-                        )}
-                    </div>
+                    <InputField
+                        form={form}
+                        label="Postal code"
+                        fieldName="shipping_postal_code"
+                        onFieldChange={onFieldChange}
+                        onLatinFieldChange={onLatinFieldChange}
+                        errors={errors}
+                    />
 
                     <div className="space-y-1">
-                        <Input
-                            placeholder="State"
-                            value={form.shipping_state}
-                            onChange={(e) => onFieldChange("shipping_state", e.target.value)}
-                        />
-                        {getError("shipping_state") && (
-                            <p className="text-sm text-red-500">
-                                {getError("shipping_state")}
-                            </p>
-                        )}
-                    </div>
-                </div>
+                        <FieldLabel className="text-sm text-muted-foreground font-normal">Country:</FieldLabel>
+                        <div className="hidden md:block">
+                            <SelectCountryForm
+                                form={form}
+                                setForm={setForm}
+                                setShippingMethod={setShippingMethod}
+                                setPayload={setPayload}
+                            />
+                        </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                        <Input
-                            placeholder="Postal code"
-                            value={form.shipping_postal_code}
-                            onChange={(e) => onFieldChange("shipping_postal_code", e.target.value)}
-                        />
-                        {getError("shipping_postal_code") && (
-                            <p className="text-sm text-red-500">
-                                {getError("shipping_postal_code")}
-                            </p>
-                        )}
-                    </div>
+                        <div className="md:hidden">
+                            <MobileSelectCountryForm
+                                form={form}
+                                setForm={setForm}
+                                setShippingMethod={setShippingMethod}
+                                setPayload={setPayload}
+                            />
+                        </div>
 
-                    <div className="space-y-1">
-                        <Popover open={openCountryPopover} onOpenChange={setOpenCountryPopover}>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    className="w-full justify-between"
-                                >
-                                    {selectedCountry?.name ?? "Select country"}
-
-                                    <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
-                                </Button>
-                            </PopoverTrigger>
-
-                            <PopoverContent align="start"
-                                sideOffset={4}
-                                className="w-[--radix-popover-trigger-width] p-0">
-                                <div className="w-[var(--radix-popover-trigger-width)]">
-                                    <Command>
-                                        <CommandInput placeholder="Search country..." />
-
-                                        <CommandList>
-                                            <CommandEmpty>No country found.</CommandEmpty>
-
-                                            <CommandGroup>
-                                                {COUNTRIES.map((country) =>
-                                                    country.code === "__divider__" ? (
-                                                        <div key="divider" className="my-2 border-t" />
-                                                    ) : (
-                                                        <CommandItem
-                                                            key={country.code}
-                                                            value={country.name}
-                                                            onSelect={() => {
-                                                                setShippingMethod(undefined);
-                                                                setPayload(null);
-                                                                setForm(prev => ({
-                                                                    ...prev,
-                                                                    shipping_country: country.code,
-                                                                }));
-                                                                setOpenCountryPopover(false);
-                                                            }}
-                                                        >
-                                                            <Check
-                                                                className={cn(
-                                                                    "mr-2 h-4 w-4",
-                                                                    form.shipping_country === country.code
-                                                                        ? "opacity-100"
-                                                                        : "opacity-0"
-                                                                )}
-                                                            />
-
-                                                            {country.name}
-                                                        </CommandItem>
-                                                    )
-                                                )}
-                                            </CommandGroup>
-                                        </CommandList>
-                                    </Command>
-                                </div>
-                            </PopoverContent>
-                        </Popover>
-                        {getError("shipping_country") && (
+                        {getFieldError("shipping_country") && (
                             <p className="text-sm text-red-500 mt-1">
-                                {getError("shipping_country")}
+                                {getFieldError("shipping_country")}
                             </p>
                         )}
                     </div>

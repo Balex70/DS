@@ -5,10 +5,16 @@ import { Button } from "@/components/ui/button";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { ShippingMethod } from "@/types/shipping";
 import { AvailableGatewayResponse } from "@/types/payment";
-import { CheckoutStatus } from "@/types/order";
+import { CheckoutStatus, OrderPayload } from "@/types/order";
 import { useCurrency } from "@/context/CurrencyContext";
+import { COUNTRIES } from "@/config/countries";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { TriangleAlert } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 type Props = {
+    form: OrderPayload;
+    shippingFormValid: boolean;
     country?: string;
     subtotal: number;
     currencySubtotal?: number;
@@ -19,6 +25,8 @@ type Props = {
 };
 
 export function OrderSummary({
+    form,
+    shippingFormValid,
     country,
     subtotal,
     currencySubtotal,
@@ -56,6 +64,8 @@ export function OrderSummary({
         buttonText = "Select Shipping Method";
     } else if (noGateway) {
         buttonText = "Payments Not Available";
+    } else if (!shippingFormValid) {
+        buttonText = "Shipping form is not valid";
     }
 
     const isDisabled =
@@ -64,7 +74,20 @@ export function OrderSummary({
         checkoutStatus === "redirecting" ||
         noShipping ||
         noGateway ||
+        !shippingFormValid ||
         !hasCountry;
+
+    const countryName = COUNTRIES.find((c) => c.code === country)?.name || country;
+
+    const goToShippingForm = () => {
+        const form = document.getElementById("checkout-shipping-form");
+        form?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
+
+        document.getElementById("shipping_full_name_latin")?.focus();
+    };
 
     return (
         <div className="rounded-xl border p-4">
@@ -90,7 +113,12 @@ export function OrderSummary({
             </div>
 
             <div className="flex justify-between">
-                <span>Shipping {shippingMethod && `(${shippingMethod.name})`}</span>
+                <div className="flex flex-wrap">
+                    <span>Shipping</span>
+                    {shippingMethod &&
+                        <span>({shippingMethod.name})</span>
+                    }
+                </div>
                 <span className="text-sm">
                     <PriceRenderer value={shippingCost} />
                     {shippingMethod?.currency_price !== undefined && (
@@ -104,6 +132,91 @@ export function OrderSummary({
                         </span>
                     )}
                 </span>
+            </div>
+            <div className="mt-2 flex justify-between">
+                { !isDisabled &&
+                    <div className="space-y-1 text-sm text-muted-foreground">
+                        <Card className="mt-2 gap-2 p-2">
+                            <CardHeader className="pb-1 px-1">
+                                <CardTitle className="font-medium text-muted-foreground">
+                                    Shipping details
+                                </CardTitle>
+                                <CardDescription>
+                                    These details will be used for delivery.
+                                </CardDescription>
+                            </CardHeader>
+
+                            <CardContent className="space-y-2 px-1">
+                                <div className="flex flex-wrap items-baseline gap-1">
+                                    <span className="text-xs text-muted-foreground">Full Name:</span>
+                                    <span className="text-sm font-semibold">{form.shipping_full_name_latin}</span>
+                                </div>
+                                {form.shipping_phone && (
+                                    <div className="flex flex-wrap items-baseline gap-1">
+                                        <span className="text-xs text-muted-foreground">Phone:</span>
+                                        <span className="text-sm font-semibold">{form.shipping_phone}</span>
+                                    </div>
+                                )}
+                                <div className="flex flex-wrap items-baseline gap-1">
+                                    <span className="text-xs text-muted-foreground">Email:</span>
+                                    <span className="text-sm font-semibold">{form.shipping_email}</span>
+                                </div>
+                                <div className="flex flex-wrap items-baseline gap-1">
+                                    <span className="text-xs text-muted-foreground">Address:</span>
+                                    <span className="text-sm font-semibold">{form.shipping_address_line1_latin}</span>
+                                </div>
+                                {form.shipping_address_line2_latin && (
+                                    <div className="flex flex-wrap items-baseline gap-1">
+                                        <span className="text-xs text-muted-foreground">Address (additional):</span>
+                                        <span className="text-sm font-semibold">{form.shipping_address_line2_latin}</span>
+                                    </div>
+                                )}
+                                <div className="flex flex-wrap items-baseline gap-1">
+                                    <span className="text-xs text-muted-foreground">City:</span>
+                                    <span className="text-sm font-semibold">{form.shipping_city_latin}</span>
+                                </div>
+                                {form.shipping_state_latin && (
+                                    <div className="flex flex-wrap items-baseline gap-1">
+                                        <span className="text-xs text-muted-foreground">State:</span>
+                                        <span className="text-sm font-semibold">{form.shipping_state_latin}</span>
+                                    </div>
+                                )}
+                                {form.shipping_postal_code && (
+                                    <div className="flex flex-wrap items-baseline gap-1">
+                                        <span className="text-xs text-muted-foreground">Postal Code:</span>
+                                        <span className="text-sm font-semibold">{form.shipping_postal_code}</span>
+                                    </div>
+                                )}
+                                <div className="flex flex-wrap items-baseline gap-1">
+                                    <span className="text-xs text-muted-foreground">Country:</span>
+                                    <span className="text-sm font-semibold">{countryName}</span>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <Alert className="mt-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20">
+                            <TriangleAlert className="h-4 w-4 !text-yellow-500" />
+
+                            <AlertTitle>Please review your shipping details</AlertTitle>
+
+                            <AlertDescription className="space-y-3">
+                                <p>
+                                    Please make sure your shipping information is correct and written in
+                                    Latin characters. Incorrect information may delay delivery or cause
+                                    your package to be returned.
+                                </p>
+
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={goToShippingForm}
+                                >
+                                    Edit shipping details
+                                </Button>
+                            </AlertDescription>
+                        </Alert>
+                    </div>
+                }
             </div>
 
             <Separator className="my-4" />

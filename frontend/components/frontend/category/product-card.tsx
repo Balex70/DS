@@ -34,7 +34,7 @@ export function ProductCard({ product }: Props) {
         });
     };
     return (
-        <Card className="overflow-hidden transition hover:shadow-md pb-0">
+        <Card className="overflow-hidden transition hover:shadow-md gap-2 pb-0 pt-0">
             <Link
                 href={`/product/${product.id}`}
                 className="group block"
@@ -54,41 +54,34 @@ export function ProductCard({ product }: Props) {
                 </div>
             </Link>
 
-            <CardContent className="space-y-2 p-3">
+            <CardContent className="flex h-full flex-col p-3">
                 <h3 className="line-clamp-2 text-sm font-medium">
                     {product.translation ? product.translation?.name : product.name_processed ? product.name_processed : product.name_raw}
                 </h3>
 
-                <div className="text-lg font-semibold">
-                    <PriceRenderer value={product.price} />
-                    {(currency !== "USD" && product.currency_price) && (
-                        <span className="ml-2 text-sm font-normal text-muted-foreground">
-                            (
-                            <PriceRenderer
-                                value={product.currency_price}
-                                currency={currency}
-                            />
-                            )
-                        </span>
-                    )}
-                </div>
+                <div className="mt-auto space-y-2">
+                    <div className="text-lg font-semibold">
+                        <PriceRenderer value={product.price} />
+                        {(currency !== "USD" && product.currency_price) && (
+                            <div className="text-sm font-normal text-muted-foreground">
+                                (
+                                <PriceRenderer
+                                    value={product.currency_price}
+                                    currency={currency}
+                                />
+                                )
+                            </div>
+                        )}
+                    </div>
 
-                {product.warehouse_inventory_num > 0 ? (
-                    <p className="text-xs text-green-600">
-                        In stock
-                    </p>
-                ) : (
-                    <p className="text-xs text-red-500">
-                        Out of stock
-                    </p>
-                )}
-                <button
-                    onClick={handleAddToCart}
-                    disabled={isPending}
-                    className="rounded-md bg-black px-4 py-2 text-white hover:opacity-90 disabled:opacity-50"
-                >
-                    {isPending ? "Adding..." : "Add to cart"}
-                </button>
+                    <button
+                        onClick={handleAddToCart}
+                        disabled={isPending}
+                        className="rounded-md bg-black px-4 py-2 text-white hover:opacity-90 disabled:opacity-50"
+                    >
+                        {isPending ? "Adding..." : "Add to cart"}
+                    </button>
+                </div>
             </CardContent>
         </Card>
     );

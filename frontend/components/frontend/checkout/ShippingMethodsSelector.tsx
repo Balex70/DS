@@ -103,7 +103,7 @@ export function ShippingMethodsSelector({
                     <label
                         key={`${method.id}`}
                         className={`
-                            flex cursor-pointer items-start justify-between rounded-xl border p-4 transition
+                            flex cursor-pointer items-start justify-between rounded-xl border p-2 sm:p-4 transition
                             ${
                                 selected
                                     ? "border-black bg-muted"
@@ -120,10 +120,10 @@ export function ShippingMethodsSelector({
                             />
 
                             <div>
-                                <div className="flex items-center gap-2">
+                                <div className="flex flex-wrap items-center gap-2">
                                     <ShippingTierBadge method={method} />
 
-                                    <div className="flex gap-1">
+                                    <div className="flex flex-wrap gap-1">
                                         {labels.map((label) => (
                                             <span
                                                 key={label}
@@ -136,9 +136,8 @@ export function ShippingMethodsSelector({
                                 </div>
 
                                 {method.estimated_delivery && (
-                                    <div className="text-sm text-muted-foreground">
-                                        {method.estimated_delivery} business
-                                        days
+                                    <div className="text-sm text-muted-foreground mt-2">
+                                        {method.estimated_delivery} business days
                                     </div>
                                 )}
                             </div>
@@ -206,11 +205,8 @@ export function ShippingMethodsSelector({
                                                 <ShippingTierBadge method={method} />
 
                                                 {method.estimated_delivery && (
-                                                    <div className="text-sm text-muted-foreground">
-                                                        {
-                                                            method.estimated_delivery
-                                                        }{" "}
-                                                        business days
+                                                    <div className="text-sm text-muted-foreground mt-1">
+                                                        {method.estimated_delivery} business days
                                                     </div>
                                                 )}
                                             </div>

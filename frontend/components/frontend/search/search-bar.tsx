@@ -1,6 +1,6 @@
 'use client'
 
-import { X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
     InputGroup,
@@ -8,6 +8,7 @@ import {
     InputGroupButton,
     InputGroupInput,
 } from "@/components/ui/input-group";
+import { Separator } from "@/components/ui/separator";
 
 type SearchBarProps = {
     value: string;
@@ -45,19 +46,30 @@ export function SearchBar({
                     onFocus={onFocus}
                     placeholder="Search..."
                 />
-                <InputGroupAddon align="inline-end">
-                <InputGroupButton
-                    size="icon-xs"
-                    aria-label="Clear"
-                    onClick={() => onChange("")}>
-                    <X />
-                </InputGroupButton>
-                <InputGroupButton
-                    variant="secondary"
-                    type="submit"
+                <InputGroupAddon
+                    align="inline-end"
+                    className="self-stretch flex p-0"
                     >
-                    Search
-                </InputGroupButton>
+                    {value &&
+                        <>
+                            <InputGroupButton
+                                size="icon-xs"
+                                aria-label="Clear"
+                                onClick={() => onChange("")}
+                            >
+                                <X />
+                            </InputGroupButton>
+
+                            <Separator orientation="vertical" className="my-2 self-stretch" />
+                        </>
+                    }
+                    <InputGroupButton
+                        className="h-full px-3 !rounded-r-md mr-1 bg-sky-500 hover:bg-sky-600 text-white"
+                        variant="secondary"
+                        type="submit"
+                        >
+                        <Search className="!h-5 !w-5" />
+                    </InputGroupButton>
                 </InputGroupAddon>
             </InputGroup>
         </form>

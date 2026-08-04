@@ -22,9 +22,14 @@ export function OrderDrawerShippingFields({order}: {order: Order}) {
         </Field>
         <Field>
             <FieldLabel>Shipping Full Name</FieldLabel>
-            <span className="text-md text-muted-foreground">
-                {order.shipping_full_name}
-            </span>
+            <div className="flex flex-col">
+                <span className="text-md text-muted-foreground">
+                    Latin: {order.shipping_full_name_latin}
+                </span>
+                <span className="text-md text-muted-foreground">
+                    Origin: {order.shipping_full_name}
+                </span>
+            </div>
         </Field>
         <Field>
             <FieldLabel>Shipping Phone</FieldLabel>
@@ -40,27 +45,47 @@ export function OrderDrawerShippingFields({order}: {order: Order}) {
         </Field>
         <Field>
             <FieldLabel>Shipping Address Line 1</FieldLabel>
-            <span className="text-md text-muted-foreground">
-                {order.shipping_address_line1}
-            </span>
+            <div className="flex flex-col">
+                <span className="text-md text-muted-foreground">
+                    Latin: {order.shipping_address_line1_latin}
+                </span>
+                <span className="text-md text-muted-foreground">
+                    Origin: {order.shipping_address_line1}
+                </span>
+            </div>
         </Field>
         <Field>
             <FieldLabel>Shipping Address Line 2</FieldLabel>
-            <span className="text-md text-muted-foreground">
-                {order.shipping_address_line2 ?? "no shipping address line 2"}
-            </span>
+            <div className="flex flex-col">
+                <span className="text-md text-muted-foreground">
+                    Latin: {order.shipping_address_line2_latin ?? "<NOT PROVIDED>"}
+                </span>
+                <span className="text-md text-muted-foreground">
+                    Origin: {order.shipping_address_line2 ?? "<NOT PROVIDED>"}
+                </span>
+            </div>
         </Field>
         <Field>
             <FieldLabel>Shipping City</FieldLabel>
-            <span className="text-md text-muted-foreground">
-                {order.shipping_city}
-            </span>
+            <div className="flex flex-col">
+                <span className="text-md text-muted-foreground">
+                    Latin: {order.shipping_city_latin}
+                </span>
+                <span className="text-md text-muted-foreground">
+                    Origin: {order.shipping_city}
+                </span>
+            </div>
         </Field>
         <Field>
             <FieldLabel>Shipping State</FieldLabel>
-            <span className="text-md text-muted-foreground">
-                {order.shipping_state ?? "no shipping state"}
-            </span>
+            <div className="flex flex-col">
+                <span className="text-md text-muted-foreground">
+                    Latin: {order.shipping_state_latin ?? "<NOT PROVIDED>"}
+                </span>
+                <span className="text-md text-muted-foreground">
+                    Origin: {order.shipping_state ?? "<NOT PROVIDED>"}
+                </span>
+            </div>
         </Field>
         <Field>
             <FieldLabel>Shipping Postal Code</FieldLabel>

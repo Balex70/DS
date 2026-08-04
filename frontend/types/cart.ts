@@ -1,5 +1,5 @@
 export type CartItemPayload = {
-  product_id: string;
+  product_id: number;
   vid: string;
   title: string;
   sku: string;
