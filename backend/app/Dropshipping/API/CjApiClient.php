@@ -145,7 +145,7 @@ class CjApiClient
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ])->get(
-            "{$this->baseUrl}/shopping/order/getOrderDetail?orderId=210711100018043276",
+            "{$this->baseUrl}/shopping/order/getOrderDetail",
             [
                 'orderId' => $orderId
             ]
