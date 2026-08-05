@@ -56,6 +56,11 @@ class CjDropshippingProvider implements DropshippingProviderInterface
         return $this->order->trackInfo($payload['trackNumber']);
     }
 
+    public function simulatePayOrder(array $payload): array
+    {
+        return $this->order->simulatePayOrder($payload['orderId']);
+    }
+
     public function activateProduct(string $externalId): bool
     {
         // CJ-specific logic

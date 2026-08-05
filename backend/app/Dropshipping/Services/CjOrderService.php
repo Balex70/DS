@@ -27,4 +27,9 @@ class CjOrderService
     {
         return $this->client->getTrackInfo($trackNumber);
     }
+
+    public function simulatePayOrder(string $orderId): array
+    {
+        return $this->client->simulatePayOrder($orderId);
+    }
 }

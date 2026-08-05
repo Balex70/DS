@@ -203,4 +203,40 @@ class CjApiClient
             'data' => $json['data'] ?? [],
         ];
     }
+
+    public function simulatePayOrder(string $orderId): array
+    {
+        $token = $this->authService->getValidAccessToken();
+
+        if (!$token) {
+            throw new \Exception('CJ authentication failed: no valid token available');
+        }
+
+        $response = Http::withHeaders([
+            'CJ-Access-Token' => $token,
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ])->post(
+            "{$this->baseUrl}/shopping/sandbox/simulatePay",
+            [
+                'orderId' => $orderId
+            ]
+        );
+
+        $json = $response->json();
+
+        if (!isset($json['code']) || $json['code'] !== 200) {
+            return [
+                'success' => false,
+                'message' => $json['message'] ?? 'Unknown error',
+                'data' => null,
+            ];
+        }
+
+        return [
+            'success' => true,
+            'message' => null,
+            'data' => $json['data'] ?? [],
+        ];
+    }
 }

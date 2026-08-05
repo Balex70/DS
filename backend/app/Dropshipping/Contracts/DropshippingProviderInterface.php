@@ -19,6 +19,8 @@ interface DropshippingProviderInterface
 
     public function trackInfo(array $payload): array;
 
+    public function simulatePayOrder(array $payload): array;
+
     public function activateProduct(string $externalId): bool;
 
     public function deactivateProduct(string $externalId): bool;

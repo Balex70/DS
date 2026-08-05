@@ -97,7 +97,7 @@ class OrderController extends Controller
         // TODO: recheck change status and dsStatus, mapping correctly
         $order->status = $this->service->toOrderStatus($responseData['data']['orderStatus']);
         $order->ds_status = $this->service->toDsStatus($responseData['data']['orderStatus']);
-        $order->ds_order_id = $responseData['data']['orderId'];
+        $order->ds_order_id = $responseData['data']['cjOrderCode'];
         $order->is_sandbox = $responseData['data']['isSandbox'] ? 1 : 0;
         $order->save();
 
@@ -124,6 +124,22 @@ class OrderController extends Controller
             ], 422);
         }
 
+
+        return response()->json([
+            'success' => true,
+            'data' => $responseData,
+        ]);
+    }
+
+    public function simulatePayOrder(Order $order)
+    {
+        $responseData = $this->service->simulatePayOrder($order);
+        if (!$responseData['success']) {
+            return response()->json([
+                'success' => false,
+                'message' => $responseData['message'],
+            ], 422);
+        }
 
         return response()->json([
             'success' => true,

@@ -72,6 +72,24 @@ class OrderService
         return $provider->trackInfo($payload);
     }
 
+    public function simulatePayOrder(Order $order)
+    {
+        $provider = $this->manager->driver();
+
+        if($order->ds_order_id === null) {
+            return [
+                'success' => false,
+                'message' => 'DS order ID not found!'
+            ];
+        }
+
+        $payload = [
+            'orderId' => $order->ds_order_id
+        ];
+
+        return $provider->simulatePayOrder($payload);
+    }
+
     public function toOrderStatus(string $dsStatus): OrderStatusEnum {
         // https://developers.cjdropshipping.com/en/api/api2/api/shopping.html#order-status
         // TODO: create mappers for each ds providers
