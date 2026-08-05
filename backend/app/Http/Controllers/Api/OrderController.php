@@ -97,6 +97,8 @@ class OrderController extends Controller
         // TODO: recheck change status and dsStatus, mapping correctly
         $order->status = $this->service->toOrderStatus($responseData['data']['orderStatus']);
         $order->ds_status = $this->service->toDsStatus($responseData['data']['orderStatus']);
+        $order->ds_order_id = $responseData['data']['orderId'];
+        $order->is_sandbox = $responseData['data']['isSandbox'] ? 1 : 0;
         $order->save();
 
         // OrderDsStatusEnum::SHIPPED -> means in transit to the client
