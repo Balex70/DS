@@ -61,6 +61,17 @@ class OrderService
         return $provider->checkOrderStatus($payload);
     }
 
+    public function getTrackInfo(Order $order)
+    {
+        $provider = $this->manager->driver();
+
+        $payload = [
+            'orderId' => $order->id
+        ];
+
+        return $provider->trackInfo($payload);
+    }
+
     public function toOrderStatus(string $dsStatus): OrderStatusEnum {
         // https://developers.cjdropshipping.com/en/api/api2/api/shopping.html#order-status
         // TODO: create mappers for each ds providers

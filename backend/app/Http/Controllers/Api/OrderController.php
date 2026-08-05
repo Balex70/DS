@@ -112,6 +112,23 @@ class OrderController extends Controller
         ]);
     }
 
+    public function trackInfo(Order $order)
+    {
+        $responseData = $this->service->getTrackInfo($order);
+        if (!$responseData['success']) {
+            return response()->json([
+                'success' => false,
+                'message' => $responseData['message'],
+            ], 422);
+        }
+
+
+        return response()->json([
+            'success' => true,
+            'data' => $responseData,
+        ]);
+    }
+
     /**
      * Update the specified resource in storage.
      */
