@@ -6,6 +6,10 @@ import { PriceRenderer } from "@/components/custom/PriceRenderer"
 
 export const columns = (): ColumnDef<Order>[] => [
   {
+    accessorKey: "id",
+    header: "ID",
+  },
+  {
     accessorKey: "order_number",
     header: "Order Number",
   },
