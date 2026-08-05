@@ -125,7 +125,7 @@ class OrderService
             'UNPAID'
                 => OrderDsStatusEnum::UNPAID,
 
-            'UNSHIPPED'
+            'UNSHIPPED' // UNSHIPPED: 300 | 400, be default is 300
                 => OrderDsStatusEnum::PROCESSING,
 
             'SHIPPED'
