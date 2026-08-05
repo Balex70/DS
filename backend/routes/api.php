@@ -70,6 +70,7 @@ Route::get('orders', [OrderController::class, 'index'])->middleware('auth:sanctu
 Route::post('orders/{order}/send', [OrderController::class, 'sendOrder'])->middleware('auth:sanctum');
 Route::post('orders/{order}/check-ds-status', [OrderController::class, 'checkOrderStatusInDSProvider'])->middleware('auth:sanctum');
 Route::post('orders/{order}/cancel', [OrderController::class, 'cancel'])->middleware('auth:sanctum');
+Route::post('orders/{order}/simulate-pay', [OrderController::class, 'simulatePayment'])->middleware('auth:sanctum');
 
 // Payments
 Route::get('payments', [PaymentController::class, 'index'])->middleware('auth:sanctum');
