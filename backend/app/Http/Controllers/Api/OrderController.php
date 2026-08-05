@@ -129,6 +129,25 @@ class OrderController extends Controller
         ]);
     }
 
+    public function cancel(Order $order)
+    {
+        Gate::authorize('update', $order);
+
+        if (!$order->status->canBeCancelled()) {
+            return response()->json([
+                'message' => "Cannot cancel an order with status '{$order->status->value}'.",
+            ], 422);
+        }
+
+        $order->update([
+            'status' => OrderStatusEnum::CANCELED,
+        ]);
+
+        return response()->json([
+            'message' => 'Order cancelled successfully',
+        ]);
+    }
+
     /**
      * Delete order (soft delete)
      */
