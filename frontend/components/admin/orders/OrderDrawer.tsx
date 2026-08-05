@@ -19,9 +19,8 @@ import { OrderDrawerShippingFields } from "./OrderDrawerShippingFields"
 import { OrderDrawerPaymentFields } from "./OrderDrawerPaymentFields"
 import { OrderDrawerItemsFields } from "./OrderDrawerItemsFields"
 import { PriceRenderer } from "@/components/custom/PriceRenderer"
-import { getCookie } from "@/helpers/general"
 import { toast } from "sonner";
-import { cancelOrder } from "@/lib/api/orders"
+import { cancelOrder, checkOrderDsStatus, sendOrder } from "@/lib/api/orders"
 import { CancelOrderButton } from "./CancelOrderButton"
 
 export function OrderDrawer({
@@ -48,25 +47,8 @@ export function OrderDrawer({
         try {
             setIsSendOrder(true)
 
-            // get the csrf token
-            await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/sanctum/csrf-cookie`, {
-                credentials: 'include',
-            });
-
-            const csrfToken = getCookie('XSRF-TOKEN');
-            const headers = {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-XSRF-TOKEN': csrfToken!
-            };
-
             // send order to DS
-            const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/orders/${order.id}/send`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: headers,
-                cache: 'no-cache', // 'no-cache' if you want it fresh each time
-            })
+            const res = await sendOrder(order.id);
 
             if (!res.ok) {
                 const contentType = res.headers.get('content-type') || '';
@@ -105,25 +87,8 @@ export function OrderDrawer({
         try {
             setIsCheckDsOrder(true)
 
-            // get the csrf token
-            await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/sanctum/csrf-cookie`, {
-                credentials: 'include',
-            });
-
-            const csrfToken = getCookie('XSRF-TOKEN');
-            const headers = {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-XSRF-TOKEN': csrfToken!
-            };
-
             // check order status in DS provider
-            const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/orders/${order.id}/check-ds-status`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: headers,
-                cache: 'no-cache', // 'no-cache' if you want it fresh each time
-            })
+            const res = await checkOrderDsStatus(order.id);
 
             if (!res.ok) {
                 const contentType = res.headers.get('content-type') || '';
