@@ -19,8 +19,9 @@ import { OrderDrawerShippingFields } from "./OrderDrawerShippingFields"
 import { OrderDrawerPaymentFields } from "./OrderDrawerPaymentFields"
 import { OrderDrawerItemsFields } from "./OrderDrawerItemsFields"
 import { PriceRenderer } from "@/components/custom/PriceRenderer"
-import { getCookie } from "@/helpers/general"
 import { toast } from "sonner";
+import { cancelOrder, checkOrderDsStatus, sendOrder } from "@/lib/api/orders"
+import { CancelOrderButton } from "./CancelOrderButton"
 
 export function OrderDrawer({
   open,
@@ -37,6 +38,8 @@ export function OrderDrawer({
     const [errorSendOrder, setErrorSendOrder] = useState<string | null>(null)
     const [isCheckDsOrder, setIsCheckDsOrder] = useState(false)
     const [errorCheckDsOrder, setErrorCheckDsOrder] = useState<string | null>(null)
+    const [isCancelOrder, setIsCancelOrder] = useState(false)
+    const [errorCancelOrder, setErrorCancelOrder] = useState<string | null>(null)
 
     const handleSendOrder = async () => {
         if (!order) return
@@ -44,25 +47,8 @@ export function OrderDrawer({
         try {
             setIsSendOrder(true)
 
-            // get the csrf token
-            await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/sanctum/csrf-cookie`, {
-                credentials: 'include',
-            });
-
-            const csrfToken = getCookie('XSRF-TOKEN');
-            const headers = {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-XSRF-TOKEN': csrfToken!
-            };
-
             // send order to DS
-            const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/orders/${order.id}/send`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: headers,
-                cache: 'no-cache', // 'no-cache' if you want it fresh each time
-            })
+            const res = await sendOrder(order.id);
 
             if (!res.ok) {
                 const contentType = res.headers.get('content-type') || '';
@@ -101,25 +87,8 @@ export function OrderDrawer({
         try {
             setIsCheckDsOrder(true)
 
-            // get the csrf token
-            await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/sanctum/csrf-cookie`, {
-                credentials: 'include',
-            });
-
-            const csrfToken = getCookie('XSRF-TOKEN');
-            const headers = {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-XSRF-TOKEN': csrfToken!
-            };
-
             // check order status in DS provider
-            const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/orders/${order.id}/check-ds-status`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: headers,
-                cache: 'no-cache', // 'no-cache' if you want it fresh each time
-            })
+            const res = await checkOrderDsStatus(order.id);
 
             if (!res.ok) {
                 const contentType = res.headers.get('content-type') || '';
@@ -153,6 +122,46 @@ export function OrderDrawer({
         }
     }
 
+    const handleCancelOrder = async () => {
+        if (!order) return
+        setErrorCancelOrder(null)
+        try {
+            setIsCancelOrder(true)
+
+            const res = await cancelOrder(order.id);
+
+            if (!res.ok) {
+                const contentType = res.headers.get('content-type') || '';
+                if (contentType.includes('application/json')) {
+                    const errorJson = await res.json();
+                    if (Array.isArray(errorJson.errors)) {
+                        errorJson.errors.forEach((error: string, index: number) => {
+                            setTimeout(() => toast.error(error), index * 2000);
+                        });
+                        return;
+                    } else {
+                        toast.error(errorJson.message || 'Unknown API error');
+                        return;
+                    }
+                } else {
+                    // HTML / text response → system-level issue (not for client)
+                    const rawText = await res.text();
+                    setErrorCancelOrder(rawText.slice(0, 400));
+                    return;
+                }
+            }
+
+            toast.success("Order cancelled");
+
+            await onRefresh()
+            setIsCancelOrder(true)
+        } catch (e) {
+            setErrorCancelOrder("Cancel order failed" + e)
+        } finally {
+            setIsCancelOrder(false)
+        }
+    }
+
     if (errorSendOrder) {
         toast.error(errorSendOrder)
         setErrorSendOrder(null)
@@ -161,6 +170,11 @@ export function OrderDrawer({
     if (errorCheckDsOrder) {
         toast.error(errorCheckDsOrder)
         setErrorCheckDsOrder(null)
+    }
+
+    if (errorCancelOrder) {
+        toast.error(errorCancelOrder)
+        setErrorCancelOrder(null)
     }
 
     return (
@@ -180,6 +194,11 @@ export function OrderDrawer({
                         {isCheckDsOrder && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         {isCheckDsOrder ? "Checking..." : "Check order status in DS provider"}
                     </Button>
+                    <CancelOrderButton
+                        order={order}
+                        handler={handleCancelOrder}
+                        isCheck={isCancelOrder}
+                    />
                     <div className="flex space-x-4">
                         <FieldGroup className="flex flex-col gap-4 min-w-0">
                             <Field className="gap-1">

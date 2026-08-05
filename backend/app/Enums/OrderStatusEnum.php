@@ -10,4 +10,18 @@ enum OrderStatusEnum: string
     case DELIVERED = 'delivered';
     case CANCELED = 'canceled';
     case REFUNDED = 'refunded';
+
+    public function canBeCancelled(): bool
+    {
+        return match ($this) {
+            self::DRAFT,
+            self::CREATED => true,
+
+            self::PROCESSING,
+            self::SHIPPED,
+            self::DELIVERED,
+            self::CANCELED,
+            self::REFUNDED => false,
+        };
+    }
 }
