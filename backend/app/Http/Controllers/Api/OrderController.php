@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Mail\Admin\AdminOrderShipped;
+use App\Mail\Client\ClientOrderCancelled;
 use App\Mail\Client\ClientOrderProcessing;
 use App\Mail\Client\ClientOrderShipped;
 use App\Models\Order;
@@ -142,6 +143,8 @@ class OrderController extends Controller
         $order->update([
             'status' => OrderStatusEnum::CANCELED,
         ]);
+
+        Mail::to($order->shipping_email)->queue(new ClientOrderCancelled($order));
 
         return response()->json([
             'message' => 'Order cancelled successfully',
