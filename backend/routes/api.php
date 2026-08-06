@@ -71,6 +71,7 @@ Route::post('orders/{order}/send', [OrderController::class, 'sendOrder'])->middl
 Route::post('orders/{order}/check-ds-status', [OrderController::class, 'checkOrderStatusInDSProvider'])->middleware('auth:sanctum');
 Route::post('orders/{order}/cancel', [OrderController::class, 'cancel'])->middleware('auth:sanctum');
 Route::post('orders/{order}/simulate-pay', [OrderController::class, 'simulatePayOrder'])->middleware('auth:sanctum');
+Route::post('orders/{order}/track-info', [OrderController::class, 'trackInfo'])->middleware('auth:sanctum');
 
 // Payments
 Route::get('payments', [PaymentController::class, 'index'])->middleware('auth:sanctum');

@@ -176,6 +176,23 @@ class CjApiClient
             throw new \Exception('CJ authentication failed: no valid token available');
         }
 
+        // For testing
+        // return [
+        //     'success' => true,
+        //     'message' => null,
+        //     'data' => [
+        //         'trackingNumber' => 'CJPKL7160102171YQ',
+        //         'logisticName' => 'CJPacket Sensitive',
+        //         'trackingFrom' => 'CN',
+        //         'trackingTo' => 'US',
+        //         'deliveryDay' => '13',
+        //         'deliveryTime' => '2021-06-17 07:04:04',
+        //         'trackingStatus' => 'In transit',
+        //         'lastMileCarrier' => 'UPS',
+        //         'lastTrackNumber' => '926112903032124',
+        //     ],
+        // ];
+
         $response = Http::withHeaders([
             'CJ-Access-Token' => $token,
             'Content-Type' => 'application/json',

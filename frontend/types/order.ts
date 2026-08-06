@@ -80,6 +80,18 @@ export type OrderPayload = {
     currency?: string;
 };
 
+export type TrackingInfo = {
+    trackingNumber: string
+    logisticName: string
+    trackingFrom: string
+    trackingTo: string
+    deliveryDay: string
+    deliveryTime: string
+    trackingStatus: string
+    lastMileCarrier: string
+    lastTrackNumber: string
+}
+
 export const latinFieldsMapper = {
     shipping_full_name: "shipping_full_name_latin",
     shipping_address_line1: "shipping_address_line1_latin",

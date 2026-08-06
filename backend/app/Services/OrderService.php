@@ -65,8 +65,16 @@ class OrderService
     {
         $provider = $this->manager->driver();
 
+        // Comment this line if you want test tracking info
+        if($order->ds_tracking_number === null) {
+            return [
+                'success' => false,
+                'message' => 'DS tracing number not found!'
+            ];
+        }
+
         $payload = [
-            'orderId' => $order->id
+            'trackNumber' => $order->ds_tracking_number, // for testing 435340934
         ];
 
         return $provider->trackInfo($payload);

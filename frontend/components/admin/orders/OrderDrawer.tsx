@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { cancelOrder, checkOrderDsStatus, sendOrder, simulatePayOrder } from "@/lib/api/orders"
 import { CancelOrderButton } from "./CancelOrderButton"
 import { SimulatePayOrderButton } from "./SimulatePayOrderButton"
+import { TrackingInfoButton } from "./TrackingInfo"
 
 export function OrderDrawer({
   open,
@@ -251,6 +252,9 @@ export function OrderDrawer({
                         order={order}
                         handler={handleSimulatePayOrder}
                         isCheck={isSimulatePayOrder}
+                    />
+                    <TrackingInfoButton
+                        order={order}
                     />
                     <div className="flex space-x-4">
                         <FieldGroup className="flex flex-col gap-4 min-w-0">
