@@ -168,7 +168,7 @@ class CjApiClient
         ];
     }
 
-    public function getTrackInfo(int $trackNumber): array
+    public function getTrackInfo(string $trackNumber): array
     {
         $token = $this->authService->getValidAccessToken();
 

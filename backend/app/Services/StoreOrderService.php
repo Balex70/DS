@@ -120,4 +120,21 @@ class StoreOrderService
 
         return $shippingOptions;
     }
+
+    public function getTrackInfo(string $trackNumber)
+    {
+        $provider = $this->manager->driver();
+
+        if($trackNumber === '' || $trackNumber === 'null') {
+            return [
+                'success' => false,
+            ];
+        }
+
+        $payload = [
+            'trackNumber' => $trackNumber,
+        ];
+
+        return $provider->trackInfo($payload);
+    }
 }

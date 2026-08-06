@@ -1,5 +1,5 @@
 import { api } from "@/lib/axios";
-import { Order, OrderPayload } from "@/types/order";
+import { Order, OrderPayload, TrackingInfo } from "@/types/order";
 import { ShippingMethod } from "@/types/shipping";
 import { AxiosResponse } from "axios";
 
@@ -33,4 +33,12 @@ export async function getOrderByPublicToken(token: string): Promise<Order> {
     );
 
     return response.data;
+}
+
+export async function getOrderTrackInfo(trackNumber: string): Promise<TrackingInfo> {
+    const response = await api.get(
+        `/api/store/orders/track-info/${trackNumber}`
+    );
+
+    return response.data.data;
 }

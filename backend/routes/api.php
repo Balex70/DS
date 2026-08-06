@@ -100,6 +100,7 @@ Route::prefix('store')->group(function () {
     Route::post('orders/create', [StoreOrderController::class, 'store'])->middleware(EnsureCartToken::class);
     Route::post('orders/shipping-calculate', [StoreOrderController::class, 'shippingCalculate'])->middleware(EnsureCartToken::class);
     Route::get('orders/public-token/{token}', [StoreOrderController::class, 'showByPublicToken']);
+    Route::get('orders/track-info/{trackNumber}', [StoreOrderController::class, 'trackInfo']);
 
     // Cart
     Route::post('cart/add', [CartController::class, 'add'])->middleware(EnsureCartToken::class);
