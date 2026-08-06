@@ -95,6 +95,7 @@ class OrderController extends Controller
 
         // Update order statuses
         // TODO: recheck change status and dsStatus, mapping correctly
+        $dsStatusCurrent = $order->ds_status;
         $order->status = $this->service->toOrderStatus($responseData['data']['orderStatus']);
         $order->ds_status = $this->service->toDsStatus($responseData['data']['orderStatus']);
         $order->ds_order_id = $responseData['data']['cjOrderCode'];
@@ -103,7 +104,8 @@ class OrderController extends Controller
 
         // OrderDsStatusEnum::SHIPPED -> means in transit to the client
         // Need to send email client and admin about that
-        if ($this->service->toDsStatus($responseData['data']['orderStatus']) === OrderDsStatusEnum::SHIPPED) {
+
+        if ($dsStatusCurrent !== OrderDsStatusEnum::SHIPPED && $this->service->toDsStatus($responseData['data']['orderStatus']) === OrderDsStatusEnum::SHIPPED) {
             Mail::to($order->shipping_email)->queue(new ClientOrderShipped($order));
             Mail::to(config('mail.admin_address'))->queue(new AdminOrderShipped($order));
         }
