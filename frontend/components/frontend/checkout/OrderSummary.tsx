@@ -11,6 +11,8 @@ import { COUNTRIES } from "@/config/countries";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TriangleAlert } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import ImportDutyDialog from "./ImportDutyDialog";
 
 type Props = {
     form: OrderPayload;
@@ -36,6 +38,8 @@ export function OrderSummary({
     onSubmit,
 }: Props) {
     const { currency } = useCurrency();
+    const [importDutyDialogOpen, setImportDutyDialogOpen] = useState(false);
+
     const shippingCost = shippingMethod?.price ?? 0;
     const total = subtotal + shippingCost;
 
@@ -89,172 +93,185 @@ export function OrderSummary({
         document.getElementById("shipping_full_name_latin")?.focus();
     };
 
+    function handleSubmit(){
+        setImportDutyDialogOpen(true);
+    }
+
+    function handleImportDutyConfirm() {
+        setImportDutyDialogOpen(false);
+        onSubmit();
+    }
+
     return (
-        <div className="rounded-xl border p-4">
-            <h2 className="mb-4 text-xl font-semibold">Summary</h2>
+        <>
+            <div className="rounded-xl border p-4">
+                <h2 className="mb-4 text-xl font-semibold">Summary</h2>
 
-            <Separator className="mb-4" />
+                <Separator className="mb-4" />
 
-            <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span className="text-sm">
-                    <PriceRenderer value={subtotal} />
-                    {currency !== "USD" && currencySubtotal !== undefined && (
-                        <span className="ml-2 text-xs font-normal text-muted-foreground">
-                            (
-                            <PriceRenderer
-                                value={currencySubtotal}
-                                currency={currency}
-                            />
-                            )
-                        </span>
-                    )}
-                </span>
-            </div>
+                <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span className="text-sm">
+                        <PriceRenderer value={subtotal} />
+                        {currency !== "USD" && currencySubtotal !== undefined && (
+                            <span className="ml-2 text-xs font-normal text-muted-foreground">
+                                (
+                                <PriceRenderer
+                                    value={currencySubtotal}
+                                    currency={currency}
+                                />
+                                )
+                            </span>
+                        )}
+                    </span>
+                </div>
 
-            <div className="flex justify-between">
-                <div className="flex flex-wrap">
-                    <span>Shipping</span>
-                    {shippingMethod &&
-                        <span>({shippingMethod.name})</span>
+                <div className="flex justify-between">
+                    <div className="flex flex-wrap">
+                        <span>Shipping</span>
+                        {shippingMethod &&
+                            <span>({shippingMethod.name})</span>
+                        }
+                    </div>
+                    <span className="text-sm">
+                        <PriceRenderer value={shippingCost} />
+                        {shippingMethod?.currency_price !== undefined && (
+                            <span className="ml-2 text-xs font-normal text-muted-foreground">
+                                (
+                                <PriceRenderer
+                                    value={shippingMethod?.currency_price}
+                                    currency={currency}
+                                />
+                                )
+                            </span>
+                        )}
+                    </span>
+                </div>
+                <div className="mt-2 flex justify-between">
+                    { !isDisabled &&
+                        <div className="space-y-1 text-sm text-muted-foreground">
+                            <Card className="mt-2 gap-2 p-2">
+                                <CardHeader className="pb-1 px-1">
+                                    <CardTitle className="font-medium text-muted-foreground">
+                                        Shipping details
+                                    </CardTitle>
+                                    <CardDescription>
+                                        These details will be used for delivery.
+                                    </CardDescription>
+                                </CardHeader>
+
+                                <CardContent className="space-y-2 px-1">
+                                    <div className="flex flex-wrap items-baseline gap-1">
+                                        <span className="text-xs text-muted-foreground">Full Name:</span>
+                                        <span className="text-sm font-semibold">{form.shipping_full_name_latin}</span>
+                                    </div>
+                                    {form.shipping_phone && (
+                                        <div className="flex flex-wrap items-baseline gap-1">
+                                            <span className="text-xs text-muted-foreground">Phone:</span>
+                                            <span className="text-sm font-semibold">{form.shipping_phone}</span>
+                                        </div>
+                                    )}
+                                    <div className="flex flex-wrap items-baseline gap-1">
+                                        <span className="text-xs text-muted-foreground">Email:</span>
+                                        <span className="text-sm font-semibold">{form.shipping_email}</span>
+                                    </div>
+                                    <div className="flex flex-wrap items-baseline gap-1">
+                                        <span className="text-xs text-muted-foreground">Address:</span>
+                                        <span className="text-sm font-semibold">{form.shipping_address_line1_latin}</span>
+                                    </div>
+                                    {form.shipping_address_line2_latin && (
+                                        <div className="flex flex-wrap items-baseline gap-1">
+                                            <span className="text-xs text-muted-foreground">Address (additional):</span>
+                                            <span className="text-sm font-semibold">{form.shipping_address_line2_latin}</span>
+                                        </div>
+                                    )}
+                                    <div className="flex flex-wrap items-baseline gap-1">
+                                        <span className="text-xs text-muted-foreground">City:</span>
+                                        <span className="text-sm font-semibold">{form.shipping_city_latin}</span>
+                                    </div>
+                                    {form.shipping_state_latin && (
+                                        <div className="flex flex-wrap items-baseline gap-1">
+                                            <span className="text-xs text-muted-foreground">State:</span>
+                                            <span className="text-sm font-semibold">{form.shipping_state_latin}</span>
+                                        </div>
+                                    )}
+                                    {form.shipping_postal_code && (
+                                        <div className="flex flex-wrap items-baseline gap-1">
+                                            <span className="text-xs text-muted-foreground">Postal Code:</span>
+                                            <span className="text-sm font-semibold">{form.shipping_postal_code}</span>
+                                        </div>
+                                    )}
+                                    <div className="flex flex-wrap items-baseline gap-1">
+                                        <span className="text-xs text-muted-foreground">Country:</span>
+                                        <span className="text-sm font-semibold">{countryName}</span>
+                                    </div>
+                                </CardContent>
+                            </Card>
+
+                            <Alert className="mt-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20">
+                                <TriangleAlert className="h-4 w-4 !text-yellow-500" />
+
+                                <AlertTitle>Please review your shipping details</AlertTitle>
+
+                                <AlertDescription className="space-y-3">
+                                    <p>
+                                        Please make sure your shipping information is correct and written in
+                                        Latin characters. Incorrect information may delay delivery or cause
+                                        your package to be returned.
+                                    </p>
+
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={goToShippingForm}
+                                    >
+                                        Edit shipping details
+                                    </Button>
+                                </AlertDescription>
+                            </Alert>
+                        </div>
                     }
                 </div>
-                <span className="text-sm">
-                    <PriceRenderer value={shippingCost} />
-                    {shippingMethod?.currency_price !== undefined && (
-                        <span className="ml-2 text-xs font-normal text-muted-foreground">
-                            (
-                            <PriceRenderer
-                                value={shippingMethod?.currency_price}
-                                currency={currency}
-                            />
-                            )
-                        </span>
-                    )}
-                </span>
-            </div>
-            <div className="mt-2 flex justify-between">
-                { !isDisabled &&
-                    <div className="space-y-1 text-sm text-muted-foreground">
-                        <Card className="mt-2 gap-2 p-2">
-                            <CardHeader className="pb-1 px-1">
-                                <CardTitle className="font-medium text-muted-foreground">
-                                    Shipping details
-                                </CardTitle>
-                                <CardDescription>
-                                    These details will be used for delivery.
-                                </CardDescription>
-                            </CardHeader>
 
-                            <CardContent className="space-y-2 px-1">
-                                <div className="flex flex-wrap items-baseline gap-1">
-                                    <span className="text-xs text-muted-foreground">Full Name:</span>
-                                    <span className="text-sm font-semibold">{form.shipping_full_name_latin}</span>
-                                </div>
-                                {form.shipping_phone && (
-                                    <div className="flex flex-wrap items-baseline gap-1">
-                                        <span className="text-xs text-muted-foreground">Phone:</span>
-                                        <span className="text-sm font-semibold">{form.shipping_phone}</span>
-                                    </div>
-                                )}
-                                <div className="flex flex-wrap items-baseline gap-1">
-                                    <span className="text-xs text-muted-foreground">Email:</span>
-                                    <span className="text-sm font-semibold">{form.shipping_email}</span>
-                                </div>
-                                <div className="flex flex-wrap items-baseline gap-1">
-                                    <span className="text-xs text-muted-foreground">Address:</span>
-                                    <span className="text-sm font-semibold">{form.shipping_address_line1_latin}</span>
-                                </div>
-                                {form.shipping_address_line2_latin && (
-                                    <div className="flex flex-wrap items-baseline gap-1">
-                                        <span className="text-xs text-muted-foreground">Address (additional):</span>
-                                        <span className="text-sm font-semibold">{form.shipping_address_line2_latin}</span>
-                                    </div>
-                                )}
-                                <div className="flex flex-wrap items-baseline gap-1">
-                                    <span className="text-xs text-muted-foreground">City:</span>
-                                    <span className="text-sm font-semibold">{form.shipping_city_latin}</span>
-                                </div>
-                                {form.shipping_state_latin && (
-                                    <div className="flex flex-wrap items-baseline gap-1">
-                                        <span className="text-xs text-muted-foreground">State:</span>
-                                        <span className="text-sm font-semibold">{form.shipping_state_latin}</span>
-                                    </div>
-                                )}
-                                {form.shipping_postal_code && (
-                                    <div className="flex flex-wrap items-baseline gap-1">
-                                        <span className="text-xs text-muted-foreground">Postal Code:</span>
-                                        <span className="text-sm font-semibold">{form.shipping_postal_code}</span>
-                                    </div>
-                                )}
-                                <div className="flex flex-wrap items-baseline gap-1">
-                                    <span className="text-xs text-muted-foreground">Country:</span>
-                                    <span className="text-sm font-semibold">{countryName}</span>
-                                </div>
-                            </CardContent>
-                        </Card>
+                <Separator className="my-4" />
 
-                        <Alert className="mt-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20">
-                            <TriangleAlert className="h-4 w-4 !text-yellow-500" />
+                <div className="flex justify-between text-lg font-semibold">
+                    <span>Total</span>
+                    <span className="text-sm">
+                        <PriceRenderer value={total} />
+                        {currency !== "USD" && currencyTotal !== undefined && (
+                            <span className="ml-2 text-xs font-normal text-muted-foreground">
+                                (
+                                <PriceRenderer
+                                    value={currencyTotal}
+                                    currency={currency}
+                                />
+                                )
+                            </span>
+                        )}
+                    </span>
+                </div>
 
-                            <AlertTitle>Please review your shipping details</AlertTitle>
-
-                            <AlertDescription className="space-y-3">
-                                <p>
-                                    Please make sure your shipping information is correct and written in
-                                    Latin characters. Incorrect information may delay delivery or cause
-                                    your package to be returned.
-                                </p>
-
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={goToShippingForm}
-                                >
-                                    Edit shipping details
-                                </Button>
-                            </AlertDescription>
-                        </Alert>
-                    </div>
-                }
+                <Button
+                    className="mt-6 w-full"
+                    onClick={handleSubmit}
+                    disabled={isDisabled}
+                >
+                    {buttonText}
+                </Button>
+                {hasCountry && noShipping && (
+                    <p className="text-sm text-red-500 mt-2">
+                        Please select a shipping method.
+                    </p>
+                )}
+                {noGateway && (
+                    <p className="text-sm text-red-500 mt-2">
+                        Unfortunately, we don’t support payments in this region yet.
+                    </p>
+                )}
             </div>
 
-            <Separator className="my-4" />
-
-            <div className="flex justify-between text-lg font-semibold">
-                <span>Total</span>
-                <span className="text-sm">
-                    <PriceRenderer value={total} />
-                    {currency !== "USD" && currencyTotal !== undefined && (
-                        <span className="ml-2 text-xs font-normal text-muted-foreground">
-                            (
-                            <PriceRenderer
-                                value={currencyTotal}
-                                currency={currency}
-                            />
-                            )
-                        </span>
-                    )}
-                </span>
-            </div>
-
-            <Button
-                className="mt-6 w-full"
-                onClick={onSubmit}
-                disabled={isDisabled}
-            >
-                {buttonText}
-            </Button>
-            {hasCountry && noShipping && (
-                <p className="text-sm text-red-500 mt-2">
-                    Please select a shipping method.
-                </p>
-            )}
-            {noGateway && (
-                <p className="text-sm text-red-500 mt-2">
-                    Unfortunately, we don’t support payments in this region yet.
-                </p>
-            )}
-        </div>
+            <ImportDutyDialog open={importDutyDialogOpen} onOpenChange={setImportDutyDialogOpen} onConfirm={handleImportDutyConfirm} />
+        </>
     );
 }

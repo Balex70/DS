@@ -16,6 +16,17 @@
       "name": "Name",
       "email": "Email"
     },
+    "checkout": {
+      "import_duty_dialog": {
+        "header": "Import VAT & Customs Duties",
+        "text_1": "Your order will be shipped internationally.",
+        "text_2": "Depending on your country's customs regulations, you may be required to pay <strong>import VAT</strong>, <strong> customs duties</strong>, taxes, or carrier handling fees before your package can be delivered.",
+        "text_3": "<strong>These charges are not included in your order total</strong> and are the responsibility of the recipient.",
+        "accept_text": "I understand that import VAT, customs duties, taxes, or carrier handling fees may be charged separately upon delivery, and I accept this responsibility.",
+        "cancel_button": "Cancel",
+        "accept_button": "I Understand & Continue"
+      }
+    },
     "footer": {
       "company": "Company",
       "customer_service": "Customer Service",
