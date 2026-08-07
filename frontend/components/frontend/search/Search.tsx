@@ -5,7 +5,7 @@ import { useSearch } from "@/hooks/use-search";
 import { useEffect, useRef, useState } from "react";
 import { SearchBar } from "./search-bar";
 import { DropdownSearchResults } from "./dropdown-search-results";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useCurrency } from "@/context/CurrencyContext";
 
 export function Search() {

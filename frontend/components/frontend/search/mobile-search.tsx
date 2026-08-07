@@ -4,7 +4,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { useSearch } from "@/hooks/use-search";
 import { useState } from "react";
 import { SearchBar } from "./search-bar";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useCurrency } from "@/context/CurrencyContext";
 import { Search, X } from "lucide-react";
 import { Sheet, SheetClose, SheetContent, SheetHeader } from "@/components/ui/sheet";
