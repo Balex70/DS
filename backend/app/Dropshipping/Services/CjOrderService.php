@@ -22,4 +22,14 @@ class CjOrderService
     {
         return $this->client->checkOrderStatus($orderId);
     }
+
+    public function trackInfo(string $trackNumber): array
+    {
+        return $this->client->getTrackInfo($trackNumber);
+    }
+
+    public function simulatePayOrder(string $orderId): array
+    {
+        return $this->client->simulatePayOrder($orderId);
+    }
 }

@@ -3,8 +3,13 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Order } from "@/types/order"
 import { PriceRenderer } from "@/components/custom/PriceRenderer"
+import { CircleAlert } from "lucide-react"
 
 export const columns = (): ColumnDef<Order>[] => [
+  {
+    accessorKey: "id",
+    header: "ID",
+  },
   {
     accessorKey: "order_number",
     header: "Order Number",
@@ -16,6 +21,17 @@ export const columns = (): ColumnDef<Order>[] => [
   {
     accessorKey: "ds_order_id",
     header: "DS order ID",
+  },
+  {
+    accessorKey: "is_sandbox",
+    header: "Sandbox",
+    cell: ({ getValue }) => {
+      const value = getValue()
+
+      return (
+        value === true ? <CircleAlert className="text-yellow-500" /> : null
+      )
+    }
   },
   {
     accessorKey: "status",

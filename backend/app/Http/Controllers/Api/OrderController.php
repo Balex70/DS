@@ -95,15 +95,52 @@ class OrderController extends Controller
 
         // Update order statuses
         // TODO: recheck change status and dsStatus, mapping correctly
+        $dsStatusCurrent = $order->ds_status;
         $order->status = $this->service->toOrderStatus($responseData['data']['orderStatus']);
         $order->ds_status = $this->service->toDsStatus($responseData['data']['orderStatus']);
+        $order->ds_order_id = $responseData['data']['cjOrderCode'];
+        $order->is_sandbox = $responseData['data']['isSandbox'] ? 1 : 0;
         $order->save();
 
         // OrderDsStatusEnum::SHIPPED -> means in transit to the client
         // Need to send email client and admin about that
-        if ($this->service->toDsStatus($responseData['data']['orderStatus']) === OrderDsStatusEnum::SHIPPED) {
+
+        if ($dsStatusCurrent !== OrderDsStatusEnum::SHIPPED && $this->service->toDsStatus($responseData['data']['orderStatus']) === OrderDsStatusEnum::SHIPPED) {
             Mail::to($order->shipping_email)->queue(new ClientOrderShipped($order));
             Mail::to(config('mail.admin_address'))->queue(new AdminOrderShipped($order));
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $responseData,
+        ]);
+    }
+
+    public function trackInfo(Order $order)
+    {
+        $responseData = $this->service->getTrackInfo($order);
+        if (!$responseData['success']) {
+            return response()->json([
+                'success' => false,
+                'message' => $responseData['message'],
+            ], 422);
+        }
+
+
+        return response()->json([
+            'success' => true,
+            'data' => $responseData,
+        ]);
+    }
+
+    public function simulatePayOrder(Order $order)
+    {
+        $responseData = $this->service->simulatePayOrder($order);
+        if (!$responseData['success']) {
+            return response()->json([
+                'success' => false,
+                'message' => $responseData['message'],
+            ], 422);
         }
 
         return response()->json([

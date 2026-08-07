@@ -109,4 +109,19 @@ class OrderController extends Controller
 
         return response()->json($order);
     }
+
+    public function trackInfo(string $trackNumber)
+    {
+        $responseData = $this->storeOrderService->getTrackInfo($trackNumber);
+        if (!$responseData['success']) {
+            return response()->json([
+                'success' => false,
+            ], 422);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $responseData['data'],
+        ]);
+    }
 }

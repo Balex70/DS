@@ -61,6 +61,43 @@ class OrderService
         return $provider->checkOrderStatus($payload);
     }
 
+    public function getTrackInfo(Order $order)
+    {
+        $provider = $this->manager->driver();
+
+        // Comment this line if you want test tracking info
+        if($order->ds_tracking_number === null) {
+            return [
+                'success' => false,
+                'message' => 'DS tracing number not found!'
+            ];
+        }
+
+        $payload = [
+            'trackNumber' => $order->ds_tracking_number, // for testing 435340934
+        ];
+
+        return $provider->trackInfo($payload);
+    }
+
+    public function simulatePayOrder(Order $order)
+    {
+        $provider = $this->manager->driver();
+
+        if($order->ds_order_id === null) {
+            return [
+                'success' => false,
+                'message' => 'DS order ID not found!'
+            ];
+        }
+
+        $payload = [
+            'orderId' => $order->ds_order_id
+        ];
+
+        return $provider->simulatePayOrder($payload);
+    }
+
     public function toOrderStatus(string $dsStatus): OrderStatusEnum {
         // https://developers.cjdropshipping.com/en/api/api2/api/shopping.html#order-status
         // TODO: create mappers for each ds providers
@@ -96,7 +133,7 @@ class OrderService
             'UNPAID'
                 => OrderDsStatusEnum::UNPAID,
 
-            'UNSHIPPED'
+            'UNSHIPPED' // UNSHIPPED: 300 | 400, be default is 300
                 => OrderDsStatusEnum::PROCESSING,
 
             'SHIPPED'

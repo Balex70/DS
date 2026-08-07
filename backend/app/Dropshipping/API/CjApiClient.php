@@ -145,7 +145,96 @@ class CjApiClient
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ])->get(
-            "{$this->baseUrl}/shopping/order/getOrderDetail?orderId=210711100018043276",
+            "{$this->baseUrl}/shopping/order/getOrderDetail",
+            [
+                'orderId' => $orderId
+            ]
+        );
+
+        $json = $response->json();
+
+        if (!isset($json['code']) || $json['code'] !== 200) {
+            return [
+                'success' => false,
+                'message' => $json['message'] ?? 'Unknown error',
+                'data' => null,
+            ];
+        }
+
+        return [
+            'success' => true,
+            'message' => null,
+            'data' => $json['data'] ?? [],
+        ];
+    }
+
+    public function getTrackInfo(string $trackNumber): array
+    {
+        $token = $this->authService->getValidAccessToken();
+
+        if (!$token) {
+            throw new \Exception('CJ authentication failed: no valid token available');
+        }
+
+        // For testing
+        // return [
+        //     'success' => true,
+        //     'message' => null,
+        //     'data' => [
+        //         'trackingNumber' => 'CJPKL7160102171YQ',
+        //         'logisticName' => 'CJPacket Sensitive',
+        //         'trackingFrom' => 'CN',
+        //         'trackingTo' => 'US',
+        //         'deliveryDay' => '13',
+        //         'deliveryTime' => '2021-06-17 07:04:04',
+        //         'trackingStatus' => 'In transit',
+        //         'lastMileCarrier' => 'UPS',
+        //         'lastTrackNumber' => '926112903032124',
+        //     ],
+        // ];
+
+        $response = Http::withHeaders([
+            'CJ-Access-Token' => $token,
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ])->get(
+            "{$this->baseUrl}/logistic/trackInfo",
+            [
+                'trackNumber' => $trackNumber
+            ]
+        );
+
+        $json = $response->json();
+
+        if (!isset($json['code']) || $json['code'] !== 200) {
+            return [
+                'success' => false,
+                'message' => $json['message'] ?? 'Unknown error',
+                'data' => null,
+            ];
+        }
+
+        return [
+            'success' => true,
+            'message' => null,
+            'data' => $json['data'] ?? [],
+        ];
+    }
+
+    public function simulatePayOrder(string $orderId): array
+    {
+        $token = $this->authService->getValidAccessToken();
+
+        if (!$token) {
+            throw new \Exception('CJ authentication failed: no valid token available');
+        }
+
+        $response = Http::withHeaders([
+            'CJ-Access-Token' => $token,
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ])->post(
+            "{$this->baseUrl}/shopping/sandbox/simulatePay",
             [
                 'orderId' => $orderId
             ]

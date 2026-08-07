@@ -20,8 +20,10 @@ import { OrderDrawerPaymentFields } from "./OrderDrawerPaymentFields"
 import { OrderDrawerItemsFields } from "./OrderDrawerItemsFields"
 import { PriceRenderer } from "@/components/custom/PriceRenderer"
 import { toast } from "sonner";
-import { cancelOrder, checkOrderDsStatus, sendOrder } from "@/lib/api/orders"
+import { cancelOrder, checkOrderDsStatus, sendOrder, simulatePayOrder } from "@/lib/api/orders"
 import { CancelOrderButton } from "./CancelOrderButton"
+import { SimulatePayOrderButton } from "./SimulatePayOrderButton"
+import { TrackingInfoButton } from "./TrackingInfo"
 
 export function OrderDrawer({
   open,
@@ -40,6 +42,8 @@ export function OrderDrawer({
     const [errorCheckDsOrder, setErrorCheckDsOrder] = useState<string | null>(null)
     const [isCancelOrder, setIsCancelOrder] = useState(false)
     const [errorCancelOrder, setErrorCancelOrder] = useState<string | null>(null)
+    const [isSimulatePayOrder, setIsSimulatePayOrder] = useState(false)
+    const [errorSimulatePayOrder, setErrorSimulatePayOrder] = useState<string | null>(null)
 
     const handleSendOrder = async () => {
         if (!order) return
@@ -162,6 +166,46 @@ export function OrderDrawer({
         }
     }
 
+    const handleSimulatePayOrder = async () => {
+        if (!order) return
+        setErrorSimulatePayOrder(null)
+        try {
+            setIsSimulatePayOrder(true)
+
+            const res = await simulatePayOrder(order.id);
+
+            if (!res.ok) {
+                const contentType = res.headers.get('content-type') || '';
+                if (contentType.includes('application/json')) {
+                    const errorJson = await res.json();
+                    if (Array.isArray(errorJson.errors)) {
+                        errorJson.errors.forEach((error: string, index: number) => {
+                            setTimeout(() => toast.error(error), index * 2000);
+                        });
+                        return;
+                    } else {
+                        toast.error(errorJson.message || 'Unknown API error');
+                        return;
+                    }
+                } else {
+                    // HTML / text response → system-level issue (not for client)
+                    const rawText = await res.text();
+                    setErrorSimulatePayOrder(rawText.slice(0, 400));
+                    return;
+                }
+            }
+
+            toast.success("Simulate payment success");
+
+            await onRefresh()
+            setIsSimulatePayOrder(true)
+        } catch (e) {
+            setErrorSimulatePayOrder("Simulate pay order failed" + e)
+        } finally {
+            setIsSimulatePayOrder(false)
+        }
+    }
+
     if (errorSendOrder) {
         toast.error(errorSendOrder)
         setErrorSendOrder(null)
@@ -175,6 +219,11 @@ export function OrderDrawer({
     if (errorCancelOrder) {
         toast.error(errorCancelOrder)
         setErrorCancelOrder(null)
+    }
+
+    if (errorSimulatePayOrder) {
+        toast.error(errorSimulatePayOrder)
+        setErrorSimulatePayOrder(null)
     }
 
     return (
@@ -198,6 +247,14 @@ export function OrderDrawer({
                         order={order}
                         handler={handleCancelOrder}
                         isCheck={isCancelOrder}
+                    />
+                    <SimulatePayOrderButton
+                        order={order}
+                        handler={handleSimulatePayOrder}
+                        isCheck={isSimulatePayOrder}
+                    />
+                    <TrackingInfoButton
+                        order={order}
                     />
                     <div className="flex space-x-4">
                         <FieldGroup className="flex flex-col gap-4 min-w-0">

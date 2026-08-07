@@ -17,3 +17,15 @@ export function cancelOrder(id: number) {
         method: "POST",
     });
 }
+
+export function simulatePayOrder(id: number) {
+    return apiFetch(`/api/orders/${id}/simulate-pay`, {
+        method: "POST",
+    });
+}
+
+export function trackInfo(id: number) {
+    return apiFetch(`/api/orders/${id}/track-info`, {
+        method: "POST",
+    });
+}
