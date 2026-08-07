@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useOrderByPublicToken } from "@/hooks/use-order-by-public-token";
 import { CheckCircle2 } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 export function CheckoutPaymentResultComponent({ token }: { token: string | undefined }) {
     const { data: order, isLoading } = useOrderByPublicToken(token);

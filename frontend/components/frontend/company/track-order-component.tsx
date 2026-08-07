@@ -6,7 +6,7 @@ import { PackageSearch, TriangleAlert } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useRef, useState } from "react";
 import { TrackingInfo } from "@/types/order";
 import { getOrderTrackInfo } from "@/services/order-service";
