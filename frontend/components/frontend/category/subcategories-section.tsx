@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { useCategories } from "@/hooks/use-categories";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import CategoryImage from "./CategoryImage";
 import Image from 'next/image'
 import { Separator } from "@/components/ui/separator";

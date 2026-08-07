@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Product } from "@/types/product";
 import ProductImage from "./ProductImage";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useAddToCart } from "@/hooks/use-add-to-cart";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useCurrency } from "@/context/CurrencyContext";

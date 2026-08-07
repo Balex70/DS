@@ -1,5 +1,5 @@
 import { CustomerMenu } from "./customer/customer-menu";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { MegaMenu } from "./megamenu/mega-menu";
 import { CartButton } from "./cart/cart-button";
 import { Search } from "./search/Search";

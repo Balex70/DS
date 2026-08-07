@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ChevronRight, LayoutGrid } from "lucide-react";
 
 import { Button } from "@/components/ui/button";

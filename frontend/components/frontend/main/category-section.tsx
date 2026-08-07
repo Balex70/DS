@@ -1,9 +1,7 @@
 "use client";
 
-import Link from "next/link";
-
+import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-
 import { Category } from "@/types/category";
 import { Product } from "@/types/product";
 import { ProductCard } from "../category/product-card";
