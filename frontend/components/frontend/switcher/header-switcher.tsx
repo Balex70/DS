@@ -6,7 +6,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
 import { useCurrency } from "@/context/CurrencyContext";
 import { Locale } from "@/i18n/config";
@@ -24,9 +24,7 @@ export default function HeaderSwitcher() {
     const { currency, setCurrency } = useCurrency();
 
     function switchLocale(nextLocale: Locale) {
-        const segments = pathname.split("/");
-        segments[1] = nextLocale;
-        router.push(segments.join("/"));
+        router.push(pathname, {locale: nextLocale});
     }
 
     return (
