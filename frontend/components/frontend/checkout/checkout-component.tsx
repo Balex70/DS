@@ -81,7 +81,7 @@ export function CheckoutComponent() {
         "USD"
     );
 
-     function proceedWithPayment(order: Order, gateway: AvailableGatewayResponse){
+    function proceedWithPayment(order: Order, gateway: AvailableGatewayResponse){
         if (!gateway) {
             setCheckoutStatus("failed");
             return;
