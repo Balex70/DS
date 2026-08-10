@@ -49,6 +49,14 @@ class SyncCategoriesProductsAction
             ]
         );
 
+        // Reset page if category is finished but need to be sync
+        if ($state->finished) {
+            $state->update([
+                'page' => 1,
+                'finished' => false,
+            ]);
+        }
+
         SyncCategoryProductsJob::dispatch(
             $category->external_id
         );
