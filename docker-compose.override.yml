@@ -16,6 +16,9 @@ services:
     volumes:
       - ./backend:/app
 
+  cron:
+    volumes:
+      - ./backend:/app
   test_db:
     image: postgres:15
     environment:

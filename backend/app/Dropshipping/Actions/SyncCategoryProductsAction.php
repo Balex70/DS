@@ -96,7 +96,7 @@ class SyncCategoryProductsAction
             // Update category sync state
             $state->update([
                 'page' => $isLastPage ? $page : $page + 1,
-                'finished' => $isLastPage,
+                'finished' => ($isLastPage || $page >= 16) ? true : false,
                 'last_run_at' => $now,
             ]);
         });
