@@ -42,17 +42,17 @@ class ProductController extends Controller
 
         // ENRICHED FILTER
         if ($request->filled('enriched')) {
-            $query->orWhereNotNull('last_enrichment_at');
+            $query->whereNotNull('last_enrichment_at');
         }
 
         // AI TEXTS FILTER
         if ($request->filled('aiTextsProcessed')) {
-            $query->orWhereNotNull('ai_texts_at');
+            $query->whereNotNull('ai_texts_at');
         }
 
         // AI IMAGES FILTER
         if ($request->filled('aiImagesProcessed')) {
-            $query->orWhereNotNull('ai_images_at');
+            $query->whereNotNull('ai_images_at');
         }
 
         return ProductResource::collection(
