@@ -34,7 +34,7 @@ export function ProductDrawerSecondaryFields({product}: {product: Product}) {
         <Field>
             <FieldLabel>Enrichment</FieldLabel>
             <div className="text-md text-muted-foreground">
-                {format(new Date(product.last_enrichment_at ?? new Date()), "PPpp")}
+                {product.last_enrichment_at ? format(new Date(product.last_enrichment_at), "PPpp") : "No"}
             </div>
         </Field>
     </FieldGroup>
