@@ -83,11 +83,7 @@ class SyncCategoryProductsAction
                 ];
             }
 
-            // category_product update (with delete before)
-            DB::table('category_product')
-                ->whereIn('product_id', $products->pluck('id'))
-                ->delete();
-            
+            // Upsert pivot
             DB::table('category_product')->upsert(
                 $pivotRows,
                 ['product_id', 'category_id']
