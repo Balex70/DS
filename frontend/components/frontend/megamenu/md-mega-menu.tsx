@@ -21,12 +21,12 @@ export default function MbMegaMenu() {
                     className="gap-2"
                 >
                     <LayoutGrid className="h-4 w-4" />
-                    {t('header.catalog')}
+                    {t('megamenu.catalog')}
                 </Button>
             </SheetTrigger>
 
             <SheetContent side="bottom" className="!h-dvh max-h-dvh w-full rounded-none">
-                <BottomSheetHeader>{t('header.catalog')}</BottomSheetHeader>
+                <BottomSheetHeader>{t('megamenu.catalog')}</BottomSheetHeader>
                 
                 <Separator className="my-0" />
 

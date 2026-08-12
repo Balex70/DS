@@ -3,8 +3,11 @@
     
   },
   "frontend": {
-    "header": {
-      "catalog": "Catalog"
+    "loading_loader": "Loading...",
+    "megamenu": {
+      "catalog": "Catalog",
+      "no_categories": "No categories",
+      "browse": "Browse"
     },
     "switcher": {
       "header": {

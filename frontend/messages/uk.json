@@ -3,8 +3,11 @@
     
   },
   "frontend": {
-    "header": {
-      "catalog": "Каталог"
+    "loading_loader": "Зачекайте...",
+    "megamenu": {
+      "catalog": "Каталог",
+      "no_categories": "Немає категорій",
+      "browse": "Перейти до"
     },
     "switcher": {
       "header": {

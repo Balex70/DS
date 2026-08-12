@@ -23,14 +23,14 @@ export default function BottomMegaMenu() {
                         <LayoutGrid className="h-6 w-6 text-muted-foreground" />
 
                         <span className="text-xs text-muted-foreground">
-                            {t('header.catalog')}
+                            {t('megamenu.catalog')}
                         </span>
                     </div>
                 </Button>
             </SheetTrigger>
 
             <SheetContent side="bottom" className="!h-dvh max-h-dvh w-full rounded-none">
-                <BottomSheetHeader>{t('header.catalog')}</BottomSheetHeader>
+                <BottomSheetHeader>{t('megamenu.catalog')}</BottomSheetHeader>
                 
                 <Separator className="my-0" />
 

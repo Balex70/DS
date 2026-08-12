@@ -1,7 +1,7 @@
 'use client';
 
 import { Link } from "@/i18n/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import {
     Accordion,
@@ -28,6 +28,7 @@ export function MobileSubcategoryGrid({
 }: Props) {
     const locale = useLocale();
     const rootTranslation = root?.translations.find((item) => item.locale === locale);
+    const t = useTranslations('frontend');
 
     const secondLevel = categories.filter(
         (category) =>
@@ -121,7 +122,7 @@ export function MobileSubcategoryGrid({
                                     "
                                 >
                                     <span>
-                                        Browse - {secondTranslation?.name ?? second.name}
+                                        {t('megamenu.browse')} - {secondTranslation?.name ?? second.name}
                                     </span>
 
                                     <ChevronRight className="h-4 w-4" />
