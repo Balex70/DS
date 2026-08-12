@@ -4,6 +4,14 @@
   },
   "frontend": {
     "loading_loader": "Зачекайте...",
+    "main": {
+      "hero_carousel": {
+        "new_arrival": "Нове надходження"
+      },
+      "categories_section": {
+        "view_all": "Переглянути всі товари"
+      }
+    },
     "megamenu": {
       "catalog": "Каталог",
       "no_categories": "Немає категорій",

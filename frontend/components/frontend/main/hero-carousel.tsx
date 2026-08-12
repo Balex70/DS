@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { useLatestProducts } from "@/hooks/use-latest-products";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useCurrency } from "@/context/CurrencyContext";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import HeroCarouselImage from "@/components/custom/HeroCarouselImage";
@@ -19,6 +19,7 @@ export function HeroCarousel() {
     const locale = useLocale();
     const { currency } = useCurrency();
     const { data: products } = useLatestProducts({locale, currency});
+    const t = useTranslations('frontend')
     
     return (
         <Carousel
@@ -70,7 +71,7 @@ export function HeroCarousel() {
                                             md:px-10
                                             text-white">
                                             <p className="mb-2 text-xs uppercase tracking-[0.2em] text-white sm:text-sm">
-                                                New Arrival
+                                                {t('main.hero_carousel.new_arrival')}
                                             </p>
 
                                             <h2 className="
