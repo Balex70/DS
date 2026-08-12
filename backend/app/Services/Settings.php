@@ -10,19 +10,24 @@ class Settings
             'default' => 'My Store',
         ],
 
-        'checkout.guest_checkout' => [
-            'type' => 'boolean',
-            'default' => true,
-        ],
+        // 'checkout.guest_checkout' => [
+        //     'type' => 'boolean',
+        //     'default' => true,
+        // ],
 
-        'orders.cancel_after_minutes' => [
+        // 'orders.cancel_after_minutes' => [
+        //     'type' => 'integer',
+        //     'default' => 60,
+        // ],
+
+        // 'shipping.free_shipping_threshold' => [
+        //     'type' => 'float',
+        //     'default' => 50.00,
+        // ],
+
+        'product_sync.max_pages_allowed' => [
             'type' => 'integer',
-            'default' => 60,
-        ],
-
-        'shipping.free_shipping_threshold' => [
-            'type' => 'float',
-            'default' => 50.00,
+            'default' => 2,
         ],
     ];
 }
