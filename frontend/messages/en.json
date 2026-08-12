@@ -6,6 +6,16 @@
     "header": {
       "catalog": "Catalog"
     },
+    "switcher": {
+      "header": {
+        "language": "Language",
+        "currency": "Currency"
+      },
+      "bottom": {
+        "language": "Language",
+        "currency": "Currency"
+      }
+    },
     "footer_nav": {
       "terms_and_conditions": "Terms and Conditions",
       "privacy_policy": "Privacy Policy",

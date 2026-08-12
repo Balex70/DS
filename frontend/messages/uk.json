@@ -6,6 +6,16 @@
     "header": {
       "catalog": "Каталог"
     },
+    "switcher": {
+      "header": {
+        "language": "Мова",
+        "currency": "Валюта"
+      },
+      "bottom": {
+        "language": "Мова",
+        "currency": "Валюта"
+      }
+    },
     "footer_nav": {
       "terms_and_conditions": "Умови та положення",
       "privacy_policy": "Політика конфіденційності",
