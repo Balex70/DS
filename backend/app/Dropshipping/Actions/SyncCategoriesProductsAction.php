@@ -5,9 +5,14 @@ namespace App\Dropshipping\Actions;
 use App\Jobs\SyncCategoryProductsJob;
 use App\Models\Category;
 use App\Models\CategorySyncState;
+use App\Services\SettingService;
 
 class SyncCategoriesProductsAction
 {
+    public function __construct(
+        private SettingService $setting
+    ) {}
+
     public function execute(): void
     {
         $category = Category::query()
@@ -29,7 +34,7 @@ class SyncCategoriesProductsAction
                         ->where(
                             'last_run_at',
                             '<=',
-                            now()->subHours(24)
+                            now()->subHours($this->setting->get('product_sync.time_since_last_update'))
                         );
                 });
             })

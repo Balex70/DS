@@ -8,13 +8,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { getSettings } from "@/lib/api/settings";
 import { getCookie, getErrorStringFromCatch } from "@/helpers/general"
-
-type Settings = {
-    "store.name": string;
-    // "checkout.guest_checkout": boolean;
-    "product_sync.max_pages_allowed": number;
-    // "shipping.free_shipping_threshold": number;
-};
+import { Settings } from "@/types/settings";
 
 export default function GeneralSettings() {
     const [settings, setSettings] = useState<Settings | null>(null);
@@ -152,21 +146,38 @@ export default function GeneralSettings() {
             </div> */}
 
             <div className="space-y-2">
-            <Label htmlFor="cancel-after">
-                Max pages allowed for product sync
-            </Label>
+                <Label htmlFor="product-sync-max-pages">
+                    Max pages allowed for product sync
+                </Label>
 
-            <Input
-                id="cancel-after"
-                type="number"
-                value={settings["product_sync.max_pages_allowed"]}
-                onChange={(e) =>
-                updateSetting(
-                    "product_sync.max_pages_allowed",
-                    Number(e.target.value)
-                )
-                }
-            />
+                <Input
+                    id="product-sync-max-pages"
+                    type="number"
+                    value={settings["product_sync.max_pages_allowed"]}
+                    onChange={(e) =>
+                    updateSetting(
+                        "product_sync.max_pages_allowed",
+                        Number(e.target.value)
+                    )
+                    }
+                />
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="product-sync-time-since-last-update">
+                   Max amount of time (hours) spent from last update of products for category
+                </Label>
+
+                <Input
+                    id="product-sync-time-since-last-update"
+                    type="number"
+                    value={settings["product_sync.time_since_last_update"]}
+                    onChange={(e) =>
+                    updateSetting(
+                        "product_sync.time_since_last_update",
+                        Number(e.target.value)
+                    )
+                    }
+                />
             </div>
 
             {/* <div className="space-y-2">

@@ -29,5 +29,9 @@ class Settings
             'type' => 'integer',
             'default' => 2,
         ],
+        'product_sync.time_since_last_update' => [
+            'type' => 'integer',
+            'default' => 48,
+        ],
     ];
 }
