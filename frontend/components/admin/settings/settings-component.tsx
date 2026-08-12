@@ -1,8 +1,8 @@
 'use client'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import Currency from "@/components/admin/settings/Currency";
 import GeneralSettings from './GeneralSettings';
+import ListCurrencies from './currency/ListCurrencies';
 
 function SettingsComponent () {
   return (
@@ -17,7 +17,7 @@ function SettingsComponent () {
       </TabsContent>
 
       <TabsContent value="currency">
-        <Currency />
+        <ListCurrencies />
       </TabsContent>
     </Tabs>
   )

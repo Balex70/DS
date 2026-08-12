@@ -5,3 +5,9 @@ export function getSettings() {
         method: "GET",
     });
 }
+
+export function getCurrencies() {
+    return apiFetch(`/api/currencies`, {
+        method: "GET",
+    });
+}

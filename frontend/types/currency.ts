@@ -14,3 +14,11 @@ export const CURRENCIES = {
 } as const;
 
 export type CurrencyCode = keyof typeof CURRENCIES;
+
+export type Currency = {
+    id: number;
+    from_currency: string;
+    to_currency: string;
+    rate: number;
+    rate_updated_at: string;
+};

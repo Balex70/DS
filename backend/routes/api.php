@@ -82,7 +82,8 @@ Route::post('payments/{payment}/update-status', [PaymentController::class, 'upda
 Route::get('materials', [MaterialController::class, 'index'])->middleware('auth:sanctum');
 Route::patch('materials/{material}', [MaterialController::class, 'update'])->middleware('auth:sanctum');
 
-// Route::apiResource('currency', CurrencyController::class)->middleware('auth:sanctum');
+// Currencies
+Route::get('currencies', [CurrencyController::class, 'index'])->middleware('auth:sanctum');
 Route::get('currency/sync-rate', [CurrencyController::class, 'syncRate'])->middleware('auth:sanctum');
 
 // Settings
