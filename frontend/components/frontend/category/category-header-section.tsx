@@ -1,7 +1,7 @@
 "use client";
 
 import { useCategories } from "@/hooks/use-categories";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 type Props = {
     slug: string[];
@@ -10,7 +10,7 @@ type Props = {
 export function CategoryHeaderSection({ slug }: Props) {
     const { data: categories, isLoading } = useCategories();
     const locale = useLocale();
-
+    const t = useTranslations('frontend')
     const lastSlug = slug[slug.length - 1];
     const category = categories?.find((c) => c.slug === lastSlug);
     const translation = category?.translations.find((item) => item.locale === locale);
@@ -18,7 +18,7 @@ export function CategoryHeaderSection({ slug }: Props) {
     if (isLoading) {
         return (
             <div className="space-y-2">
-                <h1 className="text-2xl font-semibold">...</h1>
+                <h1 className="text-2xl font-semibold">{t('loading_loader')}</h1>
             </div>
         );
     }
@@ -26,7 +26,7 @@ export function CategoryHeaderSection({ slug }: Props) {
     if (!category) {
         return (
             <p className="text-sm text-muted-foreground">
-                Category not found.
+                {t('category.category_not_found')}
             </p>
         );
     }

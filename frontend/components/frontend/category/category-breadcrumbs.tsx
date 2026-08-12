@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useCategories } from "@/hooks/use-categories";
 import { Category } from "@/types/category";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Fragment } from "react";
 
 function buildBreadcrumbs(slug: string[], categories?: Category[], locale?: string) {
@@ -26,6 +26,7 @@ function buildBreadcrumbs(slug: string[], categories?: Category[], locale?: stri
 export function CategoryBreadcrumbs({ slug }: { slug: string[] }) {
     const { data: categories } = useCategories();
     const locale = useLocale();
+    const t = useTranslations('frontend')
     
     const items = buildBreadcrumbs(slug, categories, locale);
 
@@ -34,7 +35,7 @@ export function CategoryBreadcrumbs({ slug }: { slug: string[] }) {
             <BreadcrumbList>
                 <BreadcrumbItem>
                     <BreadcrumbLink asChild>
-                        <Link href="/">Home</Link>
+                        <Link href="/">{t('category.breadcrumbs.home')}</Link>
                     </BreadcrumbLink>
                 </BreadcrumbItem>
 

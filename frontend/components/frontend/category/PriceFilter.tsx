@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator"
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 type PriceFilterProps = {
     min: number;
@@ -25,14 +26,14 @@ export function PriceFilter({
 }: PriceFilterProps) {
     const toDisplay = (cents: number) => (cents / 100).toString();
     const toCents = (value: number) => Math.round(value * 100);
-
+    const t = useTranslations('frontend')
     const [localValue, setLocalValue] = useState<[number, number]>(value);
 
     return (
         <div className="space-y-4 pt-2 px-3">
             <div>
                 <h3 className="text-sm font-medium">
-                    Price (USD)
+                    {t('category.filter.price.header')}
                 </h3>
             </div>
 
@@ -49,6 +50,7 @@ export function PriceFilter({
                 }
             />
             <div className="flex items-center gap-2">
+                $
                 <Input
                     type="number"
                     value={toDisplay(localValue[0])}
@@ -76,6 +78,7 @@ export function PriceFilter({
                     className="text-sm"
                 />
                 <span className="text-muted-foreground font-medium">–</span>
+                $
                 <Input
                     type="number"
                     value={toDisplay(localValue[1])}
@@ -111,7 +114,7 @@ export function PriceFilter({
                         setPriceApplied()
                     }}
                 >
-                    Apply
+                    {t('category.filter.price.apply')}
                 </Button>
             }
             <Separator className="my-4" />

@@ -3,6 +3,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { MaterialOption } from "@/types/material";
+import { useTranslations } from "next-intl";
 
 type MaterialsFilterProps = {
     activeMaterials: number[];
@@ -15,6 +16,7 @@ export function MaterialsFilter({
     materialsOptions,
     onChange,
 }: MaterialsFilterProps) {
+    const t = useTranslations('frontend')
     const toggleMaterial = (materialId: number) => {
         const isSelected = activeMaterials.includes(materialId);
 
@@ -28,7 +30,7 @@ export function MaterialsFilter({
         <div className="space-y-4 pt-3 px-3">
             <div>
                 <h3 className="text-sm font-medium">
-                    Materials
+                    {t('category.filter.material')}
                 </h3>
             </div>
 

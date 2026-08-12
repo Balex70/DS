@@ -10,6 +10,7 @@ import { MaterialOption } from "@/types/material";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PriceFilter } from "./PriceFilter";
 import { MaterialsFilter } from "./MaterialsFilter";
+import { useTranslations } from "next-intl";
 
 type Props = {
     minPrice: number;
@@ -31,6 +32,7 @@ export function MobileCategorySidebar({
     setActiveMaterials
 }: Props) {
     const [open, setOpen] = useState(false);
+    const t = useTranslations('frontend')
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -40,12 +42,12 @@ export function MobileCategorySidebar({
                     className="h-9 rounded-2xl border border-input bg-background px-3 shadow-xs hover:bg-accent"
                     >
                     <Funnel className="mr-2 h-4 w-4 text-muted-foreground" />
-                    Filter
+                    {t('category.filter.header')}
                 </Button>
             </SheetTrigger>
 
             <SheetContent side="bottom" className="!h-dvh max-h-dvh w-full rounded-none">
-                <BottomSheetHeader>Filter</BottomSheetHeader>
+                <BottomSheetHeader>{t('category.filter.header')}</BottomSheetHeader>
 
                 <Separator />
 
@@ -72,7 +74,7 @@ export function MobileCategorySidebar({
                             setOpen(false)
                         }}
                     >
-                        Apply
+                        {t('category.filter.apply')}
                     </Button>
                 </div>
             </ScrollArea>

@@ -12,6 +12,35 @@
         "view_all": "View all"
       }
     },
+    "category": {
+      "category_not_found": "Category not found",
+      "no_products": "There are no items in this category yet, but new arrivals are coming soon!",
+      "load_more": "Load more",
+      "loading": "Loading...",
+      "product_card": {
+        "no_image": "No image",
+        "add_to_cart": "Add to cart",
+        "adding": "Adding..."
+      },
+      "filter": {
+        "header": "Filter",
+        "apply": "Apply",
+        "material": "Materials",
+        "price": {
+          "header": "Price (USD)",
+          "apply": "Apply"
+        }
+      },
+      "sort": {
+        "header": "Sort by",
+        "latest": "Latest",
+        "price_asc": "Price: Low → High",
+        "price_desc": "Price: High → Low"
+      },
+      "breadcrumbs": {
+        "home": "Home"
+      }
+    },
     "megamenu": {
       "catalog": "Catalog",
       "no_categories": "No categories",

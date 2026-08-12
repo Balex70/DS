@@ -16,7 +16,6 @@ type Props = {
 export function SubcategoriesSection({ slug }: Props) {
     const { data: categories, isLoading } = useCategories();
     const locale = useLocale();
-    
     const lastSlug = slug[slug.length - 1];
     const category = categories?.find((c) => c.slug === lastSlug);
     const subcategories = categories?.filter((c) => c.parent_id === category?.id);
@@ -38,9 +37,10 @@ export function SubcategoriesSection({ slug }: Props) {
 
     if (!category) {
         return (
-            <p className="text-sm text-muted-foreground">
-                Category not found.
-            </p>
+            <>
+                <Separator />
+                <CategoryBreadcrumbs slug={slug} />
+            </>
         );
     }
 

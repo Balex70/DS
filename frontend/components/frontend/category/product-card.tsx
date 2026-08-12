@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { useAddToCart } from "@/hooks/use-add-to-cart";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useTranslations } from "next-intl";
 
 type Props = {
     product: Product;
@@ -15,7 +16,7 @@ type Props = {
 export function ProductCard({ product }: Props) {
     const { mutate: addToCart, isPending } = useAddToCart();
     const { currency } = useCurrency();
-
+    const t = useTranslations('frontend')
     const cheapestVariantImage = product.cheapest_variant?.image?.original_url ?? product.big_image?.original_url ?? undefined;
 
     const handleAddToCart = async (e: React.MouseEvent) => {
@@ -48,7 +49,7 @@ export function ProductCard({ product }: Props) {
                             />
                     ) : (
                         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                            No image
+                            {t('category.product_card.no_image')}
                         </div>
                     )}
                 </div>
@@ -79,7 +80,7 @@ export function ProductCard({ product }: Props) {
                         disabled={isPending}
                         className="rounded-md bg-black px-4 py-2 text-white hover:opacity-90 disabled:opacity-50"
                     >
-                        {isPending ? "Adding..." : "Add to cart"}
+                        {isPending ? t('category.product_card.adding') : t('category.product_card.add_to_cart')}
                     </button>
                 </div>
             </CardContent>
