@@ -23,7 +23,7 @@ class CurrencyController extends Controller
         Gate::authorize('viewAny', Currency::class);
 
         return CurrencyResource::collection(
-            Currency::paginate(10)
+            Currency::all()
         );
     }
     

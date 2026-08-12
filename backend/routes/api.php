@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductVariantController;
+use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\Store\CartController;
 use App\Http\Controllers\Api\Store\CategoryController as StoreCategoryController;
 use App\Http\Controllers\Api\Store\OrderController as StoreOrderController;
@@ -81,8 +82,13 @@ Route::post('payments/{payment}/update-status', [PaymentController::class, 'upda
 Route::get('materials', [MaterialController::class, 'index'])->middleware('auth:sanctum');
 Route::patch('materials/{material}', [MaterialController::class, 'update'])->middleware('auth:sanctum');
 
-// Route::apiResource('currency', CurrencyController::class)->middleware('auth:sanctum');
+// Currencies
+Route::get('currencies', [CurrencyController::class, 'index'])->middleware('auth:sanctum');
 Route::get('currency/sync-rate', [CurrencyController::class, 'syncRate'])->middleware('auth:sanctum');
+
+// Settings
+Route::get('settings', [SettingController::class, 'index'])->middleware('auth:sanctum');
+Route::put('settings', [SettingController::class, 'update'])->middleware('auth:sanctum');
 
 // Store Order
 Route::prefix('store')->group(function () {

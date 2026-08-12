@@ -66,6 +66,9 @@ nextjs-log:
 sh-backend:
 	$(DOCKER_COMPOSE) exec -u root -w /app backend /bin/bash
 
+sh-cron:
+	$(DOCKER_COMPOSE) exec -u root -w /app cron /bin/bash
+
 sh-frontend:
 	$(DOCKER_COMPOSE) exec frontend /bin/sh -l
 

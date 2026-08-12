@@ -21,3 +21,7 @@ services:
   queue:
     volumes:
       - ./backend:/app
+
+  cron:
+    volumes:
+      - ./backend:/app

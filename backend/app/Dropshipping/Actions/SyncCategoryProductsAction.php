@@ -6,12 +6,14 @@ use App\Dropshipping\DropshippingManager;
 use App\Models\Category;
 use App\Models\CategorySyncState;
 use App\Models\Product;
+use App\Services\SettingService;
 use Illuminate\Support\Facades\DB;
 
 class SyncCategoryProductsAction
 {
     public function __construct(
-        private DropshippingManager $manager
+        private DropshippingManager $manager,
+        private SettingService $setting
     ) {}
 
     public function execute(string $categoryId): void
@@ -83,11 +85,7 @@ class SyncCategoryProductsAction
                 ];
             }
 
-            // category_product update (with delete before)
-            DB::table('category_product')
-                ->whereIn('product_id', $products->pluck('id'))
-                ->delete();
-            
+            // Upsert pivot
             DB::table('category_product')->upsert(
                 $pivotRows,
                 ['product_id', 'category_id']
@@ -96,7 +94,7 @@ class SyncCategoryProductsAction
             // Update category sync state
             $state->update([
                 'page' => $isLastPage ? $page : $page + 1,
-                'finished' => $isLastPage,
+                'finished' => ($isLastPage || $page >= $this->setting->get('product_sync.max_pages_allowed')) ? true : false,
                 'last_run_at' => $now,
             ]);
         });

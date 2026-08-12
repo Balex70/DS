@@ -55,5 +55,15 @@ services:
       - db
       - redis
 
+  cron:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    command: php artisan schedule:work
+    depends_on:
+      - backend
+      - redis
+    restart: unless-stopped
+
 volumes:
   db_data:

@@ -19,6 +19,7 @@ class CurrencyResource extends JsonResource
             'from_currency' => $this->from_currency,
             'to_currency' => $this->to_currency,
             'rate' => $this->rate,
+            'rate_updated_at' => $this->rate_updated_at,
         ];
     }
 }
