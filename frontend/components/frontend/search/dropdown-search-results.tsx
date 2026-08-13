@@ -5,8 +5,11 @@ import { Category } from "@/types/category";
 import { Card } from "@/components/ui/card";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useTranslations } from "next-intl";
+import { Search } from "lucide-react";
 
 type DropdownSearchResultsProps = {
+    query: string;
     products?: Product[];
     categories?: Category[];
     onSelectProduct: (product: Product) => void;
@@ -14,19 +17,40 @@ type DropdownSearchResultsProps = {
 }
 
 export function DropdownSearchResults({
+    query: q,
     products = [],
     categories = [],
     onSelectProduct,
     onSelectCategory,
 }: DropdownSearchResultsProps) {
     const { currency } = useCurrency();
+    const t = useTranslations('frontend')
     const hasResults =
         products.length > 0 || categories.length > 0;
 
     if (!hasResults) {
         return (
-            <Card className="mt-0 p-3 text-sm text-muted-foreground">
-                No results found
+            <Card className="mt-0">
+                <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                        <Search className="h-5 w-5 text-muted-foreground" />
+                    </div>
+
+                    <h2 className="text-lg font-semibold">
+                        {t("search.no_results")}
+                    </h2>
+
+                    <p className="mt-2 max-w-md text-sm text-muted-foreground">
+                        {t("search.no_results_description")}
+                    </p>
+
+                    <p className="mt-3 text-sm">
+                        <span className="text-muted-foreground">
+                            {t("search.searched_for")}
+                        </span>{" "}
+                        <span className="font-medium">&quot;{q}&quot;</span>
+                    </p>
+                </div>
             </Card>
         );
     }
@@ -37,7 +61,7 @@ export function DropdownSearchResults({
             {products.length > 0 && (
                 <div>
                     <div className="px-2 text-xs font-medium text-muted-foreground mb-1">
-                        Products
+                        {t("search.products")}
                     </div>
 
                     <div className="space-y-1">
@@ -76,7 +100,7 @@ export function DropdownSearchResults({
             {categories.length > 0 && (
                 <div>
                     <div className="px-2 text-xs font-medium text-muted-foreground mb-1">
-                        Categories
+                        {t("search.categories")}
                     </div>
 
                     <div className="space-y-1">

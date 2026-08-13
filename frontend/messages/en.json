@@ -95,6 +95,16 @@
       "cart_is_empty": "Your cart is empty",
       "cart_is_empty_description": "Add some products to continue shopping"
     },
+    "search": {
+      "header": "Search",
+      "placeholder": "Search...",
+      "no_results": "No results found",
+      "no_results_description": "Try checking the spelling or searching for something else.",
+      "searched_for": "We couldn't find anything for",
+      "start_typing": "Start typing to search...",
+      "products": "Products",
+      "categories": "Categories"
+    },
     "footer": {
       "company": "Company",
       "customer_service": "Customer Service",

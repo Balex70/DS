@@ -95,6 +95,16 @@
       "cart_is_empty": "Кошик порожній",
       "cart_is_empty_description": "Додайте кілька товарів, щоб продовжити покупки"
     },
+    "search": {
+      "header": "Пошук",
+      "placeholder": "Я шукаю...",
+      "no_results": "Немає результатів",
+      "no_results_description": "Спробуєте перевірити написання, або пошукати щось інше.",
+      "searched_for": "Ми не можемо знайти нічого по запиту",
+      "start_typing": "Почніть набирати, щоб почати пошук...",
+      "products": "Товари",
+      "categories": "Категорії"
+    },
     "footer": {
       "company": "Компанія",
       "customer_service": "Служба підтримки",

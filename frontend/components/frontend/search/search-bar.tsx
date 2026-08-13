@@ -9,6 +9,7 @@ import {
     InputGroupInput,
 } from "@/components/ui/input-group";
 import { Separator } from "@/components/ui/separator";
+import { useTranslations } from "next-intl";
 
 type SearchBarProps = {
     value: string;
@@ -24,7 +25,7 @@ export function SearchBar({
     onClickSearch
 }: SearchBarProps) {
     const router = useRouter();
-
+    const t = useTranslations('frontend')
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -44,7 +45,7 @@ export function SearchBar({
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     onFocus={onFocus}
-                    placeholder="Search..."
+                    placeholder={t("search.placeholder")}
                 />
                 <InputGroupAddon
                     align="inline-end"

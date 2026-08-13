@@ -5,6 +5,8 @@ import { Category } from "@/types/category";
 import { Card } from "@/components/ui/card";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useTranslations } from "next-intl";
+import { Search } from "lucide-react";
 
 type DropdownSearchResultsProps = {
     query: string;
@@ -22,6 +24,7 @@ export function MobileDropdownSearchResults({
     onSelectCategory,
 }: DropdownSearchResultsProps) {
     const { currency } = useCurrency();
+    const t = useTranslations('frontend')
     const hasResults =
         products.length > 0 || categories.length > 0;
     
@@ -29,8 +32,27 @@ export function MobileDropdownSearchResults({
 
     if (!hasResults && query !== "") {
         return (
-            <Card className="mt-0 p-3 text-sm text-muted-foreground !border-0 !shadow-none !ring-0">
-                No results found
+            <Card className="mt-0 p-3 !border-0 !shadow-none !ring-0">
+                <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                        <Search className="h-5 w-5 text-muted-foreground" />
+                    </div>
+
+                    <h2 className="text-lg font-semibold">
+                        {t("search.no_results")}
+                    </h2>
+
+                    <p className="mt-2 max-w-md text-sm text-muted-foreground">
+                        {t("search.no_results_description")}
+                    </p>
+
+                    <p className="mt-3 text-sm">
+                        <span className="text-muted-foreground">
+                            {t("search.searched_for")}
+                        </span>{" "}
+                        <span className="font-medium">&quot;{query}&quot;</span>
+                    </p>
+                </div>
             </Card>
         );
     }
@@ -38,7 +60,7 @@ export function MobileDropdownSearchResults({
     if (!hasResults && query === "") {
         return (
             <Card className="mt-0 p-3 text-sm text-muted-foreground !border-0 !shadow-none !ring-0">
-                Start typing...
+                {t("search.start_typing")}
             </Card>
         );
     }
@@ -49,7 +71,7 @@ export function MobileDropdownSearchResults({
             {products.length > 0 && (
                 <div className="w-full">
                     <div className="text-xs font-medium text-muted-foreground mb-2 pl-2 mr-4 pr-4">
-                        Products                        
+                        {t("search.products")}
                     </div>
 
                     {products.map((product) => (
@@ -86,7 +108,7 @@ export function MobileDropdownSearchResults({
             {categories.length > 0 && (
                 <div>
                     <div className="px-2 text-xs font-medium text-muted-foreground mb-1">
-                        Categories
+                        {t("search.categories")}
                     </div>
 
                     <div className="space-y-1">
