@@ -6,7 +6,7 @@ import { useAddToCart } from "@/hooks/use-add-to-cart";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useCurrency } from "@/context/CurrencyContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MobileVariantSelector from "./mobile-variant-selector";
@@ -25,10 +25,11 @@ export function ProductDetail({ productId }: Props) {
     const [selectedVariantId, setSelectedVariantId] = useState<number | null>(null);
     const locale = useLocale();
     const router = useRouter();
+    const t = useTranslations('frontend')
 
     if (error?.response?.status === 404) {
         return (
-            <h2>Product not found (redirect or show nice 404)</h2>
+            <h2>{t('product.not_found_label')}</h2>
         )
     }
     
@@ -51,7 +52,7 @@ export function ProductDetail({ productId }: Props) {
     
     if (!product) {
         return (
-            <h2>Product not found (redirect or show nice 404)</h2>
+            <h2>{t('product.not_found_label')}</h2>
         )
     }
 
@@ -87,7 +88,7 @@ export function ProductDetail({ productId }: Props) {
                 className="mb-2 pl-0"
             >
                 <ArrowLeft className="mr-2 size-4" />
-                Back
+                {t('product.back')}
             </Button>
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2 mb-10">
                 {/* IMAGE */}
@@ -124,14 +125,14 @@ export function ProductDetail({ productId }: Props) {
                             disabled={isPending}
                             className="rounded-md bg-black px-4 py-2 text-white hover:opacity-90 disabled:opacity-50"
                         >
-                            {isPending ? "Adding..." : "Add to cart"}
+                            {isPending ? t('product.adding') : t('product.add_to_cart')}
                         </button>
                     </div>
 
                     {product.variants?.length > 0 && (
                         <div className="space-y-2">
                             <div className="text-sm font-medium text-muted-foreground">
-                                Options
+                                {t('product.options')}
                             </div>
                             {product.variants?.length > 10 ? (
                                 <>

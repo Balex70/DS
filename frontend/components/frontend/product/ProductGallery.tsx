@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { ProductImageType } from "@/types/product";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type Props = {
     bigImage?: ProductImageType;
@@ -27,6 +28,7 @@ export default function ProductGallery({
     images = [],
     productName,
 }: Props) {
+    const t = useTranslations('frontend')
     const galleryImages = useMemo(() => {
         const result: ProductImageType[] = [];
 
@@ -71,7 +73,7 @@ export default function ProductGallery({
     if (!galleryImages.length) {
         return (
             <div className="flex aspect-square items-center justify-center rounded-lg border bg-muted text-muted-foreground">
-                No image
+                {t('product.not_image')}
             </div>
         );
     }

@@ -41,6 +41,15 @@
         "home": "Головна"
       }
     },
+    "product": {
+      "select_variant": "Виберіть варіант",
+      "not_found_label": "Товар не знайдено",
+      "back": "Повернутися назад",
+      "add_to_cart": "Додати в кошик",
+      "adding": "Додаємо...",
+      "options": "Варіанти",
+      "no_image": "Немає зображення"
+    },
     "megamenu": {
       "catalog": "Каталог",
       "no_categories": "Немає категорій",

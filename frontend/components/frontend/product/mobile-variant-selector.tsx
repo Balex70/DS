@@ -8,6 +8,7 @@ import BottomSheetHeader from "../bottom-sheet-header";
 import { ProductVariant } from "@/types/product";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 type Props = {
     variants: ProductVariant[],
@@ -21,6 +22,7 @@ export default function MobileVariantSelector({
     setSelectedVariantId
 }: Props) {
     const [open, setOpen] = useState(false);
+    const t = useTranslations('frontend')
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -34,7 +36,7 @@ export default function MobileVariantSelector({
             </SheetTrigger>
 
             <SheetContent side="bottom" className="!h-dvh max-h-dvh w-full rounded-none">
-                <BottomSheetHeader>Select</BottomSheetHeader>
+                <BottomSheetHeader>{t('product.select_variant')}</BottomSheetHeader>
                 
                 <Separator className="my-0" />
 

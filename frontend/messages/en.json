@@ -41,6 +41,15 @@
         "home": "Home"
       }
     },
+    "product": {
+      "select_variant": "Select",
+      "not_found_label": "Product not found",
+      "back": "Back",
+      "add_to_cart": "Add to cart",
+      "adding": "Adding...",
+      "options": "Options",
+      "no_image": "No image"
+    },
     "megamenu": {
       "catalog": "Catalog",
       "no_categories": "No categories",
