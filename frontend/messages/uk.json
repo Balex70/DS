@@ -76,6 +76,21 @@
       "email": "Електронна пошта"
     },
     "checkout": {
+      "header": "Оформлення замовлення",
+      "cart_is_empty": "Ваш кошик порожній",
+      "checkout_dialog": {
+        "header": "Обробка замовлення",
+        "do_not_close_warning": "Будь ласка, не закривайте це вікно",
+        "close_button": "Закрити і спробувати ще раз",
+        "creating_order_title": "Створюємо замовлення",
+        "creating_order_description": "Ми готуємо ваше замовлення...",
+        "creating_payment_title": "Налаштувуємо оплату",
+        "creating_payment_description": "Підключаємо платіжну систему...",
+        "redirecting_title": "Перенаправляємо",
+        "redirecting_description": "Ви будете перенаправлені через декілька секунд...",
+        "failed_title": "Помилка платежу",
+        "failed_description": "Щось пішло не так. Будь ласка, спробуєте ще раз."
+      },
       "import_duty_dialog": {
         "header": "ПДВ та митні збори",
         "text_1": "Ваше замовлення буде відправлено з-за кордону.",

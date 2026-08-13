@@ -76,6 +76,21 @@
       "email": "Email"
     },
     "checkout": {
+      "header": "Checkout",
+      "cart_is_empty": "Your cart is empty",
+      "checkout_dialog": {
+        "header": "Processing checkout",
+        "do_not_close_warning": "Please do not close this window",
+        "close_button": "Close and try again",
+        "creating_order_title": "Creating order",
+        "creating_order_description": "We are preparing your order...",
+        "creating_payment_title": "Setting up payment",
+        "creating_payment_description": "Connecting to payment provider...",
+        "redirecting_title": "Redirecting",
+        "redirecting_description": "You will be redirected shortly...",
+        "failed_title": "Payment failed",
+        "failed_description": "Something went wrong. Please try again."
+      },
       "import_duty_dialog": {
         "header": "Import VAT & Customs Duties",
         "text_1": "Your order will be shipped internationally.",

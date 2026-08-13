@@ -15,7 +15,7 @@ import { useCreatePayment } from "@/hooks/use-create-payment";
 import { useAvailableGateway } from "@/hooks/use-available-gateway";
 import { CheckoutDialog } from "./CheckoutDialog";
 import { SendToPaymentGateway } from "./SendToPaymentGateway";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { detectCountry } from "@/helpers/geo";
 import { useCurrency } from "@/context/CurrencyContext";
 import { CartItemPayload } from "@/types/cart";
@@ -23,6 +23,7 @@ import { CartItemPayload } from "@/types/cart";
 export function CheckoutComponent() {
     const locale = useLocale();
     const { currency } = useCurrency();
+    const t = useTranslations('frontend')
     const { data: cart, isLoading } = useCart({
         locale: locale,
         currency: currency
@@ -141,19 +142,20 @@ export function CheckoutComponent() {
         );
     }
 
-    if (isLoading) return <div className="container py-10">Loading...</div>;
+    if (isLoading) return <div className="container py-0 lg:py-10">{t('loading_loader')}</div>;
 
     if (items.length === 0) {
         return (
-            <div className="container py-10">
-                <h1 className="text-2xl font-semibold">Your cart is empty</h1>
+            <div className="container py-0 lg:py-10">
+                <h1 className="mb-6 text-3xl font-bold">{t('checkout.header')}</h1>
+                <h2 className="text-2xl font-semibold">{t('checkout.cart_is_empty')}</h2>
             </div>
         );
     }
 
     return (
         <div className="container py-0 lg:py-10">
-            <h1 className="mb-6 text-3xl font-bold">Checkout</h1>
+            <h1 className="mb-6 text-3xl font-bold">{t('checkout.header')}</h1>
 
             <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
                 {/* LEFT */}
