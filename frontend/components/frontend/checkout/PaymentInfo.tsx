@@ -2,13 +2,15 @@
 
 import { AvailableGatewayResponse } from "@/types/payment";
 import { ShieldCheck } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 function PaymentSkeleton() {
+    const t = useTranslations('frontend')
     return (
         <div className="space-y-3 animate-pulse">
             <p className="text-sm text-muted-foreground">
-                Enter country to see payments options
+                {t('checkout.payment_info.skeleton_title')}
             </p>
             <div className="h-4 w-48 bg-gray-200 rounded" />
             <div className="h-3 w-64 bg-gray-200 rounded" />
@@ -23,6 +25,7 @@ function PaymentSkeleton() {
 }
 
 export function PaymentInfo({ gateway, isLoading, }: {gateway: AvailableGatewayResponse, isLoading: boolean}) {
+    const t = useTranslations('frontend')
     const paymentMethods: Record<
         string,
         {
@@ -57,7 +60,7 @@ export function PaymentInfo({ gateway, isLoading, }: {gateway: AvailableGatewayR
     return (
         <div className="space-y-2">
             <h2 className="font-semibold">
-                Payment Methods
+                {t('checkout.payment_info.header')}
             </h2>
 
             <div className="rounded-lg border p-4">
@@ -68,7 +71,7 @@ export function PaymentInfo({ gateway, isLoading, }: {gateway: AvailableGatewayR
                         <div className="mb-3 flex items-center gap-2 text-sm text-muted-foreground">
                             <ShieldCheck className="h-4 w-4 text-green-600" />
                             <span>
-                                Secure payment powered by {gateway.gateway}
+                                {t('checkout.payment_info.gateway_title')} {gateway.gateway}
                             </span>
                         </div>
 

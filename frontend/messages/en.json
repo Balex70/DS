@@ -83,6 +83,11 @@
       "search_country_placeholder": "Search country...",
       "no_country_found": "No country found",
       "select_country": "Select country",
+      "payment_info": {
+        "header": "Payment Methods",
+        "gateway_title": "Secure payment powered by",
+        "skeleton_title": "Enter country to see payments options"
+      },
       "shipping_info": {
         "header": "Shipping information",
         "description": "Enter your details for delivery",

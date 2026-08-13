@@ -83,6 +83,11 @@
       "search_country_placeholder": "Знайти країну...",
       "no_country_found": "Країну не знайдено",
       "select_country": "Виберіть країну",
+      "payment_info": {
+        "header": "Оплата",
+        "gateway_title": "Безпечна оплата за допомогою",
+        "skeleton_title": "Вкажіть країну, щоб переглянути доступні способи оплати"
+      },
       "shipping_info": {
         "header": "Інформація про доставку",
         "description": "Введіть дані для доставки",
