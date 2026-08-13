@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { LatinFieldType, OrderPayload } from "@/types/order";
+import { useTranslations } from "next-intl";
 
 interface LatinFieldProps {
     form: OrderPayload;
@@ -15,6 +16,7 @@ interface LatinFieldProps {
 export function LatinInputField({ form, label, fieldName, initialValue, onSave }: LatinFieldProps) {
     const [ editField, setEditField] = useState<boolean>(false);
     const inputRef = useRef<HTMLInputElement>(null);
+    const t = useTranslations('frontend')
 
     return (
         <div className="flex w-full max-w-sm items-center space-x-2">
@@ -47,7 +49,7 @@ export function LatinInputField({ form, label, fieldName, initialValue, onSave }
                                     setEditField(false);
                                 }}
                             >
-                                Done
+                                {t('checkout.latin_input.done')}
                             </Button>
                     </div>
                 ) : (
@@ -55,7 +57,7 @@ export function LatinInputField({ form, label, fieldName, initialValue, onSave }
                         <span
                             onClick={() => setEditField(true)}
                             >
-                            <span className="font-bold">Latin:</span> {form[fieldName]}
+                            <span className="font-bold">{t('checkout.latin_input.latin')}:</span> {form[fieldName]}
                         </span>
 
                         <Button
@@ -66,7 +68,7 @@ export function LatinInputField({ form, label, fieldName, initialValue, onSave }
                             onClick={() => setEditField(true)}
                         >
                             <Pencil className="!h-3 !w-3" />
-                            Edit
+                            {t('checkout.latin_input.edit')}
                         </Button>
                     </div>
                 )

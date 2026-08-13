@@ -78,6 +78,12 @@
     "checkout": {
       "header": "Checkout",
       "cart_is_empty": "Your cart is empty",
+      "delivered_by_logistics_partners": "Delivered by one of our local logistics partners",
+      "latin_input": {
+        "latin": "Latin",
+        "edit": "Edit",
+        "done": "Done"
+      },
       "checkout_dialog": {
         "header": "Processing checkout",
         "do_not_close_warning": "Please do not close this window",
