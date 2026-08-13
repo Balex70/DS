@@ -8,7 +8,7 @@ import { useCart } from "@/hooks/use-cart";
 import { useClearCart } from "@/hooks/use-clear-cart";
 import { CartItemsDrawer } from "./CartItemsDrawer";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useCurrency } from "@/context/CurrencyContext";
 import { CartItemPayload } from "@/types/cart";
 
@@ -28,7 +28,7 @@ export function CartDrawer({
         currency: currency
     });
     const { mutate: clearCart, isPending } = useClearCart();
-
+    const t = useTranslations('frontend')
     const items = cart?.items ?? [];
 
     const itemsCount = items.reduce(
@@ -63,7 +63,7 @@ export function CartDrawer({
             <SheetContent className="flex w-full flex-col sm:max-w-lg">
                 <SheetHeader>
                     <SheetTitle>
-                        Cart ({itemsCount})
+                        {t('cart.header')} ({itemsCount})
                     </SheetTitle>
                 </SheetHeader>
 
@@ -91,11 +91,11 @@ export function CartDrawer({
                         <div className="flex flex-1 items-center justify-center">
                             <div className="text-center">
                                 <p className="text-lg font-medium">
-                                    Your cart is empty
+                                    {t('cart.cart_is_empty')}
                                 </p>
 
                                 <p className="mt-1 text-sm text-muted-foreground">
-                                    Add some products to continue shopping
+                                    {t('cart.cart_is_empty_description')}
                                 </p>
                             </div>
                         </div>
@@ -109,7 +109,7 @@ export function CartDrawer({
                     <div className="border-t py-4 px-2">
                         <div className="mb-4 flex items-center justify-between">
                             <span className="text-sm text-muted-foreground">
-                                Subtotal
+                                {t('cart.subtotal')}
                             </span>
 
                             <span className="text-lg font-semibold">
@@ -136,7 +136,7 @@ export function CartDrawer({
                                     href="/checkout"
                                     onClick={() => onOpenChange(false)}
                                 >
-                                    Checkout
+                                    {t('cart.checkout')}
                                 </Link>
                             </Button>
 
@@ -146,7 +146,7 @@ export function CartDrawer({
                                 disabled={isPending}
                                 onClick={() => clearCart()}
                             >
-                                {isPending ? "Clearing..." : "Clear cart"}
+                                {isPending ? t('cart.clearing_cart') : t('cart.clear_cart')}
                             </Button>
                         </div>
                     </div>

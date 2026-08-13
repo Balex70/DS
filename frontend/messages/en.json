@@ -86,6 +86,15 @@
         "accept_button": "I Understand & Continue"
       }
     },
+    "cart": {
+      "header": "Cart",
+      "subtotal": "Subtotal",
+      "checkout": "Checkout",
+      "clear_cart": "Clear cart",
+      "clearing_cart": "Clearing...",
+      "cart_is_empty": "Your cart is empty",
+      "cart_is_empty_description": "Add some products to continue shopping"
+    },
     "footer": {
       "company": "Company",
       "customer_service": "Customer Service",

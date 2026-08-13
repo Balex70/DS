@@ -86,6 +86,15 @@
         "accept_button": "Розумію та продовжити"
       }
     },
+    "cart": {
+      "header": "Кошик",
+      "subtotal": "Сума",
+      "checkout": "До оформлення",
+      "clear_cart": "Очистити кошик",
+      "clearing_cart": "Очищаємо...",
+      "cart_is_empty": "Кошик порожній",
+      "cart_is_empty_description": "Додайте кілька товарів, щоб продовжити покупки"
+    },
     "footer": {
       "company": "Компанія",
       "customer_service": "Служба підтримки",
