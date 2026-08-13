@@ -79,6 +79,9 @@
       "header": "Оформлення замовлення",
       "cart_is_empty": "Ваш кошик порожній",
       "delivered_by_logistics_partners": "Остаточну доставку здійснюють такі служби доставки",
+      "search_country_placeholder": "Знайти країну...",
+      "no_country_found": "Країну не знайдено",
+      "select_country": "Виберіть країну",
       "latin_input": {
         "latin": "Латинською",
         "edit": "Змінити",

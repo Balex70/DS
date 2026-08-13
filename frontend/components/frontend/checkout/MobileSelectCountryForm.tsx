@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import BottomSheetHeader from "../bottom-sheet-header";
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { OrderPayload } from "@/types/order";
 import { ShippingMethod } from "@/types/shipping";
-import { COUNTRIES, getSelectedCountry } from "@/config/countries";
+import { getLocalizedCountries, getLocalizedSelectedCountry } from "@/config/countries";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 type Props = {
@@ -26,9 +26,17 @@ export default function MobileSelectCountryForm({
     setPayload
 }: Props) {
     const [open, setOpen] = useState(false);
-    const selectedCountry = getSelectedCountry(form.shipping_country);
-    
+    const locale = useLocale();
     const t = useTranslations('frontend')
+
+    const countries = useMemo(
+        () => getLocalizedCountries(locale),
+        [locale]
+    );
+    const selectedCountry = getLocalizedSelectedCountry(
+        form.shipping_country,
+        locale
+    );
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
@@ -37,19 +45,19 @@ export default function MobileSelectCountryForm({
                     role="combobox"
                     className="w-full justify-between"
                 >
-                    {selectedCountry?.name ?? "Select country"}
+                    {selectedCountry?.name ?? t('checkout.select_country')}
 
                     <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
                 </Button>
             </SheetTrigger>
 
             <SheetContent side="bottom" className="!h-dvh max-h-dvh w-full rounded-none">
-                <BottomSheetHeader>Select Country</BottomSheetHeader>
+                <BottomSheetHeader>{t('checkout.select_country')}</BottomSheetHeader>
                 
                 <Separator className="my-0" />
                 <ScrollArea className="h-[calc(100dvh-64px)]">
                     <div className="overflow-y-auto">
-                        {COUNTRIES.map((country) =>
+                        {countries.map((country) =>
                             country.code === "__divider__" ? (
                                 <Separator key="divider" />
                             ) : (

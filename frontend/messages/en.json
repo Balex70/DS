@@ -79,6 +79,9 @@
       "header": "Checkout",
       "cart_is_empty": "Your cart is empty",
       "delivered_by_logistics_partners": "Delivered by one of our local logistics partners",
+      "search_country_placeholder": "Search country...",
+      "no_country_found": "No country found",
+      "select_country": "Select country",
       "latin_input": {
         "latin": "Latin",
         "edit": "Edit",
