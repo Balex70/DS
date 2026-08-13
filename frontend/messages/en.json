@@ -102,6 +102,8 @@
       "cookie_policy": "Cookie Policy",
       "contacts": "Contact",
       "working_hours": "Working hours",
+      "mon": "Mon",
+      "fri": "Fri",
       "shop_by_category": "Shop by category",
       "copyright": "`name of the store`. All rights reserved.",
       "about_us_section": {
@@ -205,7 +207,17 @@
         "days": "days",
         "last_mile_carrier": "Local Delivery Service",
         "last_mile_tracking_number": "Local Delivery Tracking Number",
-        "estimated_delivery_time": "Estimated Delivery Time"
+        "estimated_delivery_time": "Estimated Delivery Time",
+        "tracking_status": {
+          "info_received": "Info Received",
+          "in_transit": "In Transit",
+          "out_for_delivery": "Out for Delivery",
+          "delivered": "Delivered",
+          "failed_attempt": "Delivery Failed",
+          "exception": "Exception / Alert",
+          "expired": "Expired",
+          "unknown": "In Transit"
+        }
       },
       "payment_methods_section": {
         "header": "Payment Methods",
