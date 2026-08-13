@@ -146,6 +146,13 @@
         "accept_text": "I understand that import VAT, customs duties, taxes, or carrier handling fees may be charged separately upon delivery, and I accept this responsibility.",
         "cancel_button": "Cancel",
         "accept_button": "I Understand & Continue"
+      },
+      "payment_result": {
+        "header": "Thank you for your order!",
+        "text_1": "We have received your payment attempt and are currently processing it.",
+        "text_2": "Your order status will be updated automatically once the payment provider confirms the transaction.",
+        "order_number": "Order number",
+        "continue_button" : "Continue Shopping"
       }
     },
     "cart": {
