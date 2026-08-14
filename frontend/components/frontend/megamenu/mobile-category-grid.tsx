@@ -6,6 +6,7 @@ import CategoryImage from "../category/CategoryImage";
 import Image from 'next/image'
 import { useLocale, useTranslations } from "next-intl";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import SimpleNotFoundCard from "@/components/common/SimpleNoFoundCard";
 
 export function MobileCategoryGrid({
     categories,
@@ -20,7 +21,7 @@ export function MobileCategoryGrid({
 
     if (!categories.length) {
         return (
-            <h2 className="text-lg font-semibold">{t('megamenu.no_categories')}</h2>
+            <SimpleNotFoundCard title={t('megamenu.no_categories')}/>
         );
     }
     
