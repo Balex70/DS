@@ -145,7 +145,6 @@
         "select_shipping_method": "Select shipping method",
         "payment_not_available": "Payment unavailable",
         "shipping_form_is_not_valid": "Please check your shipping information",
-        "please_select_shipping_method": "Please select a shipping method.",
         "payment_not_supported": "Unfortunately, we don’t support payments in this region yet.",
         "shipping_details": {
           "header": "Shipping details",

@@ -145,7 +145,6 @@
         "select_shipping_method": "Оберіть спосіб доставки",
         "payment_not_available": "Оплата недоступна",
         "shipping_form_is_not_valid": "Перевірте інформацію про доставку",
-        "please_select_shipping_method": "Оберіть спосіб доставки.",
         "payment_not_supported": "На жаль, оплата у вашому регіоні наразі недоступна.",
         "shipping_details": {
           "header": "Дані доставки",

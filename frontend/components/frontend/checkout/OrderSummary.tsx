@@ -14,6 +14,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useState } from "react";
 import ImportDutyDialog from "./ImportDutyDialog";
 import { useTranslations } from "next-intl";
+import SimpleAlertCard from "@/components/common/SimpleAlertCard";
 
 type Props = {
     form: OrderPayload;
@@ -260,14 +261,9 @@ export function OrderSummary({
                 >
                     {buttonText}
                 </Button>
-                {hasCountry && noShipping && (
-                    <p className="text-sm text-red-500 mt-2">
-                        {t('checkout.order_summery.please_select_shipping_method')}
-                    </p>
-                )}
                 {noGateway && (
                     <p className="text-sm text-red-500 mt-2">
-                        {t('checkout.order_summery.payment_not_supported')}
+                        <SimpleAlertCard title={t('checkout.order_summery.payment_not_supported')} className="min-h-[100px]" />
                     </p>
                 )}
             </div>
