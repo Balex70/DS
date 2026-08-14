@@ -91,7 +91,7 @@
       "shipping_info": {
         "header": "Shipping information",
         "description": "Enter your details for delivery",
-        "full_name": "Full name",
+        "full_name": "Full name (name and surname)",
         "phone": "Phone number",
         "email": "Email address",
         "address_line_1": "Address",
@@ -99,7 +99,25 @@
         "city": "City",
         "state": "State",
         "postal_code": "Postal code",
-        "country": "Country"
+        "country": "Country",
+        "shipping_methods": "Shipping methods",
+        "no_country_warning": "Enter country to see shipping options",
+        "loading_shipping_methods": "Loading shipping methods...",
+        "validation": {
+          "full_name_required": "Please enter your full name",
+          "full_name_latin_required": "Full name (latin) is required",
+          "phone_required": "Please enter your phone number",
+          "phone_too_short": "Phone number is too short",
+          "phone_too_long": "Phone number is too long",
+          "phone_invalid": "Invalid phone number",
+          "email_required": "Please enter your email address",
+          "email_invalid": "Invalid email",
+          "address_line_1_required": "Please enter your address",
+          "address_line_1_latin_required": "Address (latin) is required",
+          "city_required": "Please enter your city",
+          "city_latin_required": "City (latin) is required",
+          "country_required": "Please select a country"
+        }
       },
       "order_summery": {
         "header": "Summary",

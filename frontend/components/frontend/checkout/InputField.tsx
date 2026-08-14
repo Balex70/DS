@@ -4,6 +4,8 @@ import { checkoutSchemaValidation, CheckoutValidationType } from "@/helpers/vali
 import { z } from "zod";
 import { FieldLabel } from "@/components/ui/field";
 import { LatinInputField } from "./LatinInputField";
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 
 interface FieldProps {
     form: OrderPayload;
@@ -24,7 +26,12 @@ export function InputField({
     onLatinFieldChange,
     errors
 }: FieldProps) {
-    const feValidationResult = checkoutSchemaValidation.safeParse(form);
+    const t = useTranslations('frontend')
+    const schema = useMemo(
+        () => checkoutSchemaValidation(t),
+        [t]
+    );
+    const feValidationResult = schema.safeParse(form);
     const feErrors = feValidationResult.success
         ? {}
         : z.flattenError(feValidationResult.error).fieldErrors;

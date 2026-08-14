@@ -91,15 +91,33 @@
       "shipping_info": {
         "header": "Інформація про доставку",
         "description": "Введіть дані для доставки",
-        "full_name": "Повне ім’я",
+        "full_name": "Повне ім’я (ім’я та прізвище)",
         "phone": "Номер телефону",
         "email": "Електронна пошта",
         "address_line_1": "Адреса",
-        "address_line_2": "Адреса (додаткова)",
+        "address_line_2": "Адреса (додатково)",
         "city": "Місто",
         "state": "Область",
         "postal_code": "Поштовий індекс",
-        "country": "Країна"
+        "country": "Країна",
+        "shipping_methods": "Варіанти доставки",
+        "no_country_warning": "Вкажіть країну, щоб переглянути доступні способи доставки",
+        "loading_shipping_methods": "Зачекайте, вибираємо найкращі варіанти доставки...",
+        "validation": {
+          "full_name_required": "Вкажіть повне ім’я (ім’я та прізвище)",
+          "full_name_latin_required": "Повне ім’я латиницею є обов'язковим",
+          "phone_required": "Вкажіть номер телефону",
+          "phone_too_short": "Номер телефону занадто короткий",
+          "phone_too_long": "Номер телефону занадто довгий",
+          "phone_invalid": "Номер телефону некоректний",
+          "email_required": "Вкажіть електронну пошту",
+          "email_invalid": "Електронна пошта некоректна",
+          "address_line_1_required": "Вкажіть адресу",
+          "address_line_1_latin_required": "Адреса латиницею є обов'язковою",
+          "city_required": "Вкажіть місто",
+          "city_latin_required": "Місто латиницею є обов'язковим",
+          "country_required": "Вкажіть країну"
+        }
       },
       "order_summery": {
         "header": "Замовлення",
