@@ -32,7 +32,7 @@ export function ProductsSection({
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                 {Array.from({ length: 8 }).map((_, i) => (
                     <Card key={i}>
-                        <CardContent className="p-4 space-y-2">
+                        <CardContent className="p-4 space-y-2 animate-pulse">
                             <div className="h-4 w-3/4 rounded bg-muted" />
                             <div className="h-3 w-1/2 rounded bg-muted" />
                         </CardContent>
