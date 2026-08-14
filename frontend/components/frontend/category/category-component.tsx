@@ -128,6 +128,7 @@ export function CategoryComponent({ slug }: Props) {
                         {/* Mobile */}
                         <div className="flex items-center justify-between lg:hidden">
                             <MobileCategorySidebar
+                                data={productsQuery.data}
                                 minPrice={minPrice}
                                 maxPrice={maxPrice}
                                 price={priceDraft}
