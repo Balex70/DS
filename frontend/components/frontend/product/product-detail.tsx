@@ -45,6 +45,9 @@ export function ProductDetail({ productId }: Props) {
                         <div className="h-4 w-3/4 rounded bg-muted" />
                         <div className="h-3 w-1/2 rounded bg-muted" />
                     </div>
+                    <p className="mt-2 animate-pulse text-left text-xs text-muted-foreground">
+                        {t('loading_loader')}
+                    </p>
                 </div>
             </div>
         );
