@@ -3,6 +3,7 @@
     
   },
   "frontend": {
+    "to_home_button": "На головну",
     "loading_loader": "Зачекайте...",
     "main": {
       "hero_carousel": {
@@ -14,6 +15,7 @@
     },
     "category": {
       "category_not_found": "Категорію не знайдено",
+      "category_not_found_description": "Категорію, яку ви шукаєте, не знайдено.",
       "no_products": "Ця категорія поки що порожня, але ми вже працюємо над її поповненням!",
       "load_more": "Показати більше",
       "loading": "Зачекайте...",

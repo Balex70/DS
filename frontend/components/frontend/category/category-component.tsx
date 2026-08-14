@@ -9,19 +9,28 @@ import { useProducts } from "@/hooks/use-products";
 import { useState } from "react";
 import { useProductFilters } from "@/hooks/use-product-filters";
 import { SortSelect } from "./SortSelect";
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { CategoryFooterSection } from "./category-footer-section";
 import { useCurrency } from "@/context/CurrencyContext";
 import { MobileSortSelect } from "./MobileSortSelect";
 import { SortSelectValue } from "@/types/category";
 import { MobileCategorySidebar } from "./MobileCategorySidebar";
+import { useCategories } from "@/hooks/use-categories";
+import { Card, CardContent } from "@/components/ui/card";
+import { AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 
 type Props = {
     slug: string[];
 };
 
 export function CategoryComponent({ slug }: Props) {
+    const { data: categories, isLoading } = useCategories();
     const locale = useLocale();
+    const t = useTranslations('frontend')
+    const lastSlug = slug[slug.length - 1];
+    const category = categories?.find((c) => c.slug === lastSlug);
     const { currency } = useCurrency();
     const { data: filterData, isLoading: isFilterLoading } = useProductFilters({category: slug, locale: locale});
     const [sort, setSort] = useState<SortSelectValue>("latest");
@@ -51,6 +60,37 @@ export function CategoryComponent({ slug }: Props) {
         currency
     });
 
+    if (!isLoading && !category) {
+      return (
+        <div className="min-w-0 flex-1">
+            <Card className="mx-auto w-full max-w-5xl overflow-hidden border-border/60 bg-background shadow-sm">
+                <CardContent className="flex min-h-[360px] flex-col items-center justify-center px-6 py-12 text-center">
+                    <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-50 dark:bg-red-950/30">
+                        <AlertCircle className="h-10 w-10 text-red-500 dark:text-red-400" />
+                    </div>
+
+                    <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+                        {t('category.category_not_found')}
+                    </h2>
+
+                    <p className="mt-3 max-w-md text-sm leading-6 text-muted-foreground">
+                        {t('category.category_not_found_description')}
+                    </p>
+
+                    <Button
+                        className="mt-6"
+                        variant="outline"
+                    >
+                        <Link href="/">
+                            {t('to_home_button')}
+                        </Link>
+                    </Button>
+                </CardContent>
+            </Card>
+        </div>
+      )
+    }
+
     return (
         <>
             <aside className="hidden w-72 shrink-0 lg:block">
@@ -71,10 +111,10 @@ export function CategoryComponent({ slug }: Props) {
             <main className="min-w-0 flex-1">
                 <div className="space-y-3 lg:space-y-6">
                     {/* Header / Category Info */}
-                    <CategoryHeaderSection slug={slug} />
+                    <CategoryHeaderSection category={category} isLoading={isLoading} />
 
                     {/* Subcategories */}
-                    <SubcategoriesSection slug={slug} />
+                    <SubcategoriesSection slug={slug} category={category} categories={categories} isLoading={isLoading} />
 
                     <Separator />
 
@@ -113,7 +153,7 @@ export function CategoryComponent({ slug }: Props) {
                     />
 
                     {/* Footer / Category description */}
-                    <CategoryFooterSection slug={slug} />
+                    <CategoryFooterSection category={category} isLoading={isLoading} />
                 </div>
             </main>
         </>

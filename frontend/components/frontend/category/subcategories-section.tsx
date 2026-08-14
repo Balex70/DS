@@ -1,7 +1,6 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { useCategories } from "@/hooks/use-categories";
 import { Link } from "@/i18n/navigation";
 import CategoryImage from "./CategoryImage";
 import Image from 'next/image'
@@ -9,30 +8,32 @@ import { Separator } from "@/components/ui/separator";
 import { CategoryBreadcrumbs } from "./category-breadcrumbs";
 import { useLocale, useTranslations } from "next-intl";
 import SimpleSkeletonLoader from "@/components/common/SimpleSkeletonLoader";
+import { Category } from "@/types/category";
 
 type Props = {
     slug: string[];
+    category?: Category;
+    categories?: Category[];
+    isLoading?: boolean;
 };
 
-export function SubcategoriesSection({ slug }: Props) {
-    const { data: categories, isLoading } = useCategories();
+export function SubcategoriesSection({
+    slug,
+    category,
+    categories,
+    isLoading
+}: Props) {
     const locale = useLocale();
     const t = useTranslations('frontend')
-    const lastSlug = slug[slug.length - 1];
-    const category = categories?.find((c) => c.slug === lastSlug);
     const subcategories = categories?.filter((c) => c.parent_id === category?.id);
 
     if (isLoading) {
-        return <SimpleSkeletonLoader label={t('loading_loader')} className="p-4" />;
-    }
-
-    if (!category) {
         return (
             <>
                 <Separator />
-                <CategoryBreadcrumbs slug={slug} />
+                <SimpleSkeletonLoader label={t('loading_loader')} className="p-4" />
             </>
-        );
+        )
     }
 
     if (!subcategories?.length) {
