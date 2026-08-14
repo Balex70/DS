@@ -119,6 +119,15 @@
           "country_required": "Please select a country"
         }
       },
+      "shipping_selector": {
+        "business_days": "business days",
+        "hide_shipping_methods": "Hide shipping methods",
+        "show": "Show",
+        "more_shipping_methods": "more shipping methods",
+        "tier_express": "Express",
+        "tier_standard": "Standard",
+        "tier_economy": "Economy"
+      },
       "order_summery": {
         "header": "Summary",
         "subtotal": "Subtotal",

@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { getMaxDays, getMinDays } from "@/helpers/shipping";
 import { ShippingTierBadge } from "./shippingTiers";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useTranslations } from "next-intl";
 
 type Props = {
     methods: ShippingMethod[];
@@ -20,6 +21,7 @@ export function ShippingMethodsSelector({
 }: Props) {
     const [showAll, setShowAll] = useState(false);
     const { currency } = useCurrency();
+    const t = useTranslations('frontend')
 
     const groupedMethods = useMemo(() => {
         if (methods.length === 0) {
@@ -137,7 +139,7 @@ export function ShippingMethodsSelector({
 
                                 {method.estimated_delivery && (
                                     <div className="text-sm text-muted-foreground mt-2">
-                                        {method.estimated_delivery} business days
+                                        {method.estimated_delivery} {t('checkout.shipping_selector.business_days')}
                                     </div>
                                 )}
                             </div>
@@ -169,8 +171,8 @@ export function ShippingMethodsSelector({
                         className="text-sm underline"
                     >
                         {showAll
-                            ? "Hide shipping methods"
-                            : `Show ${groupedMethods.remaining.length} more shipping methods`}
+                            ? t('checkout.shipping_selector.hide_shipping_methods')
+                            : t('checkout.shipping_selector.show') + ` ${groupedMethods.remaining.length} ` + t('checkout.shipping_selector.more_shipping_methods')}
                     </button>
 
                     {showAll && (
@@ -206,7 +208,7 @@ export function ShippingMethodsSelector({
 
                                                 {method.estimated_delivery && (
                                                     <div className="text-sm text-muted-foreground mt-1">
-                                                        {method.estimated_delivery} business days
+                                                        {method.estimated_delivery} {t('checkout.shipping_selector.business_days')}
                                                     </div>
                                                 )}
                                             </div>

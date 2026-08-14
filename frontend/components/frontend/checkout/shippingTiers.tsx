@@ -1,5 +1,6 @@
 import { getMaxDays } from "@/helpers/shipping";
 import { ShippingMethod } from "@/types/shipping";
+import { useTranslations } from "next-intl";
 
 export type ShippingTier = "long" | "standard" | "express";
 export function getShippingTier(method: { estimated_delivery?: string | null }): ShippingTier {
@@ -22,15 +23,15 @@ export const SHIPPING_TIER_META: Record<
     }
 > = {
     express: {
-        label: "Express",
+        label: "checkout.shipping_selector.tier_express",
         color: "text-red-500",
     },
     standard: {
-        label: "Standard",
+        label: "checkout.shipping_selector.tier_standard",
         color: "text-gray-600",
     },
     long: {
-        label: "Long Delivery",
+        label: "checkout.shipping_selector.tier_economy",
         color: "text-yellow-700",
     },
 };
@@ -71,11 +72,12 @@ export function ShippingTierBadge({method}: {method: ShippingMethod}) {
     const tier = getShippingTier(method);   
     const meta = SHIPPING_TIER_META[tier];
     const provider = getCompanyFromMethodName(method.name);
+    const t = useTranslations('frontend')
 
     return (
         <div className="flex items-center gap-1">
             <span className={`font-medium ${meta.color}`}>
-                {meta.label}
+                {t(meta.label)}
             </span>
 
             {provider && (

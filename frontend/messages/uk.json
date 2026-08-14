@@ -119,6 +119,15 @@
           "country_required": "Вкажіть країну"
         }
       },
+      "shipping_selector": {
+        "business_days": "робочих дні",
+        "hide_shipping_methods": "Сховати способи доставки",
+        "show": "Показати ще",
+        "more_shipping_methods": "варіантів доставки",
+        "tier_express": "Експрес",
+        "tier_standard": "Стандартна",
+        "tier_economy": "Економна"
+      },
       "order_summery": {
         "header": "Замовлення",
         "subtotal": "Сума",
