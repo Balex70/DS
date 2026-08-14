@@ -4,13 +4,19 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { CategorySection } from "./category-section";
 import { useCategorySection } from "@/hooks/use-category-section";
 import { Category } from "@/types/category";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import SimpleSkeletonLoader from "@/components/common/SimpleSkeletonLoader";
 
 export function CategoriesSection() {
     const locale = useLocale();
+    const t = useTranslations('frontend')
     const { currency } = useCurrency();
     const { data: categories, isLoading } = useCategorySection({locale: locale, currency: currency});
     
+    if (isLoading) {
+        return <SimpleSkeletonLoader label={t('loading_loader')} className="p-4" />
+    }
+
     if (!categories?.length) {
         return null;
     }
