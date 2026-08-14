@@ -117,7 +117,6 @@ class StoreOrderService
                 return $item;
             }, $shippingOptions);
         }
-
         return $shippingOptions;
     }
 

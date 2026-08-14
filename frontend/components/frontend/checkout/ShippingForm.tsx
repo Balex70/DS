@@ -14,6 +14,7 @@ import { z } from "zod";
 import { transliterate } from "transliteration";
 import { InputField } from "./InputField";
 import { FieldLabel } from "@/components/ui/field";
+import { useTranslations } from "next-intl";
 
 type Props = {
     form: OrderPayload;
@@ -41,17 +42,22 @@ export function ShippingForm({
         shipping_postal_code?: string;
     } | null>(null);
     const { currency } = useCurrency();
+    const t = useTranslations('frontend')
     const { data: shippingOptions = [], isLoading, isFetching } =  useShippingCalculate(payload, cartKey, currency);
 
-    const feValidationResult = checkoutSchemaValidation.safeParse(form);
+    const schema = useMemo(
+        () => checkoutSchemaValidation(t),
+        [t]
+    );
+    const feValidationResult = schema.safeParse(form);
     const feErrors = feValidationResult.success
         ? {}
         : z.flattenError(feValidationResult.error).fieldErrors;
     const getFieldError = (field: keyof OrderPayload) => feErrors[field as keyof CheckoutValidationType]?.[0] ?? errors[field]?.[0];
 
     const isFormValid = useMemo(() => {
-        return checkoutSchemaValidation.safeParse(form).success;
-    }, [form]);
+        return schema.safeParse(form).success;
+    }, [schema, form]);
 
     // trigger shipping calculation when address changes
     useEffect(() => {
@@ -124,10 +130,10 @@ export function ShippingForm({
             {/* HEADER */}
             <div className="mb-6">
                 <h2 className="text-xl font-semibold">
-                    Shipping information
+                    {t('checkout.shipping_info.header')}
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                    Enter your shipping details for delivery
+                    {t('checkout.shipping_info.description')}
                 </p>
             </div>
 
@@ -135,7 +141,7 @@ export function ShippingForm({
             <div className="space-y-4" id="checkout-shipping-form">
                 <InputField
                     form={form}
-                    label="Full name"
+                    label={t('checkout.shipping_info.full_name')}
                     fieldName="shipping_full_name"
                     latinFieldName="shipping_full_name_latin"
                     onFieldChange={onFieldChange}
@@ -145,7 +151,7 @@ export function ShippingForm({
 
                 <InputField
                     form={form}
-                    label="Phone"
+                    label={t('checkout.shipping_info.phone')}
                     fieldName="shipping_phone"
                     onFieldChange={onFieldChange}
                     onLatinFieldChange={onLatinFieldChange}
@@ -154,7 +160,7 @@ export function ShippingForm({
 
                 <InputField
                     form={form}
-                    label="Email"
+                    label={t('checkout.shipping_info.email')}
                     fieldName="shipping_email"
                     onFieldChange={onFieldChange}
                     onLatinFieldChange={onLatinFieldChange}
@@ -163,7 +169,7 @@ export function ShippingForm({
 
                 <InputField
                     form={form}
-                    label="Address line 1"
+                    label={t('checkout.shipping_info.address_line_1')}
                     fieldName="shipping_address_line1"
                     latinFieldName="shipping_address_line1_latin"
                     onFieldChange={onFieldChange}
@@ -173,7 +179,7 @@ export function ShippingForm({
 
                 <InputField
                     form={form}
-                    label="Address line 2"
+                    label={t('checkout.shipping_info.address_line_2')}
                     fieldName="shipping_address_line2"
                     latinFieldName="shipping_address_line2_latin"
                     onFieldChange={onFieldChange}
@@ -185,7 +191,7 @@ export function ShippingForm({
                 <div className="grid grid-cols-2 gap-4">
                     <InputField
                         form={form}
-                        label="City"
+                        label={t('checkout.shipping_info.city')}
                         fieldName="shipping_city"
                         latinFieldName="shipping_city_latin"
                         onFieldChange={onFieldChange}
@@ -195,7 +201,7 @@ export function ShippingForm({
 
                     <InputField
                         form={form}
-                        label="State"
+                        label={t('checkout.shipping_info.state')}
                         fieldName="shipping_state"
                         latinFieldName="shipping_state_latin"
                         onFieldChange={onFieldChange}
@@ -207,7 +213,7 @@ export function ShippingForm({
                 <div className="grid grid-cols-2 gap-4">
                     <InputField
                         form={form}
-                        label="Postal code"
+                        label={t('checkout.shipping_info.postal_code')}
                         fieldName="shipping_postal_code"
                         onFieldChange={onFieldChange}
                         onLatinFieldChange={onLatinFieldChange}
@@ -215,7 +221,7 @@ export function ShippingForm({
                     />
 
                     <div className="space-y-1">
-                        <FieldLabel className="text-sm text-muted-foreground font-normal">Country:</FieldLabel>
+                        <FieldLabel className="text-sm text-muted-foreground font-normal">{t('checkout.shipping_info.country')}:</FieldLabel>
                         <div className="hidden md:block">
                             <SelectCountryForm
                                 form={form}
@@ -246,16 +252,16 @@ export function ShippingForm({
             {/* SHIPPING METHODS */}
             <div className="mt-8">
                 <h3 className="text-lg font-semibold mb-3">
-                    Shipping methods
+                    {t('checkout.shipping_info.shipping_methods')}
                 </h3>
 
                 {!form.shipping_country ? (
                     <p className="text-sm text-muted-foreground">
-                        Enter country to see shipping options
+                        {t('checkout.shipping_info.no_country_warning')}
                     </p>
                 ) : isLoading || isFetching ? (
                     <p className="text-sm text-muted-foreground">
-                        Loading shipping methods...
+                        {t('checkout.shipping_info.loading_shipping_methods')}
                     </p>
                 ) : (
                     <>

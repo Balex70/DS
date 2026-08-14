@@ -7,7 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 import { useRouter, usePathname } from "@/i18n/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useCurrency } from "@/context/CurrencyContext";
 import { Locale } from "@/i18n/config";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../../ui/dropdown-menu";
@@ -19,7 +19,7 @@ import { CURRENCIES } from "@/config/currencies";
 export default function HeaderSwitcher() {
     const router = useRouter();
     const pathname = usePathname();
-
+    const t = useTranslations('frontend')
     const activeLocale = useLocale();
     const { currency, setCurrency } = useCurrency();
 
@@ -38,7 +38,7 @@ export default function HeaderSwitcher() {
 
                     <DropdownMenuContent className="w-64">
 
-                        <DropdownMenuLabel>Language</DropdownMenuLabel>
+                        <DropdownMenuLabel>{t('switcher.header.language')}</DropdownMenuLabel>
                         {LOCALES.map(locale => (
                             <DropdownMenuItem key={locale.code} onClick={() => switchLocale(locale.code)}>
                                 <Check className={cn(
@@ -51,7 +51,7 @@ export default function HeaderSwitcher() {
 
                         <DropdownMenuSeparator />
 
-                        <DropdownMenuLabel>Currency</DropdownMenuLabel>
+                        <DropdownMenuLabel>{t('switcher.header.currency')}</DropdownMenuLabel>
 
                         {CURRENCIES.map(cur => (
                             <DropdownMenuItem key={cur.code} onClick={() => setCurrency(cur.code)}>

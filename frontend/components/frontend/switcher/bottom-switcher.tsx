@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useRouter, usePathname } from "@/i18n/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useCurrency } from "@/context/CurrencyContext";
 import { Locale } from "@/i18n/config";
 import { Globe } from "lucide-react";
@@ -17,7 +17,7 @@ import BottomSheetHeader from "../bottom-sheet-header";
 export default function BottomSwitcher() {
     const router = useRouter();
     const pathname = usePathname();
-
+    const t = useTranslations('frontend')
     const locale = useLocale();
     const { currency, setCurrency } = useCurrency();
 
@@ -52,7 +52,7 @@ export default function BottomSwitcher() {
 
                 <div className="space-y-6 p-4">
                     <div>
-                        <Label>Language</Label>
+                        <Label>{t('switcher.bottom.language')}</Label>
 
                         <Select value={locale} onValueChange={switchLocale}>
                             <SelectTrigger className="mt-2 w-full">
@@ -73,7 +73,7 @@ export default function BottomSwitcher() {
                     </div>
 
                     <div>
-                        <Label>Currency</Label>
+                        <Label>{t('switcher.bottom.currency')}</Label>
 
                         <Select value={currency} onValueChange={setCurrency}>
                             <SelectTrigger className="mt-2 w-full">

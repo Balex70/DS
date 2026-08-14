@@ -7,6 +7,7 @@ import { useState } from "react";
 import BottomSheetHeader from "../bottom-sheet-header";
 import { SortSelectValue } from "@/types/category";
 import { ArrowUpDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type Props = {
     value: SortSelectValue;
@@ -15,11 +16,12 @@ type Props = {
 
 export function MobileSortSelect({ value, onChange }: Props) {
     const [open, setOpen] = useState(false);
+    const t = useTranslations('frontend')
 
     const options = [
-        { value: "latest", label: "Latest" },
-        { value: "price_asc", label: "Price: Low → High" },
-        { value: "price_desc", label: "Price: High → Low" },
+        { value: "latest", label: "category.sort.latest" },
+        { value: "price_asc", label: "category.sort.price_asc" },
+        { value: "price_desc", label: "category.sort.price_desc" },
     ] as const;
     const selected = options.find(option => option.value === value);
 
@@ -31,12 +33,12 @@ export function MobileSortSelect({ value, onChange }: Props) {
                     className="h-9 rounded-2xl border border-input bg-background px-3 shadow-xs hover:bg-accent"
                     >
                     <ArrowUpDown className="mr-2 h-4 w-4 text-muted-foreground" />
-                    {selected?.label} 
+                    {t(selected?.label || "category.sort.latest")}
                 </Button>
             </SheetTrigger>
 
             <SheetContent side="bottom" className="rounded-none">
-                <BottomSheetHeader>Sort</BottomSheetHeader>
+                <BottomSheetHeader>{t('category.sort.header')}</BottomSheetHeader>
 
                 <Separator />
 
@@ -51,7 +53,7 @@ export function MobileSortSelect({ value, onChange }: Props) {
                                 setOpen(false);
                             }}
                         >
-                            {option.label}
+                            {t(option.label)}
                         </Button>
                     ))}
                 </div>

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { getCountryCarriers, Carrier } from "./carriers";
 
 function CarrierBadge({ carrier }: {carrier: Carrier}) {
@@ -19,7 +20,7 @@ function CarrierBadge({ carrier }: {carrier: Carrier}) {
 
 export function FinalCarriers({ country }: {country?: string}) {
     const carriers = getCountryCarriers(country);
-
+    const t = useTranslations('frontend')
     if (!carriers.length) {
         return null;
     }
@@ -27,7 +28,7 @@ export function FinalCarriers({ country }: {country?: string}) {
     return (
         <div className="mt-3 space-y-2">
             <div className="text-xs text-muted-foreground">
-                Delivered by one of our local logistics partners
+                {t('checkout.delivered_by_logistics_partners')}
             </div>
 
             <div className="flex flex-wrap gap-2">

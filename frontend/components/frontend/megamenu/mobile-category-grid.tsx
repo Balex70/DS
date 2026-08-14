@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Category } from "@/types/category";
 import CategoryImage from "../category/CategoryImage";
 import Image from 'next/image'
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function MobileCategoryGrid({
@@ -16,9 +16,11 @@ export function MobileCategoryGrid({
 }
 ) {
     const locale = useLocale();
+    const t = useTranslations('frontend')
+
     if (!categories.length) {
         return (
-            <h2 className="text-lg font-semibold">No Categories</h2>
+            <h2 className="text-lg font-semibold">{t('megamenu.no_categories')}</h2>
         );
     }
     

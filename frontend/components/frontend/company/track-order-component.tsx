@@ -33,6 +33,39 @@ const Field = ({
         </div>
     )
 }
+
+// Standardized translation keys for tracking statuses
+export type TrackingStatusKey =
+  | 'info_received'
+  | 'in_transit'
+  | 'out_for_delivery'
+  | 'delivered'
+  | 'failed_attempt'
+  | 'exception'
+  | 'expired'
+  | 'unknown';
+
+const STATUS_MAP: Record<string, TrackingStatusKey> = {
+  // REST API String Statuses
+  'info received': 'info_received',
+  'pending': 'info_received',
+  'in transit': 'in_transit',
+  'out for delivery': 'out_for_delivery',
+  'delivered': 'delivered',
+  'failed attempt': 'failed_attempt',
+  'delivery failed': 'failed_attempt',
+  'exception': 'exception',
+  'alert': 'exception',
+  'expired': 'expired',
+};
+
+export function getTrackingStatusKey(status: string | number | null | undefined): TrackingStatusKey {
+  if (!status) return 'unknown';
+
+  const normalized = String(status).trim().toLowerCase();
+  return STATUS_MAP[normalized] ?? 'unknown';
+}
+
 export function TrackOrderComponent() {
     const [tracking, setTracking] = useState<TrackingInfo | null>(null)
     const [isLoading, setIsLoading] = useState(false)
@@ -149,6 +182,7 @@ export function TrackOrderComponent() {
                                         <Badge
                                             variant="secondary"
                                             className={`
+                                                text-sm px-6 py-3 font-semibold
                                                 ${
                                                     tracking.trackingStatus === "In transit"
                                                         ? "text-white bg-green-500"
@@ -156,7 +190,7 @@ export function TrackOrderComponent() {
                                                 }
                                             `}
                                             >
-                                            {tracking.trackingStatus}
+                                            {t('footer.track_order.tracking_status.' + getTrackingStatusKey(tracking.trackingStatus))}
                                         </Badge>
                                     </div>
 

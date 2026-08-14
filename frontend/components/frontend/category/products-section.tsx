@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { ProductCard } from "./product-card";
 import { Product } from "@/types/product";
+import { useTranslations } from "next-intl";
 
 type Props = {
     data?: {
@@ -23,7 +24,7 @@ export function ProductsSection({
     hasNextPage,
     isFetchingNextPage
 }: Props) {
-
+    const t = useTranslations('frontend')
     const products = data?.pages.flatMap(page => page.data) ?? [];
 
     if (isLoading) {
@@ -42,7 +43,7 @@ export function ProductsSection({
     }
 
     if (!products.length) {
-        return <p className="text-sm text-muted-foreground">No Products</p>;
+        return <p className="text-sm text-muted-foreground">{t('category.no_products')}</p>;
     }
 
     return (
@@ -60,7 +61,7 @@ export function ProductsSection({
                         disabled={isFetchingNextPage}
                         className="px-4 py-2 text-sm border rounded"
                     >
-                        {isFetchingNextPage ? "Loading..." : "Load more"}
+                        {isFetchingNextPage ? t('category.loading') : t('category.load_more')}
                     </button>
                 </div>
             )}

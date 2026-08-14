@@ -22,13 +22,13 @@ export default function SmMegaMenu() {
                         className="w-full gap-2 mb-0"
                     >
                         <LayoutGrid className="h-4 w-4" />
-                        {t('header.catalog')}
+                        {t('megamenu.catalog')}
                     </Button>
                 </SheetTrigger>
             </div>
 
             <SheetContent side="bottom" className="!h-dvh max-h-dvh w-full rounded-none">
-                <BottomSheetHeader>{t('header.catalog')}</BottomSheetHeader>
+                <BottomSheetHeader>{t('megamenu.catalog')}</BottomSheetHeader>
                 
                 <Separator className="my-0" />
 

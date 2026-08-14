@@ -12,30 +12,31 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import { useTranslations } from "next-intl";
 
 const steps = {
     "creating-order": {
         icon: ClipboardList,
-        title: "Creating order",
-        description: "We are preparing your order...",
+        title: "checkout.checkout_dialog.creating_order_title",
+        description: "checkout.checkout_dialog.creating_order_description",
         color: "text-blue-500",
     },
     "creating-payment": {
         icon: ShoppingCart,
-        title: "Setting up payment",
-        description: "Connecting to payment provider...",
+        title: "checkout.checkout_dialog.creating_payment_title",
+        description: "checkout.checkout_dialog.creating_payment_description",
         color: "text-indigo-500",
     },
     redirecting: {
         icon: Handbag,
-        title: "Redirecting",
-        description: "You will be redirected shortly...",
+        title: "checkout.checkout_dialog.redirecting_title",
+        description: "checkout.checkout_dialog.redirecting_description",
         color: "text-emerald-500",
     },
     failed: {
         icon: XCircle,
-        title: "Payment failed",
-        description: "Something went wrong. Please try again.",
+        title: "checkout.checkout_dialog.failed_title",
+        description: "checkout.checkout_dialog.failed_description",
         color: "text-red-500",
     },
 };
@@ -53,6 +54,7 @@ export function CheckoutDialog({
 }: Props) {
     const step = steps[checkoutStatus as keyof typeof steps];
     const Icon = step?.icon ?? Loader2;
+    const t = useTranslations('frontend')
 
     const isLoading =
         checkoutStatus === "creating-order" ||
@@ -64,7 +66,7 @@ export function CheckoutDialog({
             <DialogContent className="sm:max-w-md rounded-2xl">
                 <DialogHeader>
                     <DialogTitle className="text-center">
-                        Processing checkout
+                        {t('checkout.checkout_dialog.header')}
                     </DialogTitle>
                 </DialogHeader>
 
@@ -83,10 +85,10 @@ export function CheckoutDialog({
                     {/* Title */}
                     <div className="space-y-1">
                         <h3 className="text-lg font-semibold">
-                            {step?.title ?? "Processing..."}
+                            {t(step?.title)}
                         </h3>
                         <p className="text-sm text-muted-foreground">
-                            {step?.description}
+                            {t(step?.description)}
                         </p>
                     </div>
 
@@ -97,7 +99,7 @@ export function CheckoutDialog({
                                 <div className="h-full w-1/2 bg-primary animate-pulse rounded-full" />
                             </div>
                             <p className="text-xs text-muted-foreground">
-                                Please do not close this window
+                                {t('checkout.checkout_dialog.do_not_close_warning')}
                             </p>
                         </div>
                     )}
@@ -108,7 +110,7 @@ export function CheckoutDialog({
                             onClick={() => setCheckoutOpen(false)}
                             className="mt-2 text-sm text-red-500 hover:underline"
                         >
-                            Close and try again
+                            {t('checkout.checkout_dialog.close_button')}
                         </button>
                     )}
                 </div>

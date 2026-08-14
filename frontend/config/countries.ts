@@ -49,6 +49,38 @@ export const COUNTRIES = [
         { code: "NZ", name: "New Zealand" },
     ] as const;
 
-export const getSelectedCountry = (shipping_country: string) => COUNTRIES.find(
-    (c) => c.code === shipping_country
-);
+export const getLocalizedCountries = (locale: string) => {
+    const displayNames = new Intl.DisplayNames([locale], {
+        type: "region",
+    });
+
+    return COUNTRIES.map((country) => ({
+        ...country,
+        name:
+            country.code === "__divider__"
+                ? "──────────"
+                : displayNames.of(country.code) ?? country.code,
+    }));
+};
+
+export const getLocalizedSelectedCountry = (
+    shippingCountry: string,
+    locale: string
+) => {
+    const country = COUNTRIES.find(
+        (country) => country.code === shippingCountry
+    );
+
+    if (!country || country.code === "__divider__") {
+        return undefined;
+    }
+
+    const displayNames = new Intl.DisplayNames([locale], {
+        type: "region",
+    });
+
+    return {
+        ...country,
+        name: displayNames.of(country.code) ?? country.code,
+    };
+};

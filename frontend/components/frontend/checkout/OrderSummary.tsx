@@ -13,6 +13,7 @@ import { TriangleAlert } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 import ImportDutyDialog from "./ImportDutyDialog";
+import { useTranslations } from "next-intl";
 
 type Props = {
     form: OrderPayload;
@@ -39,7 +40,7 @@ export function OrderSummary({
 }: Props) {
     const { currency } = useCurrency();
     const [importDutyDialogOpen, setImportDutyDialogOpen] = useState(false);
-
+    const t = useTranslations('frontend')
     const shippingCost = shippingMethod?.price ?? 0;
     const total = subtotal + shippingCost;
 
@@ -52,24 +53,24 @@ export function OrderSummary({
     const noShipping = !shippingMethod;
     const noGateway = !!shippingMethod && !gateway;
 
-    let buttonText = "Proceed to Payment";
+    let buttonText = t('checkout.order_summery.proceed_to_payment');
 
     if (checkoutStatus === "failed") {
-        buttonText = "Payment Failed — Try Again";
+        buttonText = t('checkout.order_summery.payment_failed');
     } else if (checkoutStatus === "creating-order") {
-        buttonText = "Creating Order...";
+        buttonText = t('checkout.order_summery.creating_order');
     } else if (checkoutStatus === "creating-payment") {
-        buttonText = "Preparing Payment...";
+        buttonText = t('checkout.order_summery.preparing_payment');
     } else if (checkoutStatus === "redirecting") {
-        buttonText = "Redirecting...";
+        buttonText = t('checkout.order_summery.redirecting');
     } else if (!hasCountry) {
-        buttonText = "Select Delivery Country";
+        buttonText = t('checkout.order_summery.select_delivery_country');
     } else if (noShipping) {
-        buttonText = "Select Shipping Method";
+        buttonText = t('checkout.order_summery.select_shipping_method');
     } else if (noGateway) {
-        buttonText = "Payments Not Available";
+        buttonText = t('checkout.order_summery.payment_not_available');
     } else if (!shippingFormValid) {
-        buttonText = "Shipping form is not valid";
+        buttonText = t('checkout.order_summery.shipping_form_is_not_valid');
     }
 
     const isDisabled =
@@ -105,12 +106,12 @@ export function OrderSummary({
     return (
         <>
             <div className="rounded-xl border p-4">
-                <h2 className="mb-4 text-xl font-semibold">Summary</h2>
+                <h2 className="mb-4 text-xl font-semibold">{t('checkout.order_summery.header')}</h2>
 
                 <Separator className="mb-4" />
 
                 <div className="flex justify-between">
-                    <span>Subtotal</span>
+                    <span>{t('checkout.order_summery.subtotal')}</span>
                     <span className="text-sm">
                         <PriceRenderer value={subtotal} />
                         {currency !== "USD" && currencySubtotal !== undefined && (
@@ -128,9 +129,9 @@ export function OrderSummary({
 
                 <div className="flex justify-between">
                     <div className="flex flex-wrap">
-                        <span>Shipping</span>
+                        <span>{t('checkout.order_summery.shipping_price')}</span>
                         {shippingMethod &&
-                            <span>({shippingMethod.name})</span>
+                            <span className="ml-1 font-normal text-muted-foreground ">({shippingMethod.name})</span>
                         }
                     </div>
                     <span className="text-sm">
@@ -153,56 +154,56 @@ export function OrderSummary({
                             <Card className="mt-2 gap-2 p-2">
                                 <CardHeader className="pb-1 px-1">
                                     <CardTitle className="font-medium text-muted-foreground">
-                                        Shipping details
+                                        {t('checkout.order_summery.shipping_details.header')}
                                     </CardTitle>
                                     <CardDescription>
-                                        These details will be used for delivery.
+                                        {t('checkout.order_summery.shipping_details.description')}
                                     </CardDescription>
                                 </CardHeader>
 
                                 <CardContent className="space-y-2 px-1">
                                     <div className="flex flex-wrap items-baseline gap-1">
-                                        <span className="text-xs text-muted-foreground">Full Name:</span>
+                                        <span className="text-xs text-muted-foreground">{t('checkout.shipping_info.full_name')}:</span>
                                         <span className="text-sm font-semibold">{form.shipping_full_name_latin}</span>
                                     </div>
                                     {form.shipping_phone && (
                                         <div className="flex flex-wrap items-baseline gap-1">
-                                            <span className="text-xs text-muted-foreground">Phone:</span>
+                                            <span className="text-xs text-muted-foreground">{t('checkout.shipping_info.phone')}:</span>
                                             <span className="text-sm font-semibold">{form.shipping_phone}</span>
                                         </div>
                                     )}
                                     <div className="flex flex-wrap items-baseline gap-1">
-                                        <span className="text-xs text-muted-foreground">Email:</span>
+                                        <span className="text-xs text-muted-foreground">{t('checkout.shipping_info.email')}:</span>
                                         <span className="text-sm font-semibold">{form.shipping_email}</span>
                                     </div>
                                     <div className="flex flex-wrap items-baseline gap-1">
-                                        <span className="text-xs text-muted-foreground">Address:</span>
+                                        <span className="text-xs text-muted-foreground">{t('checkout.shipping_info.address_line_1')}:</span>
                                         <span className="text-sm font-semibold">{form.shipping_address_line1_latin}</span>
                                     </div>
                                     {form.shipping_address_line2_latin && (
                                         <div className="flex flex-wrap items-baseline gap-1">
-                                            <span className="text-xs text-muted-foreground">Address (additional):</span>
+                                            <span className="text-xs text-muted-foreground">{t('checkout.shipping_info.address_line_2')}:</span>
                                             <span className="text-sm font-semibold">{form.shipping_address_line2_latin}</span>
                                         </div>
                                     )}
                                     <div className="flex flex-wrap items-baseline gap-1">
-                                        <span className="text-xs text-muted-foreground">City:</span>
+                                        <span className="text-xs text-muted-foreground">{t('checkout.shipping_info.city')}:</span>
                                         <span className="text-sm font-semibold">{form.shipping_city_latin}</span>
                                     </div>
                                     {form.shipping_state_latin && (
                                         <div className="flex flex-wrap items-baseline gap-1">
-                                            <span className="text-xs text-muted-foreground">State:</span>
+                                            <span className="text-xs text-muted-foreground">{t('checkout.shipping_info.state')}:</span>
                                             <span className="text-sm font-semibold">{form.shipping_state_latin}</span>
                                         </div>
                                     )}
                                     {form.shipping_postal_code && (
                                         <div className="flex flex-wrap items-baseline gap-1">
-                                            <span className="text-xs text-muted-foreground">Postal Code:</span>
+                                            <span className="text-xs text-muted-foreground">{t('checkout.shipping_info.postal_code')}:</span>
                                             <span className="text-sm font-semibold">{form.shipping_postal_code}</span>
                                         </div>
                                     )}
                                     <div className="flex flex-wrap items-baseline gap-1">
-                                        <span className="text-xs text-muted-foreground">Country:</span>
+                                        <span className="text-xs text-muted-foreground">{t('checkout.shipping_info.country')}:</span>
                                         <span className="text-sm font-semibold">{countryName}</span>
                                     </div>
                                 </CardContent>
@@ -211,13 +212,13 @@ export function OrderSummary({
                             <Alert className="mt-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20">
                                 <TriangleAlert className="h-4 w-4 !text-yellow-500" />
 
-                                <AlertTitle>Please review your shipping details</AlertTitle>
+                                <AlertTitle>{t('checkout.order_summery.shipping_details.alert_title')}</AlertTitle>
 
                                 <AlertDescription className="space-y-3">
                                     <p>
-                                        Please make sure your shipping information is correct and written in
-                                        Latin characters. Incorrect information may delay delivery or cause
-                                        your package to be returned.
+                                        {t.rich('checkout.order_summery.shipping_details.alert_message', {
+                                            strong: (chunks) => <strong className="font-semibold text-red-500">{chunks}</strong>
+                                        })}
                                     </p>
 
                                     <Button
@@ -225,7 +226,7 @@ export function OrderSummary({
                                         size="sm"
                                         onClick={goToShippingForm}
                                     >
-                                        Edit shipping details
+                                        {t('checkout.order_summery.shipping_details.edit_shipping_button')}
                                     </Button>
                                 </AlertDescription>
                             </Alert>
@@ -236,7 +237,7 @@ export function OrderSummary({
                 <Separator className="my-4" />
 
                 <div className="flex justify-between text-lg font-semibold">
-                    <span>Total</span>
+                    <span>{t('checkout.order_summery.total')}</span>
                     <span className="text-sm">
                         <PriceRenderer value={total} />
                         {currency !== "USD" && currencyTotal !== undefined && (
@@ -261,12 +262,12 @@ export function OrderSummary({
                 </Button>
                 {hasCountry && noShipping && (
                     <p className="text-sm text-red-500 mt-2">
-                        Please select a shipping method.
+                        {t('checkout.order_summery.please_select_shipping_method')}
                     </p>
                 )}
                 {noGateway && (
                     <p className="text-sm text-red-500 mt-2">
-                        Unfortunately, we don’t support payments in this region yet.
+                        {t('checkout.order_summery.payment_not_supported')}
                     </p>
                 )}
             </div>

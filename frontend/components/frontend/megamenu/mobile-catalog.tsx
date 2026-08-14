@@ -5,14 +5,16 @@ import { useState } from "react";
 import { Category } from "@/types/category";
 import { MobileCategoryGrid } from "./mobile-category-grid";
 import { MobileSubcategoryGrid } from "./mobile-subcategory-grid";
+import { useTranslations } from "next-intl";
 
 export function MobileCatalog({onClose}: {onClose: () => void}) {
     const { data: categories, isLoading } = useCategories();
     const [selectedRoot, setSelectedRoot] = useState<Category | null>(null);
     const maincategories = categories?.filter((c) => c.parent_id === null);
+    const t = useTranslations('frontend')
 
     if (isLoading) {
-        return <div className="p-4">Loading...</div>;
+        return <div className="p-4">{t('loading_loader')}</div>;
     }
     
     console.log(categories);

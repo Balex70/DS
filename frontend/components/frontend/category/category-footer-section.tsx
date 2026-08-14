@@ -1,7 +1,7 @@
 "use client";
 
 import { useCategories } from "@/hooks/use-categories";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 type Props = {
     slug: string[];
@@ -10,7 +10,7 @@ type Props = {
 export function CategoryFooterSection({ slug }: Props) {
     const { data: categories, isLoading } = useCategories();
     const locale = useLocale();
-
+    const t = useTranslations('frontend')
     const lastSlug = slug[slug.length - 1];
     const category = categories?.find((c) => c.slug === lastSlug);
     const translation = category?.translations.find((item) => item.locale === locale);
@@ -19,7 +19,7 @@ export function CategoryFooterSection({ slug }: Props) {
         return (
             <div className="space-y-2">
                 <p className="text-md text-muted-foreground">
-                    ...
+                    {t('loading_loader')}
                 </p>
             </div>
         );

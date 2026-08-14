@@ -61,7 +61,7 @@ const AddressSection = () => {
                     <div className="text-sm font-normal text-foreground">
                     {t('footer.working_hours')}
                     </div>
-                    <div>Mon – Fri</div>
+                    <div>{t('footer.mon')} – {t('footer.fri')}</div>
                     <div>09:00 – 18:00</div>
                 </li>
             </ul>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ShippingMethod } from "@/types/shipping";
 import { OrderPayload } from "@/types/order";
 import {
@@ -20,7 +20,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { COUNTRIES, getSelectedCountry } from "@/config/countries";
+import { getLocalizedCountries, getLocalizedSelectedCountry } from "@/config/countries";
+import { useLocale, useTranslations } from "next-intl";
 
 type Props = {
     form: OrderPayload;
@@ -36,8 +37,17 @@ export function SelectCountryForm({
     setPayload
 }: Props) {
     const [openCountryPopover, setOpenCountryPopover] = useState(false);
-    const selectedCountry = getSelectedCountry(form.shipping_country);
+    const locale = useLocale();
+    const t = useTranslations('frontend')
 
+    const countries = useMemo(
+        () => getLocalizedCountries(locale),
+        [locale]
+    );
+    const selectedCountry = getLocalizedSelectedCountry(
+        form.shipping_country,
+        locale
+    );
     return (
         <Popover open={openCountryPopover} onOpenChange={setOpenCountryPopover}>
             <PopoverTrigger asChild>
@@ -46,7 +56,7 @@ export function SelectCountryForm({
                     role="combobox"
                     className="w-full justify-between"
                 >
-                    {selectedCountry?.name ?? "Select country"}
+                    {selectedCountry?.name ?? t('checkout.select_country')}
 
                     <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
                 </Button>
@@ -57,13 +67,13 @@ export function SelectCountryForm({
                 className="w-[--radix-popover-trigger-width] p-0">
                 <div className="w-[var(--radix-popover-trigger-width)]">
                     <Command>
-                        <CommandInput placeholder="Search country..." />
+                        <CommandInput placeholder={t('checkout.search_country_placeholder')} />
 
                         <CommandList>
-                            <CommandEmpty>No country found.</CommandEmpty>
+                            <CommandEmpty>{t('checkout.no_country_found')}</CommandEmpty>
 
                             <CommandGroup>
-                                {COUNTRIES.map((country) =>
+                                {countries.map((country) =>
                                     country.code === "__divider__" ? (
                                         <div key="divider" className="my-2 border-t" />
                                     ) : (

@@ -55,6 +55,7 @@ export function Search() {
                     {!isLoading
                         &&
                         <DropdownSearchResults
+                            query={debouncedQuery}
                             products={data?.products}
                             categories={data?.categories}
                             onSelectProduct={(p) => {

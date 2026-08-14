@@ -2,7 +2,7 @@
 
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useCurrency } from "@/context/CurrencyContext";
 import { ShoppingCart } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -24,7 +24,7 @@ export default function BottomCart() {
     });
     const { mutate: clearCart, isPending } = useClearCart();
     const [open, setOpen] = useState(false);
-
+    const t = useTranslations('frontend')
     const items = cart?.items ?? [];
 
     const itemsCount = items.reduce(
@@ -65,7 +65,7 @@ export default function BottomCart() {
                         <ShoppingCart className="h-6 w-6 text-muted-foreground" />
 
                         <span className="text-xs text-muted-foreground">
-                            Cart
+                            {t('cart.header')}
                         </span>
                         {itemsCount > 0 && (
                             <span className="absolute right-2 min-[500px]:right-8 md:right-4 -top-0 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
@@ -77,7 +77,7 @@ export default function BottomCart() {
             </SheetTrigger>
 
             <SheetContent side="bottom" className="!h-dvh max-h-dvh w-full rounded-none">
-                <BottomSheetHeader>Cart</BottomSheetHeader>
+                <BottomSheetHeader>{t('cart.header')} ({itemsCount})</BottomSheetHeader>
                 
                 <Separator className="my-0" />
 
@@ -103,11 +103,11 @@ export default function BottomCart() {
                         <div className="flex flex-1 items-center justify-center">
                             <div className="text-center">
                                 <p className="text-lg font-medium">
-                                    Your cart is empty
+                                    {t('cart.cart_is_empty')}
                                 </p>
 
                                 <p className="mt-1 text-sm text-muted-foreground">
-                                    Add some products to continue shopping
+                                    {t('cart.cart_is_empty_description')}
                                 </p>
                             </div>
                         </div>
@@ -121,7 +121,7 @@ export default function BottomCart() {
                     <div className="border-t py-4 px-2">
                         <div className="mb-4 flex items-center justify-between">
                             <span className="text-sm text-muted-foreground">
-                                Subtotal
+                                {t('cart.subtotal')}
                             </span>
 
                             <span className="text-lg font-semibold">
@@ -148,7 +148,7 @@ export default function BottomCart() {
                                     href="/checkout"
                                     onClick={() => setOpen(false)}
                                 >
-                                    Checkout
+                                    {t('cart.checkout')}
                                 </Link>
                             </Button>
 
@@ -158,7 +158,7 @@ export default function BottomCart() {
                                 disabled={isPending}
                                 onClick={() => clearCart()}
                             >
-                                {isPending ? "Clearing..." : "Clear cart"}
+                                {isPending ? t('cart.clearing_cart') : t('cart.clear_cart')}
                             </Button>
                         </div>
                     </div>

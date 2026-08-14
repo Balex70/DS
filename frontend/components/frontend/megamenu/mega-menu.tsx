@@ -59,7 +59,7 @@ export function MegaMenu() {
                 className="gap-2"
             >
                 <LayoutGrid className="h-4 w-4" />
-                {t('header.catalog')}
+                {t('megamenu.catalog')}
             </Button>
         );
     }
@@ -72,7 +72,7 @@ export function MegaMenu() {
                     className="gap-2"
                 >
                     <LayoutGrid className="h-4 w-4" />
-                    {t('header.catalog')}
+                    {t('megamenu.catalog')}
                 </Button>
             </PopoverTrigger>
 

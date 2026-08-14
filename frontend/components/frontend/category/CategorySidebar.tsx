@@ -4,6 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { PriceFilter } from "./PriceFilter";
 import { MaterialsFilter } from "./MaterialsFilter";
 import { MaterialOption } from "@/types/material";
+import { useTranslations } from "next-intl";
 
 type Props = {
     minPrice: number;
@@ -24,11 +25,12 @@ export function CategorySidebar({
     setPriceApplied,
     setActiveMaterials
 }: Props) {
+    const t = useTranslations('frontend')
     return (
         <div className="rounded-lg border bg-card">
             <div className="border-b p-4">
                 <h2 className="font-semibold">
-                    Filter
+                    {t('category.filter.header')}
                 </h2>
             </div>
 

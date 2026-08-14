@@ -3,8 +3,67 @@
     
   },
   "frontend": {
-    "header": {
-      "catalog": "Каталог"
+    "loading_loader": "Зачекайте...",
+    "main": {
+      "hero_carousel": {
+        "new_arrival": "Нове надходження"
+      },
+      "categories_section": {
+        "view_all": "Переглянути всі товари"
+      }
+    },
+    "category": {
+      "category_not_found": "Категорію не знайдено",
+      "no_products": "Ця категорія поки що порожня, але ми вже працюємо над її поповненням!",
+      "load_more": "Показати більше",
+      "loading": "Зачекайте...",
+      "product_card": {
+        "no_image": "Немає зображення",
+        "add_to_cart": "Додати в кошик",
+        "adding": "Додаємо..."
+      },
+      "filter": {
+        "header": "Фільтр",
+        "apply": "Показати",
+        "material": "Матеріал",
+        "price": {
+          "header": "Ціна (USD)",
+          "apply": "Застосувати"
+        }
+      },
+      "sort": {
+        "header": "Сортувати",
+        "latest": "Новинки",
+        "price_asc": "Від дешевих до дорогих",
+        "price_desc": "Від дорогих до дешевих"
+      },
+      "breadcrumbs": {
+        "home": "Головна"
+      }
+    },
+    "product": {
+      "select_variant": "Виберіть варіант",
+      "not_found_label": "Товар не знайдено",
+      "back": "Повернутися назад",
+      "add_to_cart": "Додати в кошик",
+      "adding": "Додаємо...",
+      "options": "Варіанти",
+      "no_image": "Немає зображення"
+    },
+    "megamenu": {
+      "catalog": "Каталог",
+      "no_categories": "Немає категорій",
+      "browse": "Перейти до"
+    },
+    "switcher": {
+      "header": {
+        "language": "Мова",
+        "currency": "Валюта"
+      },
+      "bottom": {
+        "language": "Мова",
+        "currency": "Валюта"
+      }
     },
     "footer_nav": {
       "terms_and_conditions": "Умови та положення",
@@ -17,15 +76,135 @@
       "email": "Електронна пошта"
     },
     "checkout": {
+      "header": "Оформлення замовлення",
+      "your_order": "Товари",
+      "cart_is_empty": "Ваш кошик порожній",
+      "delivered_by_logistics_partners": "Остаточну доставку здійснюють такі служби доставки",
+      "search_country_placeholder": "Знайти країну...",
+      "no_country_found": "Країну не знайдено",
+      "select_country": "Виберіть країну",
+      "payment_info": {
+        "header": "Оплата",
+        "gateway_title": "Безпечна оплата за допомогою",
+        "skeleton_title": "Вкажіть країну, щоб переглянути доступні способи оплати"
+      },
+      "shipping_info": {
+        "header": "Інформація про доставку",
+        "description": "Введіть дані для доставки",
+        "full_name": "Повне ім’я (ім’я та прізвище)",
+        "phone": "Номер телефону",
+        "email": "Електронна пошта",
+        "address_line_1": "Адреса",
+        "address_line_2": "Адреса (додатково)",
+        "city": "Місто",
+        "state": "Область",
+        "postal_code": "Поштовий індекс",
+        "country": "Країна",
+        "shipping_methods": "Варіанти доставки",
+        "no_country_warning": "Вкажіть країну, щоб переглянути доступні способи доставки",
+        "loading_shipping_methods": "Зачекайте, вибираємо найкращі варіанти доставки...",
+        "validation": {
+          "full_name_required": "Вкажіть повне ім’я (ім’я та прізвище)",
+          "full_name_latin_required": "Повне ім’я латиницею є обов'язковим",
+          "phone_required": "Вкажіть номер телефону",
+          "phone_too_short": "Номер телефону занадто короткий",
+          "phone_too_long": "Номер телефону занадто довгий",
+          "phone_invalid": "Номер телефону некоректний",
+          "email_required": "Вкажіть електронну пошту",
+          "email_invalid": "Електронна пошта некоректна",
+          "address_line_1_required": "Вкажіть адресу",
+          "address_line_1_latin_required": "Адреса латиницею є обов'язковою",
+          "city_required": "Вкажіть місто",
+          "city_latin_required": "Місто латиницею є обов'язковим",
+          "country_required": "Вкажіть країну"
+        }
+      },
+      "shipping_selector": {
+        "business_days": "робочих дні",
+        "hide_shipping_methods": "Сховати способи доставки",
+        "show": "Показати ще",
+        "more_shipping_methods": "варіантів доставки",
+        "tier_express": "Експрес",
+        "tier_standard": "Стандартна",
+        "tier_economy": "Економна"
+      },
+      "order_summery": {
+        "header": "Замовлення",
+        "subtotal": "Сума",
+        "total": "До сплати",
+        "shipping_price": "Вартість доставки",
+        "proceed_to_payment": "Перейти до оплати",
+        "payment_failed": "Не вдалося здійснити оплату. Спробуйте ще раз",
+        "creating_order": "Створення замовлення...",
+        "preparing_payment": "Підготовка до оплати...",
+        "redirecting": "Перенаправлення...",
+        "select_delivery_country": "Оберіть країну доставки",
+        "select_shipping_method": "Оберіть спосіб доставки",
+        "payment_not_available": "Оплата недоступна",
+        "shipping_form_is_not_valid": "Перевірте інформацію про доставку",
+        "please_select_shipping_method": "Оберіть спосіб доставки.",
+        "payment_not_supported": "На жаль, оплата у вашому регіоні наразі недоступна.",
+        "shipping_details": {
+          "header": "Дані доставки",
+          "description": "Ці дані будуть використані для доставки вашого замовлення.",
+          "alert_title": "Перевірте дані доставки",
+          "alert_message": "Переконайтеся, що інформація про доставку вказана правильно та написана <strong>латинськими</strong> символами. Неправильні дані можуть призвести до затримки доставки або повернення вашого замовлення.",
+          "edit_shipping_button": "Редагувати дані доставки"
+        }
+      },
+      "latin_input": {
+        "latin": "Латинською",
+        "edit": "Змінити",
+        "done": "Готово"
+      },
+      "checkout_dialog": {
+        "header": "Обробка замовлення",
+        "do_not_close_warning": "Будь ласка, не закривайте це вікно",
+        "close_button": "Закрити і спробувати ще раз",
+        "creating_order_title": "Створюємо замовлення",
+        "creating_order_description": "Ми готуємо ваше замовлення...",
+        "creating_payment_title": "Налаштувуємо оплату",
+        "creating_payment_description": "Підключаємо платіжну систему...",
+        "redirecting_title": "Перенаправляємо",
+        "redirecting_description": "Ви будете перенаправлені через декілька секунд...",
+        "failed_title": "Помилка платежу",
+        "failed_description": "Щось пішло не так. Будь ласка, спробуєте ще раз."
+      },
       "import_duty_dialog": {
         "header": "ПДВ та митні збори",
         "text_1": "Ваше замовлення буде відправлено з-за кордону.",
-        "text_2": "Залежно від митних правил вашої країни, перед доставкою посилки вам може знадобитися сплатити <strong>ПДВ</strong>, <strong>митні збори</strong>, податки або збори перевізника за митне оформлення.",
+        "text_2": "Залежно від митних правил вашої країни, перед доставкою посилки вам може знадобитися сплатити <strong>ПДВ</strong>, <strong>митні збори</strong>, податки або збори за митне оформлення.",
         "text_3": "<strong>Ці платежі не включені у вартість вашого замовлення</strong> і сплачуються одержувачем.",
-        "accept_text": "Я розумію, що під час доставки можуть бути нараховані імпортний ПДВ, митні збори, податки або збори перевізника за митне оформлення, і погоджуюся нести відповідальність за їх сплату.",
+        "accept_text": "Я розумію, що під час доставки можуть бути нараховані імпортний ПДВ, митні збори, податки або збори за митне оформлення, і погоджуюся нести відповідальність за їх сплату.",
         "cancel_button": "Скасувати",
         "accept_button": "Розумію та продовжити"
+      },
+      "payment_result": {
+        "header": "Дякуємо за ваше замовлення!",
+        "text_1": "Ми отримали вашу оплату і обробляємо її.",
+        "text_2": "Статус вашого замовлення буде оновлюватися автоматично, коли платіжна система підтвердить транзакцію.",
+        "order_number": "Номер замовлення",
+        "continue_button" : "Продовжити покупки"
       }
+    },
+    "cart": {
+      "header": "Кошик",
+      "subtotal": "Сума",
+      "checkout": "До оформлення",
+      "clear_cart": "Очистити кошик",
+      "clearing_cart": "Очищаємо...",
+      "cart_is_empty": "Кошик порожній",
+      "cart_is_empty_description": "Додайте кілька товарів, щоб продовжити покупки"
+    },
+    "search": {
+      "header": "Пошук",
+      "placeholder": "Я шукаю...",
+      "no_results": "Немає результатів",
+      "no_results_description": "Спробуєте перевірити написання, або пошукати щось інше.",
+      "searched_for": "Ми не можемо знайти нічого по запиту",
+      "start_typing": "Почніть набирати, щоб почати пошук...",
+      "products": "Товари",
+      "categories": "Категорії"
     },
     "footer": {
       "company": "Компанія",
@@ -43,6 +222,8 @@
       "cookie_policy": "Політика використання файлів cookie",
       "contacts": "Контакти",
       "working_hours": "Робочий графік",
+      "mon": "Пн",
+      "fri": "Пт",
       "shop_by_category": "Категорії товарів",
       "copyright": "`name of the store`. Всі права захищені.",
       "about_us_section": {
@@ -146,7 +327,17 @@
         "days": "днів",
         "last_mile_carrier": "Служба доставки",
         "last_mile_tracking_number": "Номер відстеження служби доставки",
-        "estimated_delivery_time": "Приблизна дата доставки"
+        "estimated_delivery_time": "Приблизна дата доставки",
+        "tracking_status": {
+          "info_received": "Інформацію отримано",
+          "in_transit": "В дорозі",
+          "out_for_delivery": "Передано на доставку",
+          "delivered": "Доставлено",
+          "failed_attempt": "Невдала спроба доставки",
+          "exception": "Виключення / Помилка",
+          "expired": "Термін дії закінчився",
+          "unknown": "В дорозі"
+        }
       },
       "payment_methods_section": {
         "header": "Способи оплати",

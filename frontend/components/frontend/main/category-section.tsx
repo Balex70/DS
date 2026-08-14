@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Category } from "@/types/category";
 import { Product } from "@/types/product";
 import { ProductCard } from "../category/product-card";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 type Props = {
     category: Category;
@@ -17,6 +17,8 @@ export function CategorySection({
     products,
 }: Props) {
     const locale = useLocale();
+    const t = useTranslations('frontend')
+
     if (!products?.length) {
         return null;
     }
@@ -35,7 +37,7 @@ export function CategorySection({
                     variant="ghost"
                 >
                     <Link href={`/category/${category.slug}`}>
-                        View all →
+                        {t('main.categories_section.view_all')} →
                     </Link>
                 </Button>
             </div>

@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
 import { MobileDropdownSearchResults } from "./mobile-dropdown-search-results";
+import { useTranslations } from "next-intl";
 
 export function MobileSearch() {
     const [query, setQuery] = useState("");
@@ -20,6 +21,7 @@ export function MobileSearch() {
     const { data, isLoading } = useSearch(debouncedQuery, currency);
     const router = useRouter()
     const [open, setOpen] = useState(false);
+    const t = useTranslations('frontend')
     
     const handleClick = function(e: React.MouseEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -33,7 +35,7 @@ export function MobileSearch() {
                     <InputGroupInput
                         onClick={() => setOpen(true)}
                         onFocus={() => setOpen(true)}
-                        placeholder="Search..."
+                        placeholder={t("search.placeholder")}
                     />
                     <InputGroupAddon
                         align="inline-end"

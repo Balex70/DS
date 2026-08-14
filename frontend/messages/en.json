@@ -3,8 +3,67 @@
     
   },
   "frontend": {
-    "header": {
-      "catalog": "Catalog"
+    "loading_loader": "Loading...",
+    "main": {
+      "hero_carousel": {
+        "new_arrival": "New Arrival"
+      },
+      "categories_section": {
+        "view_all": "View all"
+      }
+    },
+    "category": {
+      "category_not_found": "Category not found",
+      "no_products": "There are no items in this category yet, but new arrivals are coming soon!",
+      "load_more": "Load more",
+      "loading": "Loading...",
+      "product_card": {
+        "no_image": "No image",
+        "add_to_cart": "Add to cart",
+        "adding": "Adding..."
+      },
+      "filter": {
+        "header": "Filter",
+        "apply": "Apply",
+        "material": "Materials",
+        "price": {
+          "header": "Price (USD)",
+          "apply": "Apply"
+        }
+      },
+      "sort": {
+        "header": "Sort by",
+        "latest": "Latest",
+        "price_asc": "Price: Low → High",
+        "price_desc": "Price: High → Low"
+      },
+      "breadcrumbs": {
+        "home": "Home"
+      }
+    },
+    "product": {
+      "select_variant": "Select",
+      "not_found_label": "Product not found",
+      "back": "Back",
+      "add_to_cart": "Add to cart",
+      "adding": "Adding...",
+      "options": "Options",
+      "no_image": "No image"
+    },
+    "megamenu": {
+      "catalog": "Catalog",
+      "no_categories": "No categories",
+      "browse": "Browse"
+    },
+    "switcher": {
+      "header": {
+        "language": "Language",
+        "currency": "Currency"
+      },
+      "bottom": {
+        "language": "Language",
+        "currency": "Currency"
+      }
     },
     "footer_nav": {
       "terms_and_conditions": "Terms and Conditions",
@@ -17,6 +76,100 @@
       "email": "Email"
     },
     "checkout": {
+      "header": "Checkout",
+      "your_order": "Your order",
+      "cart_is_empty": "Your cart is empty",
+      "delivered_by_logistics_partners": "Delivered by one of our local logistics partners",
+      "search_country_placeholder": "Search country...",
+      "no_country_found": "No country found",
+      "select_country": "Select country",
+      "payment_info": {
+        "header": "Payment Methods",
+        "gateway_title": "Secure payment powered by",
+        "skeleton_title": "Enter country to see payments options"
+      },
+      "shipping_info": {
+        "header": "Shipping information",
+        "description": "Enter your details for delivery",
+        "full_name": "Full name (name and surname)",
+        "phone": "Phone number",
+        "email": "Email address",
+        "address_line_1": "Address",
+        "address_line_2": "Address (additional)",
+        "city": "City",
+        "state": "State",
+        "postal_code": "Postal code",
+        "country": "Country",
+        "shipping_methods": "Shipping methods",
+        "no_country_warning": "Enter country to see shipping options",
+        "loading_shipping_methods": "Loading shipping methods...",
+        "validation": {
+          "full_name_required": "Please enter your full name",
+          "full_name_latin_required": "Full name (latin) is required",
+          "phone_required": "Please enter your phone number",
+          "phone_too_short": "Phone number is too short",
+          "phone_too_long": "Phone number is too long",
+          "phone_invalid": "Invalid phone number",
+          "email_required": "Please enter your email address",
+          "email_invalid": "Invalid email",
+          "address_line_1_required": "Please enter your address",
+          "address_line_1_latin_required": "Address (latin) is required",
+          "city_required": "Please enter your city",
+          "city_latin_required": "City (latin) is required",
+          "country_required": "Please select a country"
+        }
+      },
+      "shipping_selector": {
+        "business_days": "business days",
+        "hide_shipping_methods": "Hide shipping methods",
+        "show": "Show",
+        "more_shipping_methods": "more shipping methods",
+        "tier_express": "Express",
+        "tier_standard": "Standard",
+        "tier_economy": "Economy"
+      },
+      "order_summery": {
+        "header": "Summary",
+        "subtotal": "Subtotal",
+        "total": "Total",
+        "shipping_price": "Shipping price",
+        "proceed_to_payment": "Proceed to Payment",
+        "payment_failed": "Payment failed, please try again",
+        "creating_order": "Creating Order...",
+        "preparing_payment": "Preparing Payment...",
+        "redirecting": "Redirecting...",
+        "select_delivery_country": "Select delivery country",
+        "select_shipping_method": "Select shipping method",
+        "payment_not_available": "Payment unavailable",
+        "shipping_form_is_not_valid": "Please check your shipping information",
+        "please_select_shipping_method": "Please select a shipping method.",
+        "payment_not_supported": "Unfortunately, we don’t support payments in this region yet.",
+        "shipping_details": {
+          "header": "Shipping details",
+          "description": "These details will be used to deliver your order.",
+          "alert_title": "Please check your shipping details",
+          "alert_message": "Make sure your shipping information is correct and written in <strong>Latin</strong> characters. Incorrect information may cause delivery delays or your package to be returned.",
+          "edit_shipping_button": "Edit shipping details"
+        }
+      },
+      "latin_input": {
+        "latin": "Latin",
+        "edit": "Edit",
+        "done": "Done"
+      },
+      "checkout_dialog": {
+        "header": "Processing checkout",
+        "do_not_close_warning": "Please do not close this window",
+        "close_button": "Close and try again",
+        "creating_order_title": "Creating order",
+        "creating_order_description": "We are preparing your order...",
+        "creating_payment_title": "Setting up payment",
+        "creating_payment_description": "Connecting to payment provider...",
+        "redirecting_title": "Redirecting",
+        "redirecting_description": "You will be redirected shortly...",
+        "failed_title": "Payment failed",
+        "failed_description": "Something went wrong. Please try again."
+      },
       "import_duty_dialog": {
         "header": "Import VAT & Customs Duties",
         "text_1": "Your order will be shipped internationally.",
@@ -25,7 +178,33 @@
         "accept_text": "I understand that import VAT, customs duties, taxes, or carrier handling fees may be charged separately upon delivery, and I accept this responsibility.",
         "cancel_button": "Cancel",
         "accept_button": "I Understand & Continue"
+      },
+      "payment_result": {
+        "header": "Thank you for your order!",
+        "text_1": "We have received your payment attempt and are currently processing it.",
+        "text_2": "Your order status will be updated automatically once the payment provider confirms the transaction.",
+        "order_number": "Order number",
+        "continue_button" : "Continue Shopping"
       }
+    },
+    "cart": {
+      "header": "Cart",
+      "subtotal": "Subtotal",
+      "checkout": "Checkout",
+      "clear_cart": "Clear cart",
+      "clearing_cart": "Clearing...",
+      "cart_is_empty": "Your cart is empty",
+      "cart_is_empty_description": "Add some products to continue shopping"
+    },
+    "search": {
+      "header": "Search",
+      "placeholder": "Search...",
+      "no_results": "No results found",
+      "no_results_description": "Try checking the spelling or searching for something else.",
+      "searched_for": "We couldn't find anything for",
+      "start_typing": "Start typing to search...",
+      "products": "Products",
+      "categories": "Categories"
     },
     "footer": {
       "company": "Company",
@@ -43,6 +222,8 @@
       "cookie_policy": "Cookie Policy",
       "contacts": "Contact",
       "working_hours": "Working hours",
+      "mon": "Mon",
+      "fri": "Fri",
       "shop_by_category": "Shop by category",
       "copyright": "`name of the store`. All rights reserved.",
       "about_us_section": {
@@ -146,7 +327,17 @@
         "days": "days",
         "last_mile_carrier": "Local Delivery Service",
         "last_mile_tracking_number": "Local Delivery Tracking Number",
-        "estimated_delivery_time": "Estimated Delivery Time"
+        "estimated_delivery_time": "Estimated Delivery Time",
+        "tracking_status": {
+          "info_received": "Info Received",
+          "in_transit": "In Transit",
+          "out_for_delivery": "Out for Delivery",
+          "delivered": "Delivered",
+          "failed_attempt": "Delivery Failed",
+          "exception": "Exception / Alert",
+          "expired": "Expired",
+          "unknown": "In Transit"
+        }
       },
       "payment_methods_section": {
         "header": "Payment Methods",
