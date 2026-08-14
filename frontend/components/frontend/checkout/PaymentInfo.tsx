@@ -12,13 +12,10 @@ function PaymentSkeleton() {
             <p className="text-sm text-muted-foreground">
                 {t('checkout.payment_info.skeleton_title')}
             </p>
-            <div className="h-4 w-48 bg-gray-200 rounded" />
             <div className="h-3 w-64 bg-gray-200 rounded" />
 
             <div className="space-y-2 mt-4">
-                <div className="h-3 w-40 bg-gray-200 rounded" />
-                <div className="h-3 w-40 bg-gray-200 rounded" />
-                <div className="h-3 w-40 bg-gray-200 rounded" />
+                <div className="h-4 w-64 bg-gray-200 rounded" />
             </div>
         </div>
     );
