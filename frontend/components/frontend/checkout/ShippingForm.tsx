@@ -27,6 +27,18 @@ type Props = {
     setShippingFormValid: React.Dispatch<React.SetStateAction<boolean>>
 };
 
+function LoadShippingMethodsSkeleton() {
+    const t = useTranslations('frontend')
+    return (
+        <div className="space-y-3 animate-pulse">
+            <div className="h-2 w-64 bg-gray-200 rounded" />
+            <p className="text-sm text-muted-foreground">
+                {t('checkout.shipping_info.loading_shipping_methods')}
+            </p>
+        </div>
+    );
+}
+
 export function ShippingForm({
     form,
     setForm,
@@ -254,15 +266,12 @@ export function ShippingForm({
                 <h3 className="text-lg font-semibold mb-3">
                     {t('checkout.shipping_info.shipping_methods')}
                 </h3>
-
                 {!form.shipping_country ? (
                     <p className="text-sm text-muted-foreground">
                         {t('checkout.shipping_info.no_country_warning')}
                     </p>
                 ) : isLoading || isFetching ? (
-                    <p className="text-sm text-muted-foreground">
-                        {t('checkout.shipping_info.loading_shipping_methods')}
-                    </p>
+                    <LoadShippingMethodsSkeleton />
                 ) : (
                     <>
                         {shippingMethod && <FinalCarriers country={form.shipping_country} />}

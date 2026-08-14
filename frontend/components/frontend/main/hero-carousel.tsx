@@ -14,13 +14,17 @@ import { useLocale, useTranslations } from "next-intl";
 import { useCurrency } from "@/context/CurrencyContext";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import HeroCarouselImage from "@/components/custom/HeroCarouselImage";
+import SimpleSkeletonLoader from "@/components/common/SimpleSkeletonLoader";
 
 export function HeroCarousel() {
     const locale = useLocale();
     const { currency } = useCurrency();
-    const { data: products } = useLatestProducts({locale, currency});
+    const { data: products, isLoading } = useLatestProducts({locale, currency});
     const t = useTranslations('frontend')
     
+    if (isLoading) {
+        return <SimpleSkeletonLoader label={t('loading_loader')} className="p-4" />
+    }
     return (
         <Carousel
             opts={{

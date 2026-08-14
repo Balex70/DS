@@ -1,5 +1,6 @@
 "use client";
 
+import SimpleSkeletonLoader from "@/components/common/SimpleSkeletonLoader";
 import { useCategories } from "@/hooks/use-categories";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -16,13 +17,7 @@ export function CategoryFooterSection({ slug }: Props) {
     const translation = category?.translations.find((item) => item.locale === locale);
 
     if (isLoading) {
-        return (
-            <div className="space-y-2">
-                <p className="text-md text-muted-foreground">
-                    {t('loading_loader')}
-                </p>
-            </div>
-        );
+        return <SimpleSkeletonLoader label={t('loading_loader')} className="p-4" />;
     }
 
     if (!category) {

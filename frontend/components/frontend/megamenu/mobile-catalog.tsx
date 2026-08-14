@@ -6,6 +6,7 @@ import { Category } from "@/types/category";
 import { MobileCategoryGrid } from "./mobile-category-grid";
 import { MobileSubcategoryGrid } from "./mobile-subcategory-grid";
 import { useTranslations } from "next-intl";
+import SimpleSkeletonLoader from "@/components/common/SimpleSkeletonLoader";
 
 export function MobileCatalog({onClose}: {onClose: () => void}) {
     const { data: categories, isLoading } = useCategories();
@@ -14,10 +15,8 @@ export function MobileCatalog({onClose}: {onClose: () => void}) {
     const t = useTranslations('frontend')
 
     if (isLoading) {
-        return <div className="p-4">{t('loading_loader')}</div>;
+        return <SimpleSkeletonLoader label={t('loading_loader')} className="p-4" />;
     }
-    
-    console.log(categories);
     
     if (!selectedRoot) {
         return (
