@@ -7,7 +7,8 @@ import CategoryImage from "./CategoryImage";
 import Image from 'next/image'
 import { Separator } from "@/components/ui/separator";
 import { CategoryBreadcrumbs } from "./category-breadcrumbs";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import SimpleSkeletonLoader from "@/components/common/SimpleSkeletonLoader";
 
 type Props = {
     slug: string[];
@@ -16,23 +17,13 @@ type Props = {
 export function SubcategoriesSection({ slug }: Props) {
     const { data: categories, isLoading } = useCategories();
     const locale = useLocale();
+    const t = useTranslations('frontend')
     const lastSlug = slug[slug.length - 1];
     const category = categories?.find((c) => c.slug === lastSlug);
     const subcategories = categories?.filter((c) => c.parent_id === category?.id);
 
     if (isLoading) {
-        return (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                {Array.from({ length: 8 }).map((_, i) => (
-                    <Card key={i}>
-                        <CardContent className="p-4 space-y-2">
-                            <div className="h-4 w-3/4 rounded bg-muted" />
-                            <div className="h-3 w-1/2 rounded bg-muted" />
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-        );
+        return <SimpleSkeletonLoader label={t('loading_loader')} className="p-4" />;
     }
 
     if (!category) {
