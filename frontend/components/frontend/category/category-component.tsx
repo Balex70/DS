@@ -96,6 +96,7 @@ export function CategoryComponent({ slug }: Props) {
             <aside className="hidden w-72 shrink-0 lg:block">
                 {!isFilterLoading &&
                     <CategorySidebar
+                        data={productsQuery.data}
                         minPrice={minPrice}
                         maxPrice={maxPrice}
                         price={priceDraft}

@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ProductCard } from "./product-card";
 import { Product } from "@/types/product";
 import { useTranslations } from "next-intl";
+import SimpleNotFoundCard from "@/components/common/SimpleNoFoundCard";
 
 type Props = {
     data?: {
@@ -43,7 +44,7 @@ export function ProductsSection({
     }
 
     if (!products.length) {
-        return <p className="text-sm text-muted-foreground">{t('category.no_products')}</p>;
+        return <SimpleNotFoundCard title={t('category.no_products_title')} description={t('category.no_products_description')}/>
     }
 
     return (

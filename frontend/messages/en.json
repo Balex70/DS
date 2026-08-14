@@ -16,7 +16,8 @@
     "category": {
       "category_not_found": "Category not found",
       "category_not_found_description": "The category you are looking for does not exist.",
-      "no_products": "There are no items in this category yet, but new arrivals are coming soon!",
+      "no_products_title": "This category is currently empty",
+      "no_products_description": "There are no items in this category yet, but new arrivals are coming soon!",
       "load_more": "Load more",
       "loading": "Loading...",
       "product_card": {
