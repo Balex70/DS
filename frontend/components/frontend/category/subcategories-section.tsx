@@ -6,35 +6,22 @@ import CategoryImage from "./CategoryImage";
 import Image from 'next/image'
 import { Separator } from "@/components/ui/separator";
 import { CategoryBreadcrumbs } from "./category-breadcrumbs";
-import { useLocale, useTranslations } from "next-intl";
-import SimpleSkeletonLoader from "@/components/common/SimpleSkeletonLoader";
+import { useLocale } from "next-intl";
 import { Category } from "@/types/category";
 
 type Props = {
     slug: string[];
     category?: Category;
     categories?: Category[];
-    isLoading?: boolean;
 };
 
 export function SubcategoriesSection({
     slug,
     category,
     categories,
-    isLoading
 }: Props) {
     const locale = useLocale();
-    const t = useTranslations('frontend')
     const subcategories = categories?.filter((c) => c.parent_id === category?.id);
-
-    if (isLoading) {
-        return (
-            <>
-                <Separator />
-                <SimpleSkeletonLoader label={t('loading_loader')} className="p-4" />
-            </>
-        )
-    }
 
     if (!subcategories?.length) {
         return (
