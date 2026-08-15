@@ -65,8 +65,8 @@ export function CategoryComponent({ slug }: Props) {
         <div className="min-w-0 flex-1">
             <Card className="mx-auto w-full max-w-5xl overflow-hidden border-border/60 bg-background shadow-sm">
                 <CardContent className="flex min-h-[360px] flex-col items-center justify-center px-6 py-12 text-center">
-                    <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-50 dark:bg-red-950/30">
-                        <AlertCircle className="h-10 w-10 text-red-500 dark:text-red-400" />
+                    <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-muted">
+                        <AlertCircle className="h-10 w-10 text-muted-foreground" />
                     </div>
 
                     <h2 className="text-2xl font-semibold tracking-tight text-foreground">
@@ -80,6 +80,7 @@ export function CategoryComponent({ slug }: Props) {
                     <Button
                         className="mt-6"
                         variant="outline"
+                        asChild
                     >
                         <Link href="/">
                             {t('to_home_button')}
