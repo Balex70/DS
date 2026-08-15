@@ -12,12 +12,19 @@ import { ArrowUpDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 type Props = {
+    hasProducts?: boolean;
     value: SortSelectValue;
     onChange: (value: SortSelectValue) => void;
 };
 
-export function SortSelect({ value, onChange }: Props) {
+export function SortSelect({
+    hasProducts,
+    value,
+    onChange
+}: Props) {
     const t = useTranslations('frontend')
+    if (!hasProducts) return;
+
     return (
         <div className="flex justify-end">
             <Select value={value} onValueChange={onChange}>

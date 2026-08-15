@@ -115,7 +115,7 @@ export function CategoryComponent({ slug }: Props) {
         )
     }
 
-    if (!isLoading && !category) {
+    if (!category) {
       return (
         <div className="min-w-0 flex-1">
             <Card className="mx-auto w-full max-w-5xl overflow-hidden border-border/60 bg-background shadow-sm">
@@ -147,12 +147,15 @@ export function CategoryComponent({ slug }: Props) {
       )
     }
 
+    // Get products for all needed components
+    const products = productsQuery.data?.pages.flatMap(page => page.data) ?? [];
+
     return (
         <>
             <aside className="hidden w-72 shrink-0 lg:block">
                 {!isFilterLoading &&
                     <CategorySidebar
-                        data={productsQuery.data}
+                        hasProducts={products.length > 0}
                         minPrice={minPrice}
                         maxPrice={maxPrice}
                         price={priceDraft}
@@ -178,13 +181,14 @@ export function CategoryComponent({ slug }: Props) {
                     <div className="px-2 mb-2">
                         {/* Desktop */}
                         <div className="hidden lg:block">
-                            <SortSelect value={sort} onChange={setSort} />
+                            <SortSelect hasProducts={products.length > 0} value={sort} onChange={setSort} />
                         </div>
 
                         {/* Mobile */}
                         <div className="flex items-center justify-between lg:hidden">
                             <MobileCategorySidebar
-                                data={productsQuery.data}
+                                hasProducts={products.length > 0}
+                                isLoading={isLoading}
                                 minPrice={minPrice}
                                 maxPrice={maxPrice}
                                 price={priceDraft}
@@ -196,6 +200,7 @@ export function CategoryComponent({ slug }: Props) {
                             />
 
                             <MobileSortSelect
+                                hasProducts={products.length > 0}
                                 value={sort}
                                 onChange={setSort}
                             />

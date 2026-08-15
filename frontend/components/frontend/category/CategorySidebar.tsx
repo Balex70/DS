@@ -5,14 +5,9 @@ import { PriceFilter } from "./PriceFilter";
 import { MaterialsFilter } from "./MaterialsFilter";
 import { MaterialOption } from "@/types/material";
 import { useTranslations } from "next-intl";
-import { Product } from "@/types/product";
 
 type Props = {
-    data?: {
-        pages: {
-            data: Product[];
-        }[];
-    };
+    hasProducts?: boolean;
     minPrice: number;
     maxPrice: number;
     price: [number, number];
@@ -24,7 +19,7 @@ type Props = {
 };
 
 export function CategorySidebar({
-    data,
+    hasProducts,
     minPrice, maxPrice, price,
     activeMaterials,
     materialsOptions,
@@ -33,7 +28,6 @@ export function CategorySidebar({
     setActiveMaterials
 }: Props) {
     const t = useTranslations('frontend')
-    const products = data?.pages.flatMap(page => page.data) ?? [];
 
     return (
         <div className="rounded-lg border bg-card">
@@ -43,7 +37,7 @@ export function CategorySidebar({
                 </h2>
             </div>
 
-            {!products.length ? (
+            {!hasProducts ? (
                 <div className="p-3 animate-pulse">
                     <div className="h-3 w-64 bg-gray-200 rounded" />
 

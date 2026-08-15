@@ -11,14 +11,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { PriceFilter } from "./PriceFilter";
 import { MaterialsFilter } from "./MaterialsFilter";
 import { useTranslations } from "next-intl";
-import { Product } from "@/types/product";
 
 type Props = {
-    data?: {
-        pages: {
-            data: Product[];
-        }[];
-    };
+    hasProducts?: boolean;
+    isLoading: boolean;
     minPrice: number;
     maxPrice: number;
     price: [number, number];
@@ -30,7 +26,8 @@ type Props = {
 };
 
 export function MobileCategorySidebar({
-    data,
+    hasProducts,
+    isLoading,
     minPrice, maxPrice, price,
     activeMaterials,
     materialsOptions,
@@ -40,7 +37,7 @@ export function MobileCategorySidebar({
 }: Props) {
     const [open, setOpen] = useState(false);
     const t = useTranslations('frontend')
-    const products = data?.pages.flatMap(page => page.data) ?? [];
+    if (!isLoading && !hasProducts) return;
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -59,43 +56,33 @@ export function MobileCategorySidebar({
 
                 <Separator />
 
-                {!products.length ? (
-                    <div className="p-3 animate-pulse">
-                        <div className="h-3 w-full bg-gray-200 rounded" />
+                <ScrollArea className="h-[calc(100vh-12rem)]">
+                    <div className="mx-2">
+                        <PriceFilter
+                            min={minPrice}
+                            max={maxPrice}
+                            value={price}
+                            onChange={onPriceChange}
+                            setPriceApplied={setPriceApplied}
+                            />
 
-                        <div className="space-y-2 mt-4">
-                            <div className="h-4 w-full bg-gray-200 rounded" />
-                        </div>
+                        <MaterialsFilter
+                            activeMaterials={activeMaterials}
+                            materialsOptions={materialsOptions}
+                            onChange={setActiveMaterials}
+                            />
+
+                        <Button
+                            className="w-full my-4"
+                            onClick={() => {
+                                setPriceApplied()
+                                setOpen(false)
+                            }}
+                        >
+                            {t('category.filter.apply')}
+                        </Button>
                     </div>
-                ) : (
-                    <ScrollArea className="h-[calc(100vh-12rem)]">
-                        <div className="mx-2">
-                            <PriceFilter
-                                min={minPrice}
-                                max={maxPrice}
-                                value={price}
-                                onChange={onPriceChange}
-                                setPriceApplied={setPriceApplied}
-                                />
-
-                            <MaterialsFilter
-                                activeMaterials={activeMaterials}
-                                materialsOptions={materialsOptions}
-                                onChange={setActiveMaterials}
-                                />
-
-                            <Button
-                                className="w-full my-4"
-                                onClick={() => {
-                                    setPriceApplied()
-                                    setOpen(false)
-                                }}
-                            >
-                                {t('category.filter.apply')}
-                            </Button>
-                        </div>
-                    </ScrollArea>
-                )}
+                </ScrollArea>
             </SheetContent>
         </Sheet>
     );
