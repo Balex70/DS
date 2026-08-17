@@ -5,6 +5,7 @@ export type Product = {
   sku: string,
   description_raw: string,
   description_processed: string,
+  cost_price: number,
   price: number,
   currency_price: number;
   now_price: number,
@@ -61,6 +62,7 @@ export type ProductVariant = {
     name: string;
     name_processed: string;
     key: string;
+    cost_price: number,
     price: number;
     currency_price: number;
     stock: number;

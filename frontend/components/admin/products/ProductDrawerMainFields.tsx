@@ -22,6 +22,12 @@ export function ProductDrawerMainFields({product}: {product: Product}) {
             </span>
         </Field>
         <Field>
+            <FieldLabel>Cost Price</FieldLabel>
+            <div className="text-md text-muted-foreground">
+                <PriceRenderer value={product.cost_price} />
+            </div>
+        </Field>
+        <Field>
             <FieldLabel>Price</FieldLabel>
             <div className="text-md text-muted-foreground">
                 <PriceRenderer value={product.price} />

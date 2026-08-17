@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'sku',
     'name',
     'key',
+    'cost_price',
     'price',
     'stock',
     'weight',

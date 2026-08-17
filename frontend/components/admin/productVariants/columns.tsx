@@ -22,6 +22,17 @@ export const columns = (): ColumnDef<ProductVariant>[] => [
     }
   },
   {
+    accessorKey: "cost_price",
+    header: "Cost Price",
+    cell: ({ getValue }) => {
+      const value = Number(getValue())
+
+      return (
+        <PriceRenderer value={value} />
+      )
+    }
+  },
+  {
     accessorKey: "price",
     header: "Price",
     cell: ({ getValue }) => {

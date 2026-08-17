@@ -104,7 +104,7 @@ class CjProductMapper
         if (!$price) return null;
 
         if (str_contains($price, '--')) {
-            $price = explode('--', $price)[0]; // take min price TODO: change this
+            $price = explode('--', $price)[0]; // take min price by cheapest variant
             return $this->priceToCents($price);
         }
 

@@ -81,21 +81,6 @@ export const columns = ({
     },
   },
   {
-    id: "ai_images",
-    header: "AI Images",
-    cell: ({ row }) => {
-      const product = row.original
-
-      if (product.ai_images_at) {
-        return (
-          <Badge className="bg-green-200 text-green-800 hover:bg-green-100">
-            <Plus></Plus>
-          </Badge>
-        )
-      }
-    },
-  },
-  {
     accessorKey: "name_raw",
     header: "Name Raw",
     cell: ({ getValue }) => {
@@ -118,6 +103,17 @@ export const columns = ({
         <div className="max-w-[150px] truncate">
           <span title={value}>{value}</span>
         </div>
+      )
+    }
+  },
+  {
+    accessorKey: "cost_price",
+    header: "Cost Price",
+    cell: ({ getValue }) => {
+      const value = Number(getValue())
+
+      return (
+        <PriceRenderer value={value} />
       )
     }
   },
