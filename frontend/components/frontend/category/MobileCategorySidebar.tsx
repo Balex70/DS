@@ -11,6 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { PriceFilter } from "./PriceFilter";
 import { MaterialsFilter } from "./MaterialsFilter";
 import { useTranslations } from "next-intl";
+import { MobileMaterialsFilter } from "./MobileMaterialsFilter";
 
 type Props = {
     hasProducts?: boolean;
@@ -36,11 +37,20 @@ export function MobileCategorySidebar({
     setActiveMaterials
 }: Props) {
     const [open, setOpen] = useState(false);
+    const [activeDraftMaterials, setActiveDraftMaterials] = useState<number[]>([...activeMaterials]);
     const t = useTranslations('frontend')
     if (!isLoading && !hasProducts) return;
 
+    const handleOpenChange = (nextOpen: boolean) => {
+        if (nextOpen) {
+            setActiveDraftMaterials([...activeMaterials]);
+        }
+
+        setOpen(nextOpen);
+    };
+
     return (
-        <Sheet open={open} onOpenChange={setOpen}>
+        <Sheet open={open} onOpenChange={handleOpenChange}>
             <SheetTrigger asChild>
                 <Button
                     variant="ghost"
@@ -66,16 +76,17 @@ export function MobileCategorySidebar({
                             setPriceApplied={setPriceApplied}
                             />
 
-                        <MaterialsFilter
-                            activeMaterials={activeMaterials}
+                        <MobileMaterialsFilter
+                            activeMaterials={activeDraftMaterials}
                             materialsOptions={materialsOptions}
-                            onChange={setActiveMaterials}
+                            onChange={setActiveDraftMaterials}
                             />
 
                         <Button
                             className="w-full my-4"
                             onClick={() => {
                                 setPriceApplied()
+                                setActiveMaterials(activeDraftMaterials)
                                 setOpen(false)
                             }}
                         >
