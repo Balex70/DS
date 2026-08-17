@@ -31,7 +31,8 @@ class ProductService
                 'name_raw' => $mappedDetails['name_raw'],
                 'sku' => $mappedDetails['sku'],
                 'description_raw' => $mappedDetails['description_raw'],
-                'price' => $mappedDetails['price'],
+                'cost_price' => $mappedDetails['price'],
+                'price' => $this->generatePrice($mappedDetails['price']),
                 'now_price' => $mappedDetails['now_price'],
                 'suggested_price' => $mappedDetails['suggested_price'],
                 'add_mark_status' => $mappedDetails['add_mark_status'],
@@ -88,7 +89,8 @@ class ProductService
                     'sku'          => $variant['sku'] ?? null,
                     'key'          => $variant['key'] ?? null,
                     'name'         => $variant['name'] ?? null,
-                    'price'        => $variant['price'] ?? null,
+                    'cost_price'   => $variant['price'] ?? null,
+                    'price'        => $this->generatePrice($variant['price']),
                     'stock'        => $variant['stock'] ?? null,
                     'weight'       => $variant['weight'] ?? null,
                     'volume'       => $variant['volume'] ?? null,
@@ -126,5 +128,14 @@ class ProductService
         }
 
         return $query;
+    }
+
+    public function generatePrice(int $costPrice): string
+    {
+        $multiplier = $costPrice < 10000
+            ? 1.61
+            : 1.51;
+
+        return (int) round($costPrice * $multiplier);
     }
 }

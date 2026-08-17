@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 #[Fillable([
     'name_raw', 'name_processed', 'description_raw',
     'sku', 'product_weight', 'packing_weight',
-    'price', 'now_price', 'suggested_price',
+    'cost_price', 'price', 'now_price', 'suggested_price',
     'add_mark_status', 'raw_data',
     'is_collect', 'warehouse_inventory_num',
     'last_enrichment_at', 'description_processed',
