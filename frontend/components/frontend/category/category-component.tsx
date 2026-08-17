@@ -210,6 +210,7 @@ export function CategoryComponent({ slug }: Props) {
                     </div>
                     {/* Products */}
                     <ProductsSection
+                        hasProducts={hasProducts}
                         data={productsQuery.data}
                         isLoading={productsQuery.isLoading}
                         fetchNextPage={productsQuery.fetchNextPage}

@@ -18,6 +18,8 @@
       "category_not_found_description": "Категорію, яку ви шукаєте, не знайдено.",
       "no_products_title": "В цій категорії ще немає товарів",
       "no_products_description": "Ця категорія поки що порожня, але ми вже працюємо над її поповненням!",
+      "no_products_filter_title": "Нічого не знайдено",
+      "no_products_filter_description": "Спробуєте змінити або видалити фільтри, щоб знайти товари в цій категорії.",
       "load_more": "Показати більше",
       "loading": "Зачекайте...",
       "product_card": {

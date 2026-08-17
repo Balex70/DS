@@ -18,6 +18,8 @@
       "category_not_found_description": "The category you are looking for does not exist.",
       "no_products_title": "This category is currently empty",
       "no_products_description": "There are no items in this category yet, but new arrivals are coming soon!",
+      "no_products_filter_title": "Nothing matches your filters",
+      "no_products_filter_description": "Try changing or removing some filters to find products in this category.",
       "load_more": "Load more",
       "loading": "Loading...",
       "product_card": {

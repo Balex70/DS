@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import SimpleNotFoundCard from "@/components/common/SimpleNoFoundCard";
 
 type Props = {
+    hasProducts?: boolean;
     data?: {
         pages: {
             data: Product[];
@@ -19,6 +20,7 @@ type Props = {
 };
 
 export function ProductsSection({
+    hasProducts,
     data,
     isLoading,
     fetchNextPage,
@@ -43,8 +45,12 @@ export function ProductsSection({
         );
     }
 
-    if (!products.length) {
+    if (!hasProducts) {
         return <SimpleNotFoundCard title={t('category.no_products_title')} description={t('category.no_products_description')}/>
+    }
+
+    if (!products.length) {
+        return <SimpleNotFoundCard title={t('category.no_products_filter_title')} description={t('category.no_products_filter_description')}/>
     }
 
     return (
