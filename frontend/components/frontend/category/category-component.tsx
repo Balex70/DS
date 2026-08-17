@@ -20,7 +20,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
-import SimpleSkeletonLoader from "@/components/common/SimpleSkeletonLoader";
 import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {
@@ -147,15 +146,18 @@ export function CategoryComponent({ slug }: Props) {
       )
     }
 
-    // Get products for all needed components
-    const products = productsQuery.data?.pages.flatMap(page => page.data) ?? [];
+    // Check if category has products based on price range
+    let hasProducts = true;
+    if (minPrice === 0 && maxPrice === 10000) {
+        hasProducts = false;
+    }
 
     return (
         <>
             <aside className="hidden w-72 shrink-0 lg:block">
                 {!isFilterLoading &&
                     <CategorySidebar
-                        hasProducts={products.length > 0}
+                        hasProducts={hasProducts}
                         minPrice={minPrice}
                         maxPrice={maxPrice}
                         price={priceDraft}
@@ -181,13 +183,13 @@ export function CategoryComponent({ slug }: Props) {
                     <div className="px-2 mb-2">
                         {/* Desktop */}
                         <div className="hidden lg:block">
-                            <SortSelect hasProducts={products.length > 0} value={sort} onChange={setSort} />
+                            <SortSelect hasProducts={hasProducts} value={sort} onChange={setSort} />
                         </div>
 
                         {/* Mobile */}
                         <div className="flex items-center justify-between lg:hidden">
                             <MobileCategorySidebar
-                                hasProducts={products.length > 0}
+                                hasProducts={hasProducts}
                                 isLoading={isLoading}
                                 minPrice={minPrice}
                                 maxPrice={maxPrice}
@@ -200,7 +202,7 @@ export function CategoryComponent({ slug }: Props) {
                             />
 
                             <MobileSortSelect
-                                hasProducts={products.length > 0}
+                                hasProducts={hasProducts}
                                 value={sort}
                                 onChange={setSort}
                             />
