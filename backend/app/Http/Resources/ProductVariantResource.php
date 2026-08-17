@@ -17,6 +17,7 @@ class ProductVariantResource extends JsonResource
             'name' => $this->name,
             'name_processed' => $this->name_processed,
             'key' => $this->key,
+            'cost_price' => $this->cost_price,
             'price' => $this->price,
             'currency_price' => $this->currency_price,
             'stock' => $this->stock,
