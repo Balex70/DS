@@ -79,12 +79,11 @@ export function ShippingForm({
         const timeout = setTimeout(() => {
             setPayload({
                 shipping_country: form.shipping_country,
-                shipping_postal_code: form.shipping_postal_code,
             });
         }, 500);
 
         return () => clearTimeout(timeout);
-    }, [form.shipping_country, form.shipping_postal_code]);
+    }, [form.shipping_country]);
 
     // reset shipping method when shipping options change (e.g. country changed, cart items changed, cart item deleted)
     useEffect(() => {
