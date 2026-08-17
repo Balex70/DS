@@ -45,7 +45,7 @@ class StoreOrderRequest extends FormRequest
             'shipping_city_latin' => ['nullable', 'string', 'max:255'],
             'shipping_state' => ['nullable', 'string', 'max:255'],
             'shipping_state_latin' => ['nullable', 'string', 'max:255'],
-            'shipping_postal_code' => ['nullable', 'string', 'max:50'],
+            'shipping_postal_code' => ['required', 'string', 'max:50'],
             'shipping_country' => ['required', 'string', 'size:2'],
 
             // Optional totals (you may also recalculate in backend)

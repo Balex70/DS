@@ -126,6 +126,7 @@
           "address_line_1_latin_required": "Адреса латиницею є обов'язковою",
           "city_required": "Вкажіть місто",
           "city_latin_required": "Місто латиницею є обов'язковим",
+          "postal_code_required": "Вкажіть поштовий індекс",
           "country_required": "Вкажіть країну"
         }
       },

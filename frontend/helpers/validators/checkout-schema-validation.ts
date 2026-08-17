@@ -50,6 +50,11 @@ export const checkoutSchemaValidation = (
         .trim()
         .min(1, t("checkout.shipping_info.validation.city_latin_required")),
 
+    shipping_postal_code: z
+        .string()
+        .trim()
+        .min(1, t("checkout.shipping_info.validation.postal_code_required")),
+
     shipping_country: z
         .string()
         .length(2, t("checkout.shipping_info.validation.country_required")),
