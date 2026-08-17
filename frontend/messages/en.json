@@ -5,6 +5,11 @@
   "frontend": {
     "to_home_button": "Back to home page",
     "loading_loader": "Loading...",
+    "page_404": {
+      "title": "Page not found",
+      "description": "Sorry, we couldn't find the page you're looking for. It may have been moved, deleted, or the link might be incorrect.",
+      "back_to_home": "Back to home"
+    },
     "main": {
       "hero_carousel": {
         "new_arrival": "New Arrival"
