@@ -7,6 +7,7 @@ import { MaterialOption } from "@/types/material";
 import { useTranslations } from "next-intl";
 
 type Props = {
+    hasProducts?: boolean;
     minPrice: number;
     maxPrice: number;
     price: [number, number];
@@ -18,6 +19,7 @@ type Props = {
 };
 
 export function CategorySidebar({
+    hasProducts,
     minPrice, maxPrice, price,
     activeMaterials,
     materialsOptions,
@@ -26,6 +28,7 @@ export function CategorySidebar({
     setActiveMaterials
 }: Props) {
     const t = useTranslations('frontend')
+
     return (
         <div className="rounded-lg border bg-card">
             <div className="border-b p-4">
@@ -34,26 +37,36 @@ export function CategorySidebar({
                 </h2>
             </div>
 
-            <ScrollArea className="h-[calc(100vh-12rem)]">
-                <div>
-                    <PriceFilter
-                        min={minPrice}
-                        max={maxPrice}
-                        value={price}
-                        onChange={onPriceChange}
-                        setPriceApplied={setPriceApplied}
-                        buttonActive={true}
-                        />
+            {!hasProducts ? (
+                <div className="p-3 animate-pulse">
+                    <div className="h-3 w-64 bg-gray-200 rounded" />
 
-                    <MaterialsFilter
-                        activeMaterials={activeMaterials}
-                        materialsOptions={materialsOptions}
-                        onChange={setActiveMaterials}
-                        />
-
-                    {/* <WeightFilter min={data.weight.min} max={data.weight.max} /> */}
+                    <div className="space-y-2 mt-4">
+                        <div className="h-4 w-64 bg-gray-200 rounded" />
+                    </div>
                 </div>
-            </ScrollArea>
+            ) : (
+                <ScrollArea className="h-[calc(100vh-12rem)]">
+                    <div>
+                        <PriceFilter
+                            min={minPrice}
+                            max={maxPrice}
+                            value={price}
+                            onChange={onPriceChange}
+                            setPriceApplied={setPriceApplied}
+                            buttonActive={true}
+                            />
+
+                        <MaterialsFilter
+                            activeMaterials={activeMaterials}
+                            materialsOptions={materialsOptions}
+                            onChange={setActiveMaterials}
+                            />
+
+                        {/* <WeightFilter min={data.weight.min} max={data.weight.max} /> */}
+                    </div>
+                </ScrollArea>
+            )}
         </div>
     );
 }

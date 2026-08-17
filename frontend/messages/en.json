@@ -3,7 +3,13 @@
     
   },
   "frontend": {
+    "to_home_button": "Back to home page",
     "loading_loader": "Loading...",
+    "page_404": {
+      "title": "Page not found",
+      "description": "Sorry, we couldn't find the page you're looking for. It may have been moved, deleted, or the link might be incorrect.",
+      "back_to_home": "Back to home"
+    },
     "main": {
       "hero_carousel": {
         "new_arrival": "New Arrival"
@@ -14,7 +20,11 @@
     },
     "category": {
       "category_not_found": "Category not found",
-      "no_products": "There are no items in this category yet, but new arrivals are coming soon!",
+      "category_not_found_description": "The category you are looking for does not exist.",
+      "no_products_title": "This category is currently empty",
+      "no_products_description": "There are no items in this category yet, but new arrivals are coming soon!",
+      "no_products_filter_title": "Nothing matches your filters",
+      "no_products_filter_description": "Try changing or removing some filters to find products in this category.",
       "load_more": "Load more",
       "loading": "Loading...",
       "product_card": {
@@ -142,7 +152,6 @@
         "select_shipping_method": "Select shipping method",
         "payment_not_available": "Payment unavailable",
         "shipping_form_is_not_valid": "Please check your shipping information",
-        "please_select_shipping_method": "Please select a shipping method.",
         "payment_not_supported": "Unfortunately, we don’t support payments in this region yet.",
         "shipping_details": {
           "header": "Shipping details",

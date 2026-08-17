@@ -10,13 +10,19 @@ import { ArrowUpDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 type Props = {
+    hasProducts: boolean;
     value: SortSelectValue;
     onChange: (value: SortSelectValue) => void;
 };
 
-export function MobileSortSelect({ value, onChange }: Props) {
+export function MobileSortSelect({
+    hasProducts,
+    value,
+    onChange
+}: Props) {
     const [open, setOpen] = useState(false);
     const t = useTranslations('frontend')
+    if (!hasProducts) return;
 
     const options = [
         { value: "latest", label: "category.sort.latest" },

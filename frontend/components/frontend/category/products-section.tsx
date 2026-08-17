@@ -4,8 +4,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ProductCard } from "./product-card";
 import { Product } from "@/types/product";
 import { useTranslations } from "next-intl";
+import SimpleNotFoundCard from "@/components/common/SimpleNoFoundCard";
 
 type Props = {
+    hasProducts?: boolean;
     data?: {
         pages: {
             data: Product[];
@@ -18,6 +20,7 @@ type Props = {
 };
 
 export function ProductsSection({
+    hasProducts,
     data,
     isLoading,
     fetchNextPage,
@@ -42,8 +45,12 @@ export function ProductsSection({
         );
     }
 
+    if (!hasProducts) {
+        return <SimpleNotFoundCard title={t('category.no_products_title')} description={t('category.no_products_description')}/>
+    }
+
     if (!products.length) {
-        return <p className="text-sm text-muted-foreground">{t('category.no_products')}</p>;
+        return <SimpleNotFoundCard title={t('category.no_products_filter_title')} description={t('category.no_products_filter_description')}/>
     }
 
     return (

@@ -19,6 +19,10 @@ import { useLocale, useTranslations } from "next-intl";
 import { detectCountry } from "@/helpers/geo";
 import { useCurrency } from "@/context/CurrencyContext";
 import { CartItemPayload } from "@/types/cart";
+import { Card, CardContent } from "@/components/ui/card";
+import { AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 
 export function CheckoutComponent() {
     const locale = useLocale();
@@ -164,9 +168,28 @@ export function CheckoutComponent() {
 
     if (items.length === 0) {
         return (
-            <div className="container py-0 lg:py-10">
-                <h1 className="mb-6 text-3xl font-bold">{t('checkout.header')}</h1>
-                <h2 className="text-2xl font-semibold">{t('checkout.cart_is_empty')}</h2>
+            <div className="min-w-0 flex-1">
+                <Card className="mx-auto w-full max-w-5xl overflow-hidden border-border/60 bg-background shadow-sm">
+                    <CardContent className="flex min-h-[360px] flex-col items-center justify-center px-6 py-12 text-center">
+                        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-muted">
+                            <AlertCircle className="h-10 w-10 text-muted-foreground" />
+                        </div>
+
+                        <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+                            {t('checkout.cart_is_empty')}
+                        </h2>
+
+                        <Button
+                            className="mt-6"
+                            variant="outline"
+                            asChild
+                        >
+                            <Link href="/">
+                                {t('to_home_button')}
+                            </Link>
+                        </Button>
+                    </CardContent>
+                </Card>
             </div>
         );
     }

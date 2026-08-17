@@ -15,6 +15,7 @@ import { transliterate } from "transliteration";
 import { InputField } from "./InputField";
 import { FieldLabel } from "@/components/ui/field";
 import { useTranslations } from "next-intl";
+import SimpleNotFoundCard from "@/components/common/SimpleNoFoundCard";
 
 type Props = {
     form: OrderPayload;
@@ -266,12 +267,10 @@ export function ShippingForm({
                 <h3 className="text-lg font-semibold mb-3">
                     {t('checkout.shipping_info.shipping_methods')}
                 </h3>
-                {!form.shipping_country ? (
-                    <p className="text-sm text-muted-foreground">
-                        {t('checkout.shipping_info.no_country_warning')}
-                    </p>
-                ) : isLoading || isFetching ? (
+                {isLoading || isFetching ? (
                     <LoadShippingMethodsSkeleton />
+                ) : !form.shipping_country ? (
+                    <SimpleNotFoundCard title={t('checkout.shipping_info.no_country_warning')} className="min-h-[100px]" />
                 ) : (
                     <>
                         {shippingMethod && <FinalCarriers country={form.shipping_country} />}

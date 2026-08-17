@@ -3,7 +3,13 @@
     
   },
   "frontend": {
+    "to_home_button": "На головну",
     "loading_loader": "Зачекайте...",
+    "page_404": {
+      "title": "Сторінка не знайдена",
+      "description": "На жаль, нам не вдалося знайти сторінку, яку ви шукаєте. Можливо, її було переміщено або видалено, або посилання є неправильним.",
+      "back_to_home": "На головну"
+    },
     "main": {
       "hero_carousel": {
         "new_arrival": "Нове надходження"
@@ -14,7 +20,11 @@
     },
     "category": {
       "category_not_found": "Категорію не знайдено",
-      "no_products": "Ця категорія поки що порожня, але ми вже працюємо над її поповненням!",
+      "category_not_found_description": "Категорію, яку ви шукаєте, не знайдено.",
+      "no_products_title": "В цій категорії ще немає товарів",
+      "no_products_description": "Ця категорія поки що порожня, але ми вже працюємо над її поповненням!",
+      "no_products_filter_title": "Нічого не знайдено",
+      "no_products_filter_description": "Спробуєте змінити або видалити фільтри, щоб знайти товари в цій категорії.",
       "load_more": "Показати більше",
       "loading": "Зачекайте...",
       "product_card": {
@@ -142,7 +152,6 @@
         "select_shipping_method": "Оберіть спосіб доставки",
         "payment_not_available": "Оплата недоступна",
         "shipping_form_is_not_valid": "Перевірте інформацію про доставку",
-        "please_select_shipping_method": "Оберіть спосіб доставки.",
         "payment_not_supported": "На жаль, оплата у вашому регіоні наразі недоступна.",
         "shipping_details": {
           "header": "Дані доставки",
