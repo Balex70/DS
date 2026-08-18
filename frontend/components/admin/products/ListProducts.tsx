@@ -24,6 +24,8 @@ function ListProducts () {
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [page, setPage] = useState(1)
   const [enriched, setEnriched] = useState<string | null>(null)
+  const [outdated, setOutdated] = useState<string | null>(null)
+  const [enrichedFailed, setEnrichedFailed] = useState<string | null>(null)
   const [aiTextsProcessed, setAiTextsProcessed] = useState<string | null>(null)
   const [aiImagesProcessed, setAiImagesProcessed] = useState<string | null>(null)
   const [categoryIds, setCategoryIds] = useState<number[]>([])
@@ -32,6 +34,8 @@ function ListProducts () {
   const fetchProducts = async (params?: {
     page?: number,
     enriched: string|null,
+    outdated: string|null,
+    enrichedFailed: string|null,
     aiTextsProcessed: string|null,
     aiImagesProcessed: string|null,
     categoryIds: number[]|null
@@ -43,6 +47,8 @@ function ListProducts () {
 
       if (params?.page) query.append("page", String(params.page))
       if (params?.enriched) query.append("enriched", params.enriched)
+      if (params?.outdated) query.append("outdated", params.outdated)
+      if (params?.enrichedFailed) query.append("enrichedFailed", params.enrichedFailed)
       if (params?.aiTextsProcessed) query.append("aiTextsProcessed", params.aiTextsProcessed)
       if (params?.aiImagesProcessed) query.append("aiImagesProcessed", params.aiImagesProcessed)
       if (params?.categoryIds?.length) query.append("categoryIds", params.categoryIds.join(","))
@@ -73,8 +79,8 @@ function ListProducts () {
   }
 
   useEffect(() => {
-      fetchProducts({ page, enriched, aiTextsProcessed, aiImagesProcessed, categoryIds })
-  }, [page, enriched, aiTextsProcessed, aiImagesProcessed, categoryIds])
+      fetchProducts({ page, enriched, outdated, enrichedFailed, aiTextsProcessed, aiImagesProcessed, categoryIds })
+  }, [page, enriched, outdated, enrichedFailed, aiTextsProcessed, aiImagesProcessed, categoryIds])
 
   if (error) {
     return (
@@ -91,12 +97,22 @@ function ListProducts () {
         open={filtersOpen}
         onOpenChange={setFiltersOpen}
         enriched={enriched}
+        outdated={outdated}
+        enrichedFailed={enrichedFailed}
         categoryIds={categoryIds}
         aiTextsProcessed={aiTextsProcessed}
         aiImagesProcessed={aiImagesProcessed}
         onEnrichedChange={(value) => {
           setPage(1)
           setEnriched(value)
+        }}
+        onOutdatedChange={(value) => {
+          setPage(1)
+          setOutdated(value)
+        }}
+        onEnrichedFailedChange={(value) => {
+          setPage(1)
+          setEnrichedFailed(value)
         }}
         onAiTextsProcessedChange={(value) => {
           setPage(1)
@@ -115,6 +131,11 @@ function ListProducts () {
         <Loader />
       ) : (
           <>
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-lg font-semibold">
+                Products ({meta?.total ?? 0})
+              </h2>
+            </div>
             <DataTable
               columns={columns({
                 onView: (product) => {
@@ -157,6 +178,8 @@ function ListProducts () {
           fetchProducts({
             page,
             enriched,
+            outdated,
+            enrichedFailed,
             aiTextsProcessed,
             aiImagesProcessed,
             categoryIds

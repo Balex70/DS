@@ -22,7 +22,17 @@ class ProductService
     {
         $provider = $this->manager->driver();
 
-        $productDetails = $provider->getProductDetails($productToEnrich->external_id);
+        try {
+            $productDetails = $provider->getProductDetails($productToEnrich->external_id);
+        } catch (\Throwable $e) {
+            $productToEnrich->update([
+                'enrichment_failed_at' => now(),
+                'enrichment_error' => $e->getMessage(),
+            ]);
+
+            return;
+        }
+
         $mappedDetails = $this->mapper->mapDetail($productDetails, $productToEnrich->toArray());
 
         DB::transaction(function () use ($productToEnrich, $mappedDetails) {

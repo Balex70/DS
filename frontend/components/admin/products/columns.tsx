@@ -15,11 +15,11 @@ import { Product } from "@/types/product"
 import { Badge } from "@/components/ui/badge"
 import { PriceRenderer } from "@/components/custom/PriceRenderer"
 
-const FOUR_WEEKS_MS = 1000 * 60 * 60 * 24 * 28
+const EIGHT_WEEKS_MS = 1000 * 60 * 60 * 24 * 56
 
 const isFresh = (date?: Date | null) => {
   if (!date) return false
-  return Date.now() - new Date(date).getTime() < FOUR_WEEKS_MS
+  return Date.now() - new Date(date).getTime() < EIGHT_WEEKS_MS
 }
 
 // This type is used to define the shape of our data.
@@ -44,7 +44,16 @@ export const columns = ({
       const product = row.original
 
       const enrichedAt = product.last_enrichment_at
+      const enrichedFailedAt = product.enrichment_failed_at
       const isFreshEnrichment = isFresh(enrichedAt)
+
+      if (enrichedFailedAt) {
+        return (
+          <Badge className="bg-red-200 text-red-800 hover:bg-red-100">
+            Failed
+          </Badge>
+        )
+      }
 
       if (enrichedAt && isFreshEnrichment) {
         return (
