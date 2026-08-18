@@ -27,8 +27,8 @@ export function CategorySection({
 
     return (
         <section className="space-y-5">
-            <div className="flex items-center justify-between border-b pb-3">
-                <h2 className="text-2xl font-bold">
+            <div className="flex flex-col gap-2 border-b pb-3 sm:flex-row sm:items-center sm:justify-between">
+                <h2 className="text-center text-2xl font-bold sm:text-left">
                     {translation?.name ?? category.name}
                 </h2>
 
