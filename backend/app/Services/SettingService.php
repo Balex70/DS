@@ -11,6 +11,10 @@ class SettingService
     {
         $definition = Settings::DEFINITIONS[$key];
 
+        if (!$definition) {
+            return null;
+        }
+
         $value = Setting::where('key', $key)->value('value');
 
         if ($value === null) {

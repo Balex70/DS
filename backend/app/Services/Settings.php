@@ -9,6 +9,14 @@ class Settings
             'type' => 'string',
             'default' => 'My Store',
         ],
+        'store.fe_email' => [
+            'type' => 'string',
+            'default' => null,
+        ],
+        'store.fe_phone' => [
+            'type' => 'string',
+            'default' => null,
+        ],
 
         // 'checkout.guest_checkout' => [
         //     'type' => 'boolean',

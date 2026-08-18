@@ -118,15 +118,37 @@ export default function GeneralSettings() {
 
         <div className="space-y-6">
             <div className="space-y-2">
-            <Label htmlFor="store-name">Store name</Label>
+                <Label htmlFor="store-name">Store name</Label>
 
-            <Input
-                id="store-name"
-                value={settings["store.name"]}
-                onChange={(e) =>
-                updateSetting("store.name", e.target.value)
-                }
-            />
+                <Input
+                    id="store-name"
+                    value={settings["store.name"]}
+                    onChange={(e) =>
+                        updateSetting("store.name", e.target.value)
+                    }
+                />
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="store-fe-email">Store email (render on Frontend)</Label>
+
+                <Input
+                    id="store-fe-email"
+                    value={settings["store.fe_email"]}
+                    onChange={(e) =>
+                        updateSetting("store.fe_email", e.target.value)
+                    }
+                />
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="store-fe-phone">Store phone number (render on Frontend)</Label>
+
+                <Input
+                    id="store-fe-phone"
+                    value={settings["store.fe_phone"]}
+                    onChange={(e) =>
+                        updateSetting("store.fe_phone", e.target.value)
+                    }
+                />
             </div>
 
             {/* <div className="flex items-center justify-between rounded-lg border p-4">
