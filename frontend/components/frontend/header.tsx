@@ -70,7 +70,8 @@ export function Header() {
                 <div className="ml-auto flex items-center gap-2">
                     <div className="hidden md:flex items-center gap-2">
                         <HeaderSwitcher />
-                        <CustomerMenu />
+                        {/* Hide for now, before customer register/login is implemented */}
+                        {/* <CustomerMenu /> */}
                         <CartButton />
                     </div>
                 </div>

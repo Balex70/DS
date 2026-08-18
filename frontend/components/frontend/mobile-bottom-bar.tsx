@@ -27,8 +27,9 @@ export function MobileBottomBar() {
             <Separator orientation="vertical" className="!h-10 !self-center" />
             <BottomSwitcher />
             <Separator orientation="vertical" className="!h-10 !self-center" />
-            <BottomCustomerMenu />
-            <Separator orientation="vertical" className="!h-10 !self-center" />
+            {/* Hide for now, before customer register/login is implemented */}
+            {/* <BottomCustomerMenu />
+            <Separator orientation="vertical" className="!h-10 !self-center" /> */}
             <BottomCart />
         </div>
     );
