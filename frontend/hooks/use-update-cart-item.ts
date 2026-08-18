@@ -9,7 +9,7 @@ export function useUpdateCartItem() {
             productId,
             quantity,
         }: {
-            productId: string;
+            productId: number;
             quantity: number;
         }) => {
             const res = await updateCartItem({

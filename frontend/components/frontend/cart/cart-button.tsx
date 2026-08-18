@@ -6,6 +6,7 @@ import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { CartDrawer } from "./CartDrawer";
 import { useLocale } from "next-intl";
+import { cn } from "@/lib/utils";
 
 export function CartButton() {
     const locale = useLocale();
@@ -24,13 +25,22 @@ export function CartButton() {
             <Button
                 variant="outline"
                 size="icon"
-                className="relative"
+                className={cn("relative w-12",
+                    itemsCount > 0
+                        ? "border-green-500 text-green-600 hover:border-green-600 hover:bg-green-50"
+                        : "border-gray-500 text-gray-600 hover:border-gray-600 hover:bg-gray-50"
+                )}
+
                 onClick={() => setOpen(true)}
             >
-                <ShoppingCart className="h-5 w-5" />
+                <ShoppingCart className={cn(
+                    itemsCount > 0
+                        ? "!h-5 !w-5"
+                        : "!h-4 !w-4"
+                )} />
 
                 {itemsCount > 0 && (
-                    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+                    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-xs text-primary-foreground">
                         {itemsCount}
                     </span>
                 )}

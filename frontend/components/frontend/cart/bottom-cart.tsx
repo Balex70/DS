@@ -14,6 +14,7 @@ import { CartItemsDrawer } from "./CartItemsDrawer";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useState } from "react";
 import BottomSheetHeader from "../bottom-sheet-header";
+import { cn } from "@/lib/utils";
 
 export default function BottomCart() {
     const locale = useLocale();
@@ -62,13 +63,22 @@ export default function BottomCart() {
                     className="h-full flex-1 rounded-none"
                 >
                     <div className="flex flex-col items-center gap-1">
-                        <ShoppingCart className="h-6 w-6 text-muted-foreground" />
+                        <ShoppingCart className={cn(
+                            itemsCount > 0
+                                ? "!h-5 !w-5 text-green-600"
+                                : "!h-4 !w-4 text-muted-foreground"
+                        )} />
+                        {/* <ShoppingCart className="h-6 w-6 text-muted-foreground" /> */}
 
-                        <span className="text-xs text-muted-foreground">
+                        <span className={cn(
+                            itemsCount > 0
+                                ? "text-sm text-green-600"
+                                : "text-xs text-muted-foreground"
+                        )}>
                             {t('cart.header')}
                         </span>
                         {itemsCount > 0 && (
-                            <span className="absolute right-2 min-[500px]:right-8 md:right-4 -top-0 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+                            <span className="absolute right-2 min-[500px]:right-8 md:right-4 -top-0 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-xs text-primary-foreground">
                                 {itemsCount}
                             </span>
                         )}

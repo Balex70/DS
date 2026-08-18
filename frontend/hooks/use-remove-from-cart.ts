@@ -5,7 +5,7 @@ export function useRemoveFromCart() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (productId: string) => {
+        mutationFn: async (productId: number) => {
             const res = await removeFromCart({ product_id: productId });
 
             return res.data;
