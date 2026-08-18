@@ -116,6 +116,8 @@ class ProductService
     public function baseCategoryQuery(Request $request)
     {
         $query = Product::query();
+        $query->whereNotNull('last_enrichment_at');
+        $query->whereNotNull('ai_texts_at');
 
         $slugArray = $request->category;
         $lastSlug = end($slugArray);

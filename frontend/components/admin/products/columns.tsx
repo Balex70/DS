@@ -34,6 +34,10 @@ export const columns = ({
   onDelete: (product: Product) => void
 }): ColumnDef<Product>[] => [
   {
+    accessorKey: "id",
+    header: "ID",
+  },
+  {
     id: "enrich",
     header: "Enrich",
     cell: ({ row }) => {
