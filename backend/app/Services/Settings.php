@@ -9,6 +9,14 @@ class Settings
             'type' => 'string',
             'default' => 'My Store',
         ],
+        'store.fe_email' => [
+            'type' => 'string',
+            'default' => null,
+        ],
+        'store.fe_phone' => [
+            'type' => 'string',
+            'default' => null,
+        ],
 
         // 'checkout.guest_checkout' => [
         //     'type' => 'boolean',
@@ -25,6 +33,15 @@ class Settings
         //     'default' => 50.00,
         // ],
 
+        'product_sync.allow_cron_sync' => [
+            'type' => 'boolean',
+            'default' => false,
+        ],
+
+        'product_sync.allow_cron_enrichment' => [
+            'type' => 'boolean',
+            'default' => false,
+        ],
         'product_sync.max_pages_allowed' => [
             'type' => 'integer',
             'default' => 2,
@@ -32,6 +49,10 @@ class Settings
         'product_sync.time_since_last_update' => [
             'type' => 'integer',
             'default' => 48,
+        ],
+        'currency_sync.allow_cron_sync' => [
+            'type' => 'boolean',
+            'default' => false,
         ],
     ];
 }

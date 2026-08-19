@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
     'add_mark_status', 'raw_data',
     'is_collect', 'warehouse_inventory_num',
     'last_enrichment_at', 'description_processed',
+    'enrichment_failed_at', 'enrichment_error',
     'ai_texts_at', 'ai_status',
 ])]
 class Product extends Model

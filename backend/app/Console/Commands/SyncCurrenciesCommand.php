@@ -2,16 +2,16 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\EnrichProductJob;
+use App\Jobs\SyncCurrenciesJob;
 use App\Services\SettingService;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-#[Signature('app:enrich-product')]
-#[Description('Enrich product')]
-class EnrichProductCommand extends Command
+#[Signature('app:sync-currencies')]
+#[Description('Sync currencies')]
+class SyncCurrenciesCommand extends Command
 {
     public function __construct(
         private SettingService $setting
@@ -24,17 +24,17 @@ class EnrichProductCommand extends Command
      */
     public function handle()
     {
-        if (! $this->setting->get('product_sync.allow_cron_enrichment')) {
-            $this->info('Product enrichment is disabled.');
-            Log::info('Product enrichment is disabled.');
+        if (! $this->setting->get('currency_sync.allow_cron_sync')) {
+            $this->info('Currencies sync is disabled.');
+            Log::info('Currencies sync is disabled.');
 
             return self::SUCCESS;
         }
 
-        EnrichProductJob::dispatch();
+        SyncCurrenciesJob::dispatch();
 
-        $this->info('Enrich product job dispatched!');
-        Log::info('Enrich product job dispatched!');
+        $this->info('Sync currencies job dispatched!');
+        Log::info('Sync currencies job dispatched!');
 
         return self::SUCCESS;
     }

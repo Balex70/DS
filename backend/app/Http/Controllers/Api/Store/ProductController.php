@@ -81,6 +81,13 @@ class ProductController extends Controller
 
     public function show(Request $request, Product $product)
     {
+        abort_unless(
+            $product->last_enrichment_at !== null
+                && $product->ai_texts_at !== null
+                && $product->enrichment_failed_at === null,
+            404
+        );
+
         $product->load([
             'variants' => fn ($query) => $query
                 ->with('image', 'translations')
@@ -151,7 +158,8 @@ class ProductController extends Controller
     {
         $query = Product::query();
         $query->whereNotNull('last_enrichment_at');
-        $query->where('ai_status', 'done');
+        $query->whereNotNull('ai_texts_at');
+        $query->whereNull('enrichment_failed_at');
         $query->whereHas('categories', function ($q) {
             $q->where('is_visible', true);
         });

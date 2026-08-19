@@ -34,6 +34,9 @@ class SearchController extends Controller
 
         return Cache::remember($cacheKey, 30, function () use ($search, $request) {
             $products = Product::query()
+                ->whereNotNull('last_enrichment_at')
+                ->whereNotNull('ai_texts_at')
+                ->whereNull('enrichment_failed_at')
                 ->with(['variants'])
                 ->select(['id', 'name_raw', 'name_processed', 'price', 'slug'])
                 ->where(function ($q) use ($search) {
@@ -57,6 +60,9 @@ class SearchController extends Controller
             }
 
             $categories = Category::query()
+                ->where('active', true)
+                ->where('is_visible', true)
+                ->with('translations')
                 ->select(['id', 'name', 'slug', 'full_path'])
                 ->where('name', 'ILIKE', "%{$search}%")
                 ->limit(5)

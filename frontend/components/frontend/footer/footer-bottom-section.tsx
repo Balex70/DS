@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useTranslations } from 'next-intl'
+import { useSettings } from "@/hooks/use-settings";
 
 function TrustImage({ src, alt }) {
     return (
@@ -16,6 +17,7 @@ function TrustImage({ src, alt }) {
 }
 
 export default function FooterBottomSection() {
+    const { data: settings } = useSettings();
     const t = useTranslations('frontend')
 
     return (
@@ -23,7 +25,11 @@ export default function FooterBottomSection() {
             <div className="flex flex-col items-center justify-between mt-2 gap-2 lg:flex-row">
                 {/* Copyright */}
                 <p className="text-center text-xs text-muted-foreground lg:text-left">
-                    © {new Date().getFullYear()} {t('footer.copyright')}
+                    © {new Date().getFullYear()}
+                    {' ' + t('footer.copyright')}
+                    {settings?.["store.name"] && settings?.["store.name"] !== '' &&
+                        ' - ' + settings?.["store.name"]
+                    }
                 </p>
 
                 {/* Payment / Trust */}

@@ -22,7 +22,17 @@ class ProductService
     {
         $provider = $this->manager->driver();
 
-        $productDetails = $provider->getProductDetails($productToEnrich->external_id);
+        try {
+            $productDetails = $provider->getProductDetails($productToEnrich->external_id);
+        } catch (\Throwable $e) {
+            $productToEnrich->update([
+                'enrichment_failed_at' => now(),
+                'enrichment_error' => $e->getMessage(),
+            ]);
+
+            return;
+        }
+
         $mappedDetails = $this->mapper->mapDetail($productDetails, $productToEnrich->toArray());
 
         DB::transaction(function () use ($productToEnrich, $mappedDetails) {
@@ -116,6 +126,9 @@ class ProductService
     public function baseCategoryQuery(Request $request)
     {
         $query = Product::query();
+        $query->whereNotNull('last_enrichment_at');
+        $query->whereNotNull('ai_texts_at');
+        $query->whereNull('enrichment_failed_at');
 
         $slugArray = $request->category;
         $lastSlug = end($slugArray);
@@ -124,6 +137,9 @@ class ProductService
         if ($request->filled('category')) {
             $query->whereHas('categories', function ($q) use ($slugs) {
                 $q->whereIn('slug', $slugs);
+            })
+            ->whereHas('categories', function ($q) {
+                $q->where('is_visible', true);
             });
         }
 

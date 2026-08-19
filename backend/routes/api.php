@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Store\OrderController as StoreOrderController;
 use App\Http\Controllers\Api\Store\PaymentController as StorePaymentController;
 use App\Http\Controllers\Api\Store\ProductController as StoreProductController;
 use App\Http\Controllers\Api\Store\SearchController as StoreSearchController;
+use App\Http\Controllers\Api\Store\SettingController as StoreSettingController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Middleware\EnsureCartToken;
 use Illuminate\Http\Request;
@@ -123,4 +124,7 @@ Route::prefix('store')->group(function () {
     // Search
     Route::get('search', [StoreSearchController::class, 'search']);
     Route::get('full-search', [StoreSearchController::class, 'fullSearch']);
+
+    // Settings
+    Route::get('settings', [StoreSettingController::class, 'index']);
 });

@@ -3,6 +3,7 @@
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from 'next-intl'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useSettings } from "@/hooks/use-settings";
 
 const footerMainSections = [
   {
@@ -33,7 +34,9 @@ const footerMainSections = [
 ];
 
 const AddressSection = () => {
+    const { data: settings } = useSettings();
     const t = useTranslations('frontend')
+
     return (
         <address className="not-italic">
             <h3 className="hidden md:block mb-4 text-sm font-semibold uppercase tracking-wide">
@@ -41,22 +44,26 @@ const AddressSection = () => {
             </h3>
 
             <ul className="space-y-3 text-sm text-muted-foreground">
-                <li>
-                    <a
-                    href="mailto:support@example.com"
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground !no-underline !hover:no-underline"
-                    >
-                    support@example.com
-                    </a>
-                </li>
-                <li>
-                    <a
-                    href="tel:+10000000000"
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground !no-underline !hover:no-underline"
-                    >
-                    +1 (000) 000-0000
-                    </a>
-                </li>
+                {settings?.["store.fe_email"] && settings?.["store.fe_email"] !== '' &&
+                    <li>
+                        <a
+                        href={'mailto:' + settings?.["store.fe_email"]}
+                        className="text-sm text-muted-foreground transition-colors hover:text-foreground !no-underline !hover:no-underline"
+                        >
+                            {settings?.["store.fe_email"]}
+                        </a>
+                    </li>
+                }
+                {settings?.["store.fe_phone"] && settings?.["store.fe_phone"] !== '' &&
+                    <li>
+                        <a
+                        href={'tel:' + settings?.["store.fe_phone"]}
+                        className="text-sm text-muted-foreground transition-colors hover:text-foreground !no-underline !hover:no-underline"
+                        >
+                            {settings?.["store.fe_phone"]}
+                        </a>
+                    </li>
+                }
                 <li>
                     <div className="text-sm font-normal text-foreground">
                     {t('footer.working_hours')}

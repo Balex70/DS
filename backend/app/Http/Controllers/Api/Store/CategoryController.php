@@ -48,7 +48,8 @@ class CategoryController extends Controller
 
             $productsQuery = Product::query()
                 ->whereNotNull('last_enrichment_at')
-                ->where('ai_status', 'done')
+                ->whereNotNull('ai_texts_at')
+                ->whereNull('enrichment_failed_at')
                 ->whereHas('categories', function ($q) use ($slugs) {
                     $q->whereIn('slug', $slugs);
                 })

@@ -37,6 +37,18 @@ export function ProductDrawerSecondaryFields({product}: {product: Product}) {
                 {product.last_enrichment_at ? format(new Date(product.last_enrichment_at), "PPpp") : "No"}
             </div>
         </Field>
+        <Field>
+            <FieldLabel>Enrichment Failed</FieldLabel>
+            <div className="text-md text-muted-foreground">
+                {product.enrichment_failed_at ? format(new Date(product.enrichment_failed_at), "PPpp") : "No"}
+            </div>
+        </Field>
+        <Field>
+            <FieldLabel>Enrichment Error</FieldLabel>
+            <div className="text-md text-muted-foreground">
+                {product.enrichment_error ? product.enrichment_error : "No"}
+            </div>
+        </Field>
     </FieldGroup>
   )
 }

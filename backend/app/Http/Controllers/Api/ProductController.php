@@ -40,9 +40,26 @@ class ProductController extends Controller
             });
         }
 
+        $outdatedDate = now()->subWeeks(8);
         // ENRICHED FILTER
         if ($request->filled('enriched')) {
-            $query->whereNotNull('last_enrichment_at');
+            $query
+                ->whereNotNull('last_enrichment_at')
+                ->where('last_enrichment_at', '>', $outdatedDate);
+        }
+
+        // OUTDATED FILTER
+        if ($request->filled('outdated')) {
+            $query->where(function ($q) use ($outdatedDate) {
+                $q->whereNull('last_enrichment_at')
+                ->orWhere('last_enrichment_at', '<', $outdatedDate);
+            })
+            ->whereNull('enrichment_failed_at');
+        }
+
+        // ENRICHMENT FAILED FILTER
+        if ($request->filled('enrichedFailed')) {
+            $query->whereNotNull('enrichment_failed_at');
         }
 
         // AI TEXTS FILTER

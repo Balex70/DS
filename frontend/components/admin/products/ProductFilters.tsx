@@ -20,10 +20,14 @@ type Props = {
     open: boolean
     onOpenChange: (open: boolean) => void
     enriched: string | null
+    outdated: string | null
+    enrichedFailed: string | null
     aiTextsProcessed: string | null
     aiImagesProcessed: string | null
     categoryIds: number[];
     onEnrichedChange: (value: string | null) => void
+    onOutdatedChange: (value: string | null) => void
+    onEnrichedFailedChange: (value: string | null) => void
     onAiTextsProcessedChange: (value: string | null) => void
     onAiImagesProcessedChange: (value: string | null) => void
     onCategoryIdsChange: (value: number[]) => void;
@@ -33,10 +37,14 @@ export function ProductFilters({
     open,
     onOpenChange,
     enriched,
+    outdated,
+    enrichedFailed,
     aiTextsProcessed,
     aiImagesProcessed,
     categoryIds,
     onEnrichedChange,
+    onOutdatedChange,
+    onEnrichedFailedChange,
     onAiTextsProcessedChange,
     onAiImagesProcessedChange,
     onCategoryIdsChange,
@@ -54,6 +62,16 @@ export function ProductFilters({
             label: "Enriched",
             onClick: () => onEnrichedChange(null),
             color: "blue",
+        },
+        outdated && {
+            label: "Outdated",
+            onClick: () => onOutdatedChange(null),
+            color: "yellow",
+        },
+        enrichedFailed && {
+            label: "Enriched Failed",
+            onClick: () => onEnrichedFailedChange(null),
+            color: "red",
         },
         aiTextsProcessed && {
             label: "AI Texts",
@@ -95,6 +113,36 @@ export function ProductFilters({
                                 />
                                 <Label htmlFor="enriched">
                                     Enriched
+                                </Label>
+                            </Field>
+
+                            <Field orientation="horizontal">
+                                <Checkbox
+                                    id="outdated"
+                                    checked={outdated === "outdated"}
+                                    onCheckedChange={(checked) =>
+                                        onOutdatedChange(
+                                            checked ? "outdated" : null
+                                        )
+                                    }
+                                />
+                                <Label htmlFor="outdated">
+                                    Outdated
+                                </Label>
+                            </Field>
+
+                            <Field orientation="horizontal">
+                                <Checkbox
+                                    id="enrichedFailed"
+                                    checked={enrichedFailed === "enrichedFailed"}
+                                    onCheckedChange={(checked) =>
+                                        onEnrichedFailedChange(
+                                            checked ? "enrichedFailed" : null
+                                        )
+                                    }
+                                />
+                                <Label htmlFor="enrichedFailed">
+                                    Enriched Failed
                                 </Label>
                             </Field>
 
