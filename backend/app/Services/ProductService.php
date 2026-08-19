@@ -137,6 +137,9 @@ class ProductService
         if ($request->filled('category')) {
             $query->whereHas('categories', function ($q) use ($slugs) {
                 $q->whereIn('slug', $slugs);
+            })
+            ->whereHas('categories', function ($q) {
+                $q->where('is_visible', true);
             });
         }
 

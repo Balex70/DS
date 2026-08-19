@@ -158,7 +158,8 @@ class ProductController extends Controller
     {
         $query = Product::query();
         $query->whereNotNull('last_enrichment_at');
-        $query->where('ai_status', 'done');
+        $query->whereNotNull('ai_texts_at');
+        $query->whereNull('enrichment_failed_at');
         $query->whereHas('categories', function ($q) {
             $q->where('is_visible', true);
         });
