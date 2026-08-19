@@ -34,6 +34,7 @@ class EnrichProductCommand extends Command
         EnrichProductJob::dispatch();
 
         $this->info('Enrich product job dispatched!');
+        Log::info('Enrich product job dispatched!');
 
         return self::SUCCESS;
     }

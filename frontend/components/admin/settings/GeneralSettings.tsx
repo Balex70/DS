@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { getSettings } from "@/lib/api/settings";
 import { getCookie, getErrorStringFromCatch } from "@/helpers/general"
 import { Settings } from "@/types/settings";
+import { Switch } from "@/components/ui/switch";
 
 export default function GeneralSettings() {
     const [settings, setSettings] = useState<Settings | null>(null);
@@ -151,21 +152,21 @@ export default function GeneralSettings() {
                 />
             </div>
 
-            {/* <div className="flex items-center justify-between rounded-lg border p-4">
-            <div className="space-y-0.5">
-                <Label>Guest checkout</Label>
-                <p className="text-sm text-muted-foreground">
-                Allow customers to checkout without creating an account.
-                </p>
-            </div>
+            <div className="flex items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                    <Label>Allow products cron sync</Label>
+                    <p className="text-sm text-muted-foreground">
+                        Allow products sync using cron job via command SyncCategoriesProductsCommand (php artisan app:sync-products)
+                    </p>
+                </div>
 
-            <Switch
-                checked={settings["checkout.guest_checkout"]}
-                onCheckedChange={(checked) =>
-                updateSetting("checkout.guest_checkout", checked)
-                }
-            />
-            </div> */}
+                <Switch
+                    checked={settings["product_sync.allow_cron_sync"]}
+                    onCheckedChange={(checked) =>
+                    updateSetting("product_sync.allow_cron_sync", checked)
+                    }
+                />
+            </div>
 
             <div className="space-y-2">
                 <Label htmlFor="product-sync-max-pages">
@@ -198,6 +199,22 @@ export default function GeneralSettings() {
                         "product_sync.time_since_last_update",
                         Number(e.target.value)
                     )
+                    }
+                />
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                    <Label>Allow products enrichment</Label>
+                    <p className="text-sm text-muted-foreground">
+                        Allow products enrichment using cron job via command EnrichProductCommand (php artisan app:enrich-product)
+                    </p>
+                </div>
+
+                <Switch
+                    checked={settings["product_sync.allow_cron_enrichment"]}
+                    onCheckedChange={(checked) =>
+                    updateSetting("product_sync.allow_cron_enrichment", checked)
                     }
                 />
             </div>

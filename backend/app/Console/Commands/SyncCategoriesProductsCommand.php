@@ -34,6 +34,7 @@ class SyncCategoriesProductsCommand extends Command
         SyncCategoriesProductsJob::dispatch();
 
         $this->info('Sync categories products job dispatched!');
+        Log::info('Sync categories products job dispatched!');
 
         return self::SUCCESS;
     }
