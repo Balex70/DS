@@ -128,6 +128,7 @@ class ProductService
         $query = Product::query();
         $query->whereNotNull('last_enrichment_at');
         $query->whereNotNull('ai_texts_at');
+        $query->whereNull('enrichment_failed_at');
 
         $slugArray = $request->category;
         $lastSlug = end($slugArray);

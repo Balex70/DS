@@ -36,6 +36,7 @@ class SearchController extends Controller
             $products = Product::query()
                 ->whereNotNull('last_enrichment_at')
                 ->whereNotNull('ai_texts_at')
+                ->whereNull('enrichment_failed_at')
                 ->with(['variants'])
                 ->select(['id', 'name_raw', 'name_processed', 'price', 'slug'])
                 ->where(function ($q) use ($search) {
