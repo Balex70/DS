@@ -50,5 +50,9 @@ class Settings
             'type' => 'integer',
             'default' => 48,
         ],
+        'currency_sync.allow_cron_sync' => [
+            'type' => 'boolean',
+            'default' => false,
+        ],
     ];
 }

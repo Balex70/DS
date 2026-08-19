@@ -219,24 +219,21 @@ export default function GeneralSettings() {
                 />
             </div>
 
-            {/* <div className="space-y-2">
-            <Label htmlFor="free-shipping">
-                Free shipping threshold
-            </Label>
+            <div className="flex items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                    <Label>Allow sync currencies</Label>
+                    <p className="text-sm text-muted-foreground">
+                        Allow syncing currencies using cron job via command SyncCurrenciesCommand (php artisan app:sync-currencies)
+                    </p>
+                </div>
 
-            <Input
-                id="free-shipping"
-                type="number"
-                step="0.01"
-                value={settings["shipping.free_shipping_threshold"]}
-                onChange={(e) =>
-                updateSetting(
-                    "shipping.free_shipping_threshold",
-                    Number(e.target.value)
-                )
-                }
-            />
-            </div> */}
+                <Switch
+                    checked={settings["currency_sync.allow_cron_sync"]}
+                    onCheckedChange={(checked) =>
+                    updateSetting("currency_sync.allow_cron_sync", checked)
+                    }
+                />
+            </div>
         </div>
 
         <div className="flex justify-end">
