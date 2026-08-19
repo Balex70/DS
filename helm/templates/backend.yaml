@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-backend
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Release.Name }}-backend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-backend
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-backend
+    spec:
+      volumes:
+        - name: {{ .Release.Name }}-backend-pv-storage
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-backend-pvc
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.backend.port }}
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}-secrets
+          volumeMounts:
+            - mountPath: "/backend/storage"
+              name: {{ .Release.Name }}-backend-pv-storage
+
+# PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-backend-pvc
+  namespace: {{ .Values.namespace }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-backend-service
+  namespace: {{ .Values.namespace }}
+spec:
+  type: {{ .Values.service.backend.type }}
+  selector:
+    app: {{ .Release.Name }}-backend
+  ports:
+    - port: {{ .Values.service.backend.port }}
+      targetPort: {{ .Values.backend.port }}
