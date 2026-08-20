@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-queue
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Release.Name }}-queue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-queue
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-queue
+    spec:
+      containers:
+        - name: queue
+          image: "{{ .Values.queue.image.repository }}:{{ .Values.queue.image.tag }}"
+          imagePullPolicy: {{ .Values.queue.image.pullPolicy }}
+          command:
+            {{- toYaml .Values.queue.command | nindent 12 }}
+          args:
+            {{- toYaml .Values.queue.args | nindent 12 }}
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}-be-secrets
