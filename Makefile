@@ -213,8 +213,11 @@ get-ingress:
 get-cert:
 	@ bin/kctl get certificate
 
-create-env-secrets:
-	@ bin/kctl create secret generic $(RELEASE)-secrets --from-env-file=web/.env --dry-run=client -o yaml | bin/kctl apply -f -
+create-be-env-secrets:
+	@ bin/kctl create secret generic $(RELEASE)-be-secrets --from-env-file=backend/.env --dry-run=client -o yaml | bin/kctl apply -f -
+
+create-fe-env-secrets:
+	@ bin/kctl create secret generic $(RELEASE)-fe-secrets --from-env-file=frontend/.env --dry-run=client -o yaml | bin/kctl apply -f -
 # KUBECTL END
 
 # HELM START

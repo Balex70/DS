@@ -31,9 +31,6 @@ frontend:
     tag: latest                 # local tag
     pullPolicy: IfNotPresent
   env:
-    # DATABASE_URI: postgres://user:password@ds-postgres:5432/ds
-    # PAYLOAD_SECRET: 4c0bc2c71471e4ec14f870794cb860734172509e1f202ef9e55ae721ae7a3ad7
-    NEXT_PUBLIC_BACKEND_URL: http://backend:8000/api
     NODE_ENV: development
   port: 3000                     # port the frontend app container exposes
 
@@ -130,7 +127,10 @@ securityContext: {}
 service:
   backend:
     type: ClusterIP
-    port: 80
+    port: 8000
+  frontend:
+    type: ClusterIP
+    port: 3000
   db:
     type: ClusterIP
     port: 5432

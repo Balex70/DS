@@ -23,7 +23,7 @@ spec:
             - containerPort: {{ .Values.frontend.port }}
           envFrom:
             - secretRef:
-                name: {{ .Release.Name }}-secrets
+                name: {{ .Release.Name }}-fe-secrets
 
 # Service
 apiVersion: v1

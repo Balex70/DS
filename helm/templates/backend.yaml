@@ -23,13 +23,14 @@ spec:
         - name: backend
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          command: {{ toYaml .Values.backend.command | nindent 12 }}
           ports:
             - containerPort: {{ .Values.backend.port }}
           envFrom:
             - secretRef:
-                name: {{ .Release.Name }}-secrets
+                name: {{ .Release.Name }}-be-secrets
           volumeMounts:
-            - mountPath: "/backend/storage"
+            - mountPath: "/app/storage/app/public"
               name: {{ .Release.Name }}-backend-pv-storage
 
 # PVC
