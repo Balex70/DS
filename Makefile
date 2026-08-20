@@ -16,7 +16,7 @@ DOCKER_FE_CONTAINER=$(shell docker compose ps --quiet frontend)
 DOCKER_COMPOSE=docker compose
 DOCKER_COMPOSE_PROD = docker compose -f docker-compose.yml -f docker-compose.prod.yml
 DOCKER_COMPOSE_CI=docker compose -f docker-compose.ci.yml
-DOCKER_COMPOSE_KUBE=docker-compose -f docker-compose.kube.yml # use docker compose in local
+DOCKER_COMPOSE_KUBE=docker-compose --env-file frontend/.env.kube -f docker-compose.kube.yml # use docker compose in local
 
 show-config:
 	$(DOCKER_COMPOSE) config
@@ -105,6 +105,9 @@ RELEASE=ds
 # KUBECTL START
 kube-build:
 	$(DOCKER_COMPOSE_KUBE) build --no-cache
+
+create-namespace:
+	@ bin/kctl create namespace $(KUBE_NAMESPACE)
 
 backend-pod:
 	@ export BACKEND_POD_NAME=$(shell bin/kctl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=ds-backend); \
@@ -235,7 +238,7 @@ create-be-env-secrets:
 	@ bin/kctl create secret generic $(RELEASE)-be-secrets --from-env-file=backend/.env --dry-run=client -o yaml | bin/kctl apply -f -
 
 create-fe-env-secrets:
-	@ bin/kctl create secret generic $(RELEASE)-fe-secrets --from-env-file=frontend/.env --dry-run=client -o yaml | bin/kctl apply -f -
+	@ bin/kctl create secret generic $(RELEASE)-fe-secrets --from-env-file=frontend/.env.kube --dry-run=client -o yaml | bin/kctl apply -f -
 # KUBECTL END
 
 # HELM START
@@ -244,9 +247,7 @@ helm-prod-down:
 	@bin/kctl delete secret $(RELEASE)-be-secrets --ignore-not-found
 	@bin/kctl delete secret $(RELEASE)-fe-secrets --ignore-not-found
 
-helm-prod-up:
-	@ create-be-env-secrets
-	@ create-fe-env-secrets
+helm-prod-up: create-be-env-secrets create-fe-env-secrets
 	@ bin/helm install $(RELEASE) ./helm -f ./helm/values-prod.yaml
 
 helm-local-down:
@@ -254,9 +255,7 @@ helm-local-down:
 	@bin/kctl delete secret $(RELEASE)-be-secrets --ignore-not-found
 	@bin/kctl delete secret $(RELEASE)-fe-secrets --ignore-not-found
 
-helm-local-up:
-	@ create-be-env-secrets
-	@ create-fe-env-secrets
+helm-local-up: create-be-env-secrets create-fe-env-secrets
 	@ bin/helm install $(RELEASE) ./helm -f ./helm/values-local.yaml
 
 helm-get-releases:

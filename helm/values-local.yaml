@@ -5,24 +5,25 @@ namespace: local-ds
 backend:
   image:
     tag: 0.0.1                 # local tag
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
 frontend:
   image:
     tag: 0.0.1                 # local tag
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
   env:
+    NEXT_PUBLIC_CORE_API_ENTRYPOINT: https://ds.local/api
     NODE_ENV: production
     
 queue:
   image:
     tag: 0.0.1
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
     
 cron:
   image:
     tag: 0.0.1
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
 letsEncrypt:
   ## Possible values:

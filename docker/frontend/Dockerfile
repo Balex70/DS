@@ -31,6 +31,8 @@ CMD ["npm", "run", "dev"]
 
 # --- Builder stage ---
 FROM node:${NODE_VERSION}-slim  AS builder
+ARG NEXT_PUBLIC_CORE_API_ENTRYPOINT
+ENV NEXT_PUBLIC_CORE_API_ENTRYPOINT=$NEXT_PUBLIC_CORE_API_ENTRYPOINT
 
 WORKDIR /frontend
 
