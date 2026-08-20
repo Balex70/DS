@@ -115,7 +115,7 @@ pods:
 	@ bin/kctl get pods
 
 port-forward:
-	@ bin/kctl port-forward svc/$(RELEASE)-frontend-service 3000:80
+	@ bin/kctl port-forward svc/$(RELEASE)-frontend-service 3000:3000
 
 describe-backend:
 	@ bin/kctl describe pod $(RELEASE)-backend
@@ -124,13 +124,25 @@ describe-frontend:
 	@ bin/kctl describe pod $(RELEASE)-frontend
 
 describe-db:
-	@ bin/kctl describe pod $(RELEASE)-postgres
+	@ bin/kctl describe pod $(RELEASE)-db
+
+describe-redis:
+	@ bin/kctl describe pod $(RELEASE)-redis
+
+describe-queue:
+	@ bin/kctl describe pod $(RELEASE)-queue
+
+describe-cron:
+	@ bin/kctl describe pod $(RELEASE)-cron
 
 describe-migration:
 	@ bin/kctl describe pod $(RELEASE)-migration
 
-describe-secrets:
-	@ bin/kctl describe secret $(RELEASE)-secrets
+describe-be-secrets:
+	@bin/kctl describe secret $(RELEASE)-be-secrets
+
+describe-fe-secrets:
+	@bin/kctl describe secret $(RELEASE)-fe-secret
 
 describe-backend-service:
 	@ bin/kctl describe services $(RELEASE)-backend-service
@@ -183,8 +195,11 @@ svc-backend:
 svc-frontend:
 	@ bin/kctl get svc $(RELEASE)-frontend-service -o yaml
 
-svc-postgres:
-	@ bin/kctl get svc $(RELEASE)-postgres -o yaml
+svc-db:
+	@ bin/kctl get svc $(RELEASE)-db -o yaml
+
+svc-redis:
+	@ bin/kctl get svc $(RELEASE)-redis -o yaml
 
 log-backend:
 	@ export BACKEND_POD_NAME=$(shell bin/kctl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=ds-backend); \
@@ -223,32 +238,44 @@ create-fe-env-secrets:
 # HELM START
 helm-prod-down:
 	@ bin/helm uninstall $(RELEASE)
-	@ bin/kctl delete secret $(RELEASE)-secrets
+	@bin/kctl delete secret $(RELEASE)-be-secrets --ignore-not-found
+	@bin/kctl delete secret $(RELEASE)-fe-secrets --ignore-not-found
 
-helm-prod-up: create-env-secrets
+helm-prod-up:
+	@ create-be-env-secrets
+	@ create-fe-env-secrets
 	@ bin/helm install $(RELEASE) ./helm -f ./helm/values-prod.yaml
 
 helm-dev-down:
 	@ bin/helm uninstall $(RELEASE)
-	@ bin/kctl delete secret $(RELEASE)-secrets
+	@bin/kctl delete secret $(RELEASE)-be-secrets --ignore-not-found
+	@bin/kctl delete secret $(RELEASE)-fe-secrets --ignore-not-found
 
-helm-dev-up: create-env-secrets
+helm-dev-up:
+	@ create-be-env-secrets
+	@ create-fe-env-secrets
 	@ bin/helm install $(RELEASE) ./helm -f ./helm/values-dev.yaml
 
 helm-get-releases:
 	@ bin/helm list
 
-helm-prod-upgrade: create-env-secrets
+# create-be-env-secrets create-fe-env-secrets should be put like that, so they run and finish before upgrade
+helm-prod-upgrade: create-be-env-secrets create-fe-env-secrets
 	@ bin/helm upgrade $(RELEASE) ./helm -f ./helm/values-prod.yaml --atomic --wait --timeout 5m
-	@ bin/kctl rollout restart deployment/$(RELEASE)-backend
-	@ bin/kctl rollout restart deployment/$(RELEASE)-frontend
-	@ bin/kctl rollout restart deployment/$(RELEASE)-ds
+# 	@ bin/kctl rollout restart deployment/$(RELEASE)-backend
+# 	@ bin/kctl rollout restart deployment/$(RELEASE)-frontend
+# 	@ bin/kctl rollout restart deployment/$(RELEASE)-db
+# 	@ bin/kctl rollout restart deployment/$(RELEASE)-queue
+# 	@ bin/kctl rollout restart deployment/$(RELEASE)-cron
 
-helm-dev-upgrade: create-env-secrets
+# create-be-env-secrets create-fe-env-secrets should be put like that, so they run and finish before upgrade
+helm-dev-upgrade: create-be-env-secrets create-fe-env-secrets
 	@ bin/helm upgrade $(RELEASE) ./helm -f ./helm/values-dev.yaml --atomic --wait --timeout 5m
-	@ bin/kctl rollout restart deployment/$(RELEASE)-backend
-	@ bin/kctl rollout restart deployment/$(RELEASE)-frontend
-	@ bin/kctl rollout restart deployment/$(RELEASE)-ds
+# 	@ bin/kctl rollout restart deployment/$(RELEASE)-backend
+# 	@ bin/kctl rollout restart deployment/$(RELEASE)-frontend
+# 	@ bin/kctl rollout restart deployment/$(RELEASE)-db
+# 	@ bin/kctl rollout restart deployment/$(RELEASE)-queue
+# 	@ bin/kctl rollout restart deployment/$(RELEASE)-cron
 
 helm-namespaces:
 	@ bin/helm list -A

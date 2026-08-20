@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}-migration
   namespace: {{ .Values.namespace }}
   annotations:
-    "helm.sh/hook": post-upgrade
+    "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-delete-policy": hook-succeeded
 spec:
   backoffLimit: 3
@@ -14,20 +14,34 @@ spec:
         app: {{ .Release.Name }}-migration
     spec:
       restartPolicy: Never
-      containers:
-        - name: migration
-          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+      initContainers:
+        - name: wait-for-db
+          image: postgres:17
           command:
             - sh
             - -c
             - |
-              # Wait for DB (Postgres) service to be ready
-              until nc -z {{ .Release.Name }}-db 5432; do
-                echo "Waiting for DB (Postgres)..."
+              until pg_isready \
+                -h {{ .Release.Name }}-db \
+                -p {{ .Values.db.port }} \
+                -U "$DB_USERNAME" \
+                -d "$DB_DATABASE"
+              do
+                echo "Waiting for PostgreSQL..."
                 sleep 2
               done
-              # Run migration
-              php artisan migrate
+
           envFrom:
             - secretRef:
-                name: {{ .Release.Name }}-secrets
+                name: {{ .Release.Name }}-be-secrets
+      containers:
+        - name: migration
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          command:
+            - php
+            - artisan
+            - migrate
+            - --force
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}-be-secrets
