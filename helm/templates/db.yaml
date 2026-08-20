@@ -24,7 +24,7 @@ spec:
             - containerPort: {{ .Values.db.port }}
           envFrom:
             - secretRef:
-                name: {{ .Release.Name }}-secrets
+                name: {{ .Release.Name }}-be-secrets
           volumeMounts:
             - name: db-storage
               mountPath: {{ .Values.db.volumeMountPath }}

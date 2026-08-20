@@ -40,7 +40,6 @@ db:
     repository: postgres
     tag: "15"
   port: 5432                     # container port
-  volumeName: postgres-data      # persistent volume name
   volumeMountPath: /var/lib/postgresql/data
 
 redis:
