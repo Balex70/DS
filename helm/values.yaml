@@ -46,6 +46,7 @@ redis:
   image:
     repository: redis
     tag: alpine
+    pullPolicy: IfNotPresent
   port: 6379
   
 queue:
@@ -133,6 +134,8 @@ service:
   db:
     type: ClusterIP
     port: 5432
+  redis:
+    type: ClusterIP
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
