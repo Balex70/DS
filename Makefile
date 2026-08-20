@@ -94,6 +94,9 @@ testo:
 lint:
 	$(DOCKER_COMPOSE) exec frontend /bin/sh -c "npm run lint"
 
+type-check:
+	$(DOCKER_COMPOSE) exec frontend /bin/sh -c "npm run type-check"
+
 #################################################################
 #####                   #kubernetes                         #####
 #################################################################
