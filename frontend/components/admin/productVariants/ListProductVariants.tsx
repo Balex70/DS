@@ -10,7 +10,7 @@ import { getErrorStringFromCatch } from '@/helpers/general';
 import NotFoundCard from '@/components/common/NotFoundCard';
 import { ProductVariantPagination } from './ProductVariantPagination';
 
-function ListProductVariants ({ productId }: {productId: string}) {
+function ListProductVariants ({ productId }: {productId: number}) {
   const [productVariants, setProductVariants] = useState<ProductVariant[]>([]);
   const [meta, setMeta] = useState<Meta | null>(null)
   const [page, setPage] = useState(1)
@@ -20,7 +20,7 @@ function ListProductVariants ({ productId }: {productId: string}) {
   const [error, setError] = useState<string | null>(null)
   
   const fetchProductVariants = async (params: {
-    productId: string,
+    productId: number,
     page?: number,
   }) => {
     try {

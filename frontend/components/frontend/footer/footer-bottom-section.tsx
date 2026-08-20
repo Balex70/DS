@@ -4,7 +4,12 @@ import Image from "next/image";
 import { useTranslations } from 'next-intl'
 import { useSettings } from "@/hooks/use-settings";
 
-function TrustImage({ src, alt }) {
+type TrustImageProps = {
+    src: string;
+    alt: string;
+};
+
+function TrustImage({ src, alt }: TrustImageProps) {
     return (
         <Image
             src={src}

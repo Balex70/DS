@@ -3,7 +3,7 @@ import { ProductDetail } from "@/components/frontend/product/product-detail";
 export default async function ProductPage({
     params,
 }: {
-    params: { id: string };
+    params: { id: number };
 }) {
     const { id } = await params;
     return (
