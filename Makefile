@@ -249,15 +249,15 @@ helm-prod-up:
 	@ create-fe-env-secrets
 	@ bin/helm install $(RELEASE) ./helm -f ./helm/values-prod.yaml
 
-helm-dev-down:
+helm-local-down:
 	@ bin/helm uninstall $(RELEASE)
 	@bin/kctl delete secret $(RELEASE)-be-secrets --ignore-not-found
 	@bin/kctl delete secret $(RELEASE)-fe-secrets --ignore-not-found
 
-helm-dev-up:
+helm-local-up:
 	@ create-be-env-secrets
 	@ create-fe-env-secrets
-	@ bin/helm install $(RELEASE) ./helm -f ./helm/values-dev.yaml
+	@ bin/helm install $(RELEASE) ./helm -f ./helm/values-local.yaml
 
 helm-get-releases:
 	@ bin/helm list
@@ -272,8 +272,8 @@ helm-prod-upgrade: create-be-env-secrets create-fe-env-secrets
 # 	@ bin/kctl rollout restart deployment/$(RELEASE)-cron
 
 # create-be-env-secrets create-fe-env-secrets should be put like that, so they run and finish before upgrade
-helm-dev-upgrade: create-be-env-secrets create-fe-env-secrets
-	@ bin/helm upgrade $(RELEASE) ./helm -f ./helm/values-dev.yaml --atomic --wait --timeout 5m
+helm-local-upgrade: create-be-env-secrets create-fe-env-secrets
+	@ bin/helm upgrade $(RELEASE) ./helm -f ./helm/values-local.yaml --atomic --wait --timeout 5m
 # 	@ bin/kctl rollout restart deployment/$(RELEASE)-backend
 # 	@ bin/kctl rollout restart deployment/$(RELEASE)-frontend
 # 	@ bin/kctl rollout restart deployment/$(RELEASE)-db
@@ -289,8 +289,8 @@ helm-history:
 helm-debug:
 	@ bin/helm template ./helm --debug
 
-helm-debug-dev:
-	@ bin/helm template ./helm --debug -f ./helm/values-dev.yaml
+helm-debug-local:
+	@ bin/helm template ./helm --debug -f ./helm/values-local.yaml
 
 helm-debug-prod:
 	@ bin/helm template ./helm --debug -f ./helm/values-prod.yaml
