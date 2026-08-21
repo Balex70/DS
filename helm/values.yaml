@@ -54,6 +54,7 @@ queue:
     repository: localhost:32000/ds-backend
     tag: latest
     pullPolicy: IfNotPresent
+  workingDir: /app
   command:
     - php
     - artisan

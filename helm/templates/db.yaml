@@ -33,6 +33,7 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-db-pvc
 
+---
 # PVC
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -47,7 +48,8 @@ spec:
   resources:
     requests:
       storage: 10Gi
-      
+
+---
 # Service
 apiVersion: v1
 kind: Service

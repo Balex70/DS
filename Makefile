@@ -117,6 +117,18 @@ frontend-pod:
 	@ export FRONTEND_POD_NAME=$(shell bin/kctl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=ds-frontend); \
 	if [ "$$FRONTEND_POD_NAME" = "" ]; then echo "\e[1;31mFRONTEND Pod not exist!\e[0m"; else bin/kctl exec -ti $$FRONTEND_POD_NAME -- sh; fi
 
+queue-pod:
+	@ export QUEUE_POD_NAME=$(shell bin/kctl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=ds-queue); \
+	if [ "$$QUEUE_POD_NAME" = "" ]; then echo "\e[1;31mQUEUE Pod not exist!\e[0m"; else bin/kctl exec -ti $$QUEUE_POD_NAME -- sh; fi
+
+cron-pod:
+	@ export CRON_POD_NAME=$(shell bin/kctl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=ds-cron); \
+	if [ "$$CRON_POD_NAME" = "" ]; then echo "\e[1;31mCRON Pod not exist!\e[0m"; else bin/kctl exec -ti $$CRON_POD_NAME -- sh; fi
+
+# can be accessed without kubernetes running pods
+sh-backend-image:
+	docker run --rm -it --entrypoint sh localhost:32000/ds-backend:0.0.1
+
 pods:
 	@ bin/kctl get pods
 
@@ -215,6 +227,14 @@ log-frontend:
 	@ export FRONTEND_POD_NAME=$(shell bin/kctl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=ds-frontend); \
 	bin/kctl logs -f $$FRONTEND_POD_NAME
 
+log-cron:
+	@ export CRON_POD_NAME=$(shell bin/kctl get pods --selector=app=$(RELEASE)-cron -o jsonpath='{.items[0].metadata.name}'); \
+	if [ "$$CRON_POD_NAME" = "" ]; then echo "\e[1;31mCRON Pod does not exist!\e[0m"; else bin/kctl logs -f $$CRON_POD_NAME; fi
+
+log-cron-previous:
+	@ export CRON_POD_NAME=$(shell bin/kctl get pods --selector=app=$(RELEASE)-cron -o jsonpath='{.items[0].metadata.name}'); \
+	if [ "$$CRON_POD_NAME" = "" ]; then echo "\e[1;31mCRON Pod does not exist!\e[0m"; else bin/kctl logs $$CRON_POD_NAME --previous; fi
+
 get-jobs:
 	@ bin/kctl get jobs
 
@@ -235,7 +255,7 @@ get-cert:
 	@ bin/kctl get certificate
 
 create-be-env-secrets:
-	@ bin/kctl create secret generic $(RELEASE)-be-secrets --from-env-file=backend/.env --dry-run=client -o yaml | bin/kctl apply -f -
+	@ bin/kctl create secret generic $(RELEASE)-be-secrets --from-env-file=backend/.env.kube --dry-run=client -o yaml | bin/kctl apply -f -
 
 create-fe-env-secrets:
 	@ bin/kctl create secret generic $(RELEASE)-fe-secrets --from-env-file=frontend/.env.kube --dry-run=client -o yaml | bin/kctl apply -f -
@@ -244,16 +264,16 @@ create-fe-env-secrets:
 # HELM START
 helm-prod-down:
 	@ bin/helm uninstall $(RELEASE)
-	@bin/kctl delete secret $(RELEASE)-be-secrets --ignore-not-found
-	@bin/kctl delete secret $(RELEASE)-fe-secrets --ignore-not-found
+	@ bin/kctl delete secret $(RELEASE)-be-secrets --ignore-not-found
+	@ bin/kctl delete secret $(RELEASE)-fe-secrets --ignore-not-found
 
 helm-prod-up: create-be-env-secrets create-fe-env-secrets
 	@ bin/helm install $(RELEASE) ./helm -f ./helm/values-prod.yaml
 
 helm-local-down:
 	@ bin/helm uninstall $(RELEASE)
-	@bin/kctl delete secret $(RELEASE)-be-secrets --ignore-not-found
-	@bin/kctl delete secret $(RELEASE)-fe-secrets --ignore-not-found
+	@ bin/kctl delete secret $(RELEASE)-be-secrets --ignore-not-found
+	@ bin/kctl delete secret $(RELEASE)-fe-secrets --ignore-not-found
 
 helm-local-up: create-be-env-secrets create-fe-env-secrets
 	@ bin/helm install $(RELEASE) ./helm -f ./helm/values-local.yaml

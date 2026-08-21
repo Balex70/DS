@@ -19,6 +19,7 @@ spec:
         - name: queue
           image: "{{ .Values.queue.image.repository }}:{{ .Values.queue.image.tag }}"
           imagePullPolicy: {{ .Values.queue.image.pullPolicy }}
+          workingDir: {{ .Values.queue.workingDir }}
           command:
             {{- toYaml .Values.queue.command | nindent 12 }}
           args:

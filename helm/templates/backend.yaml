@@ -33,6 +33,7 @@ spec:
             - mountPath: "/app/storage/app/public"
               name: {{ .Release.Name }}-backend-pv-storage
 
+---
 # PVC
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -46,6 +47,7 @@ spec:
     requests:
       storage: 10Gi
 
+---
 # Service
 apiVersion: v1
 kind: Service

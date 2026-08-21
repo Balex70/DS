@@ -25,6 +25,7 @@ spec:
             - secretRef:
                 name: {{ .Release.Name }}-fe-secrets
 
+---
 # Service
 apiVersion: v1
 kind: Service
