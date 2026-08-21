@@ -23,7 +23,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
       'Cookie': cookieHeader
     };
 
-    const user = await fetch(`${process.env.CORE_API_ENTRYPOINT}/users/me`, {
+    const user = await fetch(`${process.env.CORE_API_ENTRYPOINT}/api/users/me`, {
         method: 'GET',
         credentials: 'include',
         headers: headers,

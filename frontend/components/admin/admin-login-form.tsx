@@ -49,7 +49,7 @@ export function AdminLoginForm({
           'X-XSRF-TOKEN': csrfToken!, // get the csrf token
       };
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/users/login`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/users/login`, {
           method: 'POST',
           credentials: 'include',
           headers: headers,
