@@ -135,6 +135,9 @@ pods:
 port-forward:
 	@ bin/kctl port-forward svc/$(RELEASE)-frontend-service 3000:3000
 
+port-db-forward:
+	@ bin/kctl port-forward svc/$(RELEASE)-db 5432:5432
+
 describe-backend:
 	@ bin/kctl describe pod $(RELEASE)-backend
 
