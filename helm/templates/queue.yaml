@@ -15,6 +15,10 @@ spec:
       labels:
         app: {{ .Release.Name }}-queue
     spec:
+      volumes:
+        - name: {{ .Release.Name }}-backend-pv-storage
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-backend-pvc
       containers:
         - name: queue
           image: "{{ .Values.queue.image.repository }}:{{ .Values.queue.image.tag }}"
@@ -27,3 +31,6 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ .Release.Name }}-be-secrets
+          volumeMounts:
+            - mountPath: "/app/storage/app/public"
+              name: {{ .Release.Name }}-backend-pv-storage
