@@ -262,6 +262,15 @@ create-be-env-secrets:
 
 create-fe-env-secrets:
 	@ bin/kctl create secret generic $(RELEASE)-fe-secrets --from-env-file=frontend/.env.kube --dry-run=client -o yaml | bin/kctl apply -f -
+
+ai-worker-token:
+	@bin/kctl exec -it $$(bin/kctl get pods --selector=app=$(RELEASE)-backend -o jsonpath='{.items[0].metadata.name}') -- \
+		php artisan tinker --execute="\
+		\$$user = \App\Models\User::firstOrCreate(\
+			['email' => 'ai-worker@local'], \
+			['name' => 'AI Worker', 'password' => \Illuminate\Support\Facades\Hash::make(\Illuminate\Support\Str::random(32))]\
+		); \
+		echo \$$user->createToken('ai-worker-token')->plainTextToken . PHP_EOL;"
 # KUBECTL END
 
 # HELM START
