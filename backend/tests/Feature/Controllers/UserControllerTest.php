@@ -22,7 +22,7 @@ class UserControllerTest extends TestCase
         
         $this->superadmin = User::where(
             'email',
-            env('SUPER_ADMIN_EMAIL', 'admin@mail.com')
+            'superadmin@test.com'
         )->firstOrFail();
         $this->admin = User::factory()->admin()->create();
         $this->editor = User::factory()->editor()->create();
