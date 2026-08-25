@@ -38,7 +38,7 @@ class ProfileControllerTest extends TestCase
     public function test_user_can_update_own_profile()
     {
         $response = $this->actingAs($this->editor)
-            ->putJson('/users/me', [
+            ->putJson('/api/users/me', [
                 'name' => 'Updated Name',
                 'email' => $this->editor->email,
             ]);
@@ -56,7 +56,7 @@ class ProfileControllerTest extends TestCase
     public function test_user_cannot_change_role_via_profile_update()
     {
         $response = $this->actingAs($this->editor)
-            ->putJson('/users/me', [
+            ->putJson('/api/users/me', [
                 'name' => 'Updated Name',
                 'email' => $this->editor->email,
                 'role' => 'superadmin',
