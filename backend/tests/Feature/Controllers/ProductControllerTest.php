@@ -110,14 +110,37 @@ class ProductControllerTest extends TestCase
 
         $response = $this->actingAs($this->superadmin)
             ->putJson("/api/products/{$product->id}", [
-                'name_processed' => 'New Name',
+                'price' => $product->price,
+                'translations' => [
+                    'en' => [
+                        'name' => 'Updated',
+                        'description' => $product->description_processed,
+                    ],
+                    'uk' => [
+                        'name' => "Змінений",
+                        'description' => 'Український опис',
+                    ],
+                ],
             ]);
 
-        $response->assertOk();
+        $response->assertOk()
+            ->assertJsonFragment([
+                'name_processed' => 'Updated',
+            ])->assertJsonFragment([
+                'locale' => 'uk',
+                'name' => 'Змінений',
+            ]);
 
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
-            'name_processed' => 'New Name',
+            'name_processed' => 'Updated',
+        ]);
+        
+        $this->assertDatabaseHas('product_translations', [
+            'product_id' => $product->id,
+            'locale' => 'uk',
+            'name' => 'Змінений',
+            'description' => 'Український опис',
         ]);
     }
 
@@ -129,14 +152,37 @@ class ProductControllerTest extends TestCase
 
         $response = $this->actingAs($this->admin)
             ->putJson("/api/products/{$product->id}", [
-                'name_processed' => 'New Name',
+                'price' => $product->price,
+                'translations' => [
+                    'en' => [
+                        'name' => 'Updated',
+                        'description' => $product->description_processed,
+                    ],
+                    'uk' => [
+                        'name' => "Змінений",
+                        'description' => 'Український опис',
+                    ],
+                ],
             ]);
 
-        $response->assertOk();
+        $response->assertOk()
+            ->assertJsonFragment([
+                'name_processed' => 'Updated',
+            ])->assertJsonFragment([
+                'locale' => 'uk',
+                'name' => 'Змінений',
+            ]);
 
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
-            'name_processed' => 'New Name',
+            'name_processed' => 'Updated',
+        ]);
+
+        $this->assertDatabaseHas('product_translations', [
+            'product_id' => $product->id,
+            'locale' => 'uk',
+            'name' => 'Змінений',
+            'description' => 'Український опис',
         ]);
     }
 
@@ -146,7 +192,17 @@ class ProductControllerTest extends TestCase
 
         $response = $this->actingAs($this->editor)
             ->putJson("/api/products/{$product->id}", [
-                'name_processed' => 'Updated',
+                'price' => $product->price,
+                'translations' => [
+                    'en' => [
+                        'name' => 'Updated',
+                        'description' => $product->description_processed,
+                    ],
+                    'uk' => [
+                        'name' => "Змінений",
+                        'description' => 'Український опис',
+                    ],
+                ],
             ]);
 
         $response->assertOk();
