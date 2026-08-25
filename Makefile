@@ -98,6 +98,42 @@ type-check:
 	$(DOCKER_COMPOSE) exec frontend /bin/sh -c "npm run type-check"
 
 #################################################################
+#####                  #continuous integration              #####
+#################################################################
+ci-up-build:
+	$(DOCKER_COMPOSE_CI) up -d --build
+
+ci-up:
+	$(DOCKER_COMPOSE_CI) up -d
+
+ci-migrate:
+	$(DOCKER_COMPOSE_CI) exec -T backend-ci /bin/sh -c "php artisan migrate"
+
+ci-test:
+	$(DOCKER_COMPOSE_CI) exec -T backend-ci /bin/sh -c "php artisan test"
+
+ci-lint:
+	$(DOCKER_COMPOSE_CI) exec -T frontend-ci npm run lint
+
+ci-type-check:
+	$(DOCKER_COMPOSE_CI) exec -T frontend-ci /bin/sh -c "npm run type-check"
+
+ci-test-npm-build:
+	$(DOCKER_COMPOSE_CI) exec -T frontend-ci npm run build
+
+ci-down:
+	$(DOCKER_COMPOSE_CI) down -v
+
+ci-stop:
+	$(DOCKER_COMPOSE_CI) stop
+
+ci-backend-sh:
+	$(DOCKER_COMPOSE_CI) exec -u root -w /app backend-ci /bin/sh -l
+
+ci-frontend-sh:
+	$(DOCKER_COMPOSE_CI) exec frontend-ci /bin/sh -l
+
+#################################################################
 #####                   #kubernetes                         #####
 #################################################################
 RELEASE=ds

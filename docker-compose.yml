@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
+      target: production
     working_dir: /app
     environment:
       FRANKENPHP_DOCUMENT_ROOT: /app/public

@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
+      target: production
     image: bachynskyialex/ds-backend:0.0.1
     env_file:
       - ./backend/.env.kube
