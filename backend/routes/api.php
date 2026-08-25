@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductVariantController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\Store\CartController;
 use App\Http\Controllers\Api\Store\CategoryController as StoreCategoryController;
@@ -23,6 +24,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Users
+Route::post('users/login', [UserController::class, 'login'])->middleware('web');
+Route::post('users/logout', [ProfileController::class, 'logout'])->middleware('web');
+Route::get('users/me', [ProfileController::class, 'me'])->middleware('web');
+Route::put('users/me', [ProfileController::class, 'update'])->middleware('web');
 Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
 
 // Categories

@@ -10,6 +10,15 @@ RUN install-php-extensions \
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-# COPY . /app
 
 WORKDIR /app
+
+COPY backend/ /app/
+RUN composer install --no-dev --optimize-autoloader
+
+# Create Laravel writable directories (needed for kubernetes in particular)
+RUN mkdir -p \
+    storage/logs \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views

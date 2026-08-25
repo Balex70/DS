@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/images/:path*",
-        destination: "http://backend:80/storage/:path*",
+        destination: `${process.env.CORE_API_ENTRYPOINT}/storage/:path*`,
       },
     ]
   },

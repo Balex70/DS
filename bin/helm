@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Get env variables
+source "${PWD}/.env"
+
+if [ -z "$KUBE_NAMESPACE" ]; then
+  echo "❌ KUBE_NAMESPACE is not set"
+  exit 1
+fi
+
+if [ ${KUBE_TYPE} == "minikube" ]
+then
+    helm --namespace=${KUBE_NAMESPACE} "$@"
+else
+    ${KUBE_TYPE} helm3 --namespace=${KUBE_NAMESPACE} "$@"
+fi

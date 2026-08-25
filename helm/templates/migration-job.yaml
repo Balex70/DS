@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-migration
+  namespace: {{ .Values.namespace }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-migration
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: wait-for-db
+          image: postgres:15
+          command:
+            - sh
+            - -c
+            - |
+              until pg_isready \
+                -h {{ .Release.Name }}-db \
+                -p {{ .Values.db.port }} \
+                -U "$DB_USERNAME" \
+                -d "$DB_DATABASE"
+              do
+                echo "Waiting for PostgreSQL..."
+                sleep 2
+              done
+
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}-be-secrets
+      containers:
+        - name: migration
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          command:
+            - php
+            - artisan
+            - migrate
+            - --force
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}-be-secrets

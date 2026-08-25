@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Get env variables
+source "${PWD}/.env"
+
+if [ -z "$KUBE_NAMESPACE" ]; then
+  echo "❌ KUBE_NAMESPACE is not set"
+  exit 1
+fi
+
+if [ ${KUBE_TYPE} == "minikube" ]
+then
+    kubectl --namespace=${KUBE_NAMESPACE} "$@"
+else
+    ${KUBE_TYPE} kubectl --namespace=${KUBE_NAMESPACE} "$@"
+fi

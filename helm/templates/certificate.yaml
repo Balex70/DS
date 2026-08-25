@@ -1,0 +1,28 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  # !!! NAME OF CERTIFICATE MUST BE THE SAME AS SECRETNAME !!!
+  name: {{ .Release.Name }}-certificate-secret
+  namespace: {{ .Values.namespace }}
+  annotations:
+      # This is what defines this resource as a hook. Without this line, the
+      # component is considered part of the release.
+      # needed for corect certificate creating before ingress
+      helm.sh/hook: pre-install
+      # helm.sh/hook-weight: "-5"
+      helm.sh/hook-delete-policy: hook-succeeded
+spec:
+  # isCA: true makes the certificate act as a Certificate Authority, not a normal server certificate
+  # For typical HTTPS websites, this should be false
+  isCA: false
+  commonName: {{ .Values.ingress.host }}
+  secretName: {{ .Release.Name }}-certificate-secret
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  renewBefore: 72h
+  issuerRef:
+    name: {{ .Release.Name }}-issuer
+    kind: Issuer
+  dnsNames:
+  - {{ .Values.ingress.host }}

@@ -1,0 +1,32 @@
+# Make it possible to switch from dev to production issuer
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ .Release.Name }}-issuer
+  namespace: {{ .Values.namespace }}
+spec:
+{{- if eq .Values.letsEncrypt.type "prod" }}
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: {{ .Values.letsEncrypt.email }}
+    privateKeySecretRef:
+      name: letsencrypt-production
+    solvers:
+      - http01:
+          ingress:
+            class: public # public | nginx
+{{- else if eq .Values.letsEncrypt.type "stage" }}
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: {{ .Values.letsEncrypt.email }}
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    solvers:
+      - http01:
+          ingress:
+            class: public # public | nginx
+{{- else if eq .Values.letsEncrypt.type "selfSigned" }}
+  # Self signed issuer for local development only
+  selfSigned: {}
+{{- end }}
+  

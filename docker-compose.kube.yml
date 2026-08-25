@@ -1,0 +1,20 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    image: bachynskyialex/ds-backend:0.0.1
+    env_file:
+      - ./backend/.env.kube
+
+  frontend:
+    build:
+      context: .  # Ensure build context is correct (root folder)
+      dockerfile: docker/frontend/Dockerfile
+      target: production
+      args:
+        NEXT_PUBLIC_CORE_API_ENTRYPOINT: ${NEXT_PUBLIC_CORE_API_ENTRYPOINT}
+        CORE_API_ENTRYPOINT: ${CORE_API_ENTRYPOINT}
+    image: bachynskyialex/ds-frontend:0.0.1
+    env_file:
+      - ./frontend/.env.kube
