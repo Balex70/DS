@@ -30,9 +30,12 @@ class ProductFactory extends Factory
             'description_raw' => $this->faker->paragraph(),
             'description_processed' => $this->faker->paragraph(),
 
-            'price' => $this->faker->randomFloat(2, 5, 500),
-            'now_price' => $this->faker->randomFloat(2, 5, 400),
-            'suggested_price' => $this->faker->randomFloat(2, 5, 600),
+            'cost_price' => $this->faker->numberBetween(1000, 50000),
+            'price' => $this->faker->numberBetween(1000, 50000),
+            'now_price' => $this->faker->numberBetween(1000, 50000),
+            'suggested_price' => $this->faker->numberBetween(1000, 50000),
+
+            'sku' => $this->faker->unique()->bothify('CJ####??'),
 
             'is_collect' => false,
             'add_mark_status' => false,
