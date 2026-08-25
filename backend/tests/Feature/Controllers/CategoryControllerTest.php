@@ -100,7 +100,12 @@ class CategoryControllerTest extends TestCase
         ]);
 
         $response = $this->putJson("/api/categories/{$category->id}", [
-            'name' => 'New Name',
+            'translations' => [
+                'en' => [
+                    'name' => 'New Name',
+                    'description' => 'New description',
+                ],
+            ],
         ]);
 
         $response->assertOk()
@@ -111,6 +116,49 @@ class CategoryControllerTest extends TestCase
         $this->assertDatabaseHas('categories', [
             'id' => $category->id,
             'name' => 'New Name',
+        ]);
+    }
+    
+    #[DataProvider('index_returns_categories_provider')]
+    public function test_updates_category_translations($userType)
+    {
+        match($userType) {
+            'superadmin' => $user = User::factory()->superAdmin()->create(),
+            'admin' => $user = User::factory()->admin()->create(),
+            'editor' => $user = User::factory()->editor()->create(),
+        };
+        $this->actingAs($user);
+
+        $category = Category::factory()->create([
+            'name' => 'Old',
+        ]);
+
+        $response = $this->putJson("/api/categories/{$category->id}", [
+            'translations' => [
+                'en' => [
+                    'name' => 'New Name',
+                    'description' => 'English description',
+                ],
+                'uk' => [
+                    'name' => 'Нова назва',
+                    'description' => 'Український опис',
+                ],
+            ],
+        ]);
+
+        $response->assertOk();
+
+        $this->assertDatabaseHas('categories', [
+            'id' => $category->id,
+            'name' => 'New Name',
+            'description' => 'English description',
+        ]);
+
+        $this->assertDatabaseHas('category_translations', [
+            'category_id' => $category->id,
+            'locale' => 'uk',
+            'name' => 'Нова назва',
+            'description' => 'Український опис',
         ]);
     }
     
