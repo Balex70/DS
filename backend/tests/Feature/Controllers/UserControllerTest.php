@@ -326,7 +326,7 @@ class UserControllerTest extends TestCase
             'password' => bcrypt($password),
         ]);
 
-        $response = $this->postJson('/users/login', [
+        $response = $this->postJson('/api/users/login', [
             'email' => $user->email,
             'password' => $password,
         ]);
@@ -345,7 +345,7 @@ class UserControllerTest extends TestCase
             'password' => bcrypt('correct-password'),
         ]);
 
-        $response = $this->postJson('/users/login', [
+        $response = $this->postJson('/api/users/login', [
             'email' => $user->email,
             'password' => 'wrong-password',
         ]);
@@ -370,7 +370,7 @@ class UserControllerTest extends TestCase
 
         $oldSessionId = session()->getId();
 
-        $this->postJson('/users/login', [
+        $this->postJson('/api/users/login', [
             'email' => $user->email,
             'password' => $password,
         ]);
