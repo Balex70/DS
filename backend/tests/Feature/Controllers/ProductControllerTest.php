@@ -6,14 +6,9 @@ use App\Enums\ProductAiStatusEnum;
 use App\Http\Controllers\Api\ProductController;
 use App\Models\Product;
 use App\Models\User;
-use App\Policies\ProductPolicy;
 use App\Services\ProductService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Gate;
 use Laravel\Sanctum\Sanctum;
-use PHPUnit\Framework\Attributes\DataProvider;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class ProductControllerTest extends TestCase
@@ -28,21 +23,10 @@ class ProductControllerTest extends TestCase
     {
         parent::setUp();
 
-        Permission::firstOrCreate(['name' => 'products.edit']);
-        Permission::firstOrCreate(['name' => 'products.delete']);
-        
-        // roles
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $editorRole = Role::firstOrCreate(['name' => 'editor']);
-
-        // assign permissions
-        $adminRole->givePermissionTo(Permission::all());
-
-        $editorRole->givePermissionTo([
-            'products.edit',
-        ]);
-        
-        $this->superadmin = User::factory()->superAdmin()->create();
+        $this->superadmin = User::where(
+            'email',
+            env('SUPER_ADMIN_EMAIL', 'admin@mail.com')
+        )->firstOrFail();
         $this->admin = User::factory()->admin()->create();
         $this->editor = User::factory()->editor()->create();
     }

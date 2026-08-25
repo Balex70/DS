@@ -8,43 +8,40 @@ use App\Policies\CategoryPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class CategoryControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected User $superadmin;
+    protected User $admin;
+    protected User $editor;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        Permission::firstOrCreate(['name' => 'categories.edit']);
-        Permission::firstOrCreate(['name' => 'categories.delete']);
-        
-        // roles
-        $admin = Role::firstOrCreate(['name' => 'admin']);
-        $editor = Role::firstOrCreate(['name' => 'editor']);
-
-        // assign permissions
-        $admin->givePermissionTo(Permission::all());
-
-        $editor->givePermissionTo([
-            'categories.edit',
-        ]);
+        $this->superadmin = User::where(
+            'email',
+            env('SUPER_ADMIN_EMAIL', 'admin@mail.com')
+        )->firstOrFail();
+        $this->admin = User::factory()->admin()->create();
+        $this->editor = User::factory()->editor()->create();
     }
 
     #[DataProvider('index_returns_categories_provider')]
     public function test_index_returns_categories($userType)
     {
         match($userType) {
-            'superadmin' => $user = User::factory()->superAdmin()->create(),
-            'admin' => $user = User::factory()->admin()->create(),
-            'editor' => $user = User::factory()->editor()->create(),
+            'superadmin' => $user = $this->superadmin,
+            'admin' => $user = $this->admin,
+            'editor' => $user = $this->editor,
         };
         
-        $this->assertDatabaseCount('users', 1);
+        $this->assertDatabaseHas('users', [
+            'email' => $user->email,
+        ]);
         
         $this->app->make(\Illuminate\Contracts\Auth\Access\Gate::class)
             ->policy(Category::class, CategoryPolicy::class);
@@ -89,9 +86,9 @@ class CategoryControllerTest extends TestCase
     public function test_updates_category($userType)
     {
         match($userType) {
-            'superadmin' => $user = User::factory()->superAdmin()->create(),
-            'admin' => $user = User::factory()->admin()->create(),
-            'editor' => $user = User::factory()->editor()->create(),
+            'superadmin' => $user = $this->superadmin,
+            'admin' => $user = $this->admin,
+            'editor' => $user = $this->editor,
         };
         $this->actingAs($user);
 
@@ -123,9 +120,9 @@ class CategoryControllerTest extends TestCase
     public function test_updates_category_translations($userType)
     {
         match($userType) {
-            'superadmin' => $user = User::factory()->superAdmin()->create(),
-            'admin' => $user = User::factory()->admin()->create(),
-            'editor' => $user = User::factory()->editor()->create(),
+            'superadmin' => $user = $this->superadmin,
+            'admin' => $user = $this->admin,
+            'editor' => $user = $this->editor,
         };
         $this->actingAs($user);
 
@@ -166,9 +163,9 @@ class CategoryControllerTest extends TestCase
     public function test_bulk_activate_categories($userType)
     {
         match($userType) {
-            'superadmin' => $user = User::factory()->superAdmin()->create(),
-            'admin' => $user = User::factory()->admin()->create(),
-            'editor' => $user = User::factory()->editor()->create(),
+            'superadmin' => $user = $this->superadmin,
+            'admin' => $user = $this->admin,
+            'editor' => $user = $this->editor,
         };
         $this->actingAs($user);
 

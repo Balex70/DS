@@ -4,8 +4,6 @@ namespace Tests\Feature\Controllers;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class ProfileControllerTest extends TestCase
@@ -20,17 +18,10 @@ class ProfileControllerTest extends TestCase
     {
         parent::setUp();
 
-        Permission::firstOrCreate(['name' => 'users.edit']);
-        Permission::firstOrCreate(['name' => 'users.delete']);
-        
-        // roles
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $editorRole = Role::firstOrCreate(['name' => 'editor']);
-
-        // assign permissions
-        $adminRole->givePermissionTo(Permission::all());
-        
-        $this->superadmin = User::factory()->superAdmin()->create();
+        $this->superadmin = User::where(
+            'email',
+            env('SUPER_ADMIN_EMAIL', 'admin@mail.com')
+        )->firstOrFail();
         $this->admin = User::factory()->admin()->create();
         $this->editor = User::factory()->editor()->create();
     }
