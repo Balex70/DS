@@ -27,9 +27,9 @@ class CjProductMapperTest extends TestCase
 
         $this->assertEquals('p1', $result['external_id']);
         $this->assertEquals('iPhone', $result['name_raw']);
-        $this->assertEquals(10.5, $result['price']);
-        $this->assertEquals(8.5, $result['now_price']);
-        $this->assertEquals(12.5, $result['suggested_price']);
+        $this->assertEquals(1050, $result['price']);
+        $this->assertEquals(850, $result['now_price']);
+        $this->assertEquals(1250, $result['suggested_price']);
         $this->assertEquals('image.jpg', $result['big_image']);
         $this->assertTrue($result['is_collect']);
         $this->assertFalse($result['add_mark_status']);
@@ -83,9 +83,9 @@ class CjProductMapperTest extends TestCase
         $this->assertEquals('New Name', $result['name_raw']);
         $this->assertEquals('<p>Hello <strong>World</strong></p>', $result['description_raw']);
 
-        $this->assertEquals(20.0, $result['price']);
-        $this->assertEquals(18.0, $result['now_price']);
-        $this->assertEquals(25.0, $result['suggested_price']);
+        $this->assertEquals(2000, $result['price']);
+        $this->assertEquals(1800, $result['now_price']);
+        $this->assertEquals(2500, $result['suggested_price']);
 
         $this->assertEquals('new.jpg', $result['big_image']);
 
@@ -98,7 +98,7 @@ class CjProductMapperTest extends TestCase
         $this->assertEquals('v1', $result['variants'][0]['external_id']);
         $this->assertEquals('sku-1', $result['variants'][0]['sku']);
         $this->assertEquals('Red', $result['variants'][0]['name']);
-        $this->assertEquals(15.0, $result['variants'][0]['price']);
+        $this->assertEquals(1500, $result['variants'][0]['price']);
         $this->assertEquals(0.5, $result['variants'][0]['weight']);
         $this->assertEquals(1.2, $result['variants'][0]['volume']);
         $this->assertEquals('variant.jpg', $result['variants'][0]['image']);
@@ -113,7 +113,7 @@ class CjProductMapperTest extends TestCase
             'sellPrice' => '10--20',
         ]);
 
-        $this->assertEquals(10.0, $result['price']);
+        $this->assertEquals(1000, $result['price']);
     }
 
     public function test_returns_null_price_when_price_missing()
