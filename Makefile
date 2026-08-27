@@ -89,7 +89,7 @@ backend-test:
 	bin/artisan test
 	
 testo:
-	bin/artisan test /app/tests/Feature/Controllers/CategoryControllerTest.php
+	bin/artisan test tests/Feature/Controllers/ProductControllerTest.php
 
 lint:
 	$(DOCKER_COMPOSE) exec frontend /bin/sh -c "npm run lint"
@@ -137,10 +137,11 @@ ci-frontend-sh:
 #####                   #kubernetes                         #####
 #################################################################
 RELEASE=ds
+VERSION := $(shell grep '^appVersion:' helm/Chart.yaml | awk '{print $$2}' | tr -d '"')
 
 # KUBECTL START
 kube-build:
-	$(DOCKER_COMPOSE_KUBE) build --no-cache
+	VERSION=$(VERSION) $(DOCKER_COMPOSE_KUBE) build --no-cache
 
 create-namespace:
 	@ bin/kctl create namespace $(KUBE_NAMESPACE)
@@ -316,7 +317,12 @@ helm-prod-down:
 	@ bin/kctl delete secret $(RELEASE)-fe-secrets --ignore-not-found
 
 helm-prod-up: create-be-env-secrets create-fe-env-secrets
-	@ bin/helm install $(RELEASE) ./helm -f ./helm/values-prod.yaml
+	@ bin/helm install $(RELEASE) ./helm \
+	-f ./helm/values-prod.yaml \
+	--set backend.image.tag=$(VERSION) \
+	--set frontend.image.tag=$(VERSION) \
+	--set queue.image.tag=$(VERSION) \
+	--set cron.image.tag=$(VERSION)
 
 helm-local-down:
 	@ bin/helm uninstall $(RELEASE)
@@ -324,28 +330,38 @@ helm-local-down:
 	@ bin/kctl delete secret $(RELEASE)-fe-secrets --ignore-not-found
 
 helm-local-up: create-be-env-secrets create-fe-env-secrets
-	@ bin/helm install $(RELEASE) ./helm -f ./helm/values-local.yaml
+	@ bin/helm install $(RELEASE) ./helm \
+	-f ./helm/values-local.yaml \
+	--set backend.image.tag=$(VERSION) \
+	--set frontend.image.tag=$(VERSION) \
+	--set queue.image.tag=$(VERSION) \
+	--set cron.image.tag=$(VERSION)
 
 helm-get-releases:
 	@ bin/helm list
 
 # create-be-env-secrets create-fe-env-secrets should be put like that, so they run and finish before upgrade
 helm-prod-upgrade: create-be-env-secrets create-fe-env-secrets
-	@ bin/helm upgrade $(RELEASE) ./helm -f ./helm/values-prod.yaml --atomic --wait --timeout 5m
-# 	@ bin/kctl rollout restart deployment/$(RELEASE)-backend
-# 	@ bin/kctl rollout restart deployment/$(RELEASE)-frontend
-# 	@ bin/kctl rollout restart deployment/$(RELEASE)-db
-# 	@ bin/kctl rollout restart deployment/$(RELEASE)-queue
-# 	@ bin/kctl rollout restart deployment/$(RELEASE)-cron
+	@ bin/helm upgrade $(RELEASE) ./helm \
+	-f ./helm/values-prod.yaml \
+	--set backend.image.tag=$(VERSION) \
+	--set frontend.image.tag=$(VERSION) \
+	--set queue.image.tag=$(VERSION) \
+	--set cron.image.tag=$(VERSION) \
+	--atomic --wait --timeout 5m
 
 # create-be-env-secrets create-fe-env-secrets should be put like that, so they run and finish before upgrade
 helm-local-upgrade: create-be-env-secrets create-fe-env-secrets
-	@ bin/helm upgrade $(RELEASE) ./helm -f ./helm/values-local.yaml --atomic --wait --timeout 5m
-# 	@ bin/kctl rollout restart deployment/$(RELEASE)-backend
-# 	@ bin/kctl rollout restart deployment/$(RELEASE)-frontend
-# 	@ bin/kctl rollout restart deployment/$(RELEASE)-db
-# 	@ bin/kctl rollout restart deployment/$(RELEASE)-queue
-# 	@ bin/kctl rollout restart deployment/$(RELEASE)-cron
+	@ bin/helm upgrade $(RELEASE) ./helm \
+	-f ./helm/values-local.yaml \
+	--set backend.image.tag=$(VERSION) \
+	--set frontend.image.tag=$(VERSION) \
+	--set queue.image.tag=$(VERSION) \
+	--set cron.image.tag=$(VERSION) \
+	--atomic --wait --timeout 5m
+
+helm-version:
+	@echo $(VERSION)
 
 helm-namespaces:
 	@ bin/helm list -A
