@@ -34,7 +34,7 @@ jobs:
           # set -e -> exit immediately if a command exits with a non-zero status
           script: |
             set -e
-            cd /root/portfolio
+            cd /root/ds
             git fetch origin ${{ github.event.workflow_run.head_sha }}
             git checkout ${{ github.event.workflow_run.head_sha }}
             export NEXT_PUBLIC_CORE_API_ENTRYPOINT=$NEXT_PUBLIC_CORE_API_ENTRYPOINT
