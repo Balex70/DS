@@ -16,9 +16,6 @@ frontend:
     repository: bachynskyialex/ds-frontend     # local image name (or Docker Hub later)
     tag: 0.0.1                 # local tag
     pullPolicy: Always
-  env:
-    NEXT_PUBLIC_CORE_API_ENTRYPOINT: https://boobuu.com/api
-    NODE_ENV: production
 
 queue:
   image:

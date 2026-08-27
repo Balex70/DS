@@ -5,8 +5,6 @@ FROM node:${NODE_VERSION}-slim AS deps
 
 WORKDIR /frontend
 
-RUN echo "NODE_ENV=production"
-
 COPY frontend/ ./
 
 # install ALL deps (dev + prod) для build

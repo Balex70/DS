@@ -46,7 +46,6 @@ services:
     environment:
       NEXT_PUBLIC_CORE_API_ENTRYPOINT: http://localhost:8000
       CORE_API_ENTRYPOINT: http://backend-ci:80
-      NODE_ENV: production # production for npm run build
     depends_on:
       - backend-ci
     ports:

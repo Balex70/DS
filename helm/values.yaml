@@ -30,8 +30,6 @@ frontend:
     repository: localhost:32000/ds-frontend     # local image name (or Docker Hub later)
     tag: latest                 # local tag
     pullPolicy: IfNotPresent
-  env:
-    NODE_ENV: development
   port: 3000                     # port the frontend app container exposes
 
 # db configuration

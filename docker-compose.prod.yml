@@ -12,7 +12,6 @@ services:
       target: production
     environment:
       NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
-      NODE_ENV: production # production for npm run build
     ports:
       - "3000:3000"
     volumes:

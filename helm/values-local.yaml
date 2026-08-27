@@ -11,9 +11,6 @@ frontend:
   image:
     tag: 0.0.1                 # local tag
     pullPolicy: Always
-  env:
-    NEXT_PUBLIC_CORE_API_ENTRYPOINT: https://ds.local/api
-    NODE_ENV: production
     
 queue:
   image:
