@@ -10,6 +10,10 @@ services:
       APP_KEY: base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
       APP_DEBUG: "true"
 
+      # Should be the same as .env.testing
+      SUPER_ADMIN_EMAIL: superadmin@test.com
+      SUPER_ADMIN_PASSWORD: password
+
       DB_CONNECTION: pgsql
       DB_HOST: db-ci
       DB_PORT: 5432

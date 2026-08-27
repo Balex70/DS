@@ -13,12 +13,24 @@ backend:
 
 frontend:
   image:
-    repository: localhost:32000/ds-frontend     # local image name (or Docker Hub later)
+    repository: bachynskyialex/ds-frontend     # local image name (or Docker Hub later)
     tag: 0.0.1                 # local tag
     pullPolicy: Always
   env:
-    NEXT_PUBLIC_BACKEND_URL: http://backend:8000/api
+    NEXT_PUBLIC_CORE_API_ENTRYPOINT: https://boobuu.com/api
     NODE_ENV: production
+
+queue:
+  image:
+    repository: bachynskyialex/ds-backend
+    tag: 0.0.1
+    pullPolicy: Always
+
+cron:
+  image:
+    repository: bachynskyialex/ds-backend
+    tag: 0.0.1
+    pullPolicy: Always
 
 letsEncrypt:
   ## Possible values:
@@ -32,7 +44,7 @@ letsEncrypt:
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   tlsEnabled: true
-  host: somerealdomain.com
+  host: boobuu.com
 
 # -- Expose the service via gateway-api HTTPRoute
 # Requires Gateway API resources and suitable controller installed within the cluster
