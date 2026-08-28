@@ -26,7 +26,10 @@ RUN mkdir -p \
     storage/framework/sessions \
     storage/framework/views
 
-    FROM base AS ci
+# Create public storage symlink
+RUN php artisan storage:link
+
+FROM base AS ci
 
 RUN composer install
 
@@ -35,3 +38,6 @@ RUN mkdir -p \
     storage/framework/cache \
     storage/framework/sessions \
     storage/framework/views
+
+# Create public storage symlink
+RUN php artisan storage:link
