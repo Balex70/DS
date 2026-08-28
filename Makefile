@@ -302,9 +302,9 @@ create-fe-env-secrets:
 
 # create basic auth from auth file that should be created with command `htpasswd -c auth admin` (install before run `sudo apt install apache2-utils`)
 create-basic-auth-secret:
-    @ bin/kctl create secret generic $(RELEASE)-basic-auth \
-        --from-file=auth \
-        --dry-run=client -o yaml | bin/kctl apply -f -
+	@ bin/kctl create secret generic $(RELEASE)-basic-auth \
+		--from-file=auth \
+		--dry-run=client -o yaml | bin/kctl apply -f -
 
 ai-worker-token:
 	@bin/kctl exec -it $$(bin/kctl get pods --selector=app=$(RELEASE)-backend -o jsonpath='{.items[0].metadata.name}') -- \
