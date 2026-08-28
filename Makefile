@@ -300,6 +300,12 @@ create-be-env-secrets:
 create-fe-env-secrets:
 	@ bin/kctl create secret generic $(RELEASE)-fe-secrets --from-env-file=frontend/.env.kube --dry-run=client -o yaml | bin/kctl apply -f -
 
+# create basic auth from auth file that should be created with command `htpasswd -c auth admin` (install before run `sudo apt install apache2-utils`)
+create-basic-auth-secret:
+    @ bin/kctl create secret generic $(RELEASE)-basic-auth \
+        --from-file=auth \
+        --dry-run=client -o yaml | bin/kctl apply -f -
+
 ai-worker-token:
 	@bin/kctl exec -it $$(bin/kctl get pods --selector=app=$(RELEASE)-backend -o jsonpath='{.items[0].metadata.name}') -- \
 		php artisan tinker --execute="\
