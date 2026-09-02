@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-cron
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Release.Name }}-cron
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-cron
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-cron
+    spec:
+      containers:
+        - name: cron
+          image: "{{ .Values.cron.image.repository }}:{{ .Values.cron.image.tag }}"
+          imagePullPolicy: {{ .Values.cron.image.pullPolicy }}
+          workingDir: {{ .Values.cron.workingDir }}
+          command:
+            {{- toYaml .Values.cron.command | nindent 12 }}
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}-be-secrets

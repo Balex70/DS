@@ -1,0 +1,407 @@
+{
+  "auth": {
+    
+  },
+  "frontend": {
+    "to_home_button": "Back to home page",
+    "loading_loader": "Loading...",
+    "page_404": {
+      "title": "Page not found",
+      "description": "Sorry, we couldn't find the page you're looking for. It may have been moved, deleted, or the link might be incorrect.",
+      "back_to_home": "Back to home"
+    },
+    "main": {
+      "hero_carousel": {
+        "new_arrival": "New Arrival"
+      },
+      "categories_section": {
+        "view_all": "View all"
+      }
+    },
+    "category": {
+      "category_not_found": "Category not found",
+      "category_not_found_description": "The category you are looking for does not exist.",
+      "no_products_title": "This category is currently empty",
+      "no_products_description": "There are no items in this category yet, but new arrivals are coming soon!",
+      "no_products_filter_title": "Nothing matches your filters",
+      "no_products_filter_description": "Try changing or removing some filters to find products in this category.",
+      "load_more": "Load more",
+      "loading": "Loading...",
+      "product_card": {
+        "no_image": "No image",
+        "add_to_cart": "Add to cart",
+        "adding": "Adding..."
+      },
+      "filter": {
+        "header": "Filter",
+        "apply": "Apply",
+        "material": "Materials",
+        "price": {
+          "header": "Price (USD)",
+          "apply": "Apply"
+        }
+      },
+      "sort": {
+        "header": "Sort by",
+        "latest": "Latest",
+        "price_asc": "Price: Low → High",
+        "price_desc": "Price: High → Low"
+      },
+      "breadcrumbs": {
+        "home": "Home"
+      }
+    },
+    "product": {
+      "select_variant": "Select",
+      "not_found_label": "Product not found",
+      "back": "Back",
+      "add_to_cart": "Add to cart",
+      "adding": "Adding...",
+      "options": "Options",
+      "no_image": "No image"
+    },
+    "megamenu": {
+      "catalog": "Catalog",
+      "no_categories": "No categories",
+      "browse": "Browse"
+    },
+    "switcher": {
+      "header": {
+        "language": "Language",
+        "currency": "Currency"
+      },
+      "bottom": {
+        "language": "Language",
+        "currency": "Currency"
+      }
+    },
+    "footer_nav": {
+      "terms_and_conditions": "Terms and Conditions",
+      "privacy_policy": "Privacy Policy",
+      "faq": "FAQ",
+      "about_us": "About us"
+    },
+    "customer": {
+      "name": "Name",
+      "email": "Email"
+    },
+    "checkout": {
+      "header": "Checkout",
+      "your_order": "Your order",
+      "cart_is_empty": "Your cart is empty",
+      "delivered_by_logistics_partners": "Delivered by one of our local logistics partners",
+      "search_country_placeholder": "Search country...",
+      "no_country_found": "No country found",
+      "select_country": "Select country",
+      "payment_info": {
+        "header": "Payment Methods",
+        "gateway_title": "Secure payment powered by",
+        "skeleton_title": "Enter country to see payments options"
+      },
+      "shipping_info": {
+        "header": "Shipping information",
+        "description": "Enter your details for delivery",
+        "full_name": "Full name (name and surname)",
+        "phone": "Phone number",
+        "email": "Email address",
+        "address_line_1": "Address",
+        "address_line_2": "Address (additional)",
+        "city": "City",
+        "state": "State",
+        "postal_code": "Postal code",
+        "country": "Country",
+        "shipping_methods": "Shipping methods",
+        "no_country_warning": "Enter country to see shipping options",
+        "loading_shipping_methods": "Loading shipping methods...",
+        "validation": {
+          "full_name_required": "Please enter your full name",
+          "full_name_latin_required": "Full name (latin) is required",
+          "phone_required": "Please enter your phone number",
+          "phone_too_short": "Phone number is too short",
+          "phone_too_long": "Phone number is too long",
+          "phone_invalid": "Invalid phone number",
+          "email_required": "Please enter your email address",
+          "email_invalid": "Invalid email",
+          "address_line_1_required": "Please enter your address",
+          "address_line_1_latin_required": "Address (latin) is required",
+          "city_required": "Please enter your city",
+          "city_latin_required": "City (latin) is required",
+          "postal_code_required": "Please enter your postal code",
+          "country_required": "Please select a country"
+        }
+      },
+      "shipping_selector": {
+        "business_days": "business days",
+        "hide_shipping_methods": "Hide shipping methods",
+        "show": "Show",
+        "more_shipping_methods": "more shipping methods",
+        "tier_express": "Express",
+        "tier_standard": "Standard",
+        "tier_economy": "Economy"
+      },
+      "order_summery": {
+        "header": "Summary",
+        "subtotal": "Subtotal",
+        "total": "Total",
+        "shipping_price": "Shipping price",
+        "proceed_to_payment": "Proceed to Payment",
+        "payment_failed": "Payment failed, please try again",
+        "creating_order": "Creating Order...",
+        "preparing_payment": "Preparing Payment...",
+        "redirecting": "Redirecting...",
+        "select_delivery_country": "Select delivery country",
+        "select_shipping_method": "Select shipping method",
+        "payment_not_available": "Payment unavailable",
+        "shipping_form_is_not_valid": "Please check your shipping information",
+        "payment_not_supported": "Unfortunately, we don’t support payments in this region yet.",
+        "shipping_details": {
+          "header": "Shipping details",
+          "description": "These details will be used to deliver your order.",
+          "alert_title": "Please check your shipping details",
+          "alert_message": "Make sure your shipping information is correct and written in <strong>Latin</strong> characters. Incorrect information may cause delivery delays or your package to be returned.",
+          "edit_shipping_button": "Edit shipping details"
+        }
+      },
+      "latin_input": {
+        "latin": "Latin",
+        "edit": "Edit",
+        "done": "Done"
+      },
+      "checkout_dialog": {
+        "header": "Processing checkout",
+        "do_not_close_warning": "Please do not close this window",
+        "close_button": "Close and try again",
+        "creating_order_title": "Creating order",
+        "creating_order_description": "We are preparing your order...",
+        "creating_payment_title": "Setting up payment",
+        "creating_payment_description": "Connecting to payment provider...",
+        "redirecting_title": "Redirecting",
+        "redirecting_description": "You will be redirected shortly...",
+        "failed_title": "Payment failed",
+        "failed_description": "Something went wrong. Please try again."
+      },
+      "import_duty_dialog": {
+        "header": "Import VAT & Customs Duties",
+        "text_1": "Your order will be shipped internationally.",
+        "text_2": "Depending on your country's customs regulations, you may be required to pay <strong>import VAT</strong>, <strong> customs duties</strong>, taxes, or carrier handling fees before your package can be delivered.",
+        "text_3": "<strong>These charges are not included in your order total</strong> and are the responsibility of the recipient.",
+        "accept_text": "I understand that import VAT, customs duties, taxes, or carrier handling fees may be charged separately upon delivery, and I accept this responsibility.",
+        "cancel_button": "Cancel",
+        "accept_button": "I Understand & Continue"
+      },
+      "payment_result": {
+        "header": "Thank you for your order!",
+        "text_1": "We have received your payment attempt and are currently processing it.",
+        "text_2": "Your order status will be updated automatically once the payment provider confirms the transaction.",
+        "order_number": "Order number",
+        "continue_button" : "Continue Shopping"
+      }
+    },
+    "cart": {
+      "header": "Cart",
+      "subtotal": "Subtotal",
+      "checkout": "Checkout",
+      "clear_cart": "Clear cart",
+      "clearing_cart": "Clearing...",
+      "cart_is_empty": "Your cart is empty",
+      "cart_is_empty_description": "Add some products to continue shopping"
+    },
+    "search": {
+      "header": "Search",
+      "placeholder": "Search...",
+      "no_results": "No results found",
+      "no_results_description": "Try checking the spelling or searching for something else.",
+      "searched_for": "We couldn't find anything for",
+      "start_typing": "Start typing to search...",
+      "products": "Products",
+      "categories": "Categories"
+    },
+    "footer": {
+      "company": "Company",
+      "customer_service": "Customer Service",
+      "legal": "Legal",
+      "about_us": "About us",
+      "contact_us": "Contact us",
+      "faq": "FAQ",
+      "shipping_info": "Shipping Information",
+      "returns_refunds": "Returns & Refunds",
+      "order_tracking": "Order Tracking",
+      "payment_methods": "Payment Methods",
+      "privacy_policy": "Privacy Policy",
+      "terms": "Terms and conditions",
+      "cookie_policy": "Cookie Policy",
+      "contacts": "Contact",
+      "working_hours": "Working hours",
+      "mon": "Mon",
+      "fri": "Fri",
+      "shop_by_category": "Shop by category",
+      "copyright": "All rights reserved",
+      "about_us_section": {
+        "header": "About us",
+        "short_description": "We believe online shopping should be simple, affordable, and accessible to everyone. By partnering directly with trusted suppliers, we offer a wide selection of quality products at competitive prices, supported by secure payments, transparent shipping, and reliable customer service.",
+        "our_story": {
+          "header": "Our Story",
+          "story_1": "Our journey began with a simple question: why should customers pay extra for unnecessary layers in the supply chain? By embracing the dropshipping model and partnering directly with reliable suppliers, we streamline the purchasing process, reduce overhead, and pass those savings on to our customers through more affordable prices.",
+          "story_2": "Our mission goes beyond offering lower prices. We strive to build a shopping experience based on transparency, reliability, and long-term customer satisfaction. From carefully selected suppliers to secure payments and responsive support, every part of our service is designed with our customers in mind.",
+          "story_3": "Every order is an opportunity to earn our customers' trust. We're committed to continuously improving our store, expanding our selection, and providing an experience defined by honest communication and dependable support."
+        },
+        "why_choose_us": {
+          "header": "Why Choose Us",
+          "description": "We're committed to making your shopping experience simple, secure, and enjoyable.",
+          "reason_1_title": "Competitive Shipping",
+          "reason_1_description": "Our direct supplier network helps reduce shipping costs while providing estimated delivery times before you place your order.",
+          "reason_2_title": "Secure Payments",
+          "reason_2_description": "Your payments are protected using secure and trusted payment providers.",
+          "reason_3_title": "Affordable Prices",
+          "reason_3_description": "By working directly with trusted suppliers, we reduce unnecessary costs and offer quality products at competitive prices.",
+          "reason_4_title": "Customer Support",
+          "reason_4_description": "Our support team is here to answer your questions and help with your orders."
+        },
+        "our_mission": {
+          "header": "Our Mission",
+          "text_1": "Our mission is to make online shopping more affordable by connecting customers with carefully selected products while reducing unnecessary intermediaries. By streamlining the purchasing process, we can offer competitive prices without compromising on quality or security.",
+          "text_2": "We believe everyone deserves access to quality products at fair prices. That's why we're committed to transparent pricing, reliable shipping options, secure payments, and responsive customer support throughout every step of your shopping experience."
+        }
+      },
+      "contact_us_section": {
+        "header": "Contact Us",
+        "description": "We're here to help! Reach out to us with any questions or concerns, and we'll be happy to assist you.",
+        "email": "Email",
+        "phone": "Phone",
+        "working_hours": "Working hours"
+      },
+      "faq_section": {
+        "header": "Frequently Asked Questions",
+        "description": "Find answers to the most common questions about orders, shipping, payments, returns, and customer support.",
+        "question_1": {
+          "question": "How long does shipping take?",
+          "answer": "Delivery times depend on the selected shipping method and destination country. Estimated delivery dates are displayed during checkout before you place your order."
+        },
+        "question_2": {
+          "question": "How can I track my order?",
+          "answer": "Once your order has been shipped, you'll receive a tracking number by email. You can also use our Order Tracking page to check the latest delivery status."
+        },
+        "question_3": {
+          "question": "What payment methods do you accept?",
+          "answer": "We accept major credit and debit cards along with other secure payment methods available during checkout."
+        },
+        "question_4": {
+          "question": "Can I return an item?",
+          "answer": "Yes. If your order is eligible for return, you can submit a return request according to our Returns & Refund Policy."
+        },
+        "question_5": {
+          "question": "When will I receive my refund?",
+          "answer": "Approved refunds are processed using the original payment method. Processing time depends on your payment provider and may take several business days."
+        },
+        "question_6": {
+          "question": "How can I contact support?",
+          "answer": "You can reach our support team through the Contact Us page or by emailing us directly. We'll respond as quickly as possible during business hours."
+        }
+      },
+      "shipping_section": {
+        "header": "Shipping Information",
+        "description": "Everything you need to know about shipping, delivery estimates, and tracking your order.",
+        "shipping_coverage": "Worldwide Shipping",
+        "shipping_coverage_description": "We ship to most countries around the world. Available shipping options are shown during checkout based on your delivery address.",
+        "shipping_delivery_time": "Delivery Time",
+        "shipping_delivery_time_description": "Delivery time depends on your destination and the shipping method you choose. Estimated delivery dates are displayed before you complete your purchase.",
+        "shipping_cost": "Shipping Costs",
+        "shipping_cost_description": "Shipping costs are calculated automatically during checkout based on your destination, selected shipping method, and the items in your cart.",
+        "shipping_tracking": "Order Tracking",
+        "shipping_tracking_description": "Once your order has been shipped, you'll receive a tracking number by email so you can follow your package until delivery."
+      },
+      "returns": {
+        "header": "Returns & Refunds",
+        "description": "We want you to shop with confidence. Below you'll find information about returns, refunds, and what to do if there's an issue with your order.",
+        "return_eligibility": "Return Eligibility",
+        "return_eligibility_description": "Eligible items may be returned according to our return policy. Products should be unused and returned in their original condition whenever possible.",
+        "refund_process": "Refund Process",
+        "refund_process_description": "Once your return has been received and approved, your refund will be issued using the original payment method. Processing times may vary depending on your payment provider.",
+        "return_damage": "Damaged or Incorrect Items",
+        "return_damage_description": "If your order arrives damaged or you receive the wrong item, please contact us as soon as possible so we can resolve the issue quickly.",
+        "return_help": "Need Help?",
+        "return_help_description": "If you have any questions about returns or refunds, our support team is always happy to assist you."
+      },
+      "track_order": {
+        "header": "Track Your Order",
+        "description": "Enter your tracking number to check the latest status of your order",
+        "order_number_placeholder": "Tracking Number",
+        "track_button": "Track Order",
+        "alert_label": "Tracking Information Not Found",
+        "alert_message": "We couldn't find tracking information for the number you entered. Please check that the tracking number is correct. If your order was placed recently, tracking details may not be available yet. Older or expired shipments may also no longer have tracking information. If you need assistance, please contact our support team.",
+        "contact_us_button": "Contact Us",
+        "looking_up": "Looking up tracking information...",
+        "tracking_number": "Tracking Number",
+        "shipping_method": "Shipping Company",
+        "estimated_delivery": "Estimated Delivery",
+        "days": "days",
+        "last_mile_carrier": "Local Delivery Service",
+        "last_mile_tracking_number": "Local Delivery Tracking Number",
+        "estimated_delivery_time": "Estimated Delivery Time",
+        "tracking_status": {
+          "info_received": "Info Received",
+          "in_transit": "In Transit",
+          "out_for_delivery": "Out for Delivery",
+          "delivered": "Delivered",
+          "failed_attempt": "Delivery Failed",
+          "exception": "Exception / Alert",
+          "expired": "Expired",
+          "unknown": "In Transit"
+        }
+      },
+      "payment_methods_section": {
+        "header": "Payment Methods",
+        "description": "We offer secure and reliable payment options to make your checkout experience simple and safe.",
+        "accept": "Accepted Payment Methods",
+        "accept_description": "We accept major credit and debit cards as well as other secure payment methods available during checkout.",
+        "secure": "Secure Payments",
+        "secure_description": "Your payment information is protected using encrypted connections and trusted payment providers. We never store your complete payment card details.",
+        "charge": "When You'll Be Charged",
+        "charge_description": "Payment is processed securely during checkout after you confirm your order.",
+        "currencies": "Supported Currencies",
+        "currencies_description": "Available currencies are displayed throughout the store. The final payment amount is shown before you complete your purchase."
+      },
+      "privacy_policy_section": {
+        "header": "Privacy Policy",
+        "description": "Your privacy is important to us. This page explains how we collect, use, and protect your personal information when you use our website.",
+        "collect": "Information We Collect",
+        "collect_description": "We collect only the information necessary to process your orders, provide customer support, and improve your shopping experience.",
+        "use": "How We Use Your Information",
+        "use_description": "Your information is used to process orders, communicate with you about your purchases, and provide customer support. We do not sell your personal information.",
+        "security": "Data Security",
+        "security_description": "We use secure technologies and trusted service providers to help protect your personal information during transmission and storage.",
+        "rights": "Your Rights",
+        "rights_description": "Depending on your location, you may have the right to access, update, or request the deletion of your personal information. Please contact us if you have any questions regarding your privacy."
+      },
+      "terms_section": {
+        "header": "Terms & Conditions",
+        "description": "These Terms & Conditions outline the rules and conditions for using our website and purchasing products from our store.",
+        "use_website": "Use of Our Website",
+        "use_website_description": "By using our website, you agree to comply with these Terms & Conditions and all applicable laws and regulations.",
+        "orders": "Orders",
+        "orders_description": "All orders are subject to product availability and confirmation. We reserve the right to refuse or cancel orders when necessary.",
+        "payments": "Pricing & Payments",
+        "payments_description": "Product prices and shipping costs are displayed during checkout. Payments are processed securely through our trusted payment providers.",
+        "limitation": "Limitation of Liability",
+        "limitation_description": "We strive to provide accurate information and reliable service, but cannot guarantee that our website will always be error-free or uninterrupted."
+      },
+      "cookie_policy_section": {
+        "header": "Cookie Policy",
+        "description": "This Cookie Policy explains what cookies are, how we use them, and the choices you have regarding their use on our website.",
+        "what": "What Are Cookies?",
+        "what_description": "Cookies are small text files stored on your device that help websites remember your preferences and improve your browsing experience.",
+        "use": "How We Use Cookies",
+        "use_description": "We use cookies to keep the website functioning properly, remember your preferences, improve performance, and better understand how our website is used.",
+        "manage": "Managing Cookies",
+        "manage_description": "Most web browsers allow you to manage or disable cookies through your browser settings. Please note that disabling certain cookies may affect website functionality.",
+        "your_privacy": "Your Privacy",
+        "your_privacy_description": "We respect your privacy and use cookies responsibly. For more information about how we handle your personal data, please see our Privacy Policy."
+      }
+    },
+    "call_to_action": {
+      "header": "Have Questions?",
+      "description": "If you need assistance or have any questions about our products, shipping, or your order, we're here to help.",
+      "button_text": "Contact Us"
+    }
+  }
+}

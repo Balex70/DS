@@ -42,4 +42,45 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    /**
+     * State to create a Super Admin user.
+     */
+    public function superAdmin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            // Matches your model's env() check for hardcoded admin safety
+            'email' => env('SUPER_ADMIN_EMAIL', 'superadmin@example.com'),
+            'name' => 'Super Admin',
+        ])->afterCreating(function (User $user) {
+            // Assign Spatie role if it exists in your database
+            $user->assignRole('admin');
+        });
+    }
+
+    /**
+     * State to create a standard Admin user.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'email' => fake()->unique()->safeEmail(),
+        ])->afterCreating(function (User $user) {
+            // Assign Spatie role if it exists in your database
+            $user->assignRole('admin');
+        });
+    }
+
+    /**
+     * State to create a editor user.
+     */
+    public function editor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'email' => fake()->unique()->safeEmail(),
+        ])->afterCreating(function (User $user) {
+            // Assign Spatie role if it exists in your database
+            $user->assignRole('editor');
+        });
+    }
 }

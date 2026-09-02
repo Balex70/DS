@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="185 125 225 250">
+
+    <!-- Top -->
+    <polygon
+        fill="#1FD806"
+        points="192,178 315,130 408,180 300,220"/>
+
+    <!-- Left -->
+    <polygon
+        fill="#FACC15"
+        points="192,188 292,237 292,370 192,321"/>
+
+    <!-- Right -->
+    <polygon
+        fill="#0284C7"
+        points="308,237 408,190 408,321 308,370"/>
+
+</svg>

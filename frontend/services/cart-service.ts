@@ -1,0 +1,22 @@
+import { api } from "@/lib/axios";
+import { CartItemPayload } from "@/types/cart";
+
+export async function addToCart(data: CartItemPayload) {
+    return api.post("/api/store/cart/add", data);
+}
+
+export async function updateCartItem(data: Pick<CartItemPayload, "product_id" | "quantity">) {
+    return api.post("/api/store/cart/update", data);
+}
+
+export async function getCart(params: {locale: string, currency?: string}) {
+    return api.get("/api/store/cart", {params});
+}
+
+export async function clearCart() {
+    return api.post("/api/store/cart/clear");
+}
+
+export async function removeFromCart(data: Pick<CartItemPayload, "product_id">) {
+    return api.post("/api/store/cart/remove", data);
+}

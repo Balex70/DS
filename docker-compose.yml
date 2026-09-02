@@ -3,16 +3,24 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
+      target: production
     working_dir: /app
-    volumes:
-      - ./backend:/app
-    ports:
-      - "8000:80"
+    environment:
+      FRANKENPHP_DOCUMENT_ROOT: /app/public
     depends_on:
       - db
       - redis
     command: php artisan octane:frankenphp --host=0.0.0.0 --port=80
 
+  frontend:
+    build:
+      context: .  # Ensure build context is correct (root folder)
+      dockerfile: docker/frontend/Dockerfile
+      target: dev
+    environment:
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
+    depends_on:
+      - backend
   db:
     image: postgres:15
     environment:
@@ -28,6 +36,34 @@ services:
     image: redis:alpine
     ports:
       - "6379:6379"
+
+  queue:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    working_dir: /app
+    environment:
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    command: php artisan queue:work --tries=3 --timeout=60
+    depends_on:
+      - backend
+      - db
+      - redis
+
+  cron:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    command: php artisan schedule:work
+    depends_on:
+      - backend
+      - redis
+    restart: unless-stopped
 
 volumes:
   db_data:

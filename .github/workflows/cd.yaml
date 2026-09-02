@@ -1,0 +1,52 @@
+name: CD
+
+on:
+  workflow_dispatch:    # manual
+  workflow_run:         # automatic after CI
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: >
+      ${{
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'main'
+      }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          NEXT_PUBLIC_CORE_API_ENTRYPOINT: ${{ secrets.NEXT_PUBLIC_CORE_API_ENTRYPOINT }}
+          CORE_API_ENTRYPOINT: ${{ secrets.CORE_API_ENTRYPOINT }}
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          envs: DOCKER_USERNAME,DOCKER_PASSWORD,NEXT_PUBLIC_CORE_API_ENTRYPOINT,CORE_API_ENTRYPOINT
+          command_timeout: 30m
+          # passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
+          # set -e -> exit immediately if a command exits with a non-zero status
+          script: |
+            set -e
+            cd /root/ds
+            git fetch origin ${{ github.event.workflow_run.head_sha }}
+            git checkout ${{ github.event.workflow_run.head_sha }}
+            export NEXT_PUBLIC_CORE_API_ENTRYPOINT=$NEXT_PUBLIC_CORE_API_ENTRYPOINT
+            export CORE_API_ENTRYPOINT=$CORE_API_ENTRYPOINT
+            VERSION="$(make -s helm-version)"
+            export VERSION
+            echo "Deploying version: $VERSION"
+            make kube-build
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+            docker push bachynskyialex/ds-backend:$VERSION
+            docker rmi bachynskyialex/ds-backend:$VERSION
+            docker push bachynskyialex/ds-frontend:$VERSION
+            docker rmi bachynskyialex/ds-frontend:$VERSION
+            docker image prune -a --force
+            make helm-prod-upgrade

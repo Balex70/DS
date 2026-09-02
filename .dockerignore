@@ -1,0 +1,49 @@
+# Environment files
+.env*
+backend/.env*
+frontend/.env*
+
+# git
+.git
+.gitignore
+
+# node
+node_modules
+frontend/node_modules
+
+# Next.js build
+frontend/.next
+frontend/out
+frontend/dist
+
+# logs
+*.log
+frontend/logs
+
+# Laravel runtime / generated files
+backend/storage/logs
+backend/storage/framework/cache
+backend/storage/framework/sessions
+backend/storage/framework/views
+
+# Laravel dependencies
+backend/vendor
+
+# Runtime / uploaded media
+backend/storage/app/public
+
+# Docker
+docker-compose*
+Dockerfile
+
+# editor
+.vscode
+.idea
+
+# OS
+.DS_Store
+
+# Package manager logs
+npm-debug.log
+yarn-error.log
+pnpm-debug.log

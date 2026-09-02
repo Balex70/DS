@@ -1,0 +1,77 @@
+services:
+  backend-ci:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      target: ci
+    working_dir: /app
+    environment:
+      APP_ENV: testing
+      APP_KEY: base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+      APP_DEBUG: "true"
+
+      # Should be the same as .env.testing
+      SUPER_ADMIN_EMAIL: superadmin@test.com
+      SUPER_ADMIN_PASSWORD: password
+
+      DB_CONNECTION: pgsql
+      DB_HOST: db-ci
+      DB_PORT: 5432
+      DB_DATABASE: testdb
+      DB_USERNAME: testuser
+      DB_PASSWORD: testpass
+
+      REDIS_HOST: redis-ci
+      REDIS_PORT: 6379
+
+      CACHE_STORE: redis
+      SESSION_DRIVER: database
+      QUEUE_CONNECTION: database
+
+      FRANKENPHP_DOCUMENT_ROOT: /app/public
+    depends_on:
+      db-ci:
+        condition: service_healthy
+      redis-ci:
+        condition: service_healthy
+    command: php artisan octane:frankenphp --host=0.0.0.0 --port=80
+    ports:
+      - "8000:80"
+    
+  frontend-ci:
+    build:
+      context: .  # Ensure build context is correct (root folder)
+      dockerfile: docker/frontend/Dockerfile
+      target: builder
+    environment:
+      NEXT_PUBLIC_CORE_API_ENTRYPOINT: http://localhost:8000
+      CORE_API_ENTRYPOINT: http://backend-ci:80
+    depends_on:
+      - backend-ci
+    ports:
+      - "3000:3000"
+    command: ["sleep", "infinity"]
+
+  db-ci:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpass
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U testuser -d testdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 5432:5432
+
+  redis-ci:
+    image: redis:alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "6379:6379"

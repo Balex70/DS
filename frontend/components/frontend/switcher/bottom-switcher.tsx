@@ -1,0 +1,99 @@
+'use client';
+
+import { Button } from "@/components/ui/button";
+import { useRouter, usePathname } from "@/i18n/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { useCurrency } from "@/context/CurrencyContext";
+import { Locale } from "@/i18n/config";
+import { Globe } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { LOCALES } from "@/config/locales";
+import { CURRENCIES } from "@/config/currencies";
+import BottomSheetHeader from "../bottom-sheet-header";
+
+export default function BottomSwitcher() {
+    const router = useRouter();
+    const pathname = usePathname();
+    const t = useTranslations('frontend')
+    const locale = useLocale();
+    const { currency, setCurrency } = useCurrency();
+
+    function switchLocale(nextLocale: Locale) {
+        router.push(pathname, {locale: nextLocale});
+    }
+
+    return (
+        <Sheet>
+            <SheetTrigger asChild>
+                <Button
+                    variant="ghost"
+                    className="h-full flex-1 rounded-none"
+                >
+                    <div className="flex flex-col items-center gap-1">
+                        <Globe className="h-6 w-6 text-muted-foreground" />
+
+                        <span className="text-xs text-muted-foreground">
+                            {locale.toUpperCase()} / {currency}
+                        </span>
+                    </div>
+                </Button>
+            </SheetTrigger>
+
+            <SheetContent side="bottom" className="!h-dvh max-h-dvh w-full rounded-none" showCloseButton={false}>
+                <BottomSheetHeader>
+                    <Globe className="mr-2 h-4 w-4" />
+                    {locale.toUpperCase()} / {currency}
+                </BottomSheetHeader>
+                
+                <Separator className="my-0" />
+
+                <div className="space-y-6 p-4">
+                    <div>
+                        <Label>{t('switcher.bottom.language')}</Label>
+
+                        <Select value={locale} onValueChange={switchLocale}>
+                            <SelectTrigger className="mt-2 w-full">
+                                <SelectValue />
+                            </SelectTrigger>
+
+                            <SelectContent>
+                                {LOCALES.map(locale => (
+                                    <SelectItem
+                                        key={locale.code}
+                                        value={locale.code}
+                                    >
+                                        {locale.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div>
+                        <Label>{t('switcher.bottom.currency')}</Label>
+
+                        <Select value={currency} onValueChange={setCurrency}>
+                            <SelectTrigger className="mt-2 w-full">
+                                <SelectValue />
+                            </SelectTrigger>
+
+                            <SelectContent>
+                                {CURRENCIES.map(currency => (
+                                    <SelectItem
+                                        key={currency.code}
+                                        value={currency.code}
+                                    >
+                                        {currency.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+            </SheetContent>
+        </Sheet>
+    );
+}
