@@ -6,14 +6,9 @@ use App\Enums\ProductAiStatusEnum;
 use App\Http\Controllers\Api\ProductController;
 use App\Models\Product;
 use App\Models\User;
-use App\Policies\ProductPolicy;
 use App\Services\ProductService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Gate;
 use Laravel\Sanctum\Sanctum;
-use PHPUnit\Framework\Attributes\DataProvider;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class ProductControllerTest extends TestCase
@@ -28,21 +23,10 @@ class ProductControllerTest extends TestCase
     {
         parent::setUp();
 
-        Permission::firstOrCreate(['name' => 'products.edit']);
-        Permission::firstOrCreate(['name' => 'products.delete']);
-        
-        // roles
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $editorRole = Role::firstOrCreate(['name' => 'editor']);
-
-        // assign permissions
-        $adminRole->givePermissionTo(Permission::all());
-
-        $editorRole->givePermissionTo([
-            'products.edit',
-        ]);
-        
-        $this->superadmin = User::factory()->superAdmin()->create();
+        $this->superadmin = User::where(
+            'email',
+            'superadmin@test.com'
+        )->firstOrFail();
         $this->admin = User::factory()->admin()->create();
         $this->editor = User::factory()->editor()->create();
     }
@@ -110,14 +94,37 @@ class ProductControllerTest extends TestCase
 
         $response = $this->actingAs($this->superadmin)
             ->putJson("/api/products/{$product->id}", [
-                'name_processed' => 'New Name',
+                'price' => $product->price,
+                'translations' => [
+                    'en' => [
+                        'name' => 'Updated',
+                        'description' => $product->description_processed,
+                    ],
+                    'uk' => [
+                        'name' => "Змінений",
+                        'description' => 'Український опис',
+                    ],
+                ],
             ]);
 
-        $response->assertOk();
+        $response->assertOk()
+            ->assertJsonFragment([
+                'name_processed' => 'Updated',
+            ])->assertJsonFragment([
+                'locale' => 'uk',
+                'name' => 'Змінений',
+            ]);
 
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
-            'name_processed' => 'New Name',
+            'name_processed' => 'Updated',
+        ]);
+        
+        $this->assertDatabaseHas('product_translations', [
+            'product_id' => $product->id,
+            'locale' => 'uk',
+            'name' => 'Змінений',
+            'description' => 'Український опис',
         ]);
     }
 
@@ -129,14 +136,37 @@ class ProductControllerTest extends TestCase
 
         $response = $this->actingAs($this->admin)
             ->putJson("/api/products/{$product->id}", [
-                'name_processed' => 'New Name',
+                'price' => $product->price,
+                'translations' => [
+                    'en' => [
+                        'name' => 'Updated',
+                        'description' => $product->description_processed,
+                    ],
+                    'uk' => [
+                        'name' => "Змінений",
+                        'description' => 'Український опис',
+                    ],
+                ],
             ]);
 
-        $response->assertOk();
+        $response->assertOk()
+            ->assertJsonFragment([
+                'name_processed' => 'Updated',
+            ])->assertJsonFragment([
+                'locale' => 'uk',
+                'name' => 'Змінений',
+            ]);
 
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
-            'name_processed' => 'New Name',
+            'name_processed' => 'Updated',
+        ]);
+
+        $this->assertDatabaseHas('product_translations', [
+            'product_id' => $product->id,
+            'locale' => 'uk',
+            'name' => 'Змінений',
+            'description' => 'Український опис',
         ]);
     }
 
@@ -146,7 +176,17 @@ class ProductControllerTest extends TestCase
 
         $response = $this->actingAs($this->editor)
             ->putJson("/api/products/{$product->id}", [
-                'name_processed' => 'Updated',
+                'price' => $product->price,
+                'translations' => [
+                    'en' => [
+                        'name' => 'Updated',
+                        'description' => $product->description_processed,
+                    ],
+                    'uk' => [
+                        'name' => "Змінений",
+                        'description' => 'Український опис',
+                    ],
+                ],
             ]);
 
         $response->assertOk();

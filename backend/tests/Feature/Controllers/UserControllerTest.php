@@ -5,7 +5,6 @@ namespace Tests\Feature\Controllers;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -20,18 +19,11 @@ class UserControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        Permission::firstOrCreate(['name' => 'users.edit']);
-        Permission::firstOrCreate(['name' => 'users.delete']);
         
-        // roles
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $editorRole = Role::firstOrCreate(['name' => 'editor']);
-
-        // assign permissions
-        $adminRole->givePermissionTo(Permission::all());
-        
-        $this->superadmin = User::factory()->superAdmin()->create();
+        $this->superadmin = User::where(
+            'email',
+            'superadmin@test.com'
+        )->firstOrFail();
         $this->admin = User::factory()->admin()->create();
         $this->editor = User::factory()->editor()->create();
     }
@@ -326,7 +318,7 @@ class UserControllerTest extends TestCase
             'password' => bcrypt($password),
         ]);
 
-        $response = $this->postJson('/users/login', [
+        $response = $this->postJson('/api/users/login', [
             'email' => $user->email,
             'password' => $password,
         ]);
@@ -345,7 +337,7 @@ class UserControllerTest extends TestCase
             'password' => bcrypt('correct-password'),
         ]);
 
-        $response = $this->postJson('/users/login', [
+        $response = $this->postJson('/api/users/login', [
             'email' => $user->email,
             'password' => 'wrong-password',
         ]);
@@ -370,7 +362,7 @@ class UserControllerTest extends TestCase
 
         $oldSessionId = session()->getId();
 
-        $this->postJson('/users/login', [
+        $this->postJson('/api/users/login', [
             'email' => $user->email,
             'password' => $password,
         ]);
