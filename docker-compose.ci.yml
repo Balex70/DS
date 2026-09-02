@@ -42,7 +42,7 @@ services:
     build:
       context: .  # Ensure build context is correct (root folder)
       dockerfile: docker/frontend/Dockerfile
-      target: dev
+      target: builder
     environment:
       NEXT_PUBLIC_CORE_API_ENTRYPOINT: http://localhost:8000
       CORE_API_ENTRYPOINT: http://backend-ci:80
@@ -50,6 +50,7 @@ services:
       - backend-ci
     ports:
       - "3000:3000"
+    command: ["sleep", "infinity"]
 
   db-ci:
     image: postgres:15

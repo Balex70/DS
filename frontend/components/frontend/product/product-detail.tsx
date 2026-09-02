@@ -16,7 +16,7 @@ import { AlertCircle, ArrowLeft } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 type Props = {
-    productId: number;
+    productId: string | number;
 };
 
 export function ProductDetail({ productId }: Props) {
