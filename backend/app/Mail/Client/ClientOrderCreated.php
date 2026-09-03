@@ -5,9 +5,11 @@ namespace App\Mail\Client;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 
 class ClientOrderCreated extends Mailable
 {
@@ -26,8 +28,14 @@ class ClientOrderCreated extends Mailable
      */
     public function envelope(): Envelope
     {
+        App::setLocale($this->order->locale);
+
         return new Envelope(
-            subject: 'Order Created',
+            subject: __('mails.order_created.subject'),
+            from: new Address(
+                config('mail.from.address'),
+                __('mails.from.name'),
+            ),
         );
     }
 
@@ -36,13 +44,14 @@ class ClientOrderCreated extends Mailable
      */
     public function content(): Content
     {
+        App::setLocale($this->order->locale);
+
         return new Content(
             markdown: 'mails.client.order-created',
             with: [
                 'orderNumber' => $this->order->order_number,
                 'fullName' => $this->order->shipping_full_name,
                 'link' => '/orders',
-                'message' => "Some message"
             ],
         );
     }

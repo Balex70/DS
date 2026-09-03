@@ -3,18 +3,14 @@
 @section('content')
 
 <h2 style="margin-top:0;">
-    Hello, {{ $fullName }}
+    {{ __('mails.order_created.greeting', ['name' => $fullName]) }}
 </h2>
 
 <p>
-    Your order has been created!
+    {{ __('mails.order_created.created') }}
 </p>
 <p>
-    Order Number: <strong>{{ $orderNumber }}</strong>.
-</p>
-
-<p>
-    {{ $message }}
+    {{ __('mails.order_created.order_number') }}: <strong>{{ $orderNumber }}</strong>.
 </p>
 
 <p style="margin:32px 0;">
@@ -27,7 +23,7 @@
 </p>
 
 <p>
-    Thanks,<br>
+    {{ __('mails.order_created.thanks') }},<br>
     {{ config('app.name') }}
 </p>
 
