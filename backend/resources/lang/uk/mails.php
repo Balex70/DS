@@ -4,18 +4,27 @@ return [
     'from' => [
         'name' => 'Підтримка Goosak',
     ],
-    'order_created' => [
-        'subject' => 'Замовлення створено',
-        'greeting' => 'Вітаємо, :name',
-        'created' => 'Ваше замовлення створено!',
-        'order_number' => 'Номер замовлення',
-        'order_items' => 'Деталі замовлення',
+    'order_items' => [
+        'header' => 'Деталі замовлення',
         'product' => 'Товар',
         'quantity' => 'Кількість',
         'price' => 'Ціна',
         'subtotal' => 'Підсумок',
         'shipping' => 'Доставка',
         'total' => 'Разом',
+    ],
+    'order_created' => [
+        'subject' => 'Замовлення створено',
+        'greeting' => 'Вітаємо, :name',
+        'created' => 'Ваше замовлення створено!',
+        'order_number' => 'Номер замовлення',
         'thanks' => 'Дякуємо',
     ],
+    'order_cancelled' => [
+        'subject' => 'Ваше замовлення скасовано!',
+        'greeting' => 'Вітаємо, :name',
+        'cancelled' => 'Ваше замовлення було скасовано!',
+        'order_number' => 'Номер замовлення',
+        'thanks' => 'З повагою',
+    ]
 ];
