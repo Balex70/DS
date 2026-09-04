@@ -3,31 +3,25 @@
 @section('content')
 
 <h2 style="margin-top:0;">
-    Hello, {{ $fullName }}
+    {{ __('mails.order_processing.greeting', ['name' => $fullName]) }}
 </h2>
 
 <p>
-    Your order is processing!
+    {{ __('mails.order_processing.processing') }}
 </p>
 <p>
-    Order Number: <strong>{{ $orderNumber }}</strong>.
+    {{ __('mails.order_processing.order_number') }}: <strong>{{ $orderNumber }}</strong>
 </p>
+
+@include('mails.includes.order-items', [
+    'items' => $items,
+    'subtotal' => $subtotal,
+    'shipping_cost' => $shipping_cost,
+    'total' => $total
+])
 
 <p>
-    {{ $message }}
-</p>
-
-<p style="margin:32px 0;">
-    <a
-        href="{{ $link }}"
-        style="display:inline-block;background:#0f6776;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:6px;"
-    >
-        View Order
-    </a>
-</p>
-
-<p>
-    Thanks,<br>
+    {{ __('mails.order_processing.thanks') }},<br>
     {{ config('app.name') }}
 </p>
 

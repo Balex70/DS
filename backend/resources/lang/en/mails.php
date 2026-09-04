@@ -33,5 +33,12 @@ return [
         'paid' => 'Payment received!',
         'order_number' => 'Order Number',
         'thanks' => 'Thanks',
+    ],
+    'order_processing' => [
+        'subject' => 'Order Processing',
+        'greeting' => 'Hello, :name',
+        'processing' => 'Your order is processing!',
+        'order_number' => 'Order Number',
+        'thanks' => 'Regards',
     ]
 ];
