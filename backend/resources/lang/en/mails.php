@@ -26,5 +26,12 @@ return [
         'cancelled' => 'Your order has been cancelled!',
         'order_number' => 'Order Number',
         'thanks' => 'Regards',
+    ],
+    'order_paid' => [
+        'subject' => 'Order Paid!',
+        'greeting' => 'Hello, :name',
+        'paid' => 'Payment received!',
+        'order_number' => 'Order Number',
+        'thanks' => 'Thanks',
     ]
 ];
