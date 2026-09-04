@@ -59,6 +59,7 @@ class StoreOrderService
                 'shipping_country' => $data['shipping_country'],
 
                 'notes' => $data['notes'] ?? null,
+                'locale' => $data['locale'] ?? 'en',
                 'checkout_token' => $cartToken,
             ];
 

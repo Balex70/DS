@@ -80,6 +80,9 @@ class UpdateOrderRequest extends FormRequest
 
             // Notes (safe editable field)
             'notes' => ['sometimes', 'nullable', 'string', 'max:2000'],
+
+            // Locale
+            'locale' => ['nullable', 'string', 'max:10'],
         ];
     }
 }
