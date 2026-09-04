@@ -40,5 +40,12 @@ return [
         'processing' => 'Your order is processing!',
         'order_number' => 'Order Number',
         'thanks' => 'Regards',
+    ],
+    'order_shipped' => [
+        'subject' => 'Your order is on its way!',
+        'greeting' => 'Hello, :name',
+        'shipped' => 'Your order has been sent!',
+        'order_number' => 'Order Number',
+        'thanks' => 'Regards',
     ]
 ];
