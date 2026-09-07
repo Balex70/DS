@@ -45,6 +45,8 @@ return [
         'subject' => 'Your order is on its way!',
         'greeting' => 'Hello, :name',
         'shipped' => 'Your order has been sent!',
+        'tracking_number' => 'Tracking Number',
+        'track_order_button' => 'Track Order Now',
         'order_number' => 'Order Number',
         'thanks' => 'Regards',
     ]

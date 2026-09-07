@@ -64,6 +64,13 @@ class ClientOrderShipped extends Mailable
             with: [
                 'orderNumber' => $this->order->order_number,
                 'fullName' => $this->order->shipping_full_name,
+                'tracking_number' => $this->order->ds_tracking_number ?? '',
+                'link' => sprintf(
+                    '%s/%s/track-order?trackingNumber=%s',
+                    rtrim(config('app.frontend_url'), '/'),
+                    $this->order->locale,
+                    urlencode($this->order->ds_tracking_number)
+                ),
                 'items' => $items,
                 'subtotal' => $this->order->subtotal,
                 'shipping_cost' => $this->order->shipping_cost,
