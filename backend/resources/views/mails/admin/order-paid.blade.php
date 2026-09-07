@@ -10,7 +10,7 @@
     Full name: {{ $fullName }}
 </p>
 <p>
-    Order Number: <strong>{{ $orderNumber }}</strong>.
+    Order Number: <strong>{{ $orderNumber }}</strong>
 </p>
 
 @endsection

@@ -10,7 +10,7 @@
     {{ __('mails.order_cancelled.cancelled') }}
 </p>
 <p>
-    {{ __('mails.order_cancelled.order_number') }}: <strong>{{ $orderNumber }}</strong>.
+    {{ __('mails.order_cancelled.order_number') }}: <strong>{{ $orderNumber }}</strong>
 </p>
 
 @include('mails.includes.order-items', [

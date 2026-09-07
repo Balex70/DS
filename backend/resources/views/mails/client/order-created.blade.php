@@ -10,7 +10,7 @@
     {{ __('mails.order_created.created') }}
 </p>
 <p>
-    {{ __('mails.order_created.order_number') }}: <strong>{{ $orderNumber }}</strong>.
+    {{ __('mails.order_created.order_number') }}: <strong>{{ $orderNumber }}</strong>
 </p>
 
 @include('mails.includes.order-items', [
