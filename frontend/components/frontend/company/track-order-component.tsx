@@ -7,12 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Link } from "@/i18n/navigation";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TrackingInfo } from "@/types/order";
 import { getOrderTrackInfo } from "@/services/order-service";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSearchParams } from "next/navigation";
 
 const Field = ({
     title,
@@ -68,12 +69,17 @@ export function getTrackingStatusKey(status: string | number | null | undefined)
 
 export function TrackOrderComponent() {
     const [tracking, setTracking] = useState<TrackingInfo | null>(null)
+    const [trackNumber, setTrackNumber] = useState("");
     const [isLoading, setIsLoading] = useState(false)
     const [errorTrackInfo, setErrorTrackInfo] = useState<string | null>(null)
-    const trackNumberRef = useRef<HTMLInputElement>(null)
     const t = useTranslations('frontend')
+    const searchParams = useSearchParams();
     
-    const handleTrackInfo = async (trackNumber: string) => {
+    const handleTrackInfo = useCallback(async (trackNumber: string) => {
+        if (!trackNumber.trim()) {
+            return;
+        }
+
         setErrorTrackInfo(null)
         setTracking(null)
         try {
@@ -97,12 +103,17 @@ export function TrackOrderComponent() {
             setErrorTrackInfo("Error")
         } finally {
             setIsLoading(false)
-            // Clear the input
-            if (trackNumberRef.current) {
-                trackNumberRef.current.value = "";
-            }
         }
-    }
+    }, []);
+
+    useEffect(() => {
+        const trackingNumber = searchParams.get("trackingNumber");
+
+        if (trackingNumber) {
+            setTrackNumber(trackingNumber);
+            handleTrackInfo(trackingNumber);
+        }
+    }, [searchParams, handleTrackInfo]);
 
     return (
         <div className="mx-auto max-w-3xl py-4 lg:py-10">
@@ -214,13 +225,19 @@ export function TrackOrderComponent() {
                         disabled={isLoading}
                         className="w-full"
                         placeholder={t('footer.track_order.order_number_placeholder')}
-                        ref={trackNumberRef}
+                        value={trackNumber}
+                        onChange={(e) => setTrackNumber(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && !isLoading) {
+                                handleTrackInfo(trackNumber);
+                            }
+                        }}
                     />
 
                     <Button
-                        disabled={isLoading}
+                        disabled={isLoading || !trackNumber.trim()}
                         className="w-full"
-                        onClick={() => handleTrackInfo(trackNumberRef.current?.value ?? "")}
+                        onClick={() => handleTrackInfo(trackNumber)}
                     >
                         {t('footer.track_order.track_button')}
                     </Button>
