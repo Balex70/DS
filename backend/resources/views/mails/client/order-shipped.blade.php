@@ -3,31 +3,40 @@
 @section('content')
 
 <h2 style="margin-top:0;">
-    Hello, {{ $fullName }}
+    {{ __('mails.order_shipped.greeting', ['name' => $fullName]) }}
 </h2>
 
 <p>
-    Your order has been sent!
-</p>
-<p>
-    Order Number: <strong>{{ $orderNumber }}</strong>.
+    {{ __('mails.order_shipped.shipped') }}
 </p>
 
-<p>
-    {{ $message }}
-</p>
+@if ($tracking_number)
+    <p>
+        {{ __('mails.order_shipped.tracking_number') }}: <strong>{{ $tracking_number }}</strong>
+    </p>
+    <p style="margin:32px 0;">
+        <a
+            href="{{ $link }}"
+            style="display:inline-block;background:#0f6776;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:6px;"
+        >
+           {{ __('mails.order_shipped.track_order_button') }}
+        </a>
+    </p>
 
-<p style="margin:32px 0;">
-    <a
-        href="{{ $link }}"
-        style="display:inline-block;background:#0f6776;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:6px;"
-    >
-        View Order
-    </a>
-</p>
+    <p>
+        {{ __('mails.order_shipped.order_number') }}: <strong>{{ $orderNumber }}</strong>
+    </p>
+@endif
+
+@include('mails.includes.order-items', [
+    'items' => $items,
+    'subtotal' => $subtotal,
+    'shipping_cost' => $shipping_cost,
+    'total' => $total
+])
 
 <p>
-    Thanks,<br>
+    {{ __('mails.order_shipped.thanks') }},<br>
     {{ config('app.name') }}
 </p>
 

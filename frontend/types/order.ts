@@ -31,6 +31,7 @@ export type Order = {
     shipping_country: string;
     public_token: string;
     notes?: string;
+    locale: string;
     created_at: string;
     updated_at: string;
 }
@@ -78,6 +79,7 @@ export type OrderPayload = {
     shipping_cost?: number;
     shipping_method?: string;
     currency?: string;
+    locale?: string;
 };
 
 export type TrackingInfo = {

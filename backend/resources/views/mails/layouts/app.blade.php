@@ -17,7 +17,7 @@
                     <td align="center" style="padding-bottom:24px;">
                         <a href="{{ config('app.url') }}">
                             <img
-                                src="{{ config('app.url') }}:8000/logo.png"
+                                src="{{ config('app.url') }}/logo.svg"
                                 alt="{{ config('app.name') }}"
                                 style="max-height:60px;"
                             >
