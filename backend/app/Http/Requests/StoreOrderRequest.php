@@ -56,6 +56,9 @@ class StoreOrderRequest extends FormRequest
 
             // Notes
             'notes' => ['nullable', 'string', 'max:2000'],
+
+            // Locale
+            'locale' => ['nullable', 'string', 'max:10'],
         ];
     }
 }

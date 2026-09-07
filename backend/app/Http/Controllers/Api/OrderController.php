@@ -98,6 +98,7 @@ class OrderController extends Controller
         $dsStatusCurrent = $order->ds_status;
         $order->status = $this->service->toOrderStatus($responseData['data']['orderStatus']);
         $order->ds_status = $this->service->toDsStatus($responseData['data']['orderStatus']);
+        $order->ds_tracking_number = $responseData['data']['trackNumber'] ?? null;
         $order->ds_order_id = $responseData['data']['cjOrderCode'];
         $order->is_sandbox = $responseData['data']['isSandbox'] ? 1 : 0;
         $order->save();

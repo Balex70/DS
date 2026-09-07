@@ -12,6 +12,12 @@ export function OrderDrawerCustomerFields({order}: {order: Order}) {
                 {order.customer_id ?? "Guest"}
             </div>
         </Field>
+        <Field>
+            <FieldLabel>Locale</FieldLabel>
+            <span className="text-md text-muted-foreground">
+                {order.locale}
+            </span>
+        </Field>
     </FieldGroup>
   )
 }

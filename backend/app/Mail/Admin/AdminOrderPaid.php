@@ -5,6 +5,7 @@ namespace App\Mail\Admin;
 use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -27,7 +28,11 @@ class AdminOrderPaid extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Order Paid',
+            subject: config('mail.from.name') . ': Order Paid',
+            from: new Address(
+                config('mail.from.address'),
+                config('mail.from.name'),
+            ),
         );
     }
 
@@ -41,8 +46,6 @@ class AdminOrderPaid extends Mailable
             with: [
                 'orderNumber' => $this->order->order_number,
                 'fullName' => $this->order->shipping_full_name,
-                'link' => '/orders',
-                'message' => "Some message"
             ],
         );
     }

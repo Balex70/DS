@@ -124,6 +124,7 @@ export function CheckoutComponent() {
                 shipping_method: shippingMethod?.id,
                 payment_method: gateway?.gateway,
                 currency: "USD",
+                locale: locale,
             },
             {
                 onSuccess: (orderResponse) => {
