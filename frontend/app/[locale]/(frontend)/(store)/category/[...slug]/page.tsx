@@ -6,6 +6,7 @@ import { CategoryFooterSection } from "@/components/frontend/category/category-f
 import { CategoryHeaderSection } from "@/components/frontend/category/category-header-section";
 import { SubcategoriesSection } from "@/components/frontend/category/subcategories-section";
 import { Separator } from "@/components/ui/separator";
+import { getSettings } from "@/actions/settingsActions";
 
 type Props = {
     params: Promise<{
@@ -18,7 +19,12 @@ export async function generateMetadata({
     params,
 }: Props): Promise<Metadata> {
     const { locale, slug } = await params;
-    const categories = await getCategories();
+    const [categories, settings] = await Promise.all([
+        getCategories(),
+        getSettings(),
+    ]);
+
+    const storeName = (settings?.["store.name"] && settings?.["store.name"] !== '') ? ' | ' + settings?.["store.name"] : '';
     const lastSlug = slug[slug.length - 1];
     const category = categories.find((c) => c.slug === lastSlug);
     const translation = category?.translations.find((item) => item.locale === locale);
@@ -30,8 +36,8 @@ export async function generateMetadata({
     }
 
     return {
-        title: (translation?.name != undefined && translation?.name != '') ? translation?.name : category?.name,
-        description: (translation?.description != undefined && translation?.description != '') ? translation?.description : category?.description,
+        title: (translation?.meta_title != undefined && translation?.meta_title != '') ? translation?.meta_title + storeName : category?.name + storeName,
+        description: (translation?.meta_description != undefined && translation?.meta_description != '') ? translation?.meta_description : category?.description,
     };
 }
 
