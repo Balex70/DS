@@ -22,6 +22,8 @@ use Illuminate\Support\Str;
     'full_path',
     'active',
     'is_visible',
+    'meta_title',
+    'meta_description'
 ])]
 class Category extends Model
 {

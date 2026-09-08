@@ -36,6 +36,8 @@ class UpdateCategoryRequest extends FormRequest
             "description" => ['sometimes', 'max:1255'],
             "image" => ['nullable', 'image', 'max:2048'],
             "translations" => ['sometimes', 'array'],
+            "meta_title" => ['sometimes', 'max:255'],
+            "meta_description" => ['sometimes', 'max:1255'],
         ];
     }
 }

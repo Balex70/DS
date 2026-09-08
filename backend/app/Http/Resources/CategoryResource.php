@@ -25,7 +25,9 @@ class CategoryResource extends JsonResource
             'slug' => $this->slug,
             'image' => $this->image,
             'full_path' => $this->full_path,
-            'translations' => $this->translations
+            'translations' => $this->translations,
+            'meta_title' => $this->meta_title,
+            'meta_description' => $this->meta_description,
         ];
         // return parent::toArray($request);
     }
