@@ -1,30 +1,22 @@
 "use client";
 
-import { Separator } from "@/components/ui/separator";
-import { SubcategoriesSection } from "@/components/frontend/category/subcategories-section";
-import { CategoryHeaderSection } from "@/components/frontend/category/category-header-section";
 import { ProductsSection } from "@/components/frontend/category/products-section";
 import { CategorySidebar } from "@/components/frontend/category/CategorySidebar";
 import { useProducts } from "@/hooks/use-products";
 import { useState } from "react";
 import { useProductFilters } from "@/hooks/use-product-filters";
 import { SortSelect } from "./SortSelect";
-import { CategoryFooterSection } from "./category-footer-section";
 import { useCurrency } from "@/context/CurrencyContext";
 import { MobileSortSelect } from "./MobileSortSelect";
-import { Category, SortSelectValue } from "@/types/category";
+import { SortSelectValue } from "@/types/category";
 import { MobileCategorySidebar } from "./MobileCategorySidebar";
 
 type Props = {
-    categories: Category[];
-    category: Category;
     slug: string[];
     locale: string;
 };
 
 export function CategoryComponent({
-    categories,
-    category,
     slug,
     locale
 }: Props) {
@@ -64,7 +56,7 @@ export function CategoryComponent({
     }
 
     return (
-        <>
+        <div className="flex w-full gap-6">
             <aside className="hidden w-72 shrink-0 lg:block">
                 {!isFilterLoading &&
                     <CategorySidebar
@@ -83,14 +75,6 @@ export function CategoryComponent({
 
             <main className="min-w-0 flex-1">
                 <div className="space-y-3 lg:space-y-6">
-                    {/* Header / Category Info */}
-                    <CategoryHeaderSection category={category} />
-
-                    {/* Subcategories */}
-                    <SubcategoriesSection slug={slug} category={category} categories={categories} />
-
-                    <Separator />
-
                     <div className="px-2 mb-2">
                         {/* Desktop */}
                         <div className="hidden lg:block">
@@ -128,11 +112,8 @@ export function CategoryComponent({
                         hasNextPage={productsQuery.hasNextPage}
                         isFetchingNextPage={productsQuery.isFetchingNextPage}
                     />
-
-                    {/* Footer / Category description */}
-                    <CategoryFooterSection category={category} />
                 </div>
             </main>
-        </>
+        </div>
     );
 }

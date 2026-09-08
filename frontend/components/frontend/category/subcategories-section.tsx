@@ -1,13 +1,11 @@
-"use client";
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 import CategoryImage from "./CategoryImage";
 import Image from 'next/image'
 import { Separator } from "@/components/ui/separator";
 import { CategoryBreadcrumbs } from "./category-breadcrumbs";
-import { useLocale } from "next-intl";
 import { Category } from "@/types/category";
+import { getLocale } from "next-intl/server";
 
 type Props = {
     slug: string[];
@@ -15,19 +13,19 @@ type Props = {
     categories?: Category[];
 };
 
-export function SubcategoriesSection({
+export async function SubcategoriesSection({
     slug,
     category,
     categories,
 }: Props) {
-    const locale = useLocale();
+    const locale = await getLocale();
     const subcategories = categories?.filter((c) => c.parent_id === category?.id);
 
     if (!subcategories?.length) {
         return (
             <>
                 <Separator />
-                <CategoryBreadcrumbs slug={slug} />
+                <CategoryBreadcrumbs categories={categories} slug={slug} />
             </>
         );
     }
@@ -35,7 +33,7 @@ export function SubcategoriesSection({
     return (
         <>
             <Separator />
-            <CategoryBreadcrumbs slug={slug} />
+            <CategoryBreadcrumbs categories={categories} slug={slug} />
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
                 {subcategories.map((category) => {
                     const translation = category?.translations.find((item) => item.locale === locale);
