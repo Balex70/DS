@@ -3,31 +3,30 @@
 import ProductGallery from "./ProductGallery";
 import { useAddToCart } from "@/hooks/use-add-to-cart";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useLocale, useTranslations } from 'next-intl';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MobileVariantSelector from "./mobile-variant-selector";
-import { Product } from "@/types/product";
+import { Product, ProductVariant } from "@/types/product";
 import { CurrencyCode } from "@/types/currency";
+import { useRouter } from "@/i18n/navigation";
 
 type Props = {
     product: Product;
+    selectedVariant: ProductVariant;
     currency: CurrencyCode;
 };
 
 export function ProductDetail({
     product,
+    selectedVariant,
     currency
 }: Props) {
     const { mutate: addToCart, isPending } = useAddToCart();
-    const [selectedVariantId, setSelectedVariantId] = useState<number | null>(null);
     const locale = useLocale();
     const t = useTranslations('frontend')
+    const router = useRouter();
     
-    const selectedVariant = product?.variants?.find(v => v.id === selectedVariantId)
-        ?? product?.variants?.[0];
-
     const activeVariantId = selectedVariant?.id;
     const galleryMainImage = selectedVariant?.image ?? product.big_image;
     const variantTranslation = selectedVariant?.translations.find((item) => item.locale === locale);
@@ -97,8 +96,12 @@ export function ProductDetail({
                             <>
                                 <div className="hidden lg:block">
                                     <Select
-                                        value={activeVariantId?.toString()}
-                                        onValueChange={(value) => setSelectedVariantId(Number(value))}
+                                        value={selectedVariant.external_id.toString()}
+                                        onValueChange={(externalId) => {
+                                            router.push(
+                                                `/product/${product.id.toString()}/${externalId}`
+                                            );
+                                        }}
                                         >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select variant" />
@@ -107,8 +110,8 @@ export function ProductDetail({
                                         <SelectContent>
                                             {product.variants.map((variant) => (
                                                 <SelectItem
-                                                    key={variant.id}
-                                                    value={variant.id.toString()}
+                                                    key={variant.external_id}
+                                                    value={variant.external_id.toString()}
                                                 >
                                                     {variant.key}
                                                 </SelectItem>
@@ -117,7 +120,7 @@ export function ProductDetail({
                                     </Select>
                                 </div>
                                 <div className="lg:hidden">
-                                    <MobileVariantSelector variants={product.variants} selectedVariant={selectedVariant} setSelectedVariantId={setSelectedVariantId} />
+                                    <MobileVariantSelector product={product} variants={product.variants} selectedVariant={selectedVariant} />
                                 </div>
                             </>
                         ) : (
@@ -128,7 +131,11 @@ export function ProductDetail({
                                     return (
                                         <button
                                             key={variant.id}
-                                            onClick={() => setSelectedVariantId(variant.id)}
+                                            onClick={() => {
+                                                router.push(
+                                                    `/product/${product.id.toString()}/${variant.external_id.toString()}`
+                                                );
+                                            }}
                                             className={cn(
                                                 "rounded-2xl border px-3 py-1.5 text-sm transition-all",
                                                 isSelected

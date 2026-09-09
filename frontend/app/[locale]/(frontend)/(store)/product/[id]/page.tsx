@@ -1,10 +1,7 @@
 import { getProduct } from "@/actions/productActions";
-import { BackButton } from "@/components/frontend/product/BackButton";
-import { ProductDetail } from "@/components/frontend/product/product-detail";
 import { CURRENCIES, CurrencyCode } from "@/types/currency";
-import { Metadata } from "next";
 import { cookies } from "next/headers";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 type Props = {
     params: Promise<{
@@ -12,32 +9,6 @@ type Props = {
         locale: string;
     }>;
 };
-
-export async function generateMetadata({
-    params,
-}: Props): Promise<Metadata> {
-    const { id, locale } = await params;
-
-    try {
-        const product = await getProduct(id);
-
-        const translation = product.translations?.find(
-            (item) => item.locale === locale
-        );
-
-        const title = translation?.name ?? product.name_processed ?? product.name_raw;
-        const description = translation?.description ?? product.description_processed ?? product.description_raw ?? "";
-
-        return {
-            title,
-            description,
-        };
-    } catch {
-        return {
-            title: "Product",
-        };
-    }
-}
 
 const DEFAULT_CURRENCY: CurrencyCode = "USD";
 
@@ -49,12 +20,7 @@ function getCurrency(value: string | undefined): CurrencyCode {
 
 export default async function ProductPage({
     params,
-}: {
-    params: Promise<{
-        id: string;
-        locale: string;
-    }>;
-}) {
+}: Props) {
     const { id, locale } = await params;
 
     const cookieStore = await cookies();
@@ -65,24 +31,12 @@ export default async function ProductPage({
         notFound();
     }
 
-    const translation = product.translations?.find(
-            (item) => item.locale === locale
-        );
+    const selectedVariant = product?.variants?.[0];
+    if (!selectedVariant) {
+        notFound();
+    }
 
-    return (
-        <div className="container mx-auto pb-12">
-            <BackButton />
-            <ProductDetail
-                product={product}
-                currency={currency}
-                />
-
-            {/* DESCRIPTION (if you have it) */}
-            {product.description_processed && (
-                <div className="full-width prose max-w-none text-sm text-muted-foreground">
-                    {translation?.description ?? product.description_processed ?? product.description_raw}
-                </div>
-            )}
-        </div>
+    redirect(
+        `/${locale}/product/${id}/${selectedVariant.external_id}`
     );
 }

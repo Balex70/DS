@@ -5,24 +5,26 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import BottomSheetHeader from "../bottom-sheet-header";
-import { ProductVariant } from "@/types/product";
+import { Product, ProductVariant } from "@/types/product";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 
 type Props = {
+    product: Product,
     variants: ProductVariant[],
     selectedVariant: ProductVariant,
-    setSelectedVariantId: (id: number) => void
 }
 
 export default function MobileVariantSelector({
+    product,
     variants,
-    selectedVariant,
-    setSelectedVariantId
+    selectedVariant
 }: Props) {
     const [open, setOpen] = useState(false);
     const t = useTranslations('frontend')
+    const router = useRouter();
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -49,8 +51,10 @@ export default function MobileVariantSelector({
                             <button
                                 key={variant.id}
                                 onClick={() => {
-                                    setSelectedVariantId(Number(variant.id));
                                     setOpen(false);
+                                    router.push(
+                                        `/product/${product.id.toString()}/${variant.external_id.toString()}`
+                                    );
                                 }}
                                 className={cn(
                                     "flex w-full items-center justify-between rounded-lg px-4 py-3 text-left transition-colors",
