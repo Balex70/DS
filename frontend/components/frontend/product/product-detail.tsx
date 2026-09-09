@@ -1,79 +1,30 @@
 "use client";
 
-import { useProduct } from "@/hooks/use-product";
 import ProductGallery from "./ProductGallery";
 import { useAddToCart } from "@/hooks/use-add-to-cart";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useLocale, useTranslations } from 'next-intl';
-import { useCurrency } from "@/context/CurrencyContext";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import MobileVariantSelector from "./mobile-variant-selector";
-import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/navigation";
-import { AlertCircle } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Product } from "@/types/product";
+import { CurrencyCode } from "@/types/currency";
 
 type Props = {
-    productId: string | number;
+    product: Product;
+    currency: CurrencyCode;
 };
 
-export function ProductDetail({ productId }: Props) {
-    const { currency } = useCurrency();
-    const { data: product, error, isLoading } = useProduct(productId, currency);
+export function ProductDetail({
+    product,
+    currency
+}: Props) {
     const { mutate: addToCart, isPending } = useAddToCart();
     const [selectedVariantId, setSelectedVariantId] = useState<number | null>(null);
     const locale = useLocale();
     const t = useTranslations('frontend')
     
-    if (isLoading) {
-        return (
-            <div className="container mx-auto px-4 py-6">
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-                    <div className="space-y-4 animate-pulse">
-                        <div className="h-4 w-3/4 rounded bg-muted" />
-                        <div className="h-3 w-1/2 rounded bg-muted" />
-                    </div>
-                    <div className="space-y-4 animate-pulse">
-                        <div className="h-4 w-3/4 rounded bg-muted" />
-                        <div className="h-3 w-1/2 rounded bg-muted" />
-                    </div>
-                    <p className="mt-2 animate-pulse text-left text-xs text-muted-foreground">
-                        {t('loading_loader')}
-                    </p>
-                </div>
-            </div>
-        );
-    }
-
-    if (error?.response?.status === 404 || !product) {
-        return (
-            <div className="min-w-0 flex-1">
-                <Card className="mx-auto w-full max-w-5xl overflow-hidden border-border/60 bg-background shadow-sm">
-                    <CardContent className="flex min-h-[360px] flex-col items-center justify-center px-6 py-12 text-center">
-                        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-muted">
-                            <AlertCircle className="h-10 w-10 text-muted-foreground" />
-                        </div>
-
-                        <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-                            {t('product.not_found_label')}
-                        </h2>
-
-                        <Button
-                            className="mt-6"
-                            variant="outline"
-                        >
-                            <Link href="/">
-                                {t('to_home_button')}
-                            </Link>
-                        </Button>
-                    </CardContent>
-                </Card>
-            </div>
-        )
-    }
-
     const selectedVariant = product?.variants?.find(v => v.id === selectedVariantId)
         ?? product?.variants?.[0];
 

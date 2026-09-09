@@ -4,6 +4,7 @@ import { ProductDetail } from "@/components/frontend/product/product-detail";
 import { CURRENCIES, CurrencyCode } from "@/types/currency";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 
 type Props = {
     params: Promise<{
@@ -60,6 +61,10 @@ export default async function ProductPage({
     const currency = getCurrency(cookieStore.get("currency")?.value);
 
     const product = await getProduct(id, currency);
+    if (!product) {
+        notFound();
+    }
+
     const translation = product.translations?.find(
             (item) => item.locale === locale
         );
@@ -67,7 +72,10 @@ export default async function ProductPage({
     return (
         <div className="container mx-auto pb-12">
             <BackButton />
-            <ProductDetail productId={id} />
+            <ProductDetail
+                product={product}
+                currency={currency}
+                />
 
             {/* DESCRIPTION (if you have it) */}
             {product.description_processed && (
