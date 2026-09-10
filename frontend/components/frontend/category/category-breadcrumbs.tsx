@@ -1,5 +1,3 @@
-'use client'
-
 import { Link } from "@/i18n/navigation";
 import {
     Breadcrumb,
@@ -8,9 +6,8 @@ import {
     BreadcrumbList,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { useCategories } from "@/hooks/use-categories";
 import { Category } from "@/types/category";
-import { useLocale, useTranslations } from "next-intl";
+import { getLocale, getTranslations } from 'next-intl/server';
 import { Fragment } from "react";
 
 function buildBreadcrumbs(slug: string[], categories?: Category[], locale?: string) {
@@ -23,10 +20,15 @@ function buildBreadcrumbs(slug: string[], categories?: Category[], locale?: stri
         };
     });
 }
-export function CategoryBreadcrumbs({ slug }: { slug: string[] }) {
-    const { data: categories } = useCategories();
-    const locale = useLocale();
-    const t = useTranslations('frontend')
+export async function CategoryBreadcrumbs({
+    categories,
+    slug
+}: {
+    categories?: Category[],
+    slug: string[]
+}) {
+    const locale = await getLocale();
+    const t = await getTranslations('frontend');
     
     const items = buildBreadcrumbs(slug, categories, locale);
 

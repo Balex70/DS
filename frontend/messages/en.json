@@ -8,9 +8,13 @@
     "page_404": {
       "title": "Page not found",
       "description": "Sorry, we couldn't find the page you're looking for. It may have been moved, deleted, or the link might be incorrect.",
+      "meta_title": "Page Not Found",
+      "meta_description": "The page you're looking for doesn't exist or may have been moved. Return to Goosak and continue shopping.",
       "back_to_home": "Back to home"
     },
     "main": {
+      "meta_title": "Quality Products at Great Prices",
+      "meta_description": "Shop quality products at affordable prices at Goosak. Discover great-value products for everyday needs with secure payment, reliable delivery, and a convenient online shopping experience.",
       "hero_carousel": {
         "new_arrival": "New Arrival"
       },
@@ -87,6 +91,8 @@
     },
     "checkout": {
       "header": "Checkout",
+      "meta_title": "Checkout | Complete Your Order",
+      "meta_description": "Complete your order securely. Review your items, enter your delivery details, choose a payment method, and place your order.",
       "your_order": "Your order",
       "cart_is_empty": "Your cart is empty",
       "delivered_by_logistics_partners": "Delivered by one of our local logistics partners",
@@ -191,6 +197,8 @@
       },
       "payment_result": {
         "header": "Thank you for your order!",
+        "meta_title": "Payment Result",
+        "meta_description": "Result of your payment Goosak order.",
         "text_1": "We have received your payment attempt and are currently processing it.",
         "text_2": "Your order status will be updated automatically once the payment provider confirms the transaction.",
         "order_number": "Order number",
@@ -239,6 +247,8 @@
       "about_us_section": {
         "header": "About us",
         "short_description": "We believe online shopping should be simple, affordable, and accessible to everyone. By partnering directly with trusted suppliers, we offer a wide selection of quality products at competitive prices, supported by secure payments, transparent shipping, and reliable customer service.",
+        "meta_title": "About Us | Our Story, Vision & Commitment",
+        "meta_description": "Discover our story, vision, and commitment to affordable and reliable service, and a great shopping experience.",
         "our_story": {
           "header": "Our Story",
           "story_1": "Our journey began with a simple question: why should customers pay extra for unnecessary layers in the supply chain? By embracing the dropshipping model and partnering directly with reliable suppliers, we streamline the purchasing process, reduce overhead, and pass those savings on to our customers through more affordable prices.",
@@ -266,13 +276,19 @@
       "contact_us_section": {
         "header": "Contact Us",
         "description": "We're here to help! Reach out to us with any questions or concerns, and we'll be happy to assist you.",
+        "meta_title": "Contact Us | Get in Touch with Our Support Team",
+        "meta_description": "Have a question about an order, product, delivery, or payment? Contact us and we'll be happy to help.",
         "email": "Email",
         "phone": "Phone",
-        "working_hours": "Working hours"
+        "working_hours": "Working hours",
+        "monday": "Monday",
+        "friday": "Friday"
       },
       "faq_section": {
         "header": "Frequently Asked Questions",
         "description": "Find answers to the most common questions about orders, shipping, payments, returns, and customer support.",
+        "meta_title": "FAQ | Frequently Asked Questions",
+        "meta_description": "Find answers to common questions about Goosak products, orders, delivery, payment methods, tracking, returns, and customer support.",
         "question_1": {
           "question": "How long does shipping take?",
           "answer": "Delivery times depend on the selected shipping method and destination country. Estimated delivery dates are displayed during checkout before you place your order."
@@ -301,6 +317,8 @@
       "shipping_section": {
         "header": "Shipping Information",
         "description": "Everything you need to know about shipping, delivery estimates, and tracking your order.",
+        "meta_title": "Shipping & Delivery",
+        "meta_description": "Learn about shipping and delivery options, estimated delivery times, shipping costs, and how to track your order.",
         "shipping_coverage": "Worldwide Shipping",
         "shipping_coverage_description": "We ship to most countries around the world. Available shipping options are shown during checkout based on your delivery address.",
         "shipping_delivery_time": "Delivery Time",
@@ -313,6 +331,8 @@
       "returns": {
         "header": "Returns & Refunds",
         "description": "We want you to shop with confidence. Below you'll find information about returns, refunds, and what to do if there's an issue with your order.",
+        "meta_title": "Returns & Refunds",
+        "meta_description": "Learn about return and refund policy, including eligibility, return conditions, and how to request a refund for your order.",
         "return_eligibility": "Return Eligibility",
         "return_eligibility_description": "Eligible items may be returned according to our return policy. Products should be unused and returned in their original condition whenever possible.",
         "refund_process": "Refund Process",
@@ -325,6 +345,8 @@
       "track_order": {
         "header": "Track Your Order",
         "description": "Enter your tracking number to check the latest status of your order",
+        "meta_title": "Track Your Order | Order Status",
+        "meta_description": "Track your order on Goosak online store and check its current status, delivery progress, and the latest updates on your shipment.",
         "order_number_placeholder": "Tracking Number",
         "track_button": "Track Order",
         "alert_label": "Tracking Information Not Found",
@@ -352,6 +374,8 @@
       "payment_methods_section": {
         "header": "Payment Methods",
         "description": "We offer secure and reliable payment options to make your checkout experience simple and safe.",
+        "meta_title": "Payment Methods | Secure Ways to Pay",
+        "meta_description": "Learn about the secure payment methods available at Goosak and choose the most convenient way to pay for your order.",
         "accept": "Accepted Payment Methods",
         "accept_description": "We accept major credit and debit cards as well as other secure payment methods available during checkout.",
         "secure": "Secure Payments",
@@ -364,6 +388,8 @@
       "privacy_policy_section": {
         "header": "Privacy Policy",
         "description": "Your privacy is important to us. This page explains how we collect, use, and protect your personal information when you use our website.",
+        "meta_title": "Privacy Policy | Your Privacy & Data Protection",
+        "meta_description": "Learn how Goosak collects, uses, and protects your personal information and understand your privacy rights when using our website.",
         "collect": "Information We Collect",
         "collect_description": "We collect only the information necessary to process your orders, provide customer support, and improve your shopping experience.",
         "use": "How We Use Your Information",
@@ -376,6 +402,8 @@
       "terms_section": {
         "header": "Terms & Conditions",
         "description": "These Terms & Conditions outline the rules and conditions for using our website and purchasing products from our store.",
+        "meta_title": "Terms & Conditions",
+        "meta_description": "Read Goosak's terms and conditions to understand the rules, responsibilities, and conditions that apply when using our website and placing orders.",
         "use_website": "Use of Our Website",
         "use_website_description": "By using our website, you agree to comply with these Terms & Conditions and all applicable laws and regulations.",
         "orders": "Orders",
@@ -388,6 +416,8 @@
       "cookie_policy_section": {
         "header": "Cookie Policy",
         "description": "This Cookie Policy explains what cookies are, how we use them, and the choices you have regarding their use on our website.",
+        "meta_title":  "Cookie Policy",
+        "meta_description": "Learn how Goosak uses cookies and similar technologies to improve your browsing experience and provide better services.",
         "what": "What Are Cookies?",
         "what_description": "Cookies are small text files stored on your device that help websites remember your preferences and improve your browsing experience.",
         "use": "How We Use Cookies",
