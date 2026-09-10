@@ -360,6 +360,8 @@
       "payment_methods_section": {
         "header": "Payment Methods",
         "description": "We offer secure and reliable payment options to make your checkout experience simple and safe.",
+        "meta_title": "Payment Methods | Secure Ways to Pay",
+        "meta_description": "Learn about the secure payment methods available at Goosak and choose the most convenient way to pay for your order.",
         "accept": "Accepted Payment Methods",
         "accept_description": "We accept major credit and debit cards as well as other secure payment methods available during checkout.",
         "secure": "Secure Payments",
