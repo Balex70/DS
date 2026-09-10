@@ -394,6 +394,8 @@
       "cookie_policy_section": {
         "header": "Cookie Policy",
         "description": "This Cookie Policy explains what cookies are, how we use them, and the choices you have regarding their use on our website.",
+        "meta_title":  "Cookie Policy",
+        "meta_description": "Learn how Goosak uses cookies and similar technologies to improve your browsing experience and provide better services.",
         "what": "What Are Cookies?",
         "what_description": "Cookies are small text files stored on your device that help websites remember your preferences and improve your browsing experience.",
         "use": "How We Use Cookies",
