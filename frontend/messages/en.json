@@ -309,6 +309,8 @@
       "shipping_section": {
         "header": "Shipping Information",
         "description": "Everything you need to know about shipping, delivery estimates, and tracking your order.",
+        "meta_title": "Shipping & Delivery",
+        "meta_description": "Learn about shipping and delivery options, estimated delivery times, shipping costs, and how to track your order.",
         "shipping_coverage": "Worldwide Shipping",
         "shipping_coverage_description": "We ship to most countries around the world. Available shipping options are shown during checkout based on your delivery address.",
         "shipping_delivery_time": "Delivery Time",
