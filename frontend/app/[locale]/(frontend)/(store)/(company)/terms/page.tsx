@@ -1,4 +1,19 @@
+import { getSettings } from "@/actions/settingsActions";
 import { TermsComponent } from "@/components/frontend/company/terms-component";
+import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata(): Promise<Metadata> {
+    const settings = await getSettings();
+    const t = await getTranslations('frontend');
+
+    const storeName = (settings?.["store.name"] && settings?.["store.name"] !== '') ? ' | ' + settings?.["store.name"] : '';
+
+    return {
+        title: t('footer.terms_section.meta_title') + storeName,
+        description: t('footer.terms_section.meta_description'),
+    };
+}
 
 export default async function TermsPage() {
     return (

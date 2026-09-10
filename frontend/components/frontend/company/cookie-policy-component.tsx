@@ -1,5 +1,3 @@
-'use client'
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Cookie, Settings2, Eye, ShieldCheck } from "lucide-react";
 import { useTranslations } from 'next-intl'

@@ -1,8 +1,29 @@
+import { getSettings } from "@/actions/settingsActions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Home, Search } from "lucide-react";
+import { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+    robots: {
+        index: false,
+        follow: false,
+    },
+};
+
+export async function generateMetadata(): Promise<Metadata> {
+    const settings = await getSettings();
+    const t = await getTranslations('frontend');
+
+    const storeName = (settings?.["store.name"] && settings?.["store.name"] !== '') ? ' | ' + settings?.["store.name"] : '';
+
+    return {
+        title: t('page_404.meta_title') + storeName,
+        description: t('page_404.meta_description'),
+    };
+}
 
 export default async function NotFound() {
     const locale = await getLocale();

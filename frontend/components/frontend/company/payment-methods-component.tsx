@@ -1,5 +1,3 @@
-'use client'
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from 'next-intl'
 import { BadgeDollarSign, CreditCard, ShieldCheck, Wallet } from "lucide-react";

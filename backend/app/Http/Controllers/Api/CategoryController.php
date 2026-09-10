@@ -63,6 +63,8 @@ class CategoryController extends Controller
         $category->update([
             'name' => $data['translations']['en']['name'],
             'description' => $data['translations']['en']['description'],
+            'meta_title' => $data['translations']['en']['meta_title'],
+            'meta_description' => $data['translations']['en']['meta_description'],
         ]);
 
         // 2. Sync translations
@@ -78,6 +80,8 @@ class CategoryController extends Controller
                     [
                         'name' => $translation['name'],
                         'description' => $translation['description'] ?? null,
+                        'meta_title' => $translation['meta_title'] ?? null,
+                        'meta_description' => $translation['meta_description'] ?? null,
                     ]
                 );
             }

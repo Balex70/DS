@@ -1,4 +1,19 @@
+import { getSettings } from "@/actions/settingsActions";
 import { CheckoutPaymentResultComponent } from "@/components/frontend/checkout/payment-result-component";
+import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
+
+export async function generateMetadata(): Promise<Metadata> {
+    const settings = await getSettings();
+    const t = await getTranslations('frontend');
+
+    const storeName = (settings?.["store.name"] && settings?.["store.name"] !== '') ? ' | ' + settings?.["store.name"] : '';
+
+    return {
+        title: t('checkout.payment_result.meta_title') + storeName,
+        description: t('checkout.payment_result.meta_description'),
+    };
+}
 
 type Props = {
     searchParams: Promise<{

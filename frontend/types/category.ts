@@ -13,12 +13,17 @@ export type Category = {
   slug: string,
   image: string,
   full_path: string,
+  meta_title: string,
+  meta_description: string
   translations: {
     locale: string,
     name: string,
     description: string
+    meta_title: string,
+    meta_description: string
   }[],
   products?: Product[]
 }
 
 export type SortSelectValue = "latest" | "price_asc" | "price_desc";
+export type CategoryEditableFields = "name" | "description" | "meta_title" | "meta_description";

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable([
-    'category_id', 'locale', 'name', 'description', 'translated_at',
+    'category_id', 'locale', 'name', 'description', 'translated_at', 'meta_title', 'meta_description',
 ])]
 class CategoryTranslation extends Model
 {

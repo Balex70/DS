@@ -10,7 +10,7 @@ import { useEffect, useState } from "react"
 import { getCookie, getErrorStringFromCatch } from "@/helpers/general"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Category } from "@/types/category"
+import { Category, CategoryEditableFields } from "@/types/category"
 import NextImageWithReplace from "@/components/custom/NextImageWithReplace"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
@@ -39,14 +39,16 @@ export function EditCategoryDrawer({
             string,
             {
                 name: string,
-                description: string
+                description: string,
+                meta_title: string,
+                meta_description: string
             }
         >
     >({})
     
     const updateTranslation = (
         locale: string,
-        field: "name" | "description",
+        field: CategoryEditableFields,
         value: string,
     ) => {
         setTranslations((prev) => ({
@@ -73,8 +75,22 @@ export function EditCategoryDrawer({
             locales.forEach(locale => {
                 updateTranslation(
                     locale,
+                    "meta_title",
+                    locale === "en" ? category.meta_title : category.translations.find(t => t.locale === locale)?.meta_title ?? "",
+                )
+            });
+            locales.forEach(locale => {
+                updateTranslation(
+                    locale,
                     "description",
                     locale === "en" ? category.description : category.translations.find(t => t.locale === locale)?.description ?? "",
+                )
+            });
+            locales.forEach(locale => {
+                updateTranslation(
+                    locale,
+                    "meta_description",
+                    locale === "en" ? category.meta_description : category.translations.find(t => t.locale === locale)?.meta_description ?? "",
                 )
             });
 
@@ -147,7 +163,11 @@ export function EditCategoryDrawer({
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="right" style={{ maxWidth: '40vw' }}>
+        <SheetContent
+            side="right"
+            className="flex flex-col"
+            style={{ maxWidth: '40vw' }}
+            >
             <SheetHeader>
             <SheetTitle>Edit category (ID: {category?.id})</SheetTitle>
             <SheetTitle>External ID: {category?.external_id}</SheetTitle>
@@ -171,7 +191,7 @@ export function EditCategoryDrawer({
             </Tabs>
             {category && (
             <form
-                className="space-y-4 mt-4 mx-4"
+                className="flex-1 overflow-y-auto space-y-4 mt-4 mx-4 pr-2"
                 onSubmit={(e) => {
                     e.preventDefault()
                     handleSaveCategory()
@@ -193,6 +213,21 @@ export function EditCategoryDrawer({
                             }
                         />
                     </Field>
+                    <Field>
+                        <FieldLabel htmlFor="form-rhf-demo-title">
+                            Meta title
+                        </FieldLabel>
+                        <Input
+                            value={translations[selectedLocale]?.meta_title ?? ""}
+                            onChange={(e) =>
+                                updateTranslation(
+                                    selectedLocale,
+                                    "meta_title",
+                                    e.target.value,
+                                )
+                            }
+                        />
+                    </Field>
 
                     <Field>
                         <FieldLabel htmlFor="form-rhf-demo-title">
@@ -204,6 +239,22 @@ export function EditCategoryDrawer({
                                 updateTranslation(
                                     selectedLocale,
                                     "description",
+                                    e.target.value,
+                                )
+                            }
+                        />
+                    </Field>
+                    
+                    <Field>
+                        <FieldLabel htmlFor="form-rhf-demo-title">
+                            Meta Description
+                        </FieldLabel>
+                        <Textarea
+                            value={translations[selectedLocale]?.meta_description ?? ""}
+                            onChange={(e) =>
+                                updateTranslation(
+                                    selectedLocale,
+                                    "meta_description",
                                     e.target.value,
                                 )
                             }

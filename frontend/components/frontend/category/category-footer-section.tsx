@@ -1,16 +1,14 @@
-"use client";
-
 import { Category } from "@/types/category";
-import { useLocale } from "next-intl";
+import { getLocale } from "next-intl/server";
 
 type Props = {
     category?: Category;
 };
 
-export function CategoryFooterSection({
+export async function CategoryFooterSection({
     category,
 }: Props) {
-    const locale = useLocale();
+    const locale = await getLocale();
     const translation = category?.translations.find((item) => item.locale === locale);
 
     if (!category) {
