@@ -321,6 +321,8 @@
       "returns": {
         "header": "Returns & Refunds",
         "description": "We want you to shop with confidence. Below you'll find information about returns, refunds, and what to do if there's an issue with your order.",
+        "meta_title": "Returns & Refunds",
+        "meta_description": "Learn about return and refund policy, including eligibility, return conditions, and how to request a refund for your order.",
         "return_eligibility": "Return Eligibility",
         "return_eligibility_description": "Eligible items may be returned according to our return policy. Products should be unused and returned in their original condition whenever possible.",
         "refund_process": "Refund Process",
