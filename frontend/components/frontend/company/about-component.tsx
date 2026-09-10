@@ -1,5 +1,3 @@
-'use client'
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { WhyChooseUs } from "./why-choose-us";
 import { CallToAction } from "./call-to-action";
@@ -33,7 +31,7 @@ export function AboutComponent() {
                         {t('footer.about_us_section.our_story.story_2')}
                     </p>
                     <p>
-                        {t('footer.about_us_section.our_story.story_2')}
+                        {t('footer.about_us_section.our_story.story_3')}
                     </p>
                 </CardContent>
             </Card>
