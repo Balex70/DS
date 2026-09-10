@@ -337,6 +337,8 @@
       "track_order": {
         "header": "Track Your Order",
         "description": "Enter your tracking number to check the latest status of your order",
+        "meta_title": "Track Your Order | Order Status",
+        "meta_description": "Track your order on Goosak online store and check its current status, delivery progress, and the latest updates on your shipment.",
         "order_number_placeholder": "Tracking Number",
         "track_button": "Track Order",
         "alert_label": "Tracking Information Not Found",
