@@ -268,9 +268,13 @@
       "contact_us_section": {
         "header": "Contact Us",
         "description": "We're here to help! Reach out to us with any questions or concerns, and we'll be happy to assist you.",
+        "meta_title": "Contact Us | Get in Touch with Our Support Team",
+        "meta_description": "Have a question about an order, product, delivery, or payment? Contact us and we'll be happy to help.",
         "email": "Email",
         "phone": "Phone",
-        "working_hours": "Working hours"
+        "working_hours": "Working hours",
+        "monday": "Monday",
+        "friday": "Friday"
       },
       "faq_section": {
         "header": "Frequently Asked Questions",
