@@ -279,6 +279,8 @@
       "faq_section": {
         "header": "Frequently Asked Questions",
         "description": "Find answers to the most common questions about orders, shipping, payments, returns, and customer support.",
+        "meta_title": "FAQ | Frequently Asked Questions",
+        "meta_description": "Find answers to common questions about Goosak products, orders, delivery, payment methods, tracking, returns, and customer support.",
         "question_1": {
           "question": "How long does shipping take?",
           "answer": "Delivery times depend on the selected shipping method and destination country. Estimated delivery dates are displayed during checkout before you place your order."
