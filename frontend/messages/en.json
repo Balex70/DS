@@ -374,6 +374,8 @@
       "privacy_policy_section": {
         "header": "Privacy Policy",
         "description": "Your privacy is important to us. This page explains how we collect, use, and protect your personal information when you use our website.",
+        "meta_title": "Privacy Policy | Your Privacy & Data Protection",
+        "meta_description": "Learn how Goosak collects, uses, and protects your personal information and understand your privacy rights when using our website.",
         "collect": "Information We Collect",
         "collect_description": "We collect only the information necessary to process your orders, provide customer support, and improve your shopping experience.",
         "use": "How We Use Your Information",
