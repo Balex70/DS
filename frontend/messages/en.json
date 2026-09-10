@@ -392,6 +392,8 @@
       "terms_section": {
         "header": "Terms & Conditions",
         "description": "These Terms & Conditions outline the rules and conditions for using our website and purchasing products from our store.",
+        "meta_title": "Terms & Conditions",
+        "meta_description": "Read Goosak's terms and conditions to understand the rules, responsibilities, and conditions that apply when using our website and placing orders.",
         "use_website": "Use of Our Website",
         "use_website_description": "By using our website, you agree to comply with these Terms & Conditions and all applicable laws and regulations.",
         "orders": "Orders",
