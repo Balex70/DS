@@ -195,6 +195,8 @@
       },
       "payment_result": {
         "header": "Thank you for your order!",
+        "meta_title": "Payment Result",
+        "meta_description": "Result of your payment Goosak order.",
         "text_1": "We have received your payment attempt and are currently processing it.",
         "text_2": "Your order status will be updated automatically once the payment provider confirms the transaction.",
         "order_number": "Order number",
