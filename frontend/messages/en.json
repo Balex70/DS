@@ -89,6 +89,8 @@
     },
     "checkout": {
       "header": "Checkout",
+      "meta_title": "Checkout | Complete Your Order",
+      "meta_description": "Complete your order securely. Review your items, enter your delivery details, choose a payment method, and place your order.",
       "your_order": "Your order",
       "cart_is_empty": "Your cart is empty",
       "delivered_by_logistics_partners": "Delivered by one of our local logistics partners",
