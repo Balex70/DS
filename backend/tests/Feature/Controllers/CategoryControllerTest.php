@@ -101,6 +101,8 @@ class CategoryControllerTest extends TestCase
                 'en' => [
                     'name' => 'New Name',
                     'description' => 'New description',
+                    'meta_title' => 'New meta title',
+                    'meta_description' => 'New meta description',
                 ],
             ],
         ]);
@@ -135,10 +137,14 @@ class CategoryControllerTest extends TestCase
                 'en' => [
                     'name' => 'New Name',
                     'description' => 'English description',
+                    'meta_title' => 'New meta title',
+                    'meta_description' => 'New meta description',
                 ],
                 'uk' => [
                     'name' => 'Нова назва',
                     'description' => 'Український опис',
+                    'meta_title' => 'Нова мета назва',
+                    'meta_description' => 'Нова мета опис',
                 ],
             ],
         ]);
@@ -149,6 +155,8 @@ class CategoryControllerTest extends TestCase
             'id' => $category->id,
             'name' => 'New Name',
             'description' => 'English description',
+            'meta_title' => 'New meta title',
+            'meta_description' => 'New meta description',
         ]);
 
         $this->assertDatabaseHas('category_translations', [
@@ -156,6 +164,8 @@ class CategoryControllerTest extends TestCase
             'locale' => 'uk',
             'name' => 'Нова назва',
             'description' => 'Український опис',
+            'meta_title' => 'Нова мета назва',
+            'meta_description' => 'Нова мета опис',
         ]);
     }
     
