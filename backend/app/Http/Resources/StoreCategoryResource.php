@@ -18,6 +18,8 @@ class StoreCategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
+            'meta_title' => $this->meta_title,
+            'meta_description' => $this->meta_description,
             'parent_id' => $this->parent_id,
             'provider' => $this->provider,
             'active' => $this->active,
