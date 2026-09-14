@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/accordion";
 
 import { Category } from "@/types/category";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsRight } from "lucide-react";
 
 interface Props {
     root: Category;
@@ -47,10 +47,18 @@ export function MobileSubcategoryGrid({
         <div className="flex h-full flex-col">
             <button
                 onClick={onBack}
-                className="border-b p-4 text-left font-medium"
+                className="border-b p-4 pl-1 pt-1 text-left font-medium"
             >
-                <span className="inline-flex items-center"><ChevronLeft className="mr-2 h-4 w-4" /> {rootTranslation?.name ?? root.name}</span>
+                <span className="inline-flex items-center"><ChevronLeft className="mr-1 h-4 w-4" />{t('megamenu.back')}</span>
             </button>
+
+            <Link
+                href={`/category/${root.full_path}`}
+                onClick={onClose}
+                className="flex items-center justify-between border-b bg-muted/40 p-4 font-semibold"
+            >
+                <span className="inline-flex items-center">{rootTranslation?.name ?? root.name}<ChevronsRight className="ml-2 !h-5 !w-5" /></span>
+            </Link>
 
             <Accordion
                 type="multiple"
@@ -61,6 +69,7 @@ export function MobileSubcategoryGrid({
                         second.translations.find(
                             (item) => item.locale === locale
                         );
+                    const secondTitle = (secondTranslation?.name !== undefined && secondTranslation?.name !== '' ) ? secondTranslation?.name : second.name;
 
                     const thirdLevel = getChildren(second.id);
                     
@@ -69,10 +78,10 @@ export function MobileSubcategoryGrid({
                             <Link
                                 key={second.id}
                                 href={`/category/${second.full_path}`}
-                                className="flex h-12 items-center border-b px-4 text-sm font-medium hover:bg-muted"
+                                className="flex h-12 items-center border-b px-6 text-sm font-medium hover:bg-muted"
                                 onClick={onClose}
                             >
-                                {secondTranslation?.name ?? second.name}
+                                {secondTitle}<ChevronRight className="ml-2 !h-3 !w-3" />
                             </Link>
                         );
                     }
@@ -82,8 +91,8 @@ export function MobileSubcategoryGrid({
                             key={second.id}
                             value={String(second.id)}
                         >
-                            <AccordionTrigger className="px-4">
-                                {secondTranslation?.name ?? second.name}
+                            <AccordionTrigger className="px-6">
+                                {secondTitle}
                             </AccordionTrigger>
 
                             <AccordionContent className="pb-0">
@@ -101,7 +110,7 @@ export function MobileSubcategoryGrid({
                                                 className="px-8 py-3 text-sm text-muted-foreground hover:bg-muted"
                                                 onClick={onClose}
                                             >
-                                                {thirdTranslation?.name ?? third.name}
+                                                {(thirdTranslation?.name !== undefined && thirdTranslation?.name !== '') ? thirdTranslation?.name : third.name}
                                             </Link>
                                         );
                                     })}
@@ -122,7 +131,7 @@ export function MobileSubcategoryGrid({
                                     "
                                 >
                                     <span>
-                                        {t('megamenu.browse')} - {secondTranslation?.name ?? second.name}
+                                        {t('megamenu.browse')} - {secondTitle}
                                     </span>
 
                                     <ChevronRight className="h-4 w-4" />
