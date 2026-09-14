@@ -13,7 +13,6 @@ class ProductImageResource extends JsonResource
             'id' => $this->id,
             'url' => $this->url,
             'original_url' => $this->original_url,
-            'ai_url' => $this->ai_url,
             'position' => $this->position,
             'status' => $this->status,
         ];
