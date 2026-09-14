@@ -24,7 +24,6 @@ class ProductImageFactory extends Factory
             'created_at' => now(),
             'updated_at' => now(),
             'original_url' => $this->faker->imageUrl(1024, 1024, 'products'),
-            'ai_url' => null, // Default to null until processed
             'status' => 'original',
             'ai_meta' => null,
             'ai_processed_at' => null,
