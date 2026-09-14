@@ -41,7 +41,7 @@ export function ProductDetail({
             sku: selectedVariant.sku,
             quantity: 1,
             price: selectedVariant.price, // product.price,
-            image: selectedVariant.image?.original_url ?? undefined,
+            image: selectedVariant.image?.original_url ?? product.big_image?.original_url ?? undefined,
             product_weight: selectedVariant.weight ?? undefined,
             packing_weight: product.packing_weight ?? undefined
         });
