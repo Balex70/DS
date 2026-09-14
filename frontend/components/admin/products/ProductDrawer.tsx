@@ -88,7 +88,7 @@ export function ProductDrawer({
                     {product.big_image && (
                         <div className="max-w-28 aspect-square overflow-hidden rounded-lg border bg-muted shrink-0">
                             <NextImageWithReplace
-                                src={product.big_image.ai_url ?? product.big_image.original_url}
+                                src={product.big_image.original_url}
                                 alt={product.name_raw}
                                 width={200}
                                 height={200}

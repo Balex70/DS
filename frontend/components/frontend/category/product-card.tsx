@@ -29,7 +29,7 @@ export function ProductCard({ product }: Props) {
             sku: product.cheapest_variant.sku,
             quantity: 1,
             price: product.cheapest_variant.price, // product.price,
-            image: product.cheapest_variant.image?.original_url ?? undefined,
+            image: cheapestVariantImage,
             product_weight: product.cheapest_variant.weight ?? undefined,
             packing_weight: product.packing_weight ?? undefined
         });
