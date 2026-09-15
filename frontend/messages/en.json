@@ -67,7 +67,8 @@
     "megamenu": {
       "catalog": "Catalog",
       "no_categories": "No categories",
-      "browse": "Browse"
+      "browse": "Browse",
+      "back": "Back"
     },
     "switcher": {
       "header": {

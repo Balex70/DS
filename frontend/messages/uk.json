@@ -67,7 +67,8 @@
     "megamenu": {
       "catalog": "Каталог",
       "no_categories": "Немає категорій",
-      "browse": "Перейти до"
+      "browse": "Перейти до",
+      "back": "Назад"
     },
     "switcher": {
       "header": {
