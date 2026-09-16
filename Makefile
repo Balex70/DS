@@ -263,6 +263,10 @@ log-backend:
 	@ export BACKEND_POD_NAME=$(shell bin/kctl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=ds-backend); \
 	bin/kctl logs -f $$BACKEND_POD_NAME
 
+log-laravel:
+	@ export BACKEND_POD_NAME=$(shell bin/kctl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=ds-backend); \
+	bin/kctl exec -ti $$BACKEND_POD_NAME -- sh -c "tail -n 300 -f /app/storage/logs/laravel.log"
+
 log-frontend:
 	@ export FRONTEND_POD_NAME=$(shell bin/kctl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=ds-frontend); \
 	bin/kctl logs -f $$FRONTEND_POD_NAME
