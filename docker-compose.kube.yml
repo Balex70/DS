@@ -5,8 +5,6 @@ services:
       dockerfile: docker/php/Dockerfile
       target: production
     image: bachynskyialex/ds-backend:${VERSION}
-    env_file:
-      - ./backend/.env.kube
 
   frontend:
     build:
@@ -17,5 +15,3 @@ services:
         NEXT_PUBLIC_CORE_API_ENTRYPOINT: ${NEXT_PUBLIC_CORE_API_ENTRYPOINT}
         CORE_API_ENTRYPOINT: ${CORE_API_ENTRYPOINT}
     image: bachynskyialex/ds-frontend:${VERSION}
-    env_file:
-      - ./frontend/.env.kube
