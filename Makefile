@@ -375,6 +375,9 @@ helm-namespaces:
 helm-history:
 	@ bin/helm history $(RELEASE)
 
+helm-lint:
+	@ bin/helm lint ./helm
+
 helm-debug:
 	@ bin/helm template ./helm --debug
 

@@ -73,6 +73,14 @@ cron:
     - artisan
     - schedule:run
 
+dbBackup:
+  schedule: "0 3 * * *"
+
+  image:
+    repository: postgres
+    tag: "15"
+  hostPath: /root/db-backups/ds
+
 letsEncrypt:
   ## Possible values:
   # selfSigned -> self signed certificate issuer suited for local development
