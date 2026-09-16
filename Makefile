@@ -7,7 +7,7 @@ ifneq (,$(wildcard ./.env))
 endif
 
 ### VARIABLES ###
-DOCKER_WEB_CONTAINER=$(shell docker compose ps --quiet backend)
+DOCKER_BACKEND_CONTAINER=$(shell docker compose ps --quiet backend)
 DOCKER_POSTGRES_CONTAINER=$(shell docker compose ps --quiet db)
 DOCKER_FE_CONTAINER=$(shell docker compose ps --quiet frontend)
 
@@ -42,9 +42,6 @@ prod-stop:
 restart:
 	$(DOCKER_COMPOSE) restart
 
-container:
-	$(DOCKER_COMPOSE) exec -u root -w /app backend /bin/bash
-	
 composer-install:
 	$(DOCKER_COMPOSE) run --rm backend composer install
 
@@ -52,9 +49,11 @@ migrate:
 	bin/artisan migrate
 
 #LOGS
-web-log:
-#@echo $(DOCKER_WEB_CONTAINER)
-	docker logs --follow $(DOCKER_WEB_CONTAINER)
+laravel-log:
+	$(DOCKER_COMPOSE) exec backend /bin/sh -c "tail -n 300 -f /app/storage/logs/laravel.log"
+
+backend-log:
+	docker logs --follow $(DOCKER_BACKEND_CONTAINER)
 	
 postgres-log:
 	docker logs --follow $(DOCKER_POSTGRES_CONTAINER)
@@ -347,7 +346,7 @@ helm-local-up: create-be-env-secrets create-fe-env-secrets
 	--set queue.image.tag=$(VERSION) \
 	--set cron.image.tag=$(VERSION)
 
-helm-get-releases:
+helm-get-release:
 	@ bin/helm list
 
 # create-be-env-secrets create-fe-env-secrets should be put like that, so they run and finish before upgrade
