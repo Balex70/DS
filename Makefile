@@ -370,6 +370,11 @@ helm-local-upgrade: create-be-env-secrets create-fe-env-secrets
 	--set cron.image.tag=$(VERSION) \
 	--atomic --wait --timeout 5m
 
+# you need to restore database from backups ./db-backups after rollback
+# helm-rollback doesn't restore database!!!
+helm-rollback:
+	@ bin/helm rollback $(RELEASE)
+
 helm-version:
 	@echo $(VERSION)
 
