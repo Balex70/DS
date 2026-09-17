@@ -20,10 +20,10 @@ class AppLogController extends Controller
 
         $query = AppLog::query()->orderBy('id');
 
-        // // SEARCH
-        // if ($request->filled('search')) {
-        //     $query->where('name_raw', 'like', "%{$request->search}%");
-        // }
+        // SEARCH
+        if ($request->filled('search')) {
+            $query->where('message', 'like', "%{$request->search}%");
+        }
 
         if ($request->filled('levels')) {
             $levels = explode(',', $request->levels);

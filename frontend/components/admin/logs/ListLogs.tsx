@@ -11,6 +11,9 @@ import { LogFilters } from './LogFilters';
 import { getErrorStringFromCatch } from '@/helpers/general';
 import NotFoundCard from '@/components/common/NotFoundCard';
 import { Meta, Log } from '@/types/log';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { X } from 'lucide-react';
 
 function ListLogs () {
   const [logs, setLogs] = useState<Log[]>([]);
@@ -23,12 +26,15 @@ function ListLogs () {
   const [page, setPage] = useState(1)
   const [levels, setLevels] = useState<string[]>([])
   const [realms, setRealms] = useState<string[]>([])
+  const [search, setSearch] = useState("")
+  const [searchFilter, setSearchFilter] = useState("")
   const [error, setError] = useState<string | null>(null)
   
   const fetchLogs = async (params?: {
     page?: number,
     levels: string[]|null
     realms: string[]|null,
+    search?: string
   }) => {
     try {
       setLoading(true)
@@ -38,6 +44,7 @@ function ListLogs () {
       if (params?.page) query.append("page", String(params.page))
       if (params?.levels?.length) query.append("levels", params.levels.join(","))
       if (params?.realms?.length) query.append("realms", params.realms.join(","))
+      if (params?.search?.trim()) query.append("search", params.search.trim())
 
       const headers = {
           'Content-Type': 'application/json',
@@ -65,8 +72,8 @@ function ListLogs () {
   }
 
   useEffect(() => {
-      fetchLogs({ page, levels, realms })
-  }, [page, levels, realms])
+      fetchLogs({ page, levels, realms, search: searchFilter })
+  }, [page, levels, realms, searchFilter])
 
   if (error) {
     return (
@@ -79,6 +86,42 @@ function ListLogs () {
 
   return (
     <div className="w-full main-bg flex flex-col border-b-0 rounded-none">
+      <form
+        className="mb-4 flex items-center gap-2"
+        onSubmit={(event) => {
+          event.preventDefault()
+
+          setPage(1)
+          setSearchFilter(search.trim())
+        }}
+      >
+        <div className="relative flex-1">
+          <Input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search logs..."
+            className="pr-9"
+          />
+
+          {search && (
+            <button
+              type="button"
+              aria-label="Clear search"
+              onClick={() => {
+                setSearch("")
+                setSearchFilter("")
+                setPage(1)
+              }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+        <Button type="submit">
+          OK
+        </Button>
+      </form>
       <LogFilters
         open={filtersOpen}
         onOpenChange={setFiltersOpen}
