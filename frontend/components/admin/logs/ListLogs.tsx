@@ -21,14 +21,14 @@ function ListLogs () {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [page, setPage] = useState(1)
-  const [level, setLevel] = useState<string | null>(null)
-  const [realm, setRealm] = useState<string | null>(null)
+  const [levels, setLevels] = useState<string[]>([])
+  const [realms, setRealms] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
   
   const fetchLogs = async (params?: {
     page?: number,
-    level: string|null,
-    realm: string|null,
+    levels: string[]|null
+    realms: string[]|null,
   }) => {
     try {
       setLoading(true)
@@ -36,8 +36,8 @@ function ListLogs () {
       const query = new URLSearchParams()
 
       if (params?.page) query.append("page", String(params.page))
-      if (params?.level) query.append("level", params.level)
-      if (params?.realm) query.append("realm", params.realm)
+      if (params?.levels?.length) query.append("levels", params.levels.join(","))
+      if (params?.realms?.length) query.append("realms", params.realms.join(","))
 
       const headers = {
           'Content-Type': 'application/json',
@@ -65,8 +65,8 @@ function ListLogs () {
   }
 
   useEffect(() => {
-      fetchLogs({ page, level, realm })
-  }, [page, level, realm])
+      fetchLogs({ page, levels, realms })
+  }, [page, levels, realms])
 
   if (error) {
     return (
@@ -82,15 +82,15 @@ function ListLogs () {
       <LogFilters
         open={filtersOpen}
         onOpenChange={setFiltersOpen}
-        level={level}
-        realm={realm}
-        onLevelChange={(value) => {
+        levels={levels}
+        realms={realms}
+        onLevelsChange={(value) => {
           setPage(1)
-          setLevel(value)
+          setLevels(value)
         }}
-        onRealmChange={(value) => {
+        onRealmsChange={(value) => {
           setPage(1)
-          setRealm(value)
+          setRealms(value)
         }}
       />
       {loading ? (

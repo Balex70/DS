@@ -25,45 +25,17 @@ class AppLogController extends Controller
         //     $query->where('name_raw', 'like', "%{$request->search}%");
         // }
 
-        // if ($request->filled('categoryIds')) {
-        //     $categoryIds = explode(',', $request->categoryIds);
+        if ($request->filled('levels')) {
+            $levels = explode(',', $request->levels);
 
-        //     $query->whereHas('categories', function ($q) use ($categoryIds) {
-        //         $q->whereIn('categories.id', $categoryIds);
-        //     });
-        // }
+            $query->whereIn('level', $levels);
+        }
+        
+        if ($request->filled('realms')) {
+            $realms = explode(',', $request->realms);
 
-        // $outdatedDate = now()->subWeeks(8);
-        // // ENRICHED FILTER
-        // if ($request->filled('enriched')) {
-        //     $query
-        //         ->whereNotNull('last_enrichment_at')
-        //         ->where('last_enrichment_at', '>', $outdatedDate);
-        // }
-
-        // // OUTDATED FILTER
-        // if ($request->filled('outdated')) {
-        //     $query->where(function ($q) use ($outdatedDate) {
-        //         $q->whereNull('last_enrichment_at')
-        //         ->orWhere('last_enrichment_at', '<', $outdatedDate);
-        //     })
-        //     ->whereNull('enrichment_failed_at');
-        // }
-
-        // // ENRICHMENT FAILED FILTER
-        // if ($request->filled('enrichedFailed')) {
-        //     $query->whereNotNull('enrichment_failed_at');
-        // }
-
-        // // AI TEXTS FILTER
-        // if ($request->filled('aiTextsProcessed')) {
-        //     $query->whereNotNull('ai_texts_at');
-        // }
-
-        // // AI IMAGES FILTER
-        // if ($request->filled('aiImagesProcessed')) {
-        //     $query->whereNotNull('ai_images_at');
-        // }
+            $query->whereIn('realm', $realms);
+        }
 
         return AppLogResource::collection(
             $query->paginate(10)
