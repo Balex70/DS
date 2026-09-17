@@ -29,6 +29,9 @@ cron:
     tag: 0.0.1
     pullPolicy: Always
 
+dbBackup:
+  hostPath: /root/db-backups/ds
+
 letsEncrypt:
   ## Possible values:
   # selfSigned -> self signed certificate issuer suited for local development

@@ -62,6 +62,7 @@ queue:
     - --timeout=60
     
 cron:
+  schedule: "* * * * *"
   image:
     repository: localhost:32000/ds-backend
     tag: latest
@@ -70,7 +71,15 @@ cron:
   command:
     - php
     - artisan
-    - schedule:work
+    - schedule:run
+
+dbBackup:
+  schedule: "0 3 * * *"
+
+  image:
+    repository: postgres
+    tag: "15"
+  hostPath: /root/db-backups/ds
 
 letsEncrypt:
   ## Possible values:
