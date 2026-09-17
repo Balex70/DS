@@ -14,4 +14,5 @@ services:
       args:
         NEXT_PUBLIC_CORE_API_ENTRYPOINT: ${NEXT_PUBLIC_CORE_API_ENTRYPOINT}
         CORE_API_ENTRYPOINT: ${CORE_API_ENTRYPOINT}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
     image: bachynskyialex/ds-frontend:${VERSION}

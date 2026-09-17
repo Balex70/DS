@@ -46,6 +46,7 @@ services:
     environment:
       NEXT_PUBLIC_CORE_API_ENTRYPOINT: http://localhost:8000
       CORE_API_ENTRYPOINT: http://backend-ci:80
+      NEXT_PUBLIC_SITE_URL: http://localhost
     depends_on:
       - backend-ci
     ports:
