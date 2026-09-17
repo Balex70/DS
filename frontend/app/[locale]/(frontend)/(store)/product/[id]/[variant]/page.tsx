@@ -40,9 +40,15 @@ export async function generateMetadata({
 
     const description = translation?.description ?? product.description_processed ?? product.description_raw ?? "";
 
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+    const canonicalUrl = `${siteUrl}/${locale}/product/${id}/${variant}`;
+
     return {
         title,
         description,
+        alternates: {
+            canonical: canonicalUrl,
+        },
     };
 }
 
