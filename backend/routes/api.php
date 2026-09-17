@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\AiImagesController;
+use App\Http\Controllers\Api\AppLogController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CurrencyController;
 use App\Http\Controllers\Api\CustomerController;
@@ -48,10 +48,6 @@ Route::middleware(['auth:sanctum', 'abilities:ai:texts'])->group(function () {
     Route::post('products/ai-texts-translate/{product}/complete', [ProductController::class, 'aiTextsTranslateComplete']);
     Route::post('products/ai-variant-texts-translate/{productVariant}/complete', [ProductController::class, 'aiVariantTextsTranslateComplete']);
 });
-Route::middleware(['auth:sanctum', 'abilities:ai:images'])->group(function () {
-    Route::get('products/ai-images/next', [AiImagesController::class, 'next']);
-    Route::post('products/ai-images/{id}/complete', [AiImagesController::class, 'complete']);
-});
 
 // Product Variants
 Route::get('product-variants/{product}', [ProductVariantController::class, 'index'])->middleware('auth:sanctum');
@@ -95,6 +91,10 @@ Route::get('currency/sync-rate', [CurrencyController::class, 'syncRate'])->middl
 // Settings
 Route::get('settings', [SettingController::class, 'index'])->middleware('auth:sanctum');
 Route::put('settings', [SettingController::class, 'update'])->middleware('auth:sanctum');
+
+// Logs
+Route::get('app-logs', [AppLogController::class, 'index'])->middleware('auth:sanctum');
+Route::delete('app-logs/{appLog}', [AppLogController::class, 'destroy'])->middleware('auth:sanctum');
 
 // Store Order
 Route::prefix('store')->group(function () {
