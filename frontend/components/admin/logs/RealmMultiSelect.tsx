@@ -22,7 +22,8 @@ function buildTree() {
         'order',
         'system',
         'auth',
-        'cron'
+        'cron',
+        'currency',
     ];
 }
 
