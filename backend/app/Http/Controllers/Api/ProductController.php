@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\CreateAppLogAction;
 use App\Enums\AppLogLevelEnum;
 use App\Enums\AppLogRealmEnum;
 use App\Enums\ProductAiStatusEnum;
