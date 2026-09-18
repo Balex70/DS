@@ -21,7 +21,8 @@ function buildTree() {
         'product',
         'order',
         'system',
-        'auth'
+        'auth',
+        'cron'
     ];
 }
 

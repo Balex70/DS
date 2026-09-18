@@ -9,4 +9,5 @@ enum AppLogRealmEnum: string
     case ORDER = 'order';
     case SYSTEM = 'system';
     case AUTH = 'auth';
+    case CRON = 'cron';
 }

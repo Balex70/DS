@@ -68,7 +68,7 @@ export const columns = ({
   },
   {
     id: "realm",
-    header: "AI Texts",
+    header: "Realm",
     cell: ({ row }) => {
       const log = row.original
 
