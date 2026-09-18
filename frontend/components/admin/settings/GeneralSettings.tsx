@@ -156,7 +156,7 @@ export default function GeneralSettings() {
                 <div className="space-y-0.5">
                     <Label>Allow products cron sync</Label>
                     <p className="text-sm text-muted-foreground">
-                        Allow products sync using cron job via command SyncCategoriesProductsCommand (php artisan app:sync-products)
+                        Allow products sync (update products for each active category) using cron job via command SyncCategoriesProductsCommand (php artisan app:sync-products)
                     </p>
                 </div>
 
