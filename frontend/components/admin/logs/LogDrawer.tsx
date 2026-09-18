@@ -86,7 +86,7 @@ export function LogDrawer({
                     </Field>
                     <Field>
                         <FieldLabel>Message</FieldLabel>
-                        <div className="text-md text-muted-foreground">
+                        <div className="max-h-120 overflow-y-auto whitespace-pre-wrap text-md text-muted-foreground">
                             {log.message}
                         </div>
                     </Field>

@@ -18,7 +18,7 @@ class AppLogController extends Controller
     {
         Gate::authorize('viewAny', AppLog::class);
 
-        $query = AppLog::query()->orderBy('id');
+        $query = AppLog::query()->orderBy('id', 'desc');
 
         // SEARCH
         if ($request->filled('search')) {

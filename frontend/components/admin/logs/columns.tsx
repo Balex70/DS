@@ -88,7 +88,7 @@ export const columns = ({
       const value = String(getValue())
 
       return (
-        <div className=" truncate">
+        <div className=" max-w-[1050px] truncate">
           <span title={value}>{value}</span>
         </div>
       )
