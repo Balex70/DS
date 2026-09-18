@@ -10,4 +10,5 @@ enum AppLogRealmEnum: string
     case SYSTEM = 'system';
     case AUTH = 'auth';
     case CRON = 'cron';
+    case CURRENCY = 'currency';
 }
