@@ -12,7 +12,8 @@ class CjProductMapper
             'name_raw' => $data['nameEn'] ?? '',
             'description_raw' => null, // comes from detail API later
 
-            'price' => $this->parsePrice($data['sellPrice'] ?? null),
+            'cost_price' => $this->parsePrice($data['sellPrice'] ?? null),
+            'price' => null,
             'now_price' => $this->parsePrice($data['nowPrice'] ?? null),
             'suggested_price' => $this->parsePrice($data['suggestedPrice'] ?? null),
 
@@ -81,7 +82,7 @@ class CjProductMapper
             $sku = $v['variantSku'] ?? null;
             $key = $v['variantKey'] ?? null;
 
-            if ($key === 'defaulttitle') {
+            if ($key === 'defaulttitle' || $key === 'Defaulttitle') {
                 $key = $sku;
             }
 
@@ -109,13 +110,14 @@ class CjProductMapper
 
         return trim(strip_tags($html, '<p><b><br><img><ul><li><strong><em>'));
     }
-    public function parsePrice(?string $price): ?float
+    public function parsePrice(?string $price): ?int
     {
-        if (!$price) return null;
+        if ($price === null || $price === '') {
+            return null;
+        }
 
-        if (str_contains($price, '--')) {
-            $price = explode('--', $price)[0]; // take min price by cheapest variant
-            return $this->priceToCents($price);
+        if (str_contains($price, '-')) {
+            $price = explode('-', $price)[0]; // take min price by cheapest variant
         }
 
         return $this->priceToCents($price);
