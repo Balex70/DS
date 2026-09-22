@@ -47,6 +47,7 @@ class CategoryController extends Controller
             $slugs = $this->categoryService->getChildrenSlugs($category->slug);
 
             $productsQuery = Product::query()
+                ->whereNotNull('price')
                 ->whereNotNull('last_enrichment_at')
                 ->whereNotNull('ai_texts_at')
                 ->whereNull('enrichment_failed_at')

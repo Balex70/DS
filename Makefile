@@ -96,6 +96,8 @@ lint:
 type-check:
 	$(DOCKER_COMPOSE) exec frontend /bin/sh -c "npm run type-check"
 
+check-release: backend-test lint type-check
+
 #################################################################
 #####                  #continuous integration              #####
 #################################################################
