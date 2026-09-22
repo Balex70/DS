@@ -33,10 +33,21 @@ class ProductController extends Controller
         $query = Product::query()->orderBy('id');
         $query->with('translations');
 
-        // // SEARCH
-        // if ($request->filled('search')) {
-        //     $query->where('name_raw', 'like', "%{$request->search}%");
-        // }
+        // SEARCH
+        if ($request->filled('search')) {
+            $searchQuery = $request->search;
+            $query->where(function ($q) use ($searchQuery) {
+                $q->where('name_raw', 'ILIKE', "%{$searchQuery}%")
+                ->orWhere('name_processed', 'ILIKE', "%{$searchQuery}%")
+                ->orWhereHas('variants', function ($q) use ($searchQuery) {
+                    $q->where('name', 'ILIKE', "%{$searchQuery}%")
+                    ->orWhere('name_processed', 'ILIKE', "%{$searchQuery}%")
+                    ->orWhereHas('translations', function ($q) use ($searchQuery) {
+                        $q->where('name', 'ILIKE', "%{$searchQuery}%");
+                    });
+                });
+            });
+        }
 
         if ($request->filled('categoryIds')) {
             $categoryIds = explode(',', $request->categoryIds);

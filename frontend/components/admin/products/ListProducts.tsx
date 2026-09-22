@@ -12,6 +12,9 @@ import { ProductPagination } from './ProductPagination';
 import { ProductFilters } from './ProductFilters';
 import { getErrorStringFromCatch } from '@/helpers/general';
 import NotFoundCard from '@/components/common/NotFoundCard';
+import { Input } from '@/components/ui/input';
+import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 function ListProducts () {
   const [products, setProducts] = useState<Product[]>([]);
@@ -29,6 +32,8 @@ function ListProducts () {
   const [aiTextsProcessed, setAiTextsProcessed] = useState<string | null>(null)
   const [aiImagesProcessed, setAiImagesProcessed] = useState<string | null>(null)
   const [categoryIds, setCategoryIds] = useState<number[]>([])
+  const [search, setSearch] = useState("")
+  const [searchFilter, setSearchFilter] = useState("")
   const [error, setError] = useState<string | null>(null)
   
   const fetchProducts = async (params?: {
@@ -38,7 +43,8 @@ function ListProducts () {
     enrichedFailed: string|null,
     aiTextsProcessed: string|null,
     aiImagesProcessed: string|null,
-    categoryIds: number[]|null
+    categoryIds: number[]|null,
+    search?: string
   }) => {
     try {
       setLoading(true)
@@ -52,6 +58,7 @@ function ListProducts () {
       if (params?.aiTextsProcessed) query.append("aiTextsProcessed", params.aiTextsProcessed)
       if (params?.aiImagesProcessed) query.append("aiImagesProcessed", params.aiImagesProcessed)
       if (params?.categoryIds?.length) query.append("categoryIds", params.categoryIds.join(","))
+      if (params?.search) query.append("search", params.search)
 
       const headers = {
           'Content-Type': 'application/json',
@@ -79,8 +86,8 @@ function ListProducts () {
   }
 
   useEffect(() => {
-      fetchProducts({ page, enriched, outdated, enrichedFailed, aiTextsProcessed, aiImagesProcessed, categoryIds })
-  }, [page, enriched, outdated, enrichedFailed, aiTextsProcessed, aiImagesProcessed, categoryIds])
+      fetchProducts({ page, enriched, outdated, enrichedFailed, aiTextsProcessed, aiImagesProcessed, categoryIds, search: searchFilter })
+  }, [page, enriched, outdated, enrichedFailed, aiTextsProcessed, aiImagesProcessed, categoryIds, searchFilter])
 
   if (error) {
     return (
@@ -93,6 +100,42 @@ function ListProducts () {
 
   return (
     <div className="w-full main-bg flex flex-col border-b-0 rounded-none">
+      <form
+        className="mb-4 flex items-center gap-2"
+        onSubmit={(event) => {
+          event.preventDefault()
+
+          setPage(1)
+          setSearchFilter(search.trim())
+        }}
+      >
+        <div className="relative flex-1">
+          <Input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search products..."
+            className="pr-9"
+          />
+
+          {search && (
+            <button
+              type="button"
+              aria-label="Clear search"
+              onClick={() => {
+                setSearch("")
+                setSearchFilter("")
+                setPage(1)
+              }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+        <Button type="submit">
+          OK
+        </Button>
+      </form>
       <ProductFilters
         open={filtersOpen}
         onOpenChange={setFiltersOpen}
