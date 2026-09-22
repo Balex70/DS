@@ -81,7 +81,7 @@ class CjProductMapper
             $sku = $v['variantSku'] ?? null;
             $key = $v['variantKey'] ?? null;
 
-            if ($key === 'defaulttitle') {
+            if ($key === 'defaulttitle' || $key === 'Defaulttitle') {
                 $key = $sku;
             }
 
