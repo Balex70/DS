@@ -188,7 +188,7 @@ class ProductService
         return $query;
     }
 
-    public function generatePrice(int $costPrice): string
+    public function generatePrice(int $costPrice): int
     {
         $multiplier = $costPrice < 10000
             ? 1.61
