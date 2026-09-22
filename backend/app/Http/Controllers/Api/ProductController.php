@@ -84,11 +84,6 @@ class ProductController extends Controller
             $query->whereNotNull('ai_texts_at');
         }
 
-        // AI IMAGES FILTER
-        if ($request->filled('aiImagesProcessed')) {
-            $query->whereNotNull('ai_images_at');
-        }
-
         return ProductResource::collection(
             $query->paginate(10)
         );

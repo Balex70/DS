@@ -23,13 +23,11 @@ type Props = {
     outdated: string | null
     enrichedFailed: string | null
     aiTextsProcessed: string | null
-    aiImagesProcessed: string | null
     categoryIds: number[];
     onEnrichedChange: (value: string | null) => void
     onOutdatedChange: (value: string | null) => void
     onEnrichedFailedChange: (value: string | null) => void
     onAiTextsProcessedChange: (value: string | null) => void
-    onAiImagesProcessedChange: (value: string | null) => void
     onCategoryIdsChange: (value: number[]) => void;
 }
 
@@ -40,13 +38,11 @@ export function ProductFilters({
     outdated,
     enrichedFailed,
     aiTextsProcessed,
-    aiImagesProcessed,
     categoryIds,
     onEnrichedChange,
     onOutdatedChange,
     onEnrichedFailedChange,
     onAiTextsProcessedChange,
-    onAiImagesProcessedChange,
     onCategoryIdsChange,
 }: Props) {
     const { categories } = useAdminCategories();
@@ -76,11 +72,6 @@ export function ProductFilters({
         aiTextsProcessed && {
             label: "AI Texts",
             onClick: () => onAiTextsProcessedChange(null),
-            color: "green",
-        },
-        aiImagesProcessed && {
-            label: "AI Images",
-            onClick: () => onAiImagesProcessedChange(null),
             color: "green",
         },
     ].filter((f): f is FilterBadge => f !== null)
@@ -158,21 +149,6 @@ export function ProductFilters({
                                 />
                                 <Label htmlFor="aiTextsProcessed">
                                     AI Texts
-                                </Label>
-                            </Field>
-
-                            <Field orientation="horizontal">
-                                <Checkbox
-                                    id="aiImagesProcessed"
-                                    checked={aiImagesProcessed === "aiImagesProcessed"}
-                                    onCheckedChange={(checked) =>
-                                        onAiImagesProcessedChange(
-                                            checked ? "aiImagesProcessed" : null
-                                        )
-                                    }
-                                />
-                                <Label htmlFor="aiImagesProcessed">
-                                    AI Images
                                 </Label>
                             </Field>
 

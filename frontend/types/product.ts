@@ -15,7 +15,6 @@ export type Product = {
   last_enrichment_at: Date|null,
   enrichment_failed_at: Date|null,
   enrichment_error: string|null,
-  ai_images_at: Date|null,
   ai_texts_at: Date|null,
   ai_status: string,
   big_image?: ProductImageType,

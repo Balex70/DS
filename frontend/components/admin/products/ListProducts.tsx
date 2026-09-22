@@ -30,7 +30,6 @@ function ListProducts () {
   const [outdated, setOutdated] = useState<string | null>(null)
   const [enrichedFailed, setEnrichedFailed] = useState<string | null>(null)
   const [aiTextsProcessed, setAiTextsProcessed] = useState<string | null>(null)
-  const [aiImagesProcessed, setAiImagesProcessed] = useState<string | null>(null)
   const [categoryIds, setCategoryIds] = useState<number[]>([])
   const [search, setSearch] = useState("")
   const [searchFilter, setSearchFilter] = useState("")
@@ -42,7 +41,6 @@ function ListProducts () {
     outdated: string|null,
     enrichedFailed: string|null,
     aiTextsProcessed: string|null,
-    aiImagesProcessed: string|null,
     categoryIds: number[]|null,
     search?: string
   }) => {
@@ -56,7 +54,6 @@ function ListProducts () {
       if (params?.outdated) query.append("outdated", params.outdated)
       if (params?.enrichedFailed) query.append("enrichedFailed", params.enrichedFailed)
       if (params?.aiTextsProcessed) query.append("aiTextsProcessed", params.aiTextsProcessed)
-      if (params?.aiImagesProcessed) query.append("aiImagesProcessed", params.aiImagesProcessed)
       if (params?.categoryIds?.length) query.append("categoryIds", params.categoryIds.join(","))
       if (params?.search) query.append("search", params.search)
 
@@ -86,8 +83,8 @@ function ListProducts () {
   }
 
   useEffect(() => {
-      fetchProducts({ page, enriched, outdated, enrichedFailed, aiTextsProcessed, aiImagesProcessed, categoryIds, search: searchFilter })
-  }, [page, enriched, outdated, enrichedFailed, aiTextsProcessed, aiImagesProcessed, categoryIds, searchFilter])
+      fetchProducts({ page, enriched, outdated, enrichedFailed, aiTextsProcessed, categoryIds, search: searchFilter })
+  }, [page, enriched, outdated, enrichedFailed, aiTextsProcessed, categoryIds, searchFilter])
 
   if (error) {
     return (
@@ -144,7 +141,6 @@ function ListProducts () {
         enrichedFailed={enrichedFailed}
         categoryIds={categoryIds}
         aiTextsProcessed={aiTextsProcessed}
-        aiImagesProcessed={aiImagesProcessed}
         onEnrichedChange={(value) => {
           setPage(1)
           setEnriched(value)
@@ -160,10 +156,6 @@ function ListProducts () {
         onAiTextsProcessedChange={(value) => {
           setPage(1)
           setAiTextsProcessed(value)
-        }}
-        onAiImagesProcessedChange={(value) => {
-          setPage(1)
-          setAiImagesProcessed(value)
         }}
         onCategoryIdsChange={(value) => {
           setPage(1)
@@ -224,7 +216,6 @@ function ListProducts () {
             outdated,
             enrichedFailed,
             aiTextsProcessed,
-            aiImagesProcessed,
             categoryIds
           })
         }
