@@ -5,6 +5,7 @@ namespace Tests\Feature\Dropshipping;
 use App\Dropshipping\Mappers\CjProductMapper;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class CjProductMapperTest extends TestCase
@@ -27,7 +28,8 @@ class CjProductMapperTest extends TestCase
 
         $this->assertEquals('p1', $result['external_id']);
         $this->assertEquals('iPhone', $result['name_raw']);
-        $this->assertEquals(1050, $result['price']);
+        $this->assertEquals(1050, $result['cost_price']);
+        $this->assertNull($result['price']);
         $this->assertEquals(850, $result['now_price']);
         $this->assertEquals(1250, $result['suggested_price']);
         $this->assertEquals('image.jpg', $result['big_image']);
@@ -104,16 +106,29 @@ class CjProductMapperTest extends TestCase
         $this->assertEquals('variant.jpg', $result['variants'][0]['image']);
     }
 
-    public function test_parse_price_range_uses_minimum_price()
+    #[DataProvider('parse_price_range_uses_minimum_price_provider')]
+    public function test_parse_price_range_uses_minimum_price(string $sellPrice, string $price)
     {
         $mapper = new CjProductMapper();
 
         $result = $mapper->mapFromList([
             'id' => 'p1',
-            'sellPrice' => '10--20',
+            'sellPrice' => $sellPrice,
         ]);
 
-        $this->assertEquals(1000, $result['price']);
+        $this->assertEquals($price, $result['cost_price']);
+        $this->assertNull($result['price']);
+    }
+
+    public static function parse_price_range_uses_minimum_price_provider(): array
+    {
+        return [
+            'Range with two dashes' => ['10--20', '1000'],
+            'Range with one dash' => ['7.02--12.10', '702'],
+            'Range with two dashes and spaces' => ['8.02 -- 10.10', '802'],
+            'Range with one dash and spaces' => ['8.02 - 10.10', '802'],
+            'No range, only one value' => ['72.05', '7205'],
+        ];
     }
 
     public function test_returns_null_price_when_price_missing()
