@@ -109,13 +109,14 @@ class CjProductMapper
 
         return trim(strip_tags($html, '<p><b><br><img><ul><li><strong><em>'));
     }
-    public function parsePrice(?string $price): ?float
+    public function parsePrice(?string $price): ?int
     {
-        if (!$price) return null;
+        if ($price === null || $price === '') {
+            return null;
+        }
 
-        if (str_contains($price, '--')) {
-            $price = explode('--', $price)[0]; // take min price by cheapest variant
-            return $this->priceToCents($price);
+        if (str_contains($price, '-')) {
+            $price = explode('-', $price)[0]; // take min price by cheapest variant
         }
 
         return $this->priceToCents($price);
