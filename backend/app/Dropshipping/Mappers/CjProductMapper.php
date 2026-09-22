@@ -31,13 +31,14 @@ class CjProductMapper
     public function mapDetail(array $data, array $base): array
     {
         $images = $this->extractImages($data);
+        $name = $data['productNameEn'] ?? $base['name_raw'];
 
-        $variants = $this->mapVariants($data['variants'] ?? []);
+        $variants = $this->mapVariants($data['variants'] ?? [], $name);
 
         return [
             'external_id' => $base['external_id'],
 
-            'name_raw' => $data['productNameEn'] ?? $base['name_raw'],
+            'name_raw' => $name,
             
             'description_raw' => $this->cleanHtml($data['description']) ?? null,
 
@@ -74,14 +75,23 @@ class CjProductMapper
         return array_values(array_unique($images));
     }
     
-    private function mapVariants(array $variants): array
+    private function mapVariants(array $variants, ?string $productName): array
     {
-        return array_map(function ($v) {
+        return array_map(function ($v) use ($productName) {
+            $sku = $v['variantSku'] ?? null;
+            $key = $v['variantKey'] ?? null;
+
+            if ($key === 'defaulttitle') {
+                $key = $sku;
+            }
+
+            $variantName = $v['variantNameEn'] ?? null;
+
             return [
                 'external_id' => $v['vid'] ?? null,
-                'sku' => $v['variantSku'] ?? null,
-                'name' => $v['variantNameEn'] ? $v['variantNameEn'] : $v['variantKey'] ?? null,
-                'key' => $v['variantKey'] ?? null,
+                'sku' => $sku,
+                'name' => $variantName ?: $productName,
+                'key' => $key,
                 'price' => $this->parsePrice($v['variantSellPrice'] ?? null),
                 'stock' => isset($v['inventoryNum']) ? (int) $v['inventoryNum'] : null,
                 'weight' => $v['variantWeight'] ?? null,
