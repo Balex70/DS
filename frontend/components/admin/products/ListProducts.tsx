@@ -26,9 +26,7 @@ function ListProducts () {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [page, setPage] = useState(1)
-  const [enriched, setEnriched] = useState<string | null>(null)
-  const [outdated, setOutdated] = useState<string | null>(null)
-  const [enrichedFailed, setEnrichedFailed] = useState<string | null>(null)
+  const [enrichStatuses, setEnrichStatuses] = useState<string[]>([])
   const [aiTextsProcessed, setAiTextsProcessed] = useState<string | null>(null)
   const [categoryIds, setCategoryIds] = useState<number[]>([])
   const [search, setSearch] = useState("")
@@ -37,9 +35,7 @@ function ListProducts () {
   
   const fetchProducts = async (params?: {
     page?: number,
-    enriched: string|null,
-    outdated: string|null,
-    enrichedFailed: string|null,
+    enrichStatuses: string[]|null
     aiTextsProcessed: string|null,
     categoryIds: number[]|null,
     search?: string
@@ -50,9 +46,7 @@ function ListProducts () {
       const query = new URLSearchParams()
 
       if (params?.page) query.append("page", String(params.page))
-      if (params?.enriched) query.append("enriched", params.enriched)
-      if (params?.outdated) query.append("outdated", params.outdated)
-      if (params?.enrichedFailed) query.append("enrichedFailed", params.enrichedFailed)
+      if (params?.enrichStatuses?.length) query.append("enrichStatuses", params.enrichStatuses.join(","))
       if (params?.aiTextsProcessed) query.append("aiTextsProcessed", params.aiTextsProcessed)
       if (params?.categoryIds?.length) query.append("categoryIds", params.categoryIds.join(","))
       if (params?.search) query.append("search", params.search)
@@ -83,8 +77,8 @@ function ListProducts () {
   }
 
   useEffect(() => {
-      fetchProducts({ page, enriched, outdated, enrichedFailed, aiTextsProcessed, categoryIds, search: searchFilter })
-  }, [page, enriched, outdated, enrichedFailed, aiTextsProcessed, categoryIds, searchFilter])
+      fetchProducts({ page, enrichStatuses, aiTextsProcessed, categoryIds, search: searchFilter })
+  }, [page, enrichStatuses, aiTextsProcessed, categoryIds, searchFilter])
 
   if (error) {
     return (
@@ -136,22 +130,12 @@ function ListProducts () {
       <ProductFilters
         open={filtersOpen}
         onOpenChange={setFiltersOpen}
-        enriched={enriched}
-        outdated={outdated}
-        enrichedFailed={enrichedFailed}
+        enrichStatuses={enrichStatuses}
         categoryIds={categoryIds}
         aiTextsProcessed={aiTextsProcessed}
-        onEnrichedChange={(value) => {
+        onEnrichStatusesChange={(value) => {
           setPage(1)
-          setEnriched(value)
-        }}
-        onOutdatedChange={(value) => {
-          setPage(1)
-          setOutdated(value)
-        }}
-        onEnrichedFailedChange={(value) => {
-          setPage(1)
-          setEnrichedFailed(value)
+          setEnrichStatuses(value)
         }}
         onAiTextsProcessedChange={(value) => {
           setPage(1)
@@ -212,9 +196,7 @@ function ListProducts () {
         onRefresh={() =>
           fetchProducts({
             page,
-            enriched,
-            outdated,
-            enrichedFailed,
+            enrichStatuses,
             aiTextsProcessed,
             categoryIds
           })

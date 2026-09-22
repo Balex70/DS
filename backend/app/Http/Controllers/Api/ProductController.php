@@ -57,26 +57,36 @@ class ProductController extends Controller
             });
         }
 
-        $outdatedDate = now()->subWeeks(8);
-        // ENRICHED FILTER
-        if ($request->filled('enriched')) {
-            $query
-                ->whereNotNull('last_enrichment_at')
-                ->where('last_enrichment_at', '>', $outdatedDate);
-        }
+        // ENRICH STATUS FILTER
+        if ($request->filled('enrichStatuses')) {
+            $outdatedDate = now()->subWeeks(8);
+            $enrichStatuses = explode(',', $request->enrichStatuses);
 
-        // OUTDATED FILTER
-        if ($request->filled('outdated')) {
-            $query->where(function ($q) use ($outdatedDate) {
-                $q->whereNull('last_enrichment_at')
-                ->orWhere('last_enrichment_at', '<', $outdatedDate);
-            })
-            ->whereNull('enrichment_failed_at');
-        }
+            $query->where(function ($q) use ($enrichStatuses, $outdatedDate) {
+                // ENRICHED FILTER
+                if (in_array('enriched', $enrichStatuses)) {
+                    $q->orWhere(function ($r) use ($outdatedDate) {
+                        $r->whereNotNull('last_enrichment_at')
+                            ->where('last_enrichment_at', '>', $outdatedDate);
+                    });
+                }
 
-        // ENRICHMENT FAILED FILTER
-        if ($request->filled('enrichedFailed')) {
-            $query->whereNotNull('enrichment_failed_at');
+                // OUTDATED FILTER
+                if (in_array('outdated', $enrichStatuses)) {
+                    $q->orWhere(function ($r) use ($outdatedDate) {
+                        $r->where(function ($s) use ($outdatedDate) {
+                            $s->whereNull('last_enrichment_at')
+                                ->orWhere('last_enrichment_at', '<', $outdatedDate);
+                        })
+                        ->whereNull('enrichment_failed_at');
+                    });
+                }
+
+                // ENRICHMENT FAILED FILTER
+                if (in_array('failed', $enrichStatuses)) {
+                    $q->orWhereNotNull('enrichment_failed_at');
+                }
+            });
         }
 
         // AI TEXTS FILTER

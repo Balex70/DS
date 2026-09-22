@@ -15,18 +15,15 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import { BadgeX } from "lucide-react"
 import { useAdminCategories } from "@/hooks/use-admin-categories";
 import { CategoryMultiSelect } from "./CategoryMultiSelect";
+import { EnrichStatusesMultiSelect } from "./EnrichStatusesMultiSelect"
 
 type Props = {
     open: boolean
     onOpenChange: (open: boolean) => void
-    enriched: string | null
-    outdated: string | null
-    enrichedFailed: string | null
+    enrichStatuses: string[]
     aiTextsProcessed: string | null
     categoryIds: number[];
-    onEnrichedChange: (value: string | null) => void
-    onOutdatedChange: (value: string | null) => void
-    onEnrichedFailedChange: (value: string | null) => void
+    onEnrichStatusesChange: (value: string[]) => void
     onAiTextsProcessedChange: (value: string | null) => void
     onCategoryIdsChange: (value: number[]) => void;
 }
@@ -34,14 +31,10 @@ type Props = {
 export function ProductFilters({
     open,
     onOpenChange,
-    enriched,
-    outdated,
-    enrichedFailed,
+    enrichStatuses,
     aiTextsProcessed,
     categoryIds,
-    onEnrichedChange,
-    onOutdatedChange,
-    onEnrichedFailedChange,
+    onEnrichStatusesChange,
     onAiTextsProcessedChange,
     onCategoryIdsChange,
 }: Props) {
@@ -54,21 +47,6 @@ export function ProductFilters({
         color: string
     }
     const activeFilters: { label: string; onClick: () => void; color: string }[] = [
-        enriched && {
-            label: "Enriched",
-            onClick: () => onEnrichedChange(null),
-            color: "blue",
-        },
-        outdated && {
-            label: "Outdated",
-            onClick: () => onOutdatedChange(null),
-            color: "yellow",
-        },
-        enrichedFailed && {
-            label: "Enriched Failed",
-            onClick: () => onEnrichedFailedChange(null),
-            color: "red",
-        },
         aiTextsProcessed && {
             label: "AI Texts",
             onClick: () => onAiTextsProcessedChange(null),
@@ -90,51 +68,14 @@ export function ProductFilters({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                         {/* LEFT COLUMN */}
-                        <FieldGroup className="space-y-3">
+                        <FieldGroup className="space-y-2 gap-0">
 
+                            <Label>Enrich</Label>
                             <Field orientation="horizontal">
-                                <Checkbox
-                                    id="enriched"
-                                    checked={enriched === "enriched"}
-                                    onCheckedChange={(checked) =>
-                                        onEnrichedChange(
-                                            checked ? "enriched" : null
-                                        )
-                                    }
-                                />
-                                <Label htmlFor="enriched">
-                                    Enriched
-                                </Label>
-                            </Field>
-
-                            <Field orientation="horizontal">
-                                <Checkbox
-                                    id="outdated"
-                                    checked={outdated === "outdated"}
-                                    onCheckedChange={(checked) =>
-                                        onOutdatedChange(
-                                            checked ? "outdated" : null
-                                        )
-                                    }
-                                />
-                                <Label htmlFor="outdated">
-                                    Outdated
-                                </Label>
-                            </Field>
-
-                            <Field orientation="horizontal">
-                                <Checkbox
-                                    id="enrichedFailed"
-                                    checked={enrichedFailed === "enrichedFailed"}
-                                    onCheckedChange={(checked) =>
-                                        onEnrichedFailedChange(
-                                            checked ? "enrichedFailed" : null
-                                        )
-                                    }
-                                />
-                                <Label htmlFor="enrichedFailed">
-                                    Enriched Failed
-                                </Label>
+                                <EnrichStatusesMultiSelect
+                                    value={enrichStatuses}
+                                    onChange={onEnrichStatusesChange}
+                                    />
                             </Field>
 
                             <Field orientation="horizontal">
