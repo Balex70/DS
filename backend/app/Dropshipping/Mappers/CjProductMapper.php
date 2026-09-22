@@ -12,7 +12,8 @@ class CjProductMapper
             'name_raw' => $data['nameEn'] ?? '',
             'description_raw' => null, // comes from detail API later
 
-            'price' => $this->parsePrice($data['sellPrice'] ?? null),
+            'cost_price' => $this->parsePrice($data['sellPrice'] ?? null),
+            'price' => null,
             'now_price' => $this->parsePrice($data['nowPrice'] ?? null),
             'suggested_price' => $this->parsePrice($data['suggestedPrice'] ?? null),
 
