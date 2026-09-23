@@ -55,6 +55,7 @@ Route::middleware(['auth:sanctum', 'abilities:ai:texts'])->group(function () {
 Route::get('product-variants/{product}', [ProductVariantController::class, 'index'])->middleware('auth:sanctum');
 Route::patch('product-variants/{productVariant}', [ProductVariantController::class, 'update'])->middleware('auth:sanctum');
 Route::patch('product-variants/ai-status-change/{product}/{newAiStatus}', [ProductVariantController::class, 'changeAllVariantsAiStatuses'])->middleware('auth:sanctum');
+Route::patch('product-variants/translations-remove/{product}', [ProductVariantController::class, 'removeTranslations'])->middleware('auth:sanctum');
 
 // Customer
 Route::prefix('customer')->group(function () {
