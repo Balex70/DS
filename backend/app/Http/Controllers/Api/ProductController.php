@@ -203,6 +203,21 @@ class ProductController extends Controller
     }
 
     /**
+     * Update the ai status only
+     */
+    public function changeAiStatus(Product $product, ProductAiStatusEnum $newAiStatus)
+    {
+        Gate::authorize('update', $product);
+        $product->update([
+            'ai_status' => $newAiStatus,
+        ]);
+
+        return response()->json([
+            'message' => 'AI status updated successfully',
+        ]);
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Product $product)

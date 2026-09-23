@@ -7,7 +7,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { CardContent } from "@/components/ui/card"
-import { ProductWithCategories } from "@/types/product"
+import { ProductAiStatus, ProductWithCategories } from "@/types/product"
 import { ProductImagesDrawer } from "./ProductImagesDrawer"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
@@ -19,6 +19,8 @@ import NextImageWithReplace from "@/components/custom/NextImageWithReplace"
 import { ProductDrawerRawDataField } from "./ProductDrawerRawDataField"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import ListProductVariants from "../productVariants/ListProductVariants"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
 
 export function ProductDrawer({
   open,
@@ -71,6 +73,42 @@ export function ProductDrawer({
             setIsEnriching(false)
         }
     }
+
+    const changeAiStatus = async (newAiStatus: ProductAiStatus) => {
+        if (!product) return
+
+        try {
+            const getCookie = (name: string) => {
+                const value = `; ${document.cookie}`
+                const parts = value.split(`; ${name}=`)
+                if (parts.length === 2) return parts.pop()?.split(";").shift()
+            }
+
+            const xsrfToken = decodeURIComponent(getCookie("XSRF-TOKEN") || "")
+
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-XSRF-TOKEN': xsrfToken,
+            };
+            const response = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/products/ai-status-change/${product.id}/${newAiStatus}`, {
+                method: "PATCH",
+                credentials: 'include',
+                headers: headers,
+                cache: 'no-cache', // 'no-cache' if you want it fresh each time
+            })
+
+            if (!response.ok) {
+                throw new Error(`Failed to change AI status: ${response.status}`)
+            }
+
+            await onRefresh()
+        } catch (e) {
+            console.error("AI status change failed", e)
+        } finally {
+            //
+        }
+    }
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent style={{ maxWidth: '40vw' }}>
@@ -80,10 +118,30 @@ export function ProductDrawer({
 
         {product && (
             <CardContent className="space-y-4">
-                <Button onClick={handleEnrich} disabled={isEnriching}>
-                    {isEnriching && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {isEnriching ? "Enriching..." : "Enrich product"}
-                </Button>
+                <div className="flex items-center gap-2">
+                    <Button onClick={handleEnrich} disabled={isEnriching}>
+                        {isEnriching && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {isEnriching ? "Enriching..." : "Enrich product"}
+                    </Button>
+                    <div className="flex items-center gap-2 ml-6">
+                        <Label htmlFor="ai-status">AI status:</Label>
+                        <Select
+                            value={product.ai_status}
+                            onValueChange={(value) => changeAiStatus(value as ProductAiStatus)}
+                            >
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="AI status" />
+                            </SelectTrigger>
+
+                            <SelectContent>
+                                <SelectItem value="queued">Queued</SelectItem>
+                                <SelectItem value="processing">Processing</SelectItem>
+                                <SelectItem value="done">Done</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+
                 <div className="flex space-x-4">
                     {product.big_image && (
                         <div className="max-w-28 aspect-square overflow-hidden rounded-lg border bg-muted shrink-0">
@@ -134,7 +192,7 @@ export function ProductDrawer({
                     <TabsContent value="raw">
                         <ProductDrawerRawDataField product={product} />
                     </TabsContent>
-                    </Tabs>
+                </Tabs>
             </CardContent>
         )}
       </SheetContent>

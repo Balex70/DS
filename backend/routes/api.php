@@ -38,6 +38,7 @@ Route::post('categories/sync-full-paths', [CategoryController::class, 'syncFullP
 // Products
 Route::apiResource('products', ProductController::class)->middleware('auth:sanctum');
 Route::patch('products/enrich/{product}', [ProductController::class, 'enrich'])->middleware('auth:sanctum');
+Route::patch('products/ai-status-change/{product}/{newAiStatus}', [ProductController::class, 'changeAiStatus'])->middleware('auth:sanctum');
 Route::middleware(['auth:sanctum', 'abilities:ai:texts'])->group(function () {
     Route::get('products/ai-texts/next', [ProductController::class, 'aiTextsNext']);
     Route::get('products/ai-variant-texts/next', [ProductController::class, 'aiVariantTextsNext']);
