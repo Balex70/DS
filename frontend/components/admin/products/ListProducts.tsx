@@ -7,7 +7,7 @@ import Loader from '@/components/common/Loader';
 import { ProductDrawer } from './ProductDrawer';
 import { EditProductDrawer } from './EditProductDrawer';
 import { DeleteProductDrawer } from './DeleteProductDrawer';
-import { Meta, Product } from '@/types/product';
+import { Meta, ProductWithCategories } from '@/types/product';
 import { ProductPagination } from './ProductPagination';
 import { ProductFilters } from './ProductFilters';
 import { getErrorStringFromCatch } from '@/helpers/general';
@@ -17,10 +17,10 @@ import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 function ListProducts () {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductWithCategories[]>([]);
   const [meta, setMeta] = useState<Meta | null>(null)
   const [loading, setLoading] = useState(true)
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+  const [selectedProduct, setSelectedProduct] = useState<ProductWithCategories | null>(null)
   const [viewOpen, setViewOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)

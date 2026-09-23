@@ -3,10 +3,9 @@
 import { PriceRenderer } from "@/components/custom/PriceRenderer"
 import { Badge } from "@/components/ui/badge"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { Category } from "@/types/category"
-import { Product } from "@/types/product"
+import { ProductWithCategories } from "@/types/product"
 
-export function ProductDrawerMainFields({product}: {product: Product & {categories: Category[]}}) {
+export function ProductDrawerMainFields({product}: {product: ProductWithCategories}) {
   return (
     <FieldGroup className="grid grid-cols-2">
         <Field>

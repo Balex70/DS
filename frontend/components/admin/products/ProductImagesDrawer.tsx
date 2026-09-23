@@ -4,7 +4,6 @@ import NextImageWithReplace from "@/components/custom/NextImageWithReplace"
 import { Card, CardContent } from "@/components/ui/card"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Product } from "@/types/product"
 
 export function ProductImagesDrawer({

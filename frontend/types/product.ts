@@ -1,3 +1,5 @@
+import { Category } from "./category";
+
 export type Product = {
   id: number,
   name_raw: string,
@@ -77,4 +79,8 @@ export type ProductVariantTranslation = {
     locale: string
     name: string
     product_variant_id: number
+}
+
+export type ProductWithCategories = Product & {
+  categories: Category[]
 }

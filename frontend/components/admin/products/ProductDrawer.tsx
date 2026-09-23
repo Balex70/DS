@@ -7,7 +7,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { CardContent } from "@/components/ui/card"
-import { Product } from "@/types/product"
+import { ProductWithCategories } from "@/types/product"
 import { ProductImagesDrawer } from "./ProductImagesDrawer"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
@@ -28,7 +28,7 @@ export function ProductDrawer({
 }: {
   open: boolean
   onOpenChange: (v: boolean) => void
-  product: Product | null
+  product: ProductWithCategories | null
   onRefresh: (params?: {
     page?: number,
     enriched: string|null,
