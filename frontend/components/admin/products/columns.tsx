@@ -22,6 +22,14 @@ const isFresh = (date?: Date | null) => {
   return Date.now() - new Date(date).getTime() < EIGHT_WEEKS_MS
 }
 
+const isPriceSuspicious = (costPrice: number | null, price: number | null) => {
+  if (costPrice == null || price == null || costPrice <= 0) {
+    return false
+  }
+
+  return Math.abs(price - costPrice) / costPrice < 0.05
+}
+
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export const columns = ({
@@ -122,22 +130,32 @@ export const columns = ({
   {
     accessorKey: "cost_price",
     header: "Cost Price",
-    cell: ({ getValue }) => {
-      const value = Number(getValue())
+    cell: ({ row, getValue }) => {
+      const costPrice = Number(getValue())
+      const price = Number(row.original.price)
+
+      const suspicious = isPriceSuspicious(costPrice, price)
 
       return (
-        <PriceRenderer value={value} />
+        <span className={suspicious ? "text-yellow-600 font-semibold" : undefined}>
+          <PriceRenderer value={costPrice} />
+        </span>
       )
     }
   },
   {
     accessorKey: "price",
     header: "Price",
-    cell: ({ getValue }) => {
-      const value = Number(getValue())
+    cell: ({ row, getValue }) => {
+      const price = Number(getValue())
+      const costPrice = Number(row.original.cost_price)
+
+      const suspicious = isPriceSuspicious(costPrice, price)
 
       return (
-        <PriceRenderer value={value} />
+        <span className={suspicious ? "text-yellow-600 font-semibold" : undefined}>
+          <PriceRenderer value={price} />
+        </span>
       )
     }
   },
