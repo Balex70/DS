@@ -95,6 +95,15 @@ export const columns = ({
     }
   },
   {
+    accessorKey: "created_at",
+    header: "Created At",
+    cell: ({ getValue }) => {
+      const value = getValue<string>()
+
+      return new Date(value).toLocaleString()
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
       const log = row.original
