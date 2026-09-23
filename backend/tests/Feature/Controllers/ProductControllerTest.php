@@ -483,19 +483,108 @@ class ProductControllerTest extends TestCase
     }
     
     // FILTERS
-    public function test_can_filter_enriched_products()
+    public function test_can_filter_enriched_products(): void
     {
         Product::factory()->create([
-            'last_enrichment_at' => now(),
+            'last_enrichment_at' => now()->subWeeks(2),
+            'enrichment_failed_at' => null,
+        ]);
+
+        Product::factory()->create([
+            'last_enrichment_at' => now()->subWeeks(10),
+            'enrichment_failed_at' => null,
+        ]);
+
+        $response = $this->actingAs($this->admin)
+            ->getJson('/api/products?enrichStatuses=enriched');
+
+        $response->assertOk()
+            ->assertJsonCount(1, 'data');
+    }
+
+    public function test_can_filter_outdated_products(): void
+    {
+        Product::factory()->create([
+            'last_enrichment_at' => now()->subWeeks(10),
+            'enrichment_failed_at' => null,
+        ]);
+
+        Product::factory()->create([
+            'last_enrichment_at' => now()->subWeeks(2),
+            'enrichment_failed_at' => null,
+        ]);
+
+        $response = $this->actingAs($this->admin)
+            ->getJson('/api/products?enrichStatuses=outdated');
+
+        $response->assertOk()
+            ->assertJsonCount(1, 'data');
+    }
+
+    public function test_can_filter_fresh_products(): void
+    {
+        Product::factory()->create([
+            'last_enrichment_at' => null,
+            'enrichment_failed_at' => null,
+        ]);
+
+        Product::factory()->create([
+            'last_enrichment_at' => now()->subWeeks(2),
+            'enrichment_failed_at' => null,
+        ]);
+
+        $response = $this->actingAs($this->admin)
+            ->getJson('/api/products?enrichStatuses=fresh');
+
+        $response->assertOk()
+            ->assertJsonCount(1, 'data');
+    }
+
+    public function test_can_filter_failed_products(): void
+    {
+        Product::factory()->create([
+            'last_enrichment_at' => now()->subWeeks(2),
+            'enrichment_failed_at' => now(),
+        ]);
+
+        Product::factory()->create([
+            'last_enrichment_at' => now()->subWeeks(2),
+            'enrichment_failed_at' => null,
+        ]);
+
+        $response = $this->actingAs($this->admin)
+            ->getJson('/api/products?enrichStatuses=failed');
+
+        $response->assertOk()
+            ->assertJsonCount(1, 'data');
+    }
+
+    public function test_can_filter_multiple_enrichment_statuses(): void
+    {
+        Product::factory()->create([
+            'last_enrichment_at' => now()->subWeeks(2),
+            'enrichment_failed_at' => null,
+        ]);
+
+        Product::factory()->create([
+            'last_enrichment_at' => now()->subWeeks(10),
+            'enrichment_failed_at' => null,
         ]);
 
         Product::factory()->create([
             'last_enrichment_at' => null,
+            'enrichment_failed_at' => null,
+        ]);
+
+        Product::factory()->create([
+            'last_enrichment_at' => now()->subWeeks(2),
+            'enrichment_failed_at' => now(),
         ]);
 
         $response = $this->actingAs($this->admin)
-            ->getJson('/api/products?enriched=1');
+            ->getJson('/api/products?enrichStatuses=enriched,outdated,fresh');
 
-        $response->assertJsonCount(1, 'data');
+        $response->assertOk()
+            ->assertJsonCount(4, 'data');
     }
 }
