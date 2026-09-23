@@ -134,6 +134,14 @@ class ProductController extends Controller
             $query->whereNotNull('ai_texts_at');
         }
 
+        // SUSPICIOUS PRICE FILTER
+        if ($request->filled('suspiciousPrices')) {
+            $query->whereNotNull('cost_price')
+                ->whereNotNull('price')
+                ->where('cost_price', '>', 0)
+                ->whereRaw('ABS(price - cost_price) * 100 < cost_price * 5');
+        }
+
         return ProductResource::collection(
             $query->paginate(10)
         );

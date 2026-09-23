@@ -28,6 +28,7 @@ function ListProducts () {
   const [page, setPage] = useState(1)
   const [enrichStatuses, setEnrichStatuses] = useState<string[]>([])
   const [aiTextsProcessed, setAiTextsProcessed] = useState<string | null>(null)
+  const [suspiciousPrices, setSuspiciousPrices] = useState<string | null>(null)
   const [aiStatuses, setAiStatuses] = useState<string[]>([])
   const [categoryIds, setCategoryIds] = useState<number[]>([])
   const [search, setSearch] = useState("")
@@ -38,6 +39,7 @@ function ListProducts () {
     page?: number,
     enrichStatuses: string[]|null
     aiTextsProcessed: string|null,
+    suspiciousPrices: string|null,
     aiStatuses: string[]|null
     categoryIds: number[]|null,
     search?: string
@@ -50,6 +52,7 @@ function ListProducts () {
       if (params?.page) query.append("page", String(params.page))
       if (params?.enrichStatuses?.length) query.append("enrichStatuses", params.enrichStatuses.join(","))
       if (params?.aiTextsProcessed) query.append("aiTextsProcessed", params.aiTextsProcessed)
+      if (params?.suspiciousPrices) query.append("suspiciousPrices", params.suspiciousPrices)
       if (params?.aiStatuses?.length) query.append("aiStatuses", params.aiStatuses.join(","))
       if (params?.categoryIds?.length) query.append("categoryIds", params.categoryIds.join(","))
       if (params?.search) query.append("search", params.search)
@@ -80,8 +83,8 @@ function ListProducts () {
   }
 
   useEffect(() => {
-      fetchProducts({ page, enrichStatuses, aiTextsProcessed, aiStatuses, categoryIds, search: searchFilter })
-  }, [page, enrichStatuses, aiTextsProcessed, aiStatuses, categoryIds, searchFilter])
+      fetchProducts({ page, enrichStatuses, aiTextsProcessed, suspiciousPrices, aiStatuses, categoryIds, search: searchFilter })
+  }, [page, enrichStatuses, aiTextsProcessed, suspiciousPrices, aiStatuses, categoryIds, searchFilter])
 
   if (error) {
     return (
@@ -136,6 +139,7 @@ function ListProducts () {
         enrichStatuses={enrichStatuses}
         categoryIds={categoryIds}
         aiTextsProcessed={aiTextsProcessed}
+        suspiciousPrices={suspiciousPrices}
         aiStatuses={aiStatuses}
         onEnrichStatusesChange={(value) => {
           setPage(1)
@@ -144,6 +148,10 @@ function ListProducts () {
         onAiTextsProcessedChange={(value) => {
           setPage(1)
           setAiTextsProcessed(value)
+        }}
+        onSuspiciousPricesChange={(value) => {
+          setPage(1)
+          setSuspiciousPrices(value)
         }}
         onAiStatusesChange={(value) => {
           setPage(1)
@@ -206,6 +214,7 @@ function ListProducts () {
             page,
             enrichStatuses,
             aiTextsProcessed,
+            suspiciousPrices,
             aiStatuses,
             categoryIds
           })

@@ -23,10 +23,12 @@ type Props = {
     onOpenChange: (open: boolean) => void
     enrichStatuses: string[]
     aiTextsProcessed: string | null
+    suspiciousPrices: string | null
     aiStatuses: string[]
     categoryIds: number[];
     onEnrichStatusesChange: (value: string[]) => void
     onAiTextsProcessedChange: (value: string | null) => void
+    onSuspiciousPricesChange: (value: string | null) => void
     onAiStatusesChange: (value: string[]) => void
     onCategoryIdsChange: (value: number[]) => void;
 }
@@ -36,10 +38,12 @@ export function ProductFilters({
     onOpenChange,
     enrichStatuses,
     aiTextsProcessed,
+    suspiciousPrices,
     aiStatuses,
     categoryIds,
     onEnrichStatusesChange,
     onAiTextsProcessedChange,
+    onSuspiciousPricesChange,
     onAiStatusesChange,
     onCategoryIdsChange,
 }: Props) {
@@ -56,6 +60,11 @@ export function ProductFilters({
             label: "AI Texts",
             onClick: () => onAiTextsProcessedChange(null),
             color: "green",
+        },
+        suspiciousPrices && {
+            label: "Suspicious Prices",
+            onClick: () => onSuspiciousPricesChange(null),
+            color: "red",
         },
     ].filter((f): f is FilterBadge => f !== null)
     return (
@@ -103,6 +112,21 @@ export function ProductFilters({
                                 />
                                 <Label htmlFor="aiTextsProcessed">
                                     AI Texts
+                                </Label>
+                            </Field>
+
+                            <Field orientation="horizontal">
+                                <Checkbox
+                                    id="suspiciousPrices"
+                                    checked={suspiciousPrices === "suspiciousPrices"}
+                                    onCheckedChange={(checked) =>
+                                        onSuspiciousPricesChange(
+                                            checked ? "suspiciousPrices" : null
+                                        )
+                                    }
+                                />
+                                <Label htmlFor="suspiciousPrices">
+                                    Suspicious Prices
                                 </Label>
                             </Field>
 
