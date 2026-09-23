@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { ClipboardClock, Hammer, Home, List, Settings, ShoppingCart, StretchHorizontal, UserLock, UsersRound, WalletCards } from "lucide-react"
+import { ClipboardClock, Hammer, Home, List, Settings, ShoppingCart, FolderTree, UserLock, UsersRound, DollarSign } from "lucide-react"
 import { AdminModeToggle } from "./admin-mode-toggle"
 import Link from "next/link"
 
@@ -49,7 +49,7 @@ export function AdminSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link href="/admin/payments" className="flex items-center gap-2">
-                    <WalletCards />
+                    <DollarSign />
                     <span>Payments</span>
                   </Link>
                 </SidebarMenuButton>
@@ -72,7 +72,7 @@ export function AdminSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link href="/admin/categories" className="flex items-center gap-2">
-                    <StretchHorizontal />
+                    <FolderTree />
                     <span>Categories</span>
                   </Link>
                 </SidebarMenuButton>
