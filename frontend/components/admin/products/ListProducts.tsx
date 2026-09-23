@@ -12,6 +12,9 @@ import { ProductPagination } from './ProductPagination';
 import { ProductFilters } from './ProductFilters';
 import { getErrorStringFromCatch } from '@/helpers/general';
 import NotFoundCard from '@/components/common/NotFoundCard';
+import { Input } from '@/components/ui/input';
+import { X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 function ListProducts () {
   const [products, setProducts] = useState<Product[]>([]);
@@ -23,22 +26,23 @@ function ListProducts () {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [page, setPage] = useState(1)
-  const [enriched, setEnriched] = useState<string | null>(null)
-  const [outdated, setOutdated] = useState<string | null>(null)
-  const [enrichedFailed, setEnrichedFailed] = useState<string | null>(null)
+  const [enrichStatuses, setEnrichStatuses] = useState<string[]>([])
   const [aiTextsProcessed, setAiTextsProcessed] = useState<string | null>(null)
-  const [aiImagesProcessed, setAiImagesProcessed] = useState<string | null>(null)
+  const [suspiciousPrices, setSuspiciousPrices] = useState<string | null>(null)
+  const [aiStatuses, setAiStatuses] = useState<string[]>([])
   const [categoryIds, setCategoryIds] = useState<number[]>([])
+  const [search, setSearch] = useState("")
+  const [searchFilter, setSearchFilter] = useState("")
   const [error, setError] = useState<string | null>(null)
   
   const fetchProducts = async (params?: {
     page?: number,
-    enriched: string|null,
-    outdated: string|null,
-    enrichedFailed: string|null,
+    enrichStatuses: string[]|null
     aiTextsProcessed: string|null,
-    aiImagesProcessed: string|null,
-    categoryIds: number[]|null
+    suspiciousPrices: string|null,
+    aiStatuses: string[]|null
+    categoryIds: number[]|null,
+    search?: string
   }) => {
     try {
       setLoading(true)
@@ -46,12 +50,12 @@ function ListProducts () {
       const query = new URLSearchParams()
 
       if (params?.page) query.append("page", String(params.page))
-      if (params?.enriched) query.append("enriched", params.enriched)
-      if (params?.outdated) query.append("outdated", params.outdated)
-      if (params?.enrichedFailed) query.append("enrichedFailed", params.enrichedFailed)
+      if (params?.enrichStatuses?.length) query.append("enrichStatuses", params.enrichStatuses.join(","))
       if (params?.aiTextsProcessed) query.append("aiTextsProcessed", params.aiTextsProcessed)
-      if (params?.aiImagesProcessed) query.append("aiImagesProcessed", params.aiImagesProcessed)
+      if (params?.suspiciousPrices) query.append("suspiciousPrices", params.suspiciousPrices)
+      if (params?.aiStatuses?.length) query.append("aiStatuses", params.aiStatuses.join(","))
       if (params?.categoryIds?.length) query.append("categoryIds", params.categoryIds.join(","))
+      if (params?.search) query.append("search", params.search)
 
       const headers = {
           'Content-Type': 'application/json',
@@ -79,8 +83,8 @@ function ListProducts () {
   }
 
   useEffect(() => {
-      fetchProducts({ page, enriched, outdated, enrichedFailed, aiTextsProcessed, aiImagesProcessed, categoryIds })
-  }, [page, enriched, outdated, enrichedFailed, aiTextsProcessed, aiImagesProcessed, categoryIds])
+      fetchProducts({ page, enrichStatuses, aiTextsProcessed, suspiciousPrices, aiStatuses, categoryIds, search: searchFilter })
+  }, [page, enrichStatuses, aiTextsProcessed, suspiciousPrices, aiStatuses, categoryIds, searchFilter])
 
   if (error) {
     return (
@@ -93,34 +97,65 @@ function ListProducts () {
 
   return (
     <div className="w-full main-bg flex flex-col border-b-0 rounded-none">
+      <form
+        className="mb-4 flex items-center gap-2"
+        onSubmit={(event) => {
+          event.preventDefault()
+
+          setPage(1)
+          setSearchFilter(search.trim())
+        }}
+      >
+        <div className="relative flex-1">
+          <Input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search products..."
+            className="pr-9"
+          />
+
+          {search && (
+            <button
+              type="button"
+              aria-label="Clear search"
+              onClick={() => {
+                setSearch("")
+                setSearchFilter("")
+                setPage(1)
+              }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+        <Button type="submit">
+          OK
+        </Button>
+      </form>
       <ProductFilters
         open={filtersOpen}
         onOpenChange={setFiltersOpen}
-        enriched={enriched}
-        outdated={outdated}
-        enrichedFailed={enrichedFailed}
+        enrichStatuses={enrichStatuses}
         categoryIds={categoryIds}
         aiTextsProcessed={aiTextsProcessed}
-        aiImagesProcessed={aiImagesProcessed}
-        onEnrichedChange={(value) => {
+        suspiciousPrices={suspiciousPrices}
+        aiStatuses={aiStatuses}
+        onEnrichStatusesChange={(value) => {
           setPage(1)
-          setEnriched(value)
-        }}
-        onOutdatedChange={(value) => {
-          setPage(1)
-          setOutdated(value)
-        }}
-        onEnrichedFailedChange={(value) => {
-          setPage(1)
-          setEnrichedFailed(value)
+          setEnrichStatuses(value)
         }}
         onAiTextsProcessedChange={(value) => {
           setPage(1)
           setAiTextsProcessed(value)
         }}
-        onAiImagesProcessedChange={(value) => {
+        onSuspiciousPricesChange={(value) => {
           setPage(1)
-          setAiImagesProcessed(value)
+          setSuspiciousPrices(value)
+        }}
+        onAiStatusesChange={(value) => {
+          setPage(1)
+          setAiStatuses(value)
         }}
         onCategoryIdsChange={(value) => {
           setPage(1)
@@ -177,11 +212,10 @@ function ListProducts () {
         onRefresh={() =>
           fetchProducts({
             page,
-            enriched,
-            outdated,
-            enrichedFailed,
+            enrichStatuses,
             aiTextsProcessed,
-            aiImagesProcessed,
+            suspiciousPrices,
+            aiStatuses,
             categoryIds
           })
         }

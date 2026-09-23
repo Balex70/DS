@@ -14,12 +14,22 @@ import { MoreHorizontal, Plus } from "lucide-react"
 import { Product } from "@/types/product"
 import { Badge } from "@/components/ui/badge"
 import { PriceRenderer } from "@/components/custom/PriceRenderer"
+import { Category } from "@/types/category"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 const EIGHT_WEEKS_MS = 1000 * 60 * 60 * 24 * 56
 
 const isFresh = (date?: Date | null) => {
   if (!date) return false
   return Date.now() - new Date(date).getTime() < EIGHT_WEEKS_MS
+}
+
+const isPriceSuspicious = (costPrice: number | null, price: number | null) => {
+  if (costPrice == null || price == null || costPrice <= 0) {
+    return false
+  }
+
+  return Math.abs(price - costPrice) / costPrice < 0.05
 }
 
 // This type is used to define the shape of our data.
@@ -32,7 +42,7 @@ export const columns = ({
   onView: (product: Product) => void
   onEdit: (product: Product) => void
   onDelete: (product: Product) => void
-}): ColumnDef<Product>[] => [
+}): ColumnDef<Product & { categories: Category[] }>[] => [
   {
     accessorKey: "id",
     header: "ID",
@@ -122,28 +132,63 @@ export const columns = ({
   {
     accessorKey: "cost_price",
     header: "Cost Price",
-    cell: ({ getValue }) => {
-      const value = Number(getValue())
+    cell: ({ row, getValue }) => {
+      const costPrice = Number(getValue())
+      const price = Number(row.original.price)
+
+      const suspicious = isPriceSuspicious(costPrice, price)
 
       return (
-        <PriceRenderer value={value} />
+        <span className={suspicious ? "text-yellow-600 font-semibold" : undefined}>
+          <PriceRenderer value={costPrice} />
+        </span>
       )
     }
   },
   {
     accessorKey: "price",
     header: "Price",
-    cell: ({ getValue }) => {
-      const value = Number(getValue())
+    cell: ({ row, getValue }) => {
+      const price = Number(getValue())
+      const costPrice = Number(row.original.cost_price)
+
+      const suspicious = isPriceSuspicious(costPrice, price)
 
       return (
-        <PriceRenderer value={value} />
+        <span className={suspicious ? "text-yellow-600 font-semibold" : undefined}>
+          <PriceRenderer value={price} />
+        </span>
       )
     }
   },
   {
     accessorKey: "ai_status",
     header: "AI Status",
+  },
+  {
+    accessorKey: "categories",
+    header: "Categories",
+    cell: ({ row }) => {
+      const categories: Category[] = row.original.categories
+
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="max-w-[250px] truncate cursor-help">
+                {categories.map((category) => category.name).join(" | ")}
+              </div>
+            </TooltipTrigger>
+
+            <TooltipContent>
+              <div className="max-w-[500px]">
+                {categories.map((category) => category.full_path).join(" | ")}
+              </div>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )
+    }
   },
   {
     accessorKey: "warehouse_inventory_num",

@@ -33,10 +33,21 @@ class ProductController extends Controller
         $query = Product::query()->orderBy('id');
         $query->with('translations');
 
-        // // SEARCH
-        // if ($request->filled('search')) {
-        //     $query->where('name_raw', 'like', "%{$request->search}%");
-        // }
+        // SEARCH
+        if ($request->filled('search')) {
+            $searchQuery = $request->search;
+            $query->where(function ($q) use ($searchQuery) {
+                $q->where('name_raw', 'ILIKE', "%{$searchQuery}%")
+                ->orWhere('name_processed', 'ILIKE', "%{$searchQuery}%")
+                ->orWhereHas('variants', function ($q) use ($searchQuery) {
+                    $q->where('name', 'ILIKE', "%{$searchQuery}%")
+                    ->orWhere('name_processed', 'ILIKE', "%{$searchQuery}%")
+                    ->orWhereHas('translations', function ($q) use ($searchQuery) {
+                        $q->where('name', 'ILIKE', "%{$searchQuery}%");
+                    });
+                });
+            });
+        }
 
         if ($request->filled('categoryIds')) {
             $categoryIds = explode(',', $request->categoryIds);
@@ -46,26 +57,76 @@ class ProductController extends Controller
             });
         }
 
-        $outdatedDate = now()->subWeeks(8);
-        // ENRICHED FILTER
-        if ($request->filled('enriched')) {
-            $query
-                ->whereNotNull('last_enrichment_at')
-                ->where('last_enrichment_at', '>', $outdatedDate);
+        // ENRICH STATUS FILTER
+        if ($request->filled('enrichStatuses')) {
+            $outdatedDate = now()->subWeeks(8);
+            $enrichStatuses = explode(',', $request->enrichStatuses);
+
+            $query->where(function ($q) use ($enrichStatuses, $outdatedDate) {
+                // ENRICHED FILTER
+                if (in_array('enriched', $enrichStatuses)) {
+                    $q->orWhere(function ($r) use ($outdatedDate) {
+                        $r->whereNotNull('last_enrichment_at')
+                            ->where('last_enrichment_at', '>', $outdatedDate);
+                    });
+                }
+
+                // OUTDATED FILTER
+                if (in_array('outdated', $enrichStatuses)) {
+                    $q->orWhere(function ($r) use ($outdatedDate) {
+                        $r->where(function ($s) use ($outdatedDate) {
+                            $s->whereNotNull('last_enrichment_at')
+                                ->where('last_enrichment_at', '<', $outdatedDate);
+                        })
+                        ->whereNull('enrichment_failed_at');
+                    });
+                }
+
+                // FRESH FILTER
+                if (in_array('fresh', $enrichStatuses)) {
+                    $q->orWhere(function ($r) {
+                        $r->whereNull('last_enrichment_at')
+                            ->whereNull('enrichment_failed_at');
+                    });
+                }
+
+                // ENRICHMENT FAILED FILTER
+                if (in_array('failed', $enrichStatuses)) {
+                    $q->orWhereNotNull('enrichment_failed_at');
+                }
+            });
         }
 
-        // OUTDATED FILTER
-        if ($request->filled('outdated')) {
-            $query->where(function ($q) use ($outdatedDate) {
-                $q->whereNull('last_enrichment_at')
-                ->orWhere('last_enrichment_at', '<', $outdatedDate);
-            })
-            ->whereNull('enrichment_failed_at');
-        }
+        // AI STATUS FILTER
+        if ($request->filled('aiStatuses')) {
+            $aiStatuses = explode(',', $request->aiStatuses);
 
-        // ENRICHMENT FAILED FILTER
-        if ($request->filled('enrichedFailed')) {
-            $query->whereNotNull('enrichment_failed_at');
+            $query->where(function ($q) use ($aiStatuses) {
+                // QUEUED FILTER
+                if (in_array(ProductAiStatusEnum::QUEUED->value, $aiStatuses)) {
+                    $q->orWhere('ai_status', ProductAiStatusEnum::QUEUED->value);
+                }
+
+                // PROCESSING FILTER
+                if (in_array(ProductAiStatusEnum::PROCESSING->value, $aiStatuses)) {
+                    $q->orWhere('ai_status', ProductAiStatusEnum::PROCESSING->value);
+                }
+
+                // DONE FILTER
+                if (in_array(ProductAiStatusEnum::DONE->value, $aiStatuses)) {
+                    $q->orWhere('ai_status', ProductAiStatusEnum::DONE->value);
+                }
+
+                // FAILED FILTER
+                if (in_array(ProductAiStatusEnum::FAILED->value, $aiStatuses)) {
+                    $q->orWhere('ai_status', ProductAiStatusEnum::FAILED->value);
+                }
+
+                // NULL FILTER
+                if (in_array('null', $aiStatuses)) {
+                    $q->whereNull('ai_status');
+                }
+            });
         }
 
         // AI TEXTS FILTER
@@ -73,9 +134,12 @@ class ProductController extends Controller
             $query->whereNotNull('ai_texts_at');
         }
 
-        // AI IMAGES FILTER
-        if ($request->filled('aiImagesProcessed')) {
-            $query->whereNotNull('ai_images_at');
+        // SUSPICIOUS PRICE FILTER
+        if ($request->filled('suspiciousPrices')) {
+            $query->whereNotNull('cost_price')
+                ->whereNotNull('price')
+                ->where('cost_price', '>', 0)
+                ->whereRaw('ABS(price - cost_price) * 100 < cost_price * 5');
         }
 
         return ProductResource::collection(
