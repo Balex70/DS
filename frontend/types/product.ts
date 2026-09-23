@@ -1,3 +1,5 @@
+import { Category } from "./category";
+
 export type Product = {
   id: number,
   name_raw: string,
@@ -16,7 +18,7 @@ export type Product = {
   enrichment_failed_at: Date|null,
   enrichment_error: string|null,
   ai_texts_at: Date|null,
-  ai_status: string,
+  ai_status: ProductAiStatus,
   big_image?: ProductImageType,
   images?: ProductImageType[],
   slug: string,
@@ -30,6 +32,8 @@ export type Product = {
   translation: ProductTranslation | null
   translations: ProductTranslation[]
 }
+
+export type ProductAiStatus = "queued" | "processing" | "done" | "failed"
 
 export type ProductImageType = {
   id: string,
@@ -70,11 +74,17 @@ export type ProductVariant = {
     volume: string;
     image?: ProductImageType;
     translations: ProductVariantTranslation[]
-    ai_status: string
+    ai_status: ProductVariantAiStatus
 }
+
+export type ProductVariantAiStatus = "queued" | "processing" | "done" | "failed"
 
 export type ProductVariantTranslation = {
     locale: string
     name: string
     product_variant_id: number
+}
+
+export type ProductWithCategories = Product & {
+  categories: Category[]
 }

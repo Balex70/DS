@@ -1,10 +1,10 @@
 "use client"
 
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { Product } from "@/types/product"
+import { ProductWithCategories } from "@/types/product"
 import { format } from "date-fns"
 
-export function ProductDrawerSecondaryFields({product}: {product: Product}) {
+export function ProductDrawerSecondaryFields({product}: {product: ProductWithCategories}) {
   return (
     <FieldGroup className="grid grid-cols-2">
         <Field>

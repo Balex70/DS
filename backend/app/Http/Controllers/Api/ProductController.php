@@ -203,6 +203,41 @@ class ProductController extends Controller
     }
 
     /**
+     * Update the ai status only
+     */
+    public function changeAiStatus(Product $product, ProductAiStatusEnum $newAiStatus)
+    {
+        Gate::authorize('update', $product);
+        $product->update([
+            'ai_status' => $newAiStatus,
+        ]);
+
+        return response()->json([
+            'message' => 'AI status updated successfully',
+        ]);
+    }
+
+    /**
+     * Remove translations for product
+     */
+    public function removeTranslations(Product $product)
+    {
+        Gate::authorize('update', $product);
+        $product->translations()->delete();
+
+        $this->createAppLogAction->execute(
+                    AppLogLevelEnum::SUCCESS,
+                    AppLogRealmEnum::PRODUCT,
+                    "Translations for product removed:
+ID: {$product->id} ($product->name_processed)"
+                );
+
+        return response()->json([
+            'message' => 'Translations for product removed successfully',
+        ]);
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Product $product)

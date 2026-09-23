@@ -54,7 +54,9 @@ class ProductService
 
             DB::transaction(function () use ($productToEnrich, $mappedDetails) {
                 $now = now();
-                $productToEnrich->update([
+                $nameChanged = $productToEnrich->name_raw !== $mappedDetails['name_raw'];
+
+                $updates = [
                     'name_raw' => $mappedDetails['name_raw'],
                     'sku' => $mappedDetails['sku'],
                     'description_raw' => $mappedDetails['description_raw'],
@@ -63,15 +65,19 @@ class ProductService
                     'now_price' => $mappedDetails['now_price'],
                     'suggested_price' => $mappedDetails['suggested_price'],
                     'add_mark_status' => $mappedDetails['add_mark_status'],
-                    // 'images' => $mappedDetails['images'],
                     'updated_at' => $now,
                     'last_enrichment_at' => $now,
-                    'ai_status' => ProductAiStatusEnum::QUEUED,
                     'product_weight' => $mappedDetails['product_weight'],
                     'packing_weight' => $mappedDetails['packing_weight'],
                     'enrichment_failed_at' => null,
                     'enrichment_error' => null,
-                ]);
+                ];
+
+                if ($nameChanged) {
+                    $updates['ai_status'] = ProductAiStatusEnum::QUEUED;
+                }
+
+                $productToEnrich->update($updates);
 
                 // Store and sync materials
                 if (!empty($mappedDetails['material'])) {
@@ -111,13 +117,20 @@ class ProductService
                     ->where('product_id', $productToEnrich->id)
                     ->pluck('id', 'url');
 
-                $variantsRows = array_map(function ($variant) use ($productToEnrich, $productImages, $now) {
-                    return [
+                $existingVariants = DB::table('product_variants')
+                    ->where('product_id', $productToEnrich->id)
+                    ->get(['external_id', 'name', 'ai_status'])
+                    ->keyBy('external_id');
+                $variantsRows = array_map(function ($variant) use ($productToEnrich, $productImages, $now, $existingVariants) {
+                    $existingVariant = $existingVariants->get($variant['external_id']);
+                    $variantName = $variant['name'] ?? null;
+
+                    $variantRow = [
                         'product_id' => $productToEnrich->id,
                         'external_id'  => $variant['external_id'],
                         'sku'          => $variant['sku'] ?? null,
                         'key'          => $variant['key'] ?? null,
-                        'name'         => $variant['name'] ?? null,
+                        'name'         => $variantName,
                         'cost_price'   => $variant['price'] ?? null,
                         'price'        => $this->generatePrice($variant['price']),
                         'stock'        => $variant['stock'] ?? null,
@@ -126,8 +139,15 @@ class ProductService
                         'image_id'     => $productImages[$variant['image']] ?? null,
                         'created_at' => $now,
                         'updated_at' => $now,
-                        'ai_status' => ProductVariantAiStatusEnum::QUEUED,
                     ];
+
+                    if (
+                        !$existingVariant ||
+                        $existingVariant->name !== $variantName
+                    ) {
+                        $variantRow['ai_status'] = ProductVariantAiStatusEnum::QUEUED;
+                    }
+                    return $variantRow;
                 }, $mappedDetails['variants']);
 
                 // Upsert variants

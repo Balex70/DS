@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal, Plus } from "lucide-react"
-import { Product } from "@/types/product"
+import { ProductWithCategories } from "@/types/product"
 import { Badge } from "@/components/ui/badge"
 import { PriceRenderer } from "@/components/custom/PriceRenderer"
 import { Category } from "@/types/category"
@@ -39,10 +39,10 @@ export const columns = ({
   onEdit,
   onDelete,
 }: {
-  onView: (product: Product) => void
-  onEdit: (product: Product) => void
-  onDelete: (product: Product) => void
-}): ColumnDef<Product & { categories: Category[] }>[] => [
+  onView: (product: ProductWithCategories) => void
+  onEdit: (product: ProductWithCategories) => void
+  onDelete: (product: ProductWithCategories) => void
+}): ColumnDef<ProductWithCategories>[] => [
   {
     accessorKey: "id",
     header: "ID",
