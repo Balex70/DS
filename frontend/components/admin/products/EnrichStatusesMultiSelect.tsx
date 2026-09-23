@@ -19,6 +19,7 @@ function buildTree() {
     return [
         'enriched',
         'outdated',
+        'fresh',
         'failed'
     ];
 }

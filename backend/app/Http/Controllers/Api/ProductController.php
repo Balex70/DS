@@ -75,10 +75,18 @@ class ProductController extends Controller
                 if (in_array('outdated', $enrichStatuses)) {
                     $q->orWhere(function ($r) use ($outdatedDate) {
                         $r->where(function ($s) use ($outdatedDate) {
-                            $s->whereNull('last_enrichment_at')
-                                ->orWhere('last_enrichment_at', '<', $outdatedDate);
+                            $s->whereNotNull('last_enrichment_at')
+                                ->where('last_enrichment_at', '<', $outdatedDate);
                         })
                         ->whereNull('enrichment_failed_at');
+                    });
+                }
+
+                // FRESH FILTER
+                if (in_array('fresh', $enrichStatuses)) {
+                    $q->orWhere(function ($r) {
+                        $r->whereNull('last_enrichment_at')
+                            ->whereNull('enrichment_failed_at');
                     });
                 }
 
