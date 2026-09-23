@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\ProductVariantAiStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProductVariantRequest;
 use App\Http\Resources\ProductVariantResource;
@@ -80,5 +81,19 @@ class ProductVariantController extends Controller
         });
 
         return new ProductVariantResource($productVariant);
+    }
+
+    /**
+     * Update the ai status for variants
+     */
+    public function changeAllVariantsAiStatuses(Product $product, ProductVariantAiStatusEnum $newAiStatus)
+    {
+        Gate::authorize('update', $product);
+        $product->variants()->update([
+            'ai_status' => $newAiStatus,
+        ]);
+        return response()->json([
+            'message' => 'AI status updated successfully',
+        ]);
     }
 }

@@ -5,10 +5,12 @@ import { DataTable } from './dataTable';
 import { columns } from "./columns"
 import Loader from '@/components/common/Loader';
 import { EditProductVariantDrawer } from './EditProductVariantDrawer';
-import { Meta, ProductVariant } from '@/types/product';
+import { Meta, ProductVariant, ProductVariantAiStatus } from '@/types/product';
 import { getErrorStringFromCatch } from '@/helpers/general';
 import NotFoundCard from '@/components/common/NotFoundCard';
 import { ProductVariantPagination } from './ProductVariantPagination';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 function ListProductVariants ({ productId }: {productId: number}) {
   const [productVariants, setProductVariants] = useState<ProductVariant[]>([]);
@@ -53,6 +55,40 @@ function ListProductVariants ({ productId }: {productId: number}) {
     }
   }
 
+  const changeAiStatus = async (newAiStatus: ProductVariantAiStatus) => {
+    try {
+        const getCookie = (name: string) => {
+            const value = `; ${document.cookie}`
+            const parts = value.split(`; ${name}=`)
+            if (parts.length === 2) return parts.pop()?.split(";").shift()
+        }
+
+        const xsrfToken = decodeURIComponent(getCookie("XSRF-TOKEN") || "")
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-XSRF-TOKEN': xsrfToken,
+        };
+        const response = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/product-variants/ai-status-change/${productId}/${newAiStatus}`, {
+            method: "PATCH",
+            credentials: 'include',
+            headers: headers,
+            cache: 'no-cache', // 'no-cache' if you want it fresh each time
+        })
+
+        if (!response.ok) {
+            throw new Error(`Failed to change AI status for product variants: ${response.status}`)
+        }
+
+        fetchProductVariants({productId, page})
+    } catch (e) {
+        console.error("AI status change for variants failed", e)
+    } finally {
+        //
+    }
+}
+
   const handleSuccess = () => {
     fetchProductVariants({page, productId});
   };
@@ -72,6 +108,24 @@ function ListProductVariants ({ productId }: {productId: number}) {
 
   return (
     <div className="w-full main-bg flex flex-col border-b-0 rounded-none">
+      <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ml-6">
+              <Label htmlFor="ai-status">AI status:</Label>
+              <Select
+                  onValueChange={(value) => changeAiStatus(value as ProductVariantAiStatus)}
+                  >
+                  <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="AI status" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                      <SelectItem value="queued">Queued</SelectItem>
+                      <SelectItem value="processing">Processing</SelectItem>
+                      <SelectItem value="done">Done</SelectItem>
+                  </SelectContent>
+              </Select>
+          </div>
+      </div>
       {loading ? (
         <Loader />
       ) : (

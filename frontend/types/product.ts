@@ -74,8 +74,10 @@ export type ProductVariant = {
     volume: string;
     image?: ProductImageType;
     translations: ProductVariantTranslation[]
-    ai_status: string
+    ai_status: ProductVariantAiStatus
 }
+
+export type ProductVariantAiStatus = "queued" | "processing" | "done" | "failed"
 
 export type ProductVariantTranslation = {
     locale: string
