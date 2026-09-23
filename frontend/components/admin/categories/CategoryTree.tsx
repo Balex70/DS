@@ -175,19 +175,10 @@ function CategoryTree() {
     return (
         <>
             <div className="flex flex-col sm:flex-row items-center justify-between my-2">
-                <h1 className="text-lg font-medium">Categories</h1>
-
                 <ButtonGroup>
                     <Button onClick={handleSyncFullPaths} disabled={syncFullPathsLoading}>
                         Sync Full Paths
                     </Button>
-                </ButtonGroup>
-
-                <ButtonGroup>
-                    {/* <Button variant="outline" onClick={() => setSelectedIds([])}>
-                        Clear
-                    </Button> */}
-
                     <Button onClick={handleBulkActive} disabled={isUnchanged}>
                         Activate selected
                     </Button>

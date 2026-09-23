@@ -3,7 +3,9 @@ import ListUsers from "@/components/admin/users/ListUsers";
 export default function UsersPage() {
   return (
     <>
-      <h1>Users</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-3xl font-bold tracking-tight">Backend Users</h1>
+      </div>
       <ListUsers />
     </>
   )
