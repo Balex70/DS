@@ -14,6 +14,8 @@ import { MoreHorizontal, Plus } from "lucide-react"
 import { Product } from "@/types/product"
 import { Badge } from "@/components/ui/badge"
 import { PriceRenderer } from "@/components/custom/PriceRenderer"
+import { Category } from "@/types/category"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 const EIGHT_WEEKS_MS = 1000 * 60 * 60 * 24 * 56
 
@@ -40,7 +42,7 @@ export const columns = ({
   onView: (product: Product) => void
   onEdit: (product: Product) => void
   onDelete: (product: Product) => void
-}): ColumnDef<Product>[] => [
+}): ColumnDef<Product & { categories: Category[] }>[] => [
   {
     accessorKey: "id",
     header: "ID",
@@ -162,6 +164,31 @@ export const columns = ({
   {
     accessorKey: "ai_status",
     header: "AI Status",
+  },
+  {
+    accessorKey: "categories",
+    header: "Categories",
+    cell: ({ row }) => {
+      const categories: Category[] = row.original.categories
+
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="max-w-[250px] truncate cursor-help">
+                {categories.map((category) => category.name).join(" | ")}
+              </div>
+            </TooltipTrigger>
+
+            <TooltipContent>
+              <div className="max-w-[500px]">
+                {categories.map((category) => category.full_path).join(" | ")}
+              </div>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )
+    }
   },
   {
     accessorKey: "warehouse_inventory_num",

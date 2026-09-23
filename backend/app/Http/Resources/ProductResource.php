@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -25,7 +26,12 @@ class ProductResource extends JsonResource
             'variants' => ProductVariantResource::collection(
                 $this->whenLoaded('variants')
             ),
-            'translations' => $this->translations
+            'translations' => $this->translations,
+            'categories' => $this->categories->map(fn (Category $category) => [
+                'id' => $category->id,
+                'name' => $category->name,
+                'full_path' => $category->full_path,
+            ]),
         ];
     }
 }
