@@ -218,6 +218,26 @@ class ProductController extends Controller
     }
 
     /**
+     * Remove translations for product
+     */
+    public function removeTranslations(Product $product)
+    {
+        Gate::authorize('update', $product);
+        $product->translations()->delete();
+
+        $this->createAppLogAction->execute(
+                    AppLogLevelEnum::SUCCESS,
+                    AppLogRealmEnum::PRODUCT,
+                    "Translations for product removed:
+ID: {$product->id} ($product->name_processed)"
+                );
+
+        return response()->json([
+            'message' => 'Translations for product removed successfully',
+        ]);
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Product $product)

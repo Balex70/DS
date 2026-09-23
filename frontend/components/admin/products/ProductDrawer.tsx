@@ -39,6 +39,7 @@ export function ProductDrawer({
   }) => void
 }) {
     const [isEnriching, setIsEnriching] = useState(false)
+    const [isTranslationsRemoving, setIsTranslationsRemoving] = useState(false)
 
     const handleEnrich = async () => {
         if (!product) return
@@ -109,6 +110,44 @@ export function ProductDrawer({
             //
         }
     }
+
+    const handleTranslationsRemove = async () => {
+        if (!product) return
+
+        try {
+            setIsTranslationsRemoving(true)
+
+            const getCookie = (name: string) => {
+                const value = `; ${document.cookie}`
+                const parts = value.split(`; ${name}=`)
+                if (parts.length === 2) return parts.pop()?.split(";").shift()
+            }
+
+            const xsrfToken = decodeURIComponent(getCookie("XSRF-TOKEN") || "")
+
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-XSRF-TOKEN': xsrfToken,
+            };
+            const response = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/products/translations-remove/${product.id}`, {
+                method: "PATCH",
+                credentials: 'include',
+                headers: headers,
+                cache: 'no-cache', // 'no-cache' if you want it fresh each time
+            })
+
+            if (!response.ok) {
+                throw new Error(`Failed to remove translations for product: ${response.status}`)
+            }
+
+            await onRefresh()
+        } catch (e) {
+            console.error("Failed to remove translations", e)
+        } finally {
+            setIsTranslationsRemoving(false)
+        }
+    }
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent style={{ maxWidth: '40vw' }}>
@@ -140,6 +179,10 @@ export function ProductDrawer({
                             </SelectContent>
                         </Select>
                     </div>
+                    <Button onClick={handleTranslationsRemove} disabled={isTranslationsRemoving} className="bg-red-300">
+                        {isTranslationsRemoving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {isTranslationsRemoving ? "Removing..." : "Remove translations"}
+                    </Button>
                 </div>
 
                 <div className="flex space-x-4">
