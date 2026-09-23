@@ -16,15 +16,18 @@ import { BadgeX } from "lucide-react"
 import { useAdminCategories } from "@/hooks/use-admin-categories";
 import { CategoryMultiSelect } from "./CategoryMultiSelect";
 import { EnrichStatusesMultiSelect } from "./EnrichStatusesMultiSelect"
+import { AiStatusesMultiSelect } from "./AiStatusesMultiSelect"
 
 type Props = {
     open: boolean
     onOpenChange: (open: boolean) => void
     enrichStatuses: string[]
     aiTextsProcessed: string | null
+    aiStatuses: string[]
     categoryIds: number[];
     onEnrichStatusesChange: (value: string[]) => void
     onAiTextsProcessedChange: (value: string | null) => void
+    onAiStatusesChange: (value: string[]) => void
     onCategoryIdsChange: (value: number[]) => void;
 }
 
@@ -33,9 +36,11 @@ export function ProductFilters({
     onOpenChange,
     enrichStatuses,
     aiTextsProcessed,
+    aiStatuses,
     categoryIds,
     onEnrichStatusesChange,
     onAiTextsProcessedChange,
+    onAiStatusesChange,
     onCategoryIdsChange,
 }: Props) {
     const { categories } = useAdminCategories();
@@ -75,6 +80,14 @@ export function ProductFilters({
                                 <EnrichStatusesMultiSelect
                                     value={enrichStatuses}
                                     onChange={onEnrichStatusesChange}
+                                    />
+                            </Field>
+
+                            <Label>Ai Statuses</Label>
+                            <Field orientation="horizontal">
+                                <AiStatusesMultiSelect
+                                    value={aiStatuses}
+                                    onChange={onAiStatusesChange}
                                     />
                             </Field>
 

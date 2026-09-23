@@ -89,6 +89,38 @@ class ProductController extends Controller
             });
         }
 
+        // AI STATUS FILTER
+        if ($request->filled('aiStatuses')) {
+            $aiStatuses = explode(',', $request->aiStatuses);
+
+            $query->where(function ($q) use ($aiStatuses) {
+                // QUEUED FILTER
+                if (in_array(ProductAiStatusEnum::QUEUED->value, $aiStatuses)) {
+                    $q->orWhere('ai_status', ProductAiStatusEnum::QUEUED->value);
+                }
+
+                // PROCESSING FILTER
+                if (in_array(ProductAiStatusEnum::PROCESSING->value, $aiStatuses)) {
+                    $q->orWhere('ai_status', ProductAiStatusEnum::PROCESSING->value);
+                }
+
+                // DONE FILTER
+                if (in_array(ProductAiStatusEnum::DONE->value, $aiStatuses)) {
+                    $q->orWhere('ai_status', ProductAiStatusEnum::DONE->value);
+                }
+
+                // FAILED FILTER
+                if (in_array(ProductAiStatusEnum::FAILED->value, $aiStatuses)) {
+                    $q->orWhere('ai_status', ProductAiStatusEnum::FAILED->value);
+                }
+
+                // NULL FILTER
+                if (in_array('null', $aiStatuses)) {
+                    $q->whereNull('ai_status');
+                }
+            });
+        }
+
         // AI TEXTS FILTER
         if ($request->filled('aiTextsProcessed')) {
             $query->whereNotNull('ai_texts_at');
