@@ -44,7 +44,7 @@ class CategoryController extends Controller
             ->get();
 
         $categories->each(function ($category) use ($request) {
-            $slugs = $this->categoryService->getChildrenSlugs($category->slug);
+            $slugs = $this->categoryService->getChildrenSlugs([$category->slug]);
 
             $productsQuery = Product::query()
                 ->whereNotNull('price')
