@@ -30,11 +30,11 @@ class CategoryService
         return implode('/', array_reverse($slugs));
     }
 
-    public function getChildrenSlugs(array $slugArray): array
+    public function getCategoryAndChildrenIds(array $slugArray): array
     {
         $fullPath = implode('/', $slugArray);
         return Cache::remember(
-            "category_children_slugs:$fullPath",
+            "category_all_children_ids:$fullPath",
             now()->addDay(),
             function () use ($fullPath) {
 
@@ -45,10 +45,11 @@ class CategoryService
                 }
 
                 $allCategories = Category::query()
-                    ->select(['id', 'parent_id', 'slug'])
+                    ->select(['id', 'parent_id', 'slug', 'is_visible'])
+                    ->where('is_visible', true)
                     ->get();
 
-                return $this->getChildrenRecursively($category, $allCategories);
+                return $this->getChildrenIds($category, $allCategories);
             }
         );
     }
@@ -87,19 +88,21 @@ class CategoryService
         }
     }
 
-    private function getChildrenRecursively(Category $category, $allCategories): array
+    private function getChildrenIds(Category $category, $allCategories): array
     {
-        $slugs = [$category->slug];
+        $ids = [$category->id];
 
-        $children = $allCategories->where('parent_id', $category->id);
+        $children = $allCategories
+                    ->where('parent_id', $category->id)
+                    ->where('is_visible', true);
 
         foreach ($children as $child) {
-            $slugs = array_merge(
-                $slugs,
-                $this->getChildrenRecursively($child, $allCategories)
+            $ids = array_merge(
+                $ids,
+                $this->getChildrenIds($child, $allCategories)
             );
         }
 
-        return $slugs;
+        return $ids;
     }
 }
