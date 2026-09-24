@@ -30,20 +30,23 @@ class CategoryService
         return implode('/', array_reverse($slugs));
     }
 
-    public function getChildrenSlugs(string $slug): array
+    public function getChildrenSlugs(array $slugArray): array
     {
+        $fullPath = implode('/', $slugArray);
         return Cache::remember(
-            "category_children_slugs:$slug",
+            "category_children_slugs:$fullPath",
             now()->addDay(),
-            function () use ($slug) {
+            function () use ($fullPath) {
 
-                $category = Category::where('slug', $slug)->first();
+                $category = Category::where('full_path', $fullPath)->first();
 
                 if (!$category) {
                     return [];
                 }
 
-                $allCategories = Category::all();
+                $allCategories = Category::query()
+                    ->select(['id', 'parent_id', 'slug'])
+                    ->get();
 
                 return $this->getChildrenRecursively($category, $allCategories);
             }
