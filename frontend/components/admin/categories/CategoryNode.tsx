@@ -34,7 +34,7 @@ function CategoryNode({
             </CollapsibleTrigger>
           )}
 
-          <span>{node.name}</span>
+          <span>{node.name} ({node.id})</span>
           <div className="flex items-center gap-2">
             <Input className="h-8 w-full max-w-xs" id="active" type="checkbox" checked={selectedIds.includes(node.id)} onChange={() => onSelected(node.id)}/>
           </div>

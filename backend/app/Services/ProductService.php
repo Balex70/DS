@@ -201,11 +201,11 @@ class ProductService
         $query->whereNull('enrichment_failed_at');
 
         $slugArray = $request->category;
-        $slugs = app(CategoryService::class)->getChildrenSlugs($slugArray);
+        $allChildrenIds = app(CategoryService::class)->getCategoryAndChildrenIds($slugArray);
 
         if ($request->filled('category')) {
-            $query->whereHas('categories', function ($q) use ($slugs) {
-                $q->whereIn('slug', $slugs);
+            $query->whereHas('categories', function ($q) use ($allChildrenIds) {
+                $q->whereIn('id', $allChildrenIds);
             })
             ->whereHas('categories', function ($q) {
                 $q->where('is_visible', true);

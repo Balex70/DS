@@ -44,15 +44,15 @@ class CategoryController extends Controller
             ->get();
 
         $categories->each(function ($category) use ($request) {
-            $slugs = $this->categoryService->getChildrenSlugs([$category->slug]);
+            $allChildrenIds = $this->categoryService->getCategoryAndChildrenIds([$category->slug]);
 
             $productsQuery = Product::query()
                 ->whereNotNull('price')
                 ->whereNotNull('last_enrichment_at')
                 ->whereNotNull('ai_texts_at')
                 ->whereNull('enrichment_failed_at')
-                ->whereHas('categories', function ($q) use ($slugs) {
-                    $q->whereIn('slug', $slugs);
+                ->whereHas('categories', function ($q) use ($allChildrenIds) {
+                    $q->whereIn('id', $allChildrenIds);
                 })
                 ->whereHas('categories', function ($q) {
                     $q->where('is_visible', true);
