@@ -201,8 +201,7 @@ class ProductService
         $query->whereNull('enrichment_failed_at');
 
         $slugArray = $request->category;
-        $lastSlug = end($slugArray);
-        $slugs = app(CategoryService::class)->getChildrenSlugs($lastSlug);
+        $slugs = app(CategoryService::class)->getChildrenSlugs($slugArray);
 
         if ($request->filled('category')) {
             $query->whereHas('categories', function ($q) use ($slugs) {
