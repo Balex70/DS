@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\CreateAppLogAction;
+use App\Enums\AppLogLevelEnum;
+use App\Enums\AppLogRealmEnum;
+use App\Enums\ProductVariantAiStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProductVariantRequest;
 use App\Http\Resources\ProductVariantResource;
@@ -13,6 +17,10 @@ use Illuminate\Support\Facades\Gate;
 
 class ProductVariantController extends Controller
 {
+    public function __construct(
+        private CreateAppLogAction $createAppLogAction
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -80,5 +88,43 @@ class ProductVariantController extends Controller
         });
 
         return new ProductVariantResource($productVariant);
+    }
+
+    /**
+     * Update the ai status for variants
+     */
+    public function changeAllVariantsAiStatuses(Product $product, ProductVariantAiStatusEnum $newAiStatus)
+    {
+        Gate::authorize('update', $product);
+        $product->variants()->update([
+            'ai_status' => $newAiStatus,
+        ]);
+        return response()->json([
+            'message' => 'AI status updated successfully',
+        ]);
+    }
+
+    /**
+     * Remove translations for product variants
+     */
+    public function removeTranslations(Product $product)
+    {
+        Gate::authorize('update', $product);
+        $product->variants()
+            ->get()
+            ->each(function ($variant) {
+                $variant->translations()->delete();
+            });
+
+        $this->createAppLogAction->execute(
+                    AppLogLevelEnum::SUCCESS,
+                    AppLogRealmEnum::PRODUCT,
+                    "Translations for product's all variants removed:
+ID: {$product->id} ($product->name_processed)"
+                );
+
+        return response()->json([
+            'message' => 'Translations for product variants removed successfully',
+        ]);
     }
 }

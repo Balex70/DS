@@ -1,9 +1,9 @@
 "use client"
 
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { Product } from "@/types/product"
+import { ProductWithCategories } from "@/types/product"
 
-export function ProductDrawerRawDataField({product}: {product: Product}) {
+export function ProductDrawerRawDataField({product}: {product: ProductWithCategories}) {
   return (
     <FieldGroup className="min-w-0">
         <Field>

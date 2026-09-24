@@ -45,7 +45,6 @@ class ProductFactory extends Factory
             'raw_data' => [],
 
             'last_enrichment_at' => null,
-            'ai_images_at' => null,
             'ai_texts_at' => null,
 
             'ai_status' => null,

@@ -1,3 +1,9 @@
+import DashboardComponent from "@/components/admin/dashboard/dashboard-component";
+
 export default function Page() {
-  return <h1>Dashboard</h1>
+  return (
+    <>
+      <DashboardComponent />
+    </>
+  )
 }

@@ -1,10 +1,11 @@
 "use client"
 
 import { PriceRenderer } from "@/components/custom/PriceRenderer"
+import { Badge } from "@/components/ui/badge"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { Product } from "@/types/product"
+import { ProductWithCategories } from "@/types/product"
 
-export function ProductDrawerMainFields({product}: {product: Product}) {
+export function ProductDrawerMainFields({product}: {product: ProductWithCategories}) {
   return (
     <FieldGroup className="grid grid-cols-2">
         <Field>
@@ -56,6 +57,19 @@ export function ProductDrawerMainFields({product}: {product: Product}) {
             <div className="text-md text-muted-foreground">
                 {product.ai_status}
             </div>
+        </Field>
+        <Field>
+          <FieldLabel>Categories</FieldLabel>
+
+          <div className="flex flex-wrap gap-2">
+            {product.categories?.map((category) => (
+                <>
+                <Badge variant="secondary">
+                    {category.name} ({category.full_path})
+                </Badge>
+                </>
+            ))}
+          </div>
         </Field>
     </FieldGroup>
   )

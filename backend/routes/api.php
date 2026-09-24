@@ -38,6 +38,8 @@ Route::post('categories/sync-full-paths', [CategoryController::class, 'syncFullP
 // Products
 Route::apiResource('products', ProductController::class)->middleware('auth:sanctum');
 Route::patch('products/enrich/{product}', [ProductController::class, 'enrich'])->middleware('auth:sanctum');
+Route::patch('products/ai-status-change/{product}/{newAiStatus}', [ProductController::class, 'changeAiStatus'])->middleware('auth:sanctum');
+Route::patch('products/translations-remove/{product}', [ProductController::class, 'removeTranslations'])->middleware('auth:sanctum');
 Route::middleware(['auth:sanctum', 'abilities:ai:texts'])->group(function () {
     Route::get('products/ai-texts/next', [ProductController::class, 'aiTextsNext']);
     Route::get('products/ai-variant-texts/next', [ProductController::class, 'aiVariantTextsNext']);
@@ -52,6 +54,8 @@ Route::middleware(['auth:sanctum', 'abilities:ai:texts'])->group(function () {
 // Product Variants
 Route::get('product-variants/{product}', [ProductVariantController::class, 'index'])->middleware('auth:sanctum');
 Route::patch('product-variants/{productVariant}', [ProductVariantController::class, 'update'])->middleware('auth:sanctum');
+Route::patch('product-variants/ai-status-change/{product}/{newAiStatus}', [ProductVariantController::class, 'changeAllVariantsAiStatuses'])->middleware('auth:sanctum');
+Route::patch('product-variants/translations-remove/{product}', [ProductVariantController::class, 'removeTranslations'])->middleware('auth:sanctum');
 
 // Customer
 Route::prefix('customer')->group(function () {
