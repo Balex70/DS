@@ -26,8 +26,8 @@ export async function generateMetadata({
     ]);
 
     const storeName = (settings?.["store.name"] && settings?.["store.name"] !== '') ? ' | ' + settings?.["store.name"] : '';
-    const lastSlug = slug[slug.length - 1];
-    const category = categories.find((c) => c.slug === lastSlug);
+    const fullPath = slug.join('/');
+    const category = categories.find((c) => c.full_path === fullPath);
     const translation = category?.translations.find((item) => item.locale === locale);
 
     if (!category) {
@@ -78,8 +78,8 @@ export default async function CategoryPage({
 }: Props) {
     const { locale, slug } = await params;
     const categories = await getCategories();
-    const lastSlug = slug[slug.length - 1];
-    const category = categories.find((c) => c.slug === lastSlug);
+    const fullPath = slug.join('/');
+    const category = categories.find((c) => c.full_path === fullPath);
 
     if (!category) {
         notFound();
