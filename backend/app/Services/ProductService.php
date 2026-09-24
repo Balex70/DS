@@ -54,7 +54,11 @@ class ProductService
 
             DB::transaction(function () use ($productToEnrich, $mappedDetails) {
                 $now = now();
-                $nameChanged = $productToEnrich->name_raw !== $mappedDetails['name_raw'];
+                $shouldQueue = $this->productNeedsAiEnrichment(
+                    $productToEnrich->ai_status,
+                    $productToEnrich->name_raw,
+                    $mappedDetails['name_raw'],
+                );
 
                 $updates = [
                     'name_raw' => $mappedDetails['name_raw'],
@@ -73,7 +77,7 @@ class ProductService
                     'enrichment_error' => null,
                 ];
 
-                if ($nameChanged) {
+                if ($shouldQueue) {
                     $updates['ai_status'] = ProductAiStatusEnum::QUEUED;
                 }
 
@@ -143,7 +147,11 @@ class ProductService
 
                     if (
                         !$existingVariant ||
-                        $existingVariant->name !== $variantName
+                        $this->productVariantNeedsAiEnrichment(
+                            $existingVariant->ai_status,
+                            $existingVariant->name,
+                            $variantName,
+                        )
                     ) {
                         $variantRow['ai_status'] = ProductVariantAiStatusEnum::QUEUED;
                     }
@@ -215,5 +223,33 @@ class ProductService
             : 1.51;
 
         return (int) round($costPrice * $multiplier);
+    }
+
+    private function productNeedsAiEnrichment(
+        ?string $status,
+        ?string $currentName,
+        ?string $newName,
+    ): bool {
+        return $status === null ||
+            $status === ProductAiStatusEnum::PROCESSING->value ||
+            $status === ProductAiStatusEnum::FAILED->value ||
+            (
+                $status === ProductAiStatusEnum::DONE->value &&
+                $currentName !== $newName
+            );
+    }
+
+    private function productVariantNeedsAiEnrichment(
+        ?string $status,
+        ?string $currentName,
+        ?string $newName,
+    ): bool {
+        return $status === null ||
+            $status === ProductVariantAiStatusEnum::PROCESSING->value ||
+            $status === ProductVariantAiStatusEnum::FAILED->value ||
+            (
+                $status === ProductVariantAiStatusEnum::DONE->value &&
+                $currentName !== $newName
+            );
     }
 }
