@@ -50,6 +50,10 @@ class Settings
             'type' => 'integer',
             'default' => 48,
         ],
+        'product_sync.allow_cron_subscribe_to_webhook' => [
+            'type' => 'boolean',
+            'default' => false,
+        ],
         'currency_sync.allow_cron_sync' => [
             'type' => 'boolean',
             'default' => false,
