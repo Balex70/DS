@@ -24,17 +24,17 @@ class SubscribeProductsWebhooksCommand extends Command
      */
     public function handle()
     {
-        if (! $this->setting->get('product_sync.allow_cron_subscription')) {
-            $this->info('Product subscription is disabled in cron.');
-            Log::info('Product subscription is disabled in cron.');
+        if (! $this->setting->get('product_sync.allow_cron_subscribe_to_webhook')) {
+            $this->info('Subscribe products to webhooks is disabled in cron.');
+            Log::info('Subscribe products to webhooks is disabled in cron.');
 
             return self::SUCCESS;
         }
 
         SubscribeProductsWebhooksJob::dispatch();
 
-        $this->info('Product subscription job dispatched!');
-        Log::info('Product subscription job dispatched!');
+        $this->info('Subscribe products to webhooks job dispatched!');
+        Log::info('Subscribe products to webhooks job dispatched!');
 
         return self::SUCCESS;
     }
