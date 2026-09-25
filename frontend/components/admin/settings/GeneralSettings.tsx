@@ -221,6 +221,22 @@ export default function GeneralSettings() {
 
             <div className="flex items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
+                    <Label>Allow subscribe products to webhooks</Label>
+                    <p className="text-sm text-muted-foreground">
+                        Allow subscribe products to webhooks using cron job via command SubscribeProductsWebhooksCommand (php artisan app:subscribe-products-webhooks)
+                    </p>
+                </div>
+
+                <Switch
+                    checked={settings["product_sync.allow_cron_subscribe_to_webhook"]}
+                    onCheckedChange={(checked) =>
+                    updateSetting("product_sync.allow_cron_subscribe_to_webhook", checked)
+                    }
+                />
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
                     <Label>Allow sync currencies</Label>
                     <p className="text-sm text-muted-foreground">
                         Allow syncing currencies using cron job via command SyncCurrenciesCommand (php artisan app:sync-currencies)
