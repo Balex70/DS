@@ -7,6 +7,7 @@ use App\Enums\AppLogLevelEnum;
 use App\Enums\AppLogRealmEnum;
 use App\Enums\ProductAiStatusEnum;
 use App\Enums\ProductVariantAiStatusEnum;
+use App\Enums\ProductWebhookStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
@@ -125,6 +126,33 @@ class ProductController extends Controller
                 // NULL FILTER
                 if (in_array('null', $aiStatuses)) {
                     $q->whereNull('ai_status');
+                }
+            });
+        }
+
+        // Webhook STATUS FILTER
+        if ($request->filled('webhookStatuses')) {
+            $webhookStatuses = explode(',', $request->webhookStatuses);
+
+            $query->where(function ($q) use ($webhookStatuses) {
+                // SUCCESS FILTER
+                if (in_array(ProductWebhookStatusEnum::SUCCESS->value, $webhookStatuses)) {
+                    $q->orWhere('webhook_subscribed_status', ProductWebhookStatusEnum::SUCCESS->value);
+                }
+
+                // RECHECK FILTER
+                if (in_array(ProductWebhookStatusEnum::RECHECK->value, $webhookStatuses)) {
+                    $q->orWhere('webhook_subscribed_status', ProductWebhookStatusEnum::RECHECK->value);
+                }
+
+                // FAILED FILTER
+                if (in_array(ProductWebhookStatusEnum::FAILED->value, $webhookStatuses)) {
+                    $q->orWhere('webhook_subscribed_status', ProductWebhookStatusEnum::FAILED->value);
+                }
+
+                // NULL FILTER
+                if (in_array('null', $webhookStatuses)) {
+                    $q->whereNull('webhook_subscribed_status');
                 }
             });
         }

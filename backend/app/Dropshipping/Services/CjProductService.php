@@ -13,11 +13,6 @@ class CjProductService
         private CjProductMapper $mapper
     ) {}
 
-    public function all(): array
-    {
-        // map CJ response → ProductData
-    }
-
     public function get(string $categoryId, int $page, int $size = 10): array
     {
         $data = $this->client->getProducts($categoryId, $page, $size);
@@ -76,6 +71,11 @@ class CjProductService
                 'estimated_delivery' => $item['logisticAging'],
             ];
         }, $shippingOptions);
+    }
+
+    public function subscribeProductsWebhooks(array $payload): array
+    {
+        return $this->client->subscribeProductsWebhooks($payload);
     }
 
     private function extractPagination(array $data): array
