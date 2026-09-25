@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->timestamp('webhook_subscribed_at')->nullable();
-            $table->timestamp('webhook_subscription_failed_at')->nullable();
+            $table->timestamp('webhook_subscribed_status')->nullable();
         });
     }
 
@@ -23,8 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('webhook_subscribed_at');
-            $table->dropColumn('webhook_subscription_failed_at');
+            $table->dropColumn('webhook_subscribed_status');
         });
     }
 };

@@ -2,8 +2,10 @@
 
 namespace App\Dropshipping\API;
 
-use Illuminate\Support\Facades\Http;
 use App\Dropshipping\Services\CjAuthService;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Http;
+
 class CjApiClient
 {
     private string $baseUrl = 'https://developers.cjdropshipping.com/api2.0/v1';
@@ -284,6 +286,43 @@ class CjApiClient
                         config('app.url') . "/cj-webhook-product-handler"
                     ]
                 ]
+            ]
+        );
+
+        $json = $response->json();
+
+        if (!isset($json['code']) || $json['code'] !== 200) {
+            return [
+                'success' => false,
+                'message' => $json['message'] ?? 'Unknown error',
+                'data' => null,
+            ];
+        }
+
+        return [
+            'success' => true,
+            'message' => null,
+            'data' => $json['data'] ?? [],
+        ];
+    }
+
+    public function subscribeProductsWebhooks(array $payload): array
+    {
+        $token = $this->authService->getValidAccessToken();
+
+        if (!$token) {
+            throw new \Exception('CJ authentication failed: no valid token available');
+        }
+
+        $response = Http::withHeaders([
+            'CJ-Access-Token' => $token,
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ])->post(
+            "{$this->baseUrl}/webhook/product/subscribe",
+            [
+                "productIds" => $payload,
+                "subscribeAll" => false
             ]
         );
 

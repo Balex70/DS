@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ProductWebhookStatusEnum;
 use App\Models\Material;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
     'is_collect', 'warehouse_inventory_num',
     'last_enrichment_at', 'description_processed',
     'enrichment_failed_at', 'enrichment_error',
-    'ai_texts_at', 'ai_status',
+    'ai_texts_at', 'ai_status', 'webhook_subscribed_status'
 ])]
 class Product extends Model
 {
@@ -26,6 +27,7 @@ class Product extends Model
 
     protected $casts = [
         'raw_data' => 'array',
+        'webhook_subscribed_status' => ProductWebhookStatusEnum::class
     ];
 
     protected $with = ['images', 'bigImage'];

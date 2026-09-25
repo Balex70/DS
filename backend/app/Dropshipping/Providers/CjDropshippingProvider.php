@@ -68,6 +68,11 @@ class CjDropshippingProvider implements DropshippingProviderInterface
         return $this->subscription->setProductsWebhooks($typeStatus);
     }
 
+    public function subscribeProductsWebhooks(array $payload): array
+    {
+        return $this->products->subscribeProductsWebhooks($payload);
+    }
+
     public function activateProduct(string $externalId): bool
     {
         // CJ-specific logic
