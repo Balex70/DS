@@ -89,6 +89,42 @@ export const columns = ({
     },
   },
   {
+    id: "webhook_subscribed_status",
+    header: "Webhook",
+    cell: ({ row }) => {
+      const subscribeStatus = row.original.webhook_subscribed_status
+
+      if (subscribeStatus) {
+        switch (subscribeStatus) {
+          case "success":
+            return (
+              <Badge className="bg-green-200 text-green-800 hover:bg-green-100">
+                Subscribed
+              </Badge>
+            )
+          case "recheck":
+            return (
+              <Badge className="bg-yellow-200 text-yellow-800 hover:bg-yellow-100">
+                Need recheck
+              </Badge>
+            )
+          case "failed":
+            return (
+              <Badge className="bg-red-200 text-red-800 hover:bg-red-100">
+                Failed
+              </Badge>
+            )
+          default:
+            return (
+              <Badge className="bg-gray-200 text-gray-800 hover:bg-gray-100">
+                NULL
+              </Badge>
+            )
+        }
+      }
+    },
+  },
+  {
     id: "ai_texts",
     header: "AI Texts",
     cell: ({ row }) => {
