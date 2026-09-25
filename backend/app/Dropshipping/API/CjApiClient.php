@@ -269,7 +269,7 @@ class CjApiClient
             'CJ-Access-Token' => $token,
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-        ])->get(
+        ])->post(
             "{$this->baseUrl}/webhook/set",
             [
                 'product' => [
