@@ -23,6 +23,8 @@ export type Category = {
     meta_description: string
   }[],
   products?: Product[]
+  created_at: Date|null
+  updated_at: Date|null
 }
 
 export type SortSelectValue = "latest" | "price_asc" | "price_desc";

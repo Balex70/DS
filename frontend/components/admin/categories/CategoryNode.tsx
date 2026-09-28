@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { CategoryActions } from "./CategoryActions";
 import { EditCategoryDrawer } from "./EditCategoryDrawer";
 import NextImageWithReplace from "@/components/custom/NextImageWithReplace";
+import { ViewCategoryDrawer } from "./ViewCategoryDrawer";
 
 function CategoryNode({
   node,
@@ -19,6 +20,7 @@ function CategoryNode({
     selectedIds: number[],
     fetchCategories: () => void
   }) {
+  const [viewOpen, setViewOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
   const hasChildren = (node.children?.length && node.children?.length > 0)? true : false;
@@ -40,6 +42,10 @@ function CategoryNode({
           </div>
           <CategoryActions
             category={node}
+            onView={(category) => {
+                setSelectedCategory(category)
+                setViewOpen(true)
+            }}
             onEdit={(category) => {
                 setSelectedCategory(category)
                 setEditOpen(true)
@@ -65,6 +71,11 @@ function CategoryNode({
         </CollapsibleContent>
       </Collapsible>
 
+      <ViewCategoryDrawer
+          open={viewOpen}
+          onOpenChange={setViewOpen}
+          category={selectedCategory}
+      />
       <EditCategoryDrawer
           open={editOpen}
           onOpenChange={setEditOpen}

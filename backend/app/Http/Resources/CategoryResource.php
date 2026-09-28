@@ -28,6 +28,8 @@ class CategoryResource extends JsonResource
             'translations' => $this->translations,
             'meta_title' => $this->meta_title,
             'meta_description' => $this->meta_description,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at
         ];
         // return parent::toArray($request);
     }
