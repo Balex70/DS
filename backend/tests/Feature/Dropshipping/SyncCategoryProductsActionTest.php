@@ -100,9 +100,9 @@ class SyncCategoryProductsActionTest extends TestCase
                         'name_raw' => 'Product 1',
                         'sku' => 'CJ-TEST-001',
                         'description_raw' => 'Description 1',
-                        'price' => 1000,
-                        'now_price' => 800,
-                        'suggested_price' => 1200,
+                        'price' => 5000,
+                        'now_price' => 4500,
+                        'suggested_price' => 9000,
                         'raw_data' => '{}',
                         'is_collect' => false,
                         'add_mark_status' => false,
@@ -129,6 +129,11 @@ class SyncCategoryProductsActionTest extends TestCase
         $this->assertDatabaseHas('products', [
             'external_id' => 'prod-1',
             'name_raw' => 'Product 1',
+            'sku' => 'CJ-TEST-001',
+            'cost_price' => 5000,
+            'price' => 8050,
+            'now_price' => 4500,
+            'suggested_price' => 9000,
         ]);
     }
 

@@ -164,10 +164,14 @@ class ProductController extends Controller
 
         // SUSPICIOUS PRICE FILTER
         if ($request->filled('suspiciousPrices')) {
-            $query->whereNotNull('cost_price')
-                ->whereNotNull('price')
-                ->where('cost_price', '>', 0)
-                ->whereRaw('ABS(price - cost_price) * 100 < cost_price * 5');
+            $query->where(function ($q) {
+                $q->whereNull('price')
+                ->orWhereNull('cost_price')
+                ->orWhere(function ($r) {
+                    $r->where('cost_price', '>', 0)
+                        ->whereRaw('ABS(price - cost_price) * 100 < cost_price * 5');
+                });
+            });
         }
 
         return ProductResource::collection(
