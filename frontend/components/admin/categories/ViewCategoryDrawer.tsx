@@ -32,6 +32,8 @@ export function ViewCategoryDrawer({
     const [syncStateError, setSyncStateError] = useState<string | null>(null)
     const [isSyncing, setIsSyncing] = useState(false)
     const [syncError, setSyncError] = useState<string | null>(null)
+    const [isResettingSyncState, setIsResettingSyncState] = useState(false)
+    const [resettingSyncStateError, setResettingSyncStateError] = useState<string | null>(null)
 
     const fetchCategorySyncState = useCallback(async () => {
         if (!category) return
@@ -112,6 +114,48 @@ export function ViewCategoryDrawer({
         }
     }
 
+    const handleResetCategorySyncState = async () => {
+        if (!category) return
+
+        try {
+            setIsResettingSyncState(true)
+
+            const getCookie = (name: string) => {
+                const value = `; ${document.cookie}`
+                const parts = value.split(`; ${name}=`)
+                if (parts.length === 2) return parts.pop()?.split(";").shift()
+            }
+
+            const xsrfToken = decodeURIComponent(getCookie("XSRF-TOKEN") || "")
+
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-XSRF-TOKEN': xsrfToken,
+            };
+            const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/categories/reset-sync-state/${category.id}`, {
+                method: "POST",
+                credentials: 'include',
+                headers: headers,
+                cache: 'no-cache', // 'no-cache' if you want it fresh each time
+            })
+
+            if (!res.ok) {
+                const data = await res.json()
+
+                setResettingSyncStateError(data.message || 'Failed to reset category sync state')
+                return
+            }
+
+            toast.success("Reset category sync state success");
+        } catch (err) {
+            console.error("Reset category sync state failed", err)
+            setResettingSyncStateError(getErrorStringFromCatch(err))
+        } finally {
+            setIsResettingSyncState(false)
+        }
+    }
+
     if (syncStateError) {
         toast.error(syncStateError)
         setSyncStateError(null)
@@ -120,6 +164,11 @@ export function ViewCategoryDrawer({
     if (syncError) {
         toast.error(syncError)
         setSyncError(null)
+    }
+
+    if (resettingSyncStateError) {
+        toast.error(resettingSyncStateError)
+        setResettingSyncStateError(null)
     }
 
     return (
@@ -133,11 +182,15 @@ export function ViewCategoryDrawer({
             <SheetTitle>Edit category (ID: {category?.id})</SheetTitle>
             <SheetTitle>External ID: {category?.external_id}</SheetTitle>
             <div className="flex items-center gap-2">
-                    <Button onClick={handleSyncCategoryProducts} disabled={isSyncing}>
-                        {isSyncing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        {isSyncing ? "Sending..." : "Sync products for category"}
-                    </Button>
-                </div>
+                <Button onClick={handleSyncCategoryProducts} disabled={isSyncing}>
+                    {isSyncing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isSyncing ? "Sending..." : "Sync products for category"}
+                </Button>
+                <Button onClick={handleResetCategorySyncState} disabled={isResettingSyncState}>
+                    {isResettingSyncState && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isResettingSyncState ? "Resetting ..." : "Reset category sync state"}
+                </Button>
+            </div>
             </SheetHeader>
             
             {category && (

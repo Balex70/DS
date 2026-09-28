@@ -1,28 +1,30 @@
-import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Category } from "@/types/category";
 import { Input } from "@/components/ui/input";
 import { CategoryActions } from "./CategoryActions";
-import { EditCategoryDrawer } from "./EditCategoryDrawer";
 import NextImageWithReplace from "@/components/custom/NextImageWithReplace";
-import { ViewCategoryDrawer } from "./ViewCategoryDrawer";
 
 function CategoryNode({
   node,
   level = 0,
   onSelected,
   selectedIds,
-  fetchCategories
+  fetchCategories,
+  viewOpen,
+  onView,
+  editOpen,
+  onEdit
 }: {
     node: Category,
     level?: number,
     onSelected: (id: number) => void,
     selectedIds: number[],
-    fetchCategories: () => void
+    fetchCategories: () => void,
+    viewOpen: boolean,
+    onView: (category: Category) => void,
+    editOpen: boolean,
+    onEdit: (category: Category) => void
   }) {
-  const [viewOpen, setViewOpen] = useState(false)
-  const [editOpen, setEditOpen] = useState(false)
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
   const hasChildren = (node.children?.length && node.children?.length > 0)? true : false;
   const preview = node.image
 
@@ -42,14 +44,8 @@ function CategoryNode({
           </div>
           <CategoryActions
             category={node}
-            onView={(category) => {
-                setSelectedCategory(category)
-                setViewOpen(true)
-            }}
-            onEdit={(category) => {
-                setSelectedCategory(category)
-                setEditOpen(true)
-            }}
+            onView={(category) => onView(category)}
+            onEdit={(category) => onEdit(category)}
           />
           {preview && (
             <NextImageWithReplace
@@ -65,23 +61,21 @@ function CategoryNode({
         <CollapsibleContent className="ml-2 border-l">
           {node.children?.map((child) => (
               <div key={child.id} className="border-b last:border-b-0">
-              <CategoryNode node={child} level={level + 1} onSelected={onSelected} selectedIds={selectedIds} fetchCategories={fetchCategories} />
+              <CategoryNode
+                node={child}
+                level={level + 1}
+                onSelected={onSelected}
+                selectedIds={selectedIds}
+                fetchCategories={fetchCategories}
+                viewOpen={viewOpen}
+                onView={onView}
+                editOpen={editOpen}
+                onEdit={onEdit}
+                />
               </div>
           ))}
         </CollapsibleContent>
       </Collapsible>
-
-      <ViewCategoryDrawer
-          open={viewOpen}
-          onOpenChange={setViewOpen}
-          category={selectedCategory}
-      />
-      <EditCategoryDrawer
-          open={editOpen}
-          onOpenChange={setEditOpen}
-          category={selectedCategory}
-          onSuccess={fetchCategories}
-      />
     </div>
   );
 }

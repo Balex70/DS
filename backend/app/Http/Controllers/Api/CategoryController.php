@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Jobs\SyncCategoryProductsJob;
 use App\Models\Category;
+use App\Models\CategorySyncState;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -121,6 +122,21 @@ class CategoryController extends Controller
         return [
             'success' => true,
             'data' => $category->syncState
+        ];
+    }
+
+    public function resetCategorySyncState(Category $category) {
+        $syncState = CategorySyncState::updateOrCreate(
+            ['category_id' => $category->id],
+            [
+                'page' => 1,
+                'finished' => false,
+            ]
+        );
+
+        return [
+            'success' => true,
+            'data' => $syncState,
         ];
     }
 
