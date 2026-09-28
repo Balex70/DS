@@ -9,6 +9,7 @@ use App\Enums\AppLogRealmEnum;
 use App\Models\Category;
 use App\Models\CategorySyncState;
 use App\Models\Product;
+use App\Services\ProductService;
 use App\Services\SettingService;
 use Illuminate\Support\Facades\DB;
 
@@ -17,7 +18,8 @@ class SyncCategoryProductsAction
     public function __construct(
         private DropshippingManager $manager,
         private SettingService $setting,
-        private CreateAppLogAction $createAppLogAction
+        private CreateAppLogAction $createAppLogAction,
+        private ProductService $productService
     ) {}
 
     public function execute(string $categoryId): void
@@ -70,7 +72,7 @@ class SyncCategoryProductsAction
                     'sku' => $p['sku'],
                     'description_raw' => $p['description_raw'],
                     'cost_price' => $p['price'],
-                    'price' => null,
+                    'price' => $p['price'] !== null ? $this->productService->generatePrice($p['price']) : null,
                     'now_price' => $p['now_price'],
                     'suggested_price' => $p['suggested_price'],
                     'is_collect' => $p['is_collect'],
