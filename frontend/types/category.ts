@@ -29,3 +29,8 @@ export type Category = {
 
 export type SortSelectValue = "latest" | "price_asc" | "price_desc";
 export type CategoryEditableFields = "name" | "description" | "meta_title" | "meta_description";
+
+export type CategorySyncState = {
+  finished: boolean,
+  last_run_at: Date|null,
+}

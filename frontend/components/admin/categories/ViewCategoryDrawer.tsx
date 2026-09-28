@@ -6,10 +6,10 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet"
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { getErrorStringFromCatch } from "@/helpers/general"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { Category } from "@/types/category"
+import { Category, CategorySyncState } from "@/types/category"
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -27,8 +27,48 @@ export function ViewCategoryDrawer({
   onOpenChange: (v: boolean) => void
   category: Category | null
 }) {
+    const [syncState, setSyncState] = useState<CategorySyncState | null>(null)
+    const [isSynStateLoading, setIsSyncStateLoading] = useState(false)
+    const [syncStateError, setSyncStateError] = useState<string | null>(null)
     const [isSyncing, setIsSyncing] = useState(false)
     const [syncError, setSyncError] = useState<string | null>(null)
+
+    const fetchCategorySyncState = useCallback(async () => {
+        if (!category) return
+        try {
+            setIsSyncStateLoading(true)
+
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            };
+
+            // fetch category sync state
+            const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/categories/get-sync-state/${category.id}`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: headers,
+                cache: 'no-cache', // 'no-cache' if you want it fresh each time
+            })
+
+            if (!res.ok) {
+                const data = await res.json()
+
+                setSyncStateError(data.message || 'Failed to get sync category state')
+                return
+            }
+            const stateRes = await res.json()
+            setSyncState(stateRes.data ?? [])
+        } catch (err: unknown) {
+            setSyncStateError(getErrorStringFromCatch(err))
+        } finally {
+            setIsSyncStateLoading(false)
+        }
+    }, [category]);
+
+    useEffect(() => {
+        fetchCategorySyncState()
+    }, [category?.id, fetchCategorySyncState])
 
     const handleSyncCategoryProducts = async () => {
         if (!category) return
@@ -71,7 +111,12 @@ export function ViewCategoryDrawer({
             setIsSyncing(false)
         }
     }
-   
+
+    if (syncStateError) {
+        toast.error(syncStateError)
+        setSyncStateError(null)
+    }
+
     if (syncError) {
         toast.error(syncError)
         setSyncError(null)
@@ -106,8 +151,29 @@ export function ViewCategoryDrawer({
                             imageClassName="object-cover rounded-md border"
                         />
                     }
-                    
+
                     <FieldGroup className="grid grid-cols-2 gap-4 space-x-4">
+                        <Field>
+                            <FieldLabel>Sync finished</FieldLabel>
+                            <div className="flex flex-wrap gap-2">
+                                {syncState?.finished
+                                    ?
+                                    <Badge className="bg-teal-300 text-white hover:bg-teal-300">
+                                        YES
+                                    </Badge>
+                                    :
+                                    <Badge className="bg-amber-300 text-white hover:bg-amber-300">
+                                        NO
+                                    </Badge>
+                                }
+                            </div>
+                        </Field>
+                        <Field>
+                            <FieldLabel>Sync last run</FieldLabel>
+                            <div className="text-md text-muted-foreground">
+                                {syncState?.last_run_at ? format(new Date(syncState.last_run_at), "PPpp") : "No"}
+                            </div>
+                        </Field>
                         <Field>
                             <FieldLabel>Name</FieldLabel>
                             <span className="text-md text-muted-foreground">
@@ -138,12 +204,12 @@ export function ViewCategoryDrawer({
                             <div className="flex flex-wrap gap-2">
                                 {category.active
                                     ?
-                                    <Badge className="bg-red-400 text-white hover:bg-red-400">
-                                        NO
-                                    </Badge>
-                                    :
                                     <Badge className="bg-green-500 text-white hover:bg-green-500">
                                         YES
+                                    </Badge>
+                                    :
+                                    <Badge className="bg-red-400 text-white hover:bg-red-400">
+                                        NO
                                     </Badge>
                                 }
                             </div>
@@ -154,12 +220,12 @@ export function ViewCategoryDrawer({
                             <div className="flex flex-wrap gap-2">
                                 {category.is_visible
                                     ?
-                                    <Badge className="bg-red-500 text-white hover:bg-red-500">
-                                        NO
-                                    </Badge>
-                                    :
                                     <Badge className="bg-green-500 text-white hover:bg-green-500">
                                         YES
+                                    </Badge>
+                                    :
+                                    <Badge className="bg-red-500 text-white hover:bg-red-500">
+                                        NO
                                     </Badge>
                                 }
                             </div>

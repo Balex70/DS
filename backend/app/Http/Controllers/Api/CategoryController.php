@@ -117,6 +117,13 @@ class CategoryController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function getCategorySyncState(Category $category) {
+        return [
+            'success' => true,
+            'data' => $category->syncState
+        ];
+    }
+
     /**
      * Dispatch category sync job for this single category
      */
