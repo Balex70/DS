@@ -26,7 +26,7 @@ const isFresh = (date?: Date | null) => {
 
 const isPriceSuspicious = (costPrice: number | null, price: number | null) => {
   if (costPrice == null || price == null || costPrice <= 0) {
-    return false
+    return true
   }
 
   return Math.abs(price - costPrice) / costPrice < 0.05
@@ -176,7 +176,7 @@ export const columns = ({
 
       return (
         <span className={suspicious ? "text-yellow-600 font-semibold" : undefined}>
-          <PriceRenderer value={costPrice} />
+          {row.original.cost_price && <PriceRenderer value={costPrice} />}
         </span>
       )
     }
@@ -192,7 +192,7 @@ export const columns = ({
 
       return (
         <span className={suspicious ? "text-yellow-600 font-semibold" : undefined}>
-          <PriceRenderer value={price} />
+          {row.original.price && <PriceRenderer value={price} />}
         </span>
       )
     }
