@@ -137,6 +137,138 @@ class SyncCategoryProductsActionTest extends TestCase
         ]);
     }
 
+    public function test_upserts_existing_and_new_products(): void
+    {
+        $category = Category::factory()->create([
+            'external_id' => 'cat-1',
+        ]);
+
+        // Existing products with intentionally wrong data.
+        $existingProduct1 = Product::factory()->create([
+            'external_id' => 'prod-1',
+            'name_raw' => 'Old Product Name',
+            'sku' => 'OLD-SKU',
+            'cost_price' => 4000,
+            'price' => 9999,
+            'now_price' => 4000,
+            'suggested_price' => 8000,
+        ]);
+
+        $existingProduct2 = Product::factory()->create([
+            'external_id' => 'prod-2',
+            'name_raw' => 'Old Product Name 2',
+            'sku' => 'OLD-SKU-2',
+            'cost_price' => null,
+            'price' => null,
+            'now_price' => null,
+            'suggested_price' => null,
+        ]);
+
+        $provider = $this->mock(DropshippingProviderInterface::class);
+
+        $provider
+            ->shouldReceive('getProducts')
+            ->once()
+            ->andReturn([
+                'products' => [
+                    // Existing products
+                    [
+                        'external_id' => 'prod-1',
+                        'name_raw' => 'Product 1',
+                        'sku' => 'CJ-TEST-001',
+                        'description_raw' => 'Description 1',
+                        'price' => 5000,
+                        'now_price' => 4500,
+                        'suggested_price' => 9000,
+                        'raw_data' => '{}',
+                        'is_collect' => false,
+                        'add_mark_status' => false,
+                        'warehouse_inventory_num' => 1275,
+                    ],
+                    [
+                        'external_id' => 'prod-2',
+                        'name_raw' => 'Product 2',
+                        'sku' => 'CJ-TEST-002',
+                        'description_raw' => 'Description 2',
+                        'price' => 5000,
+                        'now_price' => 4500,
+                        'suggested_price' => 9000,
+                        'raw_data' => '{}',
+                        'is_collect' => false,
+                        'add_mark_status' => false,
+                        'warehouse_inventory_num' => 1275,
+                    ],
+
+                    // New product
+                    [
+                        'external_id' => 'prod-3',
+                        'name_raw' => 'Product 3',
+                        'sku' => 'CJ-TEST-003',
+                        'description_raw' => 'Description 3',
+                        'price' => 10000,
+                        'now_price' => 9500,
+                        'suggested_price' => 15000,
+                        'raw_data' => '{}',
+                        'is_collect' => false,
+                        'add_mark_status' => false,
+                        'warehouse_inventory_num' => 500,
+                    ],
+                ],
+                'pagination' => [
+                    'total_pages' => 1,
+                ],
+            ]);
+
+        $manager = $this->mock(DropshippingManager::class);
+
+        $manager
+            ->shouldReceive('driver')
+            ->once()
+            ->andReturn($provider);
+
+        $this->app->instance(DropshippingManager::class, $manager);
+
+        $action = $this->app->make(SyncCategoryProductsAction::class);
+
+        $action->execute('cat-1');
+
+        // Existing products were updated, not duplicated.
+        $this->assertDatabaseHas('products', [
+            'id' => $existingProduct1->id,
+            'external_id' => 'prod-1',
+            'name_raw' => 'Product 1',
+            'sku' => 'CJ-TEST-001',
+            'cost_price' => 5000,
+            'price' => 8050,
+            'now_price' => 4500,
+            'suggested_price' => 9000,
+        ]);
+        $this->assertDatabaseHas('products', [
+            'id' => $existingProduct2->id,
+            'external_id' => 'prod-2',
+            'name_raw' => 'Product 2',
+            'sku' => 'CJ-TEST-002',
+            'cost_price' => 5000,
+            'price' => 8050,
+            'now_price' => 4500,
+            'suggested_price' => 9000,
+        ]);
+
+        // New product was inserted with the calculated price.
+        $this->assertDatabaseHas('products', [
+            'external_id' => 'prod-3',
+            'name_raw' => 'Product 3',
+            'sku' => 'CJ-TEST-003',
+            'cost_price' => 10000,
+            'price' => 15100,
+            'now_price' => 9500,
+            'suggested_price' => 15000,
+        ]);
+
+        // Make sure the existing product wasn't duplicated.
+        $this->assertDatabaseCount('products', 3);
+    }
+
     public function test_creates_category_product_pivot()
     {
         $category = Category::factory()->create([

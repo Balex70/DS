@@ -8,7 +8,9 @@ use App\Http\Requests\BulkActivateCategoryRequest;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
+use App\Jobs\SyncCategoryProductsJob;
 use App\Models\Category;
+use App\Models\CategorySyncState;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -114,5 +116,42 @@ class CategoryController extends Controller
         Gate::authorize('syncFullPaths', Category::class);
         $this->categoryService->syncFullPaths();
         return response()->json(['success' => true]);
+    }
+
+    public function getCategorySyncState(Category $category) {
+        return [
+            'success' => true,
+            'data' => $category->syncState
+        ];
+    }
+
+    public function resetCategorySyncState(Category $category) {
+        $syncState = CategorySyncState::updateOrCreate(
+            ['category_id' => $category->id],
+            [
+                'page' => 1,
+                'finished' => false,
+            ]
+        );
+
+        return [
+            'success' => true,
+            'data' => $syncState,
+        ];
+    }
+
+    /**
+     * Dispatch category sync job for this single category
+     */
+    public function dispatchSyncCategoryProductsJob(Category $category)
+    {
+        SyncCategoryProductsJob::dispatch(
+            $category->external_id
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Category sync job dispatched successfully.',
+        ], 202);
     }
 }

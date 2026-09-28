@@ -8,16 +8,18 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
 type Props = {
     category: Category;
+    onView: (category: Category) => void;
     onEdit: (category: Category) => void;
     onDelete?: (category: Category) => void;
 };
 
 export function CategoryActions({
     category,
+    onView,
     onEdit,
     onDelete,
 }: Props) {
@@ -34,6 +36,12 @@ export function CategoryActions({
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                    onClick={() => onView(category)}
+                >
+                    <Eye className="mr-2 h-4 w-4" />
+                    View
+                </DropdownMenuItem>
                 <DropdownMenuItem
                     onClick={() => onEdit(category)}
                 >
