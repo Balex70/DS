@@ -14,6 +14,12 @@ export function ProductDrawerSecondaryFields({product}: {product: ProductWithCat
             </div>
         </Field>
         <Field>
+            <FieldLabel>SKU</FieldLabel>
+            <div className="text-md text-muted-foreground">
+                {product.sku}
+            </div>
+        </Field>
+        <Field>
             <FieldLabel>Slug</FieldLabel>
             <div className="text-md text-muted-foreground">
                 {product.slug}
@@ -47,6 +53,18 @@ export function ProductDrawerSecondaryFields({product}: {product: ProductWithCat
             <FieldLabel>Enrichment Error</FieldLabel>
             <div className="text-md text-muted-foreground">
                 {product.enrichment_error ? product.enrichment_error : "No"}
+            </div>
+        </Field>
+        <Field>
+            <FieldLabel>Created At</FieldLabel>
+            <div className="text-md text-muted-foreground">
+                {product.created_at ? format(new Date(product.created_at), "PPpp") : "No"}
+            </div>
+        </Field>
+        <Field>
+            <FieldLabel>Updated At</FieldLabel>
+            <div className="text-md text-muted-foreground">
+                {product.updated_at ? format(new Date(product.updated_at), "PPpp") : "No"}
             </div>
         </Field>
     </FieldGroup>
