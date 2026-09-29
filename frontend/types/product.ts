@@ -32,6 +32,8 @@ export type Product = {
   translation: ProductTranslation | null
   translations: ProductTranslation[],
   webhook_subscribed_status: WebhookSubscribedStatus|null,
+  created_at: Date,
+  updated_at: Date
 }
 
 export type ProductAiStatus = "queued" | "processing" | "done" | "failed"
