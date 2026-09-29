@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { getCookie, getErrorStringFromCatch } from "@/helpers/general";
 import { ButtonGroup } from "@/components/ui/button-group"
 import { toast } from "sonner";
+import { ViewCategoryDrawer } from "./ViewCategoryDrawer";
+import { EditCategoryDrawer } from "./EditCategoryDrawer";
 
 function CategoryTree() {
     const [categories, setCategories] = useState<Category[]>([]);
@@ -20,6 +22,9 @@ function CategoryTree() {
     const [errorFetch, setErrorFetch] = useState<string | null>(null)
     const [errorBulkActive, setErrorBulkActive] = useState<string | null>(null)
     const [errorSyncFullPaths, setErrorSyncFullPaths] = useState<string | null>(null)
+    const [viewOpen, setViewOpen] = useState(false)
+    const [editOpen, setEditOpen] = useState(false)
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
 
     const fetchCategories = async () => {
         try {
@@ -187,9 +192,38 @@ function CategoryTree() {
 
             <div className="text-sm">
                 {data.map(node => (
-                    <CategoryNode key={node.id} node={node} onSelected={handleSelectedIds} selectedIds={selectedIds} fetchCategories={fetchCategories}/>
+                    <CategoryNode
+                        key={node.id}
+                        node={node}
+                        onSelected={handleSelectedIds}
+                        selectedIds={selectedIds}
+                        fetchCategories={fetchCategories}
+                        viewOpen={viewOpen}
+                        onView={(category) => {
+                            setSelectedCategory(category)
+                            setViewOpen(true)
+                        }}
+                        editOpen={editOpen}
+                        onEdit={(category) => {
+                            setSelectedCategory(category)
+                            setEditOpen(true)
+                        }}
+                        />
                 ))}
             </div>
+
+            <ViewCategoryDrawer
+                open={viewOpen}
+                onOpenChange={setViewOpen}
+                category={selectedCategory}
+            />
+
+            <EditCategoryDrawer
+                open={editOpen}
+                onOpenChange={setEditOpen}
+                category={selectedCategory}
+                onSuccess={fetchCategories}
+            />
         </>
     );
 }

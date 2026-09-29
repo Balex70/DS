@@ -88,7 +88,19 @@ class SyncCategoryProductsAction
             $isLastPage = $page >= $totalPages;
             DB::transaction(function () use ($rows, $state, $isLastPage, $page, $category, $now) {
                 // Upsert products
-                Product::upsert($rows, ['external_id'], ['name_raw', 'price', 'now_price', 'suggested_price', 'raw_data']);
+                Product::upsert($rows, ['external_id'], [
+                    'name_raw',
+                    'sku',
+                    'description_raw',
+                    'cost_price',
+                    'price',
+                    'now_price',
+                    'suggested_price',
+                    'is_collect',
+                    'add_mark_status',
+                    'warehouse_inventory_num',
+                    'raw_data'
+                ]);
 
                 // Get existing (upserted) products
                 $products = Product::whereIn(

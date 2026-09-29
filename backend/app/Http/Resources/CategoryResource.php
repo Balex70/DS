@@ -22,12 +22,15 @@ class CategoryResource extends JsonResource
             'parent_id' => $this->parent_id,
             'provider' => $this->provider,
             'active' => $this->active,
+            'is_visible' => $this->is_visible,
             'slug' => $this->slug,
             'image' => $this->image,
             'full_path' => $this->full_path,
             'translations' => $this->translations,
             'meta_title' => $this->meta_title,
             'meta_description' => $this->meta_description,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at
         ];
         // return parent::toArray($request);
     }
