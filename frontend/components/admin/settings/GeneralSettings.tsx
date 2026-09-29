@@ -221,9 +221,33 @@ export default function GeneralSettings() {
 
             <div className="flex items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
+                    <Label>Allow retry failed products enrichment</Label>
+                    <p className="text-sm text-muted-foreground">
+                        Allow retrying failed product enrichment using the cron job via command
+                        RetryOrDeleteFailedProductEnrichmentCommand
+                        (php artisan app:retry-enrich-failed-product).
+                    </p>
+                    <p className="text-sm text-yellow-600 dark:text-yellow-500">
+                        Warning: this will delete product if it has no orders and failed to enrich again.
+                    </p>
+                </div>
+
+                <Switch
+                    checked={settings["product_sync.allow_cron_retry_enrichment"]}
+                    onCheckedChange={(checked) =>
+                        updateSetting("product_sync.allow_cron_retry_enrichment", checked)
+                    }
+                />
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
                     <Label>Allow subscribe products to webhooks</Label>
                     <p className="text-sm text-muted-foreground">
-                        Allow subscribe products to webhooks using cron job via command SubscribeProductsWebhooksCommand (php artisan app:subscribe-products-webhooks)
+                        Allow subscribing products to webhooks using the cron job via the <code>SubscribeProductsWebhooksCommand</code> (<code>php artisan app:subscribe-products-webhooks</code>).
+                    </p>
+                    <p className="text-sm text-yellow-600 dark:text-yellow-500">
+                        Warning: This setting is not implemented yet and currently has no effect.
                     </p>
                 </div>
 
