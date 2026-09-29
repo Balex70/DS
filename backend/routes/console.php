@@ -7,7 +7,7 @@ Schedule::command('app:sync-products')
     ->withoutOverlapping();
 
 Schedule::command('app:enrich-product')
-    ->everyFiveMinutes()
+    ->everyMinute()
     ->withoutOverlapping();
 
 Schedule::command('app:sync-currencies')

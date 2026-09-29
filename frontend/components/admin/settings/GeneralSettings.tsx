@@ -223,7 +223,10 @@ export default function GeneralSettings() {
                 <div className="space-y-0.5">
                     <Label>Allow subscribe products to webhooks</Label>
                     <p className="text-sm text-muted-foreground">
-                        Allow subscribe products to webhooks using cron job via command SubscribeProductsWebhooksCommand (php artisan app:subscribe-products-webhooks)
+                        Allow subscribing products to webhooks using the cron job via the <code>SubscribeProductsWebhooksCommand</code> (<code>php artisan app:subscribe-products-webhooks</code>).
+                    </p>
+                    <p className="text-sm text-yellow-600 dark:text-yellow-500">
+                        Warning: This setting is not implemented yet and currently has no effect.
                     </p>
                 </div>
 

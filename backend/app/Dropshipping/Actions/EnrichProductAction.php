@@ -14,12 +14,12 @@ class EnrichProductAction
     public function execute(): void
     {
         // get product to enrich
-        $productToEnrich = Product::where(function ($q) {
-            $q->whereNull('last_enrichment_at')
-            ->orWhere('last_enrichment_at', '<', now()->minus(weeks: 8));
-        })
-        ->whereNull('enrichment_failed_at')
-        ->orderBy('id')->first();
+        $productToEnrich = Product::query()
+            ->whereNull('enrichment_failed_at')
+            ->orderByRaw('last_enrichment_at IS NOT NULL') // for ordering, take products that was not enriched yet
+            ->orderBy('last_enrichment_at')
+            ->orderBy('id')
+            ->first();
 
         if (!$productToEnrich) {
             return;
