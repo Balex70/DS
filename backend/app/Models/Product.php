@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ProductWebhookStatusEnum;
 use App\Models\Material;
+use App\Services\ProductImageService;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -79,5 +80,12 @@ class Product extends Model
         return $this->variants()
             ->whereHas('orderItems')
             ->exists();
+    }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Product $product) {
+            app(ProductImageService::class)->deleteProductImages($product->id);
+        });
     }
 }
