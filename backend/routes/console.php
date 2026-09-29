@@ -7,6 +7,10 @@ Schedule::command('app:sync-products')
     ->withoutOverlapping();
 
 Schedule::command('app:enrich-product')
+    ->everyMinute()
+    ->withoutOverlapping();
+
+Schedule::command('app:retry-enrich-failed-product')
     ->everyFiveMinutes()
     ->withoutOverlapping();
 

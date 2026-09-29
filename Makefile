@@ -88,7 +88,7 @@ backend-test:
 	bin/artisan test
 	
 testo:
-	bin/artisan test tests/Feature/Controllers/ProductControllerTest.php
+	bin/artisan test tests/Feature/Dropshipping/RetryOrDeleteFailedProductEnrichmentActionTest.php
 
 lint:
 	$(DOCKER_COMPOSE) exec frontend /bin/sh -c "npm run lint"

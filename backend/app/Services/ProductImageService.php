@@ -80,4 +80,11 @@ class ProductImageService
 
         return Storage::disk('public')->delete($path);
     }
+
+    public function deleteProductImages(int $productId): void
+    {
+        $directory = "products/{$productId}";
+
+        Storage::disk('public')->deleteDirectory($directory);
+    }
 }

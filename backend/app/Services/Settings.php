@@ -42,6 +42,10 @@ class Settings
             'type' => 'boolean',
             'default' => false,
         ],
+        'product_sync.allow_cron_retry_enrichment' => [
+            'type' => 'boolean',
+            'default' => false,
+        ],
         'product_sync.max_pages_allowed' => [
             'type' => 'integer',
             'default' => 2,

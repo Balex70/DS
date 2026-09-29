@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ProductWebhookStatusEnum;
 use App\Models\Material;
+use App\Services\ProductImageService;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -57,7 +58,7 @@ class Product extends Model
         return $this->belongsToMany(Material::class);
     }
 
-    public function cheapestVariant(): hasOne
+    public function cheapestVariant(): HasOne
     {
         return $this->hasOne(ProductVariant::class)
             ->ofMany('price', 'min')
@@ -72,5 +73,19 @@ class Product extends Model
     public function translation()
     {
         return $this->hasOne(ProductTranslation::class);
+    }
+
+    public function hasOrders(): bool
+    {
+        return $this->variants()
+            ->whereHas('orderItems')
+            ->exists();
+    }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Product $product) {
+            app(ProductImageService::class)->deleteProductImages($product->id);
+        });
     }
 }

@@ -276,7 +276,16 @@ ID: {$product->id} ($product->name_processed)"
     {
         Gate::authorize('delete', $product);
 
+        $productId = $product->id;
+        $productName = $product->name_raw;
+
         $product->delete();
+
+        $this->createAppLogAction->execute(
+            AppLogLevelEnum::INFO,
+            AppLogRealmEnum::PRODUCT,
+            "Product with ID: {$productId} with name: {$productName} was manually deleted."
+        );
 
         return response()->noContent();
     }
