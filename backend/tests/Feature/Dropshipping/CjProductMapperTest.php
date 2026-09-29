@@ -28,8 +28,7 @@ class CjProductMapperTest extends TestCase
 
         $this->assertEquals('p1', $result['external_id']);
         $this->assertEquals('iPhone', $result['name_raw']);
-        $this->assertEquals(1050, $result['cost_price']);
-        $this->assertNull($result['price']);
+        $this->assertEquals(1050, $result['price']);
         $this->assertEquals(850, $result['now_price']);
         $this->assertEquals(1250, $result['suggested_price']);
         $this->assertEquals('image.jpg', $result['big_image']);
@@ -116,8 +115,7 @@ class CjProductMapperTest extends TestCase
             'sellPrice' => $sellPrice,
         ]);
 
-        $this->assertEquals($price, $result['cost_price']);
-        $this->assertNull($result['price']);
+        $this->assertEquals($price, $result['price']);
     }
 
     public static function parse_price_range_uses_minimum_price_provider(): array
