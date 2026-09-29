@@ -57,7 +57,7 @@ class Product extends Model
         return $this->belongsToMany(Material::class);
     }
 
-    public function cheapestVariant(): hasOne
+    public function cheapestVariant(): HasOne
     {
         return $this->hasOne(ProductVariant::class)
             ->ofMany('price', 'min')
@@ -72,5 +72,12 @@ class Product extends Model
     public function translation()
     {
         return $this->hasOne(ProductTranslation::class);
+    }
+
+    public function hasOrders(): bool
+    {
+        return $this->variants()
+            ->whereHas('orderItems')
+            ->exists();
     }
 }

@@ -10,6 +10,10 @@ Schedule::command('app:enrich-product')
     ->everyMinute()
     ->withoutOverlapping();
 
+Schedule::command('app:retry-enrich-failed-product')
+    ->everyFiveMinutes()
+    ->withoutOverlapping();
+
 Schedule::command('app:sync-currencies')
     ->twiceDaily(1, 12)
     ->withoutOverlapping();
