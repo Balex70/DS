@@ -31,13 +31,11 @@ export type Product = {
   cheapest_variant: ProductVariant,
   translation: ProductTranslation | null
   translations: ProductTranslation[],
-  webhook_subscribed_status: WebhookSubscribedStatus|null,
   created_at: Date,
   updated_at: Date
 }
 
 export type ProductAiStatus = "queued" | "processing" | "done" | "failed"
-export type WebhookSubscribedStatus = "success" | "recheck" | "failed"
 
 export type ProductImageType = {
   id: string,

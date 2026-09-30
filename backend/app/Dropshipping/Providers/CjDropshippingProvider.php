@@ -5,15 +5,13 @@ use App\Dropshipping\Contracts\DropshippingProviderInterface;
 use App\Dropshipping\Services\CjCategoryService;
 use App\Dropshipping\Services\CjOrderService;
 use App\Dropshipping\Services\CjProductService;
-use App\Dropshipping\Services\CjSubscriptionService;
 
 class CjDropshippingProvider implements DropshippingProviderInterface
 {
     public function __construct(
         private CjCategoryService $categories,
         private CjProductService $products,
-        private CjOrderService $order,
-        private CjSubscriptionService $subscription
+        private CjOrderService $order
     ) {}
 
     public function getName(): string
@@ -61,16 +59,6 @@ class CjDropshippingProvider implements DropshippingProviderInterface
     public function simulatePayOrder(array $payload): array
     {
         return $this->order->simulatePayOrder($payload['orderId']);
-    }
-
-    public function setProductsWebhooks(string $typeStatus): array
-    {
-        return $this->subscription->setProductsWebhooks($typeStatus);
-    }
-
-    public function subscribeProductsWebhooks(array $payload): array
-    {
-        return $this->products->subscribeProductsWebhooks($payload);
     }
 
     public function activateProduct(string $externalId): bool

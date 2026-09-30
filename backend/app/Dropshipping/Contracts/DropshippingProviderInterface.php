@@ -21,10 +21,6 @@ interface DropshippingProviderInterface
 
     public function simulatePayOrder(array $payload): array;
 
-    public function setProductsWebhooks(string $typeStatus): array;
-
-    public function subscribeProductsWebhooks(array $payload): array;
-
     public function activateProduct(string $externalId): bool;
 
     public function deactivateProduct(string $externalId): bool;
