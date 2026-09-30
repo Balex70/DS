@@ -51,8 +51,8 @@ Order status [{$order->status->value}] does not allow payment status changes."
                     AppLogRealmEnum::ORDER,
                     "Payment status changed for:
 Order: {$order->id}
-Old status: " . $oldStatus . "
-New status: " . $order->payment_status
+Old status: " . $oldStatus->value . "
+New status: " . $order->payment_status->value
                 );
         } catch (\Throwable $e) {
             $this->createAppLogAction->execute(

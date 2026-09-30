@@ -30,7 +30,7 @@ spec:
             - secretRef:
                 name: {{ .Release.Name }}-be-secrets
           volumeMounts:
-            - mountPath: "/app/storage/app/public"
+            - mountPath: "/app/storage"
               name: {{ .Release.Name }}-backend-pv-storage
 
 ---
