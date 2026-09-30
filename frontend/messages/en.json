@@ -120,6 +120,9 @@
         "shipping_methods": "Shipping methods",
         "no_country_warning": "Enter country to see shipping options",
         "loading_shipping_methods": "Loading shipping methods...",
+        "badge_recommended": "Recommended",
+        "badge_cheapest": "Cheapest",
+        "badge_fastest": "Fastest",
         "validation": {
           "full_name_required": "Please enter your full name",
           "full_name_latin_required": "Full name (latin) is required",

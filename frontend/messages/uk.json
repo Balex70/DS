@@ -120,6 +120,9 @@
         "shipping_methods": "Варіанти доставки",
         "no_country_warning": "Вкажіть країну, щоб переглянути доступні способи доставки",
         "loading_shipping_methods": "Зачекайте, вибираємо найкращі варіанти доставки...",
+        "badge_recommended": "Рекомендовано",
+        "badge_cheapest": "Найдешевший",
+        "badge_fastest": "Найшвидший",
         "validation": {
           "full_name_required": "Вкажіть повне ім’я (ім’я та прізвище)",
           "full_name_latin_required": "Повне ім’я латиницею є обов'язковим",
