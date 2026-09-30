@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import BottomSheetHeader from "../bottom-sheet-header";
 import { Product, ProductVariant } from "@/types/product";
-import { Check } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
@@ -34,6 +34,7 @@ export default function MobileVariantSelector({
                     className="h-9 rounded-2xl border border-input bg-background px-3 shadow-xs hover:bg-accent"
                     >
                     {selectedVariant.key}
+                    <ChevronDown className="ml-1 size-4" />
                 </Button>
             </SheetTrigger>
 
