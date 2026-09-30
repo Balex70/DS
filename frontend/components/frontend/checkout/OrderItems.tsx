@@ -13,7 +13,7 @@ export function OrderItems({ items }: {items: CartItemPayload[]}) {
 
             <Separator className="mb-4" />
 
-            <div className="max-h-[500px] overflow-hidden">
+            <div className="max-h-[500px] min-h-0 overflow-y-auto">
                 <CartItemsDrawer items={items} />
             </div>
         </div>
