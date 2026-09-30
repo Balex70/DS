@@ -2,7 +2,6 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import GeneralSettings from './GeneralSettings';
-import ListCurrencies from './currency/ListCurrencies';
 
 function SettingsComponent () {
   return (
@@ -17,7 +16,7 @@ function SettingsComponent () {
       </TabsContent>
 
       <TabsContent value="currency">
-        <ListCurrencies />
+        
       </TabsContent>
     </Tabs>
   )
