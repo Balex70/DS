@@ -30,7 +30,6 @@ function ListProducts () {
   const [aiTextsProcessed, setAiTextsProcessed] = useState<string | null>(null)
   const [suspiciousPrices, setSuspiciousPrices] = useState<string | null>(null)
   const [aiStatuses, setAiStatuses] = useState<string[]>([])
-  const [webhookStatuses, setWebhookStatuses] = useState<string[]>([])
   const [categoryIds, setCategoryIds] = useState<number[]>([])
   const [search, setSearch] = useState("")
   const [searchFilter, setSearchFilter] = useState("")
@@ -42,7 +41,6 @@ function ListProducts () {
     aiTextsProcessed: string|null,
     suspiciousPrices: string|null,
     aiStatuses: string[]|null
-    webhookStatuses: string[]|null
     categoryIds: number[]|null,
     search?: string
   }) => {
@@ -56,7 +54,6 @@ function ListProducts () {
       if (params?.aiTextsProcessed) query.append("aiTextsProcessed", params.aiTextsProcessed)
       if (params?.suspiciousPrices) query.append("suspiciousPrices", params.suspiciousPrices)
       if (params?.aiStatuses?.length) query.append("aiStatuses", params.aiStatuses.join(","))
-      if (params?.webhookStatuses?.length) query.append("webhookStatuses", params.webhookStatuses.join(","))
       if (params?.categoryIds?.length) query.append("categoryIds", params.categoryIds.join(","))
       if (params?.search) query.append("search", params.search)
 
@@ -86,8 +83,8 @@ function ListProducts () {
   }
 
   useEffect(() => {
-      fetchProducts({ page, enrichStatuses, aiTextsProcessed, suspiciousPrices, aiStatuses, webhookStatuses, categoryIds, search: searchFilter })
-  }, [page, enrichStatuses, aiTextsProcessed, suspiciousPrices, aiStatuses, webhookStatuses, categoryIds, searchFilter])
+      fetchProducts({ page, enrichStatuses, aiTextsProcessed, suspiciousPrices, aiStatuses, categoryIds, search: searchFilter })
+  }, [page, enrichStatuses, aiTextsProcessed, suspiciousPrices, aiStatuses, categoryIds, searchFilter])
 
   if (error) {
     return (
@@ -144,7 +141,6 @@ function ListProducts () {
         aiTextsProcessed={aiTextsProcessed}
         suspiciousPrices={suspiciousPrices}
         aiStatuses={aiStatuses}
-        webhookStatuses={webhookStatuses}
         onEnrichStatusesChange={(value) => {
           setPage(1)
           setEnrichStatuses(value)
@@ -160,10 +156,6 @@ function ListProducts () {
         onAiStatusesChange={(value) => {
           setPage(1)
           setAiStatuses(value)
-        }}
-        onWebhookStatusesChange={(value) => {
-          setPage(1)
-          setWebhookStatuses(value)
         }}
         onCategoryIdsChange={(value) => {
           setPage(1)
@@ -224,7 +216,6 @@ function ListProducts () {
             aiTextsProcessed,
             suspiciousPrices,
             aiStatuses,
-            webhookStatuses,
             categoryIds
           })
         }
