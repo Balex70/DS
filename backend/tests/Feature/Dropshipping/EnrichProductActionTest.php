@@ -6,7 +6,6 @@ use App\Dropshipping\Actions\EnrichProductAction;
 use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class EnrichProductActionTest extends TestCase
@@ -25,24 +24,26 @@ class EnrichProductActionTest extends TestCase
         $action->execute();
     }
 
-    public function test_enriches_first_unprocessed_product()
+    public function test_enriches_oldest_product_when_no_unprocessed_products_exist(): void
     {
-        $product = Product::factory()->create([
-            'last_enrichment_at' => null,
+        $oldest = Product::factory()->create([
+            'last_enrichment_at' => now()->subDays(3),
         ]);
 
-        $now = now();
         Product::factory()->create([
-            'name_raw' => 'second',
-            'last_enrichment_at' => $now,
+            'last_enrichment_at' => now()->subDays(2),
+        ]);
+
+        Product::factory()->create([
+            'last_enrichment_at' => now()->subDay(),
         ]);
 
         $service = $this->mock(ProductService::class);
 
         $service->shouldReceive('enrichProduct')
             ->once()
-            ->withArgs(function ($arg) use ($product) {
-                return $arg->id === $product->id;
+            ->withArgs(function ($arg) use ($oldest) {
+                return $arg->id === $oldest->id;
             });
 
         $this->app->instance(ProductService::class, $service);
@@ -52,15 +53,13 @@ class EnrichProductActionTest extends TestCase
         $action->execute();
     }
 
-    public function test_prioritizes_oldest_product()
+    public function test_prioritizes_unprocessed_products_over_processed_products(): void
     {
-        $second = Product::factory()->create([
-            'last_enrichment_at' => null,
+        Product::factory()->create([
+            'last_enrichment_at' => now()->subDays(10),
         ]);
 
-        sleep(1);
-
-        $first = Product::factory()->create([
+        $unprocessed = Product::factory()->create([
             'last_enrichment_at' => null,
         ]);
 
@@ -68,8 +67,60 @@ class EnrichProductActionTest extends TestCase
 
         $service->shouldReceive('enrichProduct')
             ->once()
-            ->withArgs(function ($arg) use ($second) {
-                return $arg->id === $second->id;
+            ->withArgs(function ($arg) use ($unprocessed) {
+                return $arg->id === $unprocessed->id;
+            });
+
+        $this->app->instance(ProductService::class, $service);
+
+        $action = $this->app->make(EnrichProductAction::class);
+
+        $action->execute();
+    }
+
+    public function test_prioritizes_oldest_unprocessed_product_by_id(): void
+    {
+        $first = Product::factory()->create([
+            'last_enrichment_at' => null,
+        ]);
+
+        $second = Product::factory()->create([
+            'last_enrichment_at' => null,
+        ]);
+
+        $service = $this->mock(ProductService::class);
+
+        $service->shouldReceive('enrichProduct')
+            ->once()
+            ->withArgs(function ($arg) use ($first) {
+                return $arg->id === $first->id;
+            });
+
+        $this->app->instance(ProductService::class, $service);
+
+        $action = $this->app->make(EnrichProductAction::class);
+
+        $action->execute();
+    }
+
+    public function test_ignores_failed_products(): void
+    {
+        Product::factory()->create([
+            'last_enrichment_at' => null,
+            'enrichment_failed_at' => now(),
+        ]);
+
+        $product = Product::factory()->create([
+            'last_enrichment_at' => null,
+            'enrichment_failed_at' => null,
+        ]);
+
+        $service = $this->mock(ProductService::class);
+
+        $service->shouldReceive('enrichProduct')
+            ->once()
+            ->withArgs(function ($arg) use ($product) {
+                return $arg->id === $product->id;
             });
 
         $this->app->instance(ProductService::class, $service);
