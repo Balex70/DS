@@ -17,7 +17,6 @@ import { useAdminCategories } from "@/hooks/use-admin-categories";
 import { CategoryMultiSelect } from "./CategoryMultiSelect";
 import { EnrichStatusesMultiSelect } from "./EnrichStatusesMultiSelect"
 import { AiStatusesMultiSelect } from "./AiStatusesMultiSelect"
-import { WebhookStatusesMultiSelect } from "./WebhookStatusesMultiSelect"
 
 type Props = {
     open: boolean
@@ -26,13 +25,11 @@ type Props = {
     aiTextsProcessed: string | null
     suspiciousPrices: string | null
     aiStatuses: string[]
-    webhookStatuses: string[]
     categoryIds: number[];
     onEnrichStatusesChange: (value: string[]) => void
     onAiTextsProcessedChange: (value: string | null) => void
     onSuspiciousPricesChange: (value: string | null) => void
     onAiStatusesChange: (value: string[]) => void
-    onWebhookStatusesChange: (value: string[]) => void
     onCategoryIdsChange: (value: number[]) => void;
 }
 
@@ -43,13 +40,11 @@ export function ProductFilters({
     aiTextsProcessed,
     suspiciousPrices,
     aiStatuses,
-    webhookStatuses,
     categoryIds,
     onEnrichStatusesChange,
     onAiTextsProcessedChange,
     onSuspiciousPricesChange,
     onAiStatusesChange,
-    onWebhookStatusesChange,
     onCategoryIdsChange,
 }: Props) {
     const { categories } = useAdminCategories();
@@ -102,14 +97,6 @@ export function ProductFilters({
                                 <AiStatusesMultiSelect
                                     value={aiStatuses}
                                     onChange={onAiStatusesChange}
-                                    />
-                            </Field>
-
-                            <Label>Webhook Statuses</Label>
-                            <Field orientation="horizontal">
-                                <WebhookStatusesMultiSelect
-                                    value={webhookStatuses}
-                                    onChange={onWebhookStatusesChange}
                                     />
                             </Field>
 

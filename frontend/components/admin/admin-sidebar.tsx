@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { ClipboardClock, Hammer, Home, List, Settings, ShoppingCart, FolderTree, UserLock, UsersRound, DollarSign } from "lucide-react"
+import { ClipboardClock, Hammer, Home, List, Settings, ShoppingCart, FolderTree, UserLock, UsersRound, DollarSign, ArrowDownUp } from "lucide-react"
 import { AdminModeToggle } from "./admin-mode-toggle"
 import Link from "next/link"
 
@@ -90,6 +90,14 @@ export function AdminSidebar() {
                   <Link href="/admin/materials" className="flex items-center gap-2">
                     <Hammer />
                     <span>Materials</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/admin/currencies" className="flex items-center gap-2">
+                    <ArrowDownUp />
+                    <span>Currencies</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

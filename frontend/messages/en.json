@@ -120,6 +120,11 @@
         "shipping_methods": "Shipping methods",
         "no_country_warning": "Enter country to see shipping options",
         "loading_shipping_methods": "Loading shipping methods...",
+        "badge_recommended": "Recommended",
+        "badge_cheapest": "Cheapest",
+        "badge_fastest": "Fastest",
+        "no_shipping_methods_title": "No shipping methods available",
+        "no_shipping_methods_description": "Shipping is not currently available for one or more items in your cart to the selected country. Please remove or replace the affected items, or choose a different shipping country to continue with your order.",
         "validation": {
           "full_name_required": "Please enter your full name",
           "full_name_latin_required": "Full name (latin) is required",

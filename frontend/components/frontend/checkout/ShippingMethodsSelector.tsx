@@ -77,15 +77,15 @@ export function ShippingMethodsSelector({
             const labels: string[] = [];
 
             if (method.id === groupedMethods.recommended?.id) {
-                labels.push("Recommended");
+                labels.push(t('checkout.shipping_info.badge_recommended'));
             }
 
             if (method.id === groupedMethods.cheapest?.id) {
-                labels.push("Cheapest");
+                labels.push(t('checkout.shipping_info.badge_cheapest'));
             }
 
             if (method.id === groupedMethods.fastest?.id) {
-                labels.push("Fastest");
+                labels.push(t('checkout.shipping_info.badge_fastest'));
             }
 
             return {

@@ -73,11 +73,6 @@ class CjProductService
         }, $shippingOptions);
     }
 
-    public function subscribeProductsWebhooks(array $payload): array
-    {
-        return $this->client->subscribeProductsWebhooks($payload);
-    }
-
     private function extractPagination(array $data): array
     {
         return [
