@@ -16,6 +16,7 @@ import { InputField } from "./InputField";
 import { FieldLabel } from "@/components/ui/field";
 import { useTranslations } from "next-intl";
 import SimpleNotFoundCard from "@/components/common/SimpleNoFoundCard";
+import { ShieldAlert } from "lucide-react";
 
 type Props = {
     form: OrderPayload;
@@ -272,13 +273,29 @@ export function ShippingForm({
                     <SimpleNotFoundCard title={t('checkout.shipping_info.no_country_warning')} className="min-h-[100px]" />
                 ) : (
                     <>
-                        {shippingMethod && <FinalCarriers country={form.shipping_country} />}
+                        {shippingMethod ? (
+                            <>
+                                <FinalCarriers country={form.shipping_country} />
+                                <ShippingMethodsSelector
+                                    methods={shippingOptions}
+                                    value={shippingMethod}
+                                    onChange={setShippingMethod}
+                                />
+                            </>
+                        ) : (
+                            <div className="rounded-lg border p-4">
+                                <div className="mb-3 flex items-center gap-2 text-sm text-muted-foreground">
+                                    <ShieldAlert className="!h-5 !w-5 text-red-600" />
+                                    <span>
+                                        {t('checkout.shipping_info.no_shipping_methods_title')}
+                                    </span>
+                                </div>
 
-                        <ShippingMethodsSelector
-                            methods={shippingOptions}
-                            value={shippingMethod}
-                            onChange={setShippingMethod}
-                        />
+                                <div className="flex flex-wrap gap-2">
+                                    <h3>{t('checkout.shipping_info.no_shipping_methods_description')}</h3>
+                                </div>
+                            </div>
+                        )}
                     </>
                 )}
             </div>
