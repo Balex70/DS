@@ -62,7 +62,8 @@
       "add_to_cart": "Add to cart",
       "adding": "Adding...",
       "options": "Options",
-      "no_image": "No image"
+      "no_image": "No image",
+      "description_label": "Description"
     },
     "megamenu": {
       "catalog": "Catalog",
@@ -273,6 +274,9 @@
           "reason_4_title": "Customer Support",
           "reason_4_description": "Our support team is here to answer your questions and help with your orders."
         },
+        "where_to_find_us": {
+          "header": "Where You Can Find Us"
+        },
         "our_mission": {
           "header": "Our Mission",
           "text_1": "Our mission is to make online shopping more affordable by connecting customers with carefully selected products while reducing unnecessary intermediaries. By streamlining the purchasing process, we can offer competitive prices without compromising on quality or security.",
@@ -288,7 +292,8 @@
         "phone": "Phone",
         "working_hours": "Working hours",
         "monday": "Monday",
-        "friday": "Friday"
+        "friday": "Friday",
+        "address": "Address"
       },
       "faq_section": {
         "header": "Frequently Asked Questions",

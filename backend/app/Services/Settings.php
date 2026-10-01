@@ -17,6 +17,14 @@ class Settings
             'type' => 'string',
             'default' => null,
         ],
+        'store.fe_address.en' => [
+            'type' => 'string',
+            'default' => null,
+        ],
+        'store.fe_address.uk' => [
+            'type' => 'string',
+            'default' => null,
+        ],
 
         // 'checkout.guest_checkout' => [
         //     'type' => 'boolean',

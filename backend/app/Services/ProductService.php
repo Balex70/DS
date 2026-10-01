@@ -129,6 +129,18 @@ class ProductService
                     $existingVariant = $existingVariants->get($variant['external_id']);
                     $variantName = $variant['name'] ?? null;
 
+                    $aiStatus = $existingVariant?->ai_status;
+                    if (
+                        !$existingVariant ||
+                        $this->productVariantNeedsAiEnrichment(
+                            $existingVariant->ai_status,
+                            $existingVariant->name,
+                            $variantName,
+                        )
+                    ) {
+                        $aiStatus = ProductVariantAiStatusEnum::QUEUED->value;
+                    }
+
                     $variantRow = [
                         'product_id' => $productToEnrich->id,
                         'external_id'  => $variant['external_id'],
@@ -141,20 +153,11 @@ class ProductService
                         'weight'       => $variant['weight'] ?? null,
                         'volume'       => $variant['volume'] ?? null,
                         'image_id'     => $productImages[$variant['image']] ?? null,
+                        'ai_status'    => $aiStatus,
                         'created_at' => $now,
                         'updated_at' => $now,
                     ];
 
-                    if (
-                        !$existingVariant ||
-                        $this->productVariantNeedsAiEnrichment(
-                            $existingVariant->ai_status,
-                            $existingVariant->name,
-                            $variantName,
-                        )
-                    ) {
-                        $variantRow['ai_status'] = ProductVariantAiStatusEnum::QUEUED;
-                    }
                     return $variantRow;
                 }, $mappedDetails['variants']);
 
