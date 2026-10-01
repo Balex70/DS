@@ -39,6 +39,7 @@ export default function FooterBottomSection() {
 
                 {/* Payment / Trust */}
                 <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+                    <TrustImage src="/footer/liqpay_white.svg" alt="LiqPay" />
                     <TrustImage src="/footer/verified_by_visa.svg" alt="Verified by Visa" />
                     <TrustImage src="/footer/mastercard_secure_code.svg" alt="Mastercard Secure Code" />
                     <TrustImage src="/footer/apple_pay.svg" alt="Apple Pay" />
