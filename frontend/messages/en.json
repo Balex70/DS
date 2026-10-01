@@ -62,7 +62,8 @@
       "add_to_cart": "Add to cart",
       "adding": "Adding...",
       "options": "Options",
-      "no_image": "No image"
+      "no_image": "No image",
+      "description_label": "Description"
     },
     "megamenu": {
       "catalog": "Catalog",

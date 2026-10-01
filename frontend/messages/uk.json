@@ -62,7 +62,8 @@
       "add_to_cart": "Додати в кошик",
       "adding": "Додаємо...",
       "options": "Варіанти",
-      "no_image": "Немає зображення"
+      "no_image": "Немає зображення",
+      "description_label": "Короткий опис"
     },
     "megamenu": {
       "catalog": "Каталог",
