@@ -87,7 +87,7 @@ export function ProductDetail({
                     </button>
                 </div>
 
-                {product.variants?.length > 0 && (
+                {product.variants?.length > 1 && (
                     <div className="space-y-2">
                         <div className="text-sm font-medium text-muted-foreground">
                             {t('product.options')}

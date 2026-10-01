@@ -4,6 +4,7 @@ import { ReactNode, useEffect, useState } from "react";
 import Cookies from 'js-cookie'
 import { CurrencyContext } from "@/context/CurrencyContext";
 import { CURRENCIES, CurrencyCode } from "@/types/currency";
+import { useRouter } from "@/i18n/navigation";
 
 const DEFAULT_CURRENCY = "USD";
 const COOKIE_NAME = "currency";
@@ -19,6 +20,7 @@ export function CurrencyContextWrapper({
 }: {
     children: ReactNode;
 }) {
+    const router = useRouter();
     const [currency, setCurrency] = useState<CurrencyCode>(() => {
         const saved = Cookies.get(COOKIE_NAME);
 
@@ -31,6 +33,7 @@ export function CurrencyContextWrapper({
         });
 
         setCurrency(currency);
+        router.refresh();
     };
 
     return (
