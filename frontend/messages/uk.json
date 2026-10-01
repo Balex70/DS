@@ -292,7 +292,8 @@
         "phone": "Телефон",
         "working_hours": "Робочі години",
         "monday": "Понеділок",
-        "friday": "П'ятниця"
+        "friday": "П'ятниця",
+        "address": "Адреса"
       },
       "faq_section": {
         "header": "Поширені запитання",

@@ -292,7 +292,8 @@
         "phone": "Phone",
         "working_hours": "Working hours",
         "monday": "Monday",
-        "friday": "Friday"
+        "friday": "Friday",
+        "address": "Address"
       },
       "faq_section": {
         "header": "Frequently Asked Questions",
