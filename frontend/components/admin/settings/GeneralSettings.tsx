@@ -58,6 +58,29 @@ export default function GeneralSettings({
                     }
                 />
             </div>
+            <div className="space-y-2">
+                <Label htmlFor="store-fe-address-en">Address (English)</Label>
+
+                <Input
+                    id="store-fe-address-en"
+                    value={settings["store.fe_address.en"] ?? ""}
+                    onChange={(e) =>
+                        updateSetting("store.fe_address.en", e.target.value)
+                    }
+                />
+            </div>
+
+            <div className="space-y-2">
+                <Label htmlFor="store-fe-address-uk">Address (Ukrainian)</Label>
+
+                <Input
+                    id="store-fe-address-uk"
+                    value={settings["store.fe_address.uk"] ?? ""}
+                    onChange={(e) =>
+                        updateSetting("store.fe_address.uk", e.target.value)
+                    }
+                />
+            </div>
 
             <div className="flex items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
