@@ -5,6 +5,7 @@ import { CURRENCIES, CurrencyCode } from "@/types/currency";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 
 type Props = {
     params: Promise<{
@@ -64,7 +65,7 @@ export default async function ProductPage({
     params,
 }: Props) {
     const { id, variant, locale } = await params;
-
+    const t = await getTranslations('frontend');
     const cookieStore = await cookies();
     const currency = getCurrency(cookieStore.get("currency")?.value);
 
@@ -95,9 +96,12 @@ export default async function ProductPage({
 
             {/* DESCRIPTION (if you have it) */}
             {product.description_processed && (
-                <div className="full-width prose max-w-none text-sm text-muted-foreground">
-                    {translation?.description ?? product.description_processed ?? product.description_raw}
-                </div>
+                <>
+                    <h2>{t('product.description_label')}</h2>
+                    <div className="full-width prose max-w-none text-sm text-muted-foreground">
+                        {translation?.description ?? product.description_processed ?? product.description_raw}
+                    </div>
+                </>
             )}
         </div>
     );

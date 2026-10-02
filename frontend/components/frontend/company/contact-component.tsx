@@ -1,10 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from 'next-intl'
-import { Clock, Mail, Phone } from "lucide-react";
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { Settings } from "@/types/settings";
+import { Locale } from "@/i18n/config";
 
-export function ContactComponent({settings}: {settings: Settings}) {
+export function ContactComponent({settings, locale}: {settings: Settings, locale: string}) {
     const t = useTranslations('frontend')
+
+    const addressKey: keyof Settings = `store.fe_address.${locale as Locale}`;
+    const address = settings[addressKey];
 
     return (
         <div className="mx-auto max-w-5xl py-4 lg:py-10">
@@ -67,7 +71,21 @@ export function ContactComponent({settings}: {settings: Settings}) {
                     </CardContent>
                 </Card>
             </div>
-            
+
+            {address && (
+                <div className="mt-10 text-center">
+                    <MapPin className="mx-auto mb-3 h-8 w-8 text-primary" />
+
+                    <h2 className="text-xl font-semibold">
+                        {t("footer.contact_us_section.address")}
+                    </h2>
+
+                    <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
+                        {address}
+                    </p>
+                </div>
+            )}
+
             {/* TODO: add contact form */}
         </div>
     );

@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { AboutComponent } from "@/components/frontend/company/about-component";
 import { getTranslations } from "next-intl/server";
 import { getSettings } from "@/actions/settingsActions";
+import { getLocale } from 'next-intl/server';
 
 export async function generateMetadata(): Promise<Metadata> {
     const settings = await getSettings();
@@ -16,9 +17,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AboutPage() {
+    const settings = await getSettings();
+    const locale = await getLocale();
     return (
         <div className="container mx-auto px-0 sm:px-4 py-0">
-            <AboutComponent />
+            <AboutComponent settings={settings} locale={locale} />
         </div>
     );
 }
