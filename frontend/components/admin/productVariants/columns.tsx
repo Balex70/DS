@@ -9,6 +9,10 @@ import { Badge } from "@/components/ui/badge"
 // You can use a Zod schema here if you want.
 export const columns = (): ColumnDef<ProductVariant>[] => [
   {
+    accessorKey: "id",
+    header: "ID",
+  },
+  {
     accessorKey: "name_processed",
     header: "Name (Processed)",
     cell: ({ getValue }) => {
