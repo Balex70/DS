@@ -25,9 +25,9 @@ use Illuminate\Support\Facades\Route;
 
 // Users
 Route::post('users/login', [UserController::class, 'login'])->middleware('web');
-Route::post('users/logout', [ProfileController::class, 'logout'])->middleware('web');
-Route::get('users/me', [ProfileController::class, 'me'])->middleware('web');
-Route::put('users/me', [ProfileController::class, 'update'])->middleware('web');
+Route::post('users/logout', [ProfileController::class, 'logout'])->middleware(['web', 'auth:sanctum']);
+Route::get('users/me', [ProfileController::class, 'me'])->middleware(['web', 'auth:sanctum']);
+Route::put('users/me', [ProfileController::class, 'update'])->middleware(['web', 'auth:sanctum']);
 Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
 
 // Categories
