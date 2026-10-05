@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import DOMPurify from "isomorphic-dompurify";
 
 type Props = {
     params: Promise<{
@@ -85,6 +86,12 @@ export default async function ProductPage({
             (item) => item.locale === locale
         );
 
+    const description = DOMPurify.sanitize(translation?.description ?? product.description_processed ?? product.description_raw, {
+        USE_PROFILES: {
+            html: true,
+        },
+    });
+
     return (
         <div className="container mx-auto pb-12">
             <BackButton />
@@ -97,10 +104,19 @@ export default async function ProductPage({
             {/* DESCRIPTION (if you have it) */}
             {product.description_processed && (
                 <>
-                    <h2>{t('product.description_label')}</h2>
-                    <div className="full-width prose max-w-none text-sm text-muted-foreground">
-                        {translation?.description ?? product.description_processed ?? product.description_raw}
-                    </div>
+                    <h2 className="mb-4 text-lg font-semibold sm:text-xl">{t('product.description_label')}</h2>
+                    <div
+                        className="
+                            prose
+                            prose-sm
+                            sm:prose-base
+                            max-w-none
+                            prose-p:my-4
+                            prose-p:leading-7
+                            prose-h2:mb-4
+                        "
+                        dangerouslySetInnerHTML={{ __html: description }}
+                    />
                 </>
             )}
         </div>
