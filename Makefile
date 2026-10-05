@@ -319,6 +319,15 @@ ai-worker-token:
 			['name' => 'AI Worker', 'password' => \Illuminate\Support\Facades\Hash::make(\Illuminate\Support\Str::random(32))]\
 		); \
 		echo \$$user->createToken('ai-worker-token')->plainTextToken . PHP_EOL;"
+
+check-backend-php-security:
+	@BACKEND_POD_NAME=$$(bin/kctl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=ds-backend); \
+	if [ "$$BACKEND_POD_NAME" = "" ]; then \
+		echo "\e[1;31mBACKEND Pod not exist!\e[0m"; \
+	else \
+		echo "Checking PHP security configuration in $$BACKEND_POD_NAME..."; \
+		bin/kctl exec $$BACKEND_POD_NAME -- php -i | grep -E '^(expose_php|display_errors|display_startup_errors|log_errors|allow_url_fopen|allow_url_include|session.use_strict_mode|session.use_only_cookies|session.cookie_httponly|session.cookie_secure|memory_limit) =>'; \
+	fi
 # KUBECTL END
 
 # HELM START
