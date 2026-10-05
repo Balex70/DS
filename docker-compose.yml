@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-      target: production
+      target: dev
     working_dir: /app
     environment:
       FRANKENPHP_DOCUMENT_ROOT: /app/public
@@ -41,6 +41,7 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
+      target: dev
     working_dir: /app
     environment:
       DB_CONNECTION: ${DB_CONNECTION}
