@@ -15,7 +15,27 @@ WORKDIR /app
 
 COPY backend/ /app/
 
+# -------------------------
+# Development
+# -------------------------
+FROM base AS dev
+
+RUN composer install
+
+RUN mkdir -p \
+    storage/logs \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views
+
+RUN php artisan storage:link
+
+# -------------------------
+# Production
+# -------------------------
 FROM base AS production
+
+COPY docker/php/production.ini /usr/local/etc/php/conf.d/production.ini
 
 RUN composer install --no-dev --optimize-autoloader
 
@@ -29,6 +49,9 @@ RUN mkdir -p \
 # Create public storage symlink
 RUN php artisan storage:link
 
+# -------------------------
+# CI
+# -------------------------
 FROM base AS ci
 
 RUN composer install
