@@ -53,13 +53,10 @@ WORKDIR /frontend
 
 ENV NODE_ENV=production
 
-# only production deps
-COPY frontend/ ./
-RUN npm ci --omit=dev --legacy-peer-deps
-
-# copy just the built from builder
-COPY --from=builder /frontend/.next ./.next
+COPY --from=builder /frontend/.next/standalone ./
+COPY --from=builder /frontend/.next/static ./.next/static
+COPY --from=builder /frontend/public ./public
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+CMD ["node", "server.js"]
