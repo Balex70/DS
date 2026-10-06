@@ -8,12 +8,12 @@ import { DropdownSearchResults } from "./dropdown-search-results";
 import { useRouter } from "@/i18n/navigation";
 import { useCurrency } from "@/context/CurrencyContext";
 
-export function Search() {
+export function Search({locale}: {locale: string}) {
     const [query, setQuery] = useState("");
     const [showResults, setShowResults] = useState(false);
     const debouncedQuery = useDebounce(query);
     const { currency } = useCurrency();
-    const { data, isLoading } = useSearch(debouncedQuery, currency);
+    const { data, isLoading } = useSearch(debouncedQuery, locale, currency);
     const router = useRouter()
     const containerRef = useRef<HTMLDivElement>(null);
 

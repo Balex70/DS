@@ -8,7 +8,7 @@ import { MobileSearch } from "./search/mobile-search";
 import Image from "next/image";
 import MbMegaMenu from "./megamenu/md-mega-menu";
 
-export function Header() {
+export function Header({locale}: {locale: string}) {
     return (
         <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur">
             <div className="
@@ -60,7 +60,7 @@ export function Header() {
 
                 {/* Search */}
                 <div className="hidden md:flex flex-1 min-w-0 order-none">
-                    <Search />
+                    <Search locale={locale} />
                 </div>
                 <div className="flex flex-1 min-w-0 order-3 md:hidden">
                     <MobileSearch />

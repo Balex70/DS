@@ -73,7 +73,7 @@ export function DropdownSearchResults({
                                 }
                                 className="w-full text-left px-2 py-1.5 rounded-md text-sm hover:bg-muted flex justify-between"
                             >
-                                <span className="truncate">{product.name_processed ?? product.name_raw}</span>
+                                <span className="truncate">{product.translation ? product.translation?.name : product.name_processed ? product.name_processed : product.name_raw}</span>
 
                                 {product.price && (
                                     <span className="text-xs text-muted-foreground">
