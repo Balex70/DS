@@ -39,11 +39,14 @@ class ProductController extends Controller
             $query->where(function ($q) use ($searchQuery) {
                 $q->where('name_raw', 'ILIKE', "%{$searchQuery}%")
                 ->orWhere('name_processed', 'ILIKE', "%{$searchQuery}%")
+                ->orWhereHas('translations', function ($tq) use ($searchQuery) {
+                    $tq->where('name', 'ILIKE', "%{$searchQuery}%");
+                })
                 ->orWhereHas('variants', function ($q) use ($searchQuery) {
                     $q->where('name', 'ILIKE', "%{$searchQuery}%")
                     ->orWhere('name_processed', 'ILIKE', "%{$searchQuery}%")
-                    ->orWhereHas('translations', function ($q) use ($searchQuery) {
-                        $q->where('name', 'ILIKE', "%{$searchQuery}%");
+                    ->orWhereHas('translations', function ($vtq) use ($searchQuery) {
+                        $vtq->where('name', 'ILIKE', "%{$searchQuery}%");
                     });
                 });
             });

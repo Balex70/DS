@@ -21,10 +21,12 @@ type PaginatedFullSearchResponse<T> = {
 
 export async function search(
     query: string,
-    currency?: CurrencyCode
+    locale: string,
+    currency?: CurrencyCode,
 ): Promise<SearchResult> {
     const queryParams = new URLSearchParams()
     queryParams.append("q", query)
+    queryParams.append("locale", locale)
     if (currency) queryParams.append("currency", String(currency))
 
     const response = await api.get(`/api/store/search?${queryParams.toString()}`);
