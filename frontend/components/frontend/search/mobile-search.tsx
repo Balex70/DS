@@ -14,11 +14,11 @@ import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "
 import { MobileDropdownSearchResults } from "./mobile-dropdown-search-results";
 import { useTranslations } from "next-intl";
 
-export function MobileSearch() {
+export function MobileSearch({locale}: {locale: string}) {
     const [query, setQuery] = useState("");
     const debouncedQuery = useDebounce(query);
     const { currency } = useCurrency();
-    const { data, isLoading } = useSearch(debouncedQuery, currency);
+    const { data, isLoading } = useSearch(debouncedQuery, locale, currency);
     const router = useRouter()
     const [open, setOpen] = useState(false);
     const t = useTranslations('frontend')
@@ -84,6 +84,7 @@ export function MobileSearch() {
                             &&
                             <MobileDropdownSearchResults
                                 query={debouncedQuery}
+                                locale={locale}
                                 products={data?.products}
                                 categories={data?.categories}
                                 onSelectProduct={(p) => {

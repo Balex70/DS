@@ -4,11 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { search } from "@/services/search-service";
 import { CurrencyCode } from "@/types/currency";
 
-export function useSearch(query: string, currency?: CurrencyCode) {
+export function useSearch(query: string, locale: string, currency?: CurrencyCode) {
+    const normalizedQuery = query.trim();
     return useQuery({
-        queryKey: ["search", query, currency],
-        queryFn: () => search(query, currency),
+        queryKey: ["search", normalizedQuery, locale, currency],
+        queryFn: () => search(normalizedQuery,  locale, currency),
 
-        enabled: query.length >= 2,
+        enabled: normalizedQuery.length >= 2,
     });
 }
