@@ -63,7 +63,7 @@ export function Header({locale}: {locale: string}) {
                     <Search locale={locale} />
                 </div>
                 <div className="flex flex-1 min-w-0 order-3 md:hidden">
-                    <MobileSearch />
+                    <MobileSearch locale={locale} />
                 </div>
 
                 {/* Right actions */}
