@@ -42,8 +42,16 @@ class SearchController extends Controller
                 ->where(function ($q) use ($search) {
                     $q->where('name_processed', 'ILIKE', "%{$search}%")
                     ->orWhere('name_raw', 'ILIKE', "%{$search}%")
+                    ->orWhereHas('translations', function ($tq) use ($search) {
+                        $tq->where('name', 'ILIKE', "%{$search}%");
+                    })
                     ->orWhereHas('variants', function ($vq) use ($search) {
-                        $vq->where('name', 'ILIKE', "%{$search}%");
+                        $vq->where('name', 'ILIKE', "%{$search}%")
+                        ->orWhere('name_processed', 'ILIKE', "%{$search}%")
+                        ->orWhereHas('translations', function ($vtq) use ($search) {
+                            $vtq->where('name', 'ILIKE', "%{$search}%");
+                        })
+                        ;
                     });
                 })
                 ->limit(10)
