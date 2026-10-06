@@ -103,9 +103,23 @@ class SearchController extends Controller
             $categories = Category::query()
                 ->where('active', true)
                 ->where('is_visible', true)
-                ->with('translations')
                 ->select(['id', 'name', 'slug', 'full_path'])
-                ->where('name', 'ILIKE', "%{$search}%")
+                ->when(
+                    $locale,
+                    fn ($query) => $query->where(function ($q) use ($search, $locale) {
+                        $q->where('name', 'ILIKE', "%{$search}%")
+                            ->orWhereHas('translations', function ($tq) use ($search, $locale) {
+                                $tq->where('locale', $locale)
+                                    ->where('name', 'ILIKE', "%{$search}%");
+                            });
+                    }),
+                    fn ($query) => $query->where('name', 'ILIKE', "%{$search}%")
+                )
+                ->with([
+                    'translations' => fn ($q) => $locale
+                        ? $q->where('locale', $locale)
+                        : $q,
+                ])
                 ->limit(5)
                 ->get();
             return [

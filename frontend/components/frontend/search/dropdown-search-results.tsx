@@ -10,6 +10,7 @@ import { Search } from "lucide-react";
 
 type DropdownSearchResultsProps = {
     query: string;
+    locale: string;
     products?: Product[];
     categories?: Category[];
     onSelectProduct: (product: Product) => void;
@@ -18,6 +19,7 @@ type DropdownSearchResultsProps = {
 
 export function DropdownSearchResults({
     query: q,
+    locale,
     products = [],
     categories = [],
     onSelectProduct,
@@ -104,17 +106,20 @@ export function DropdownSearchResults({
                     </div>
 
                     <div className="space-y-1">
-                        {categories.map((category) => (
-                            <button
-                                key={category.id}
-                                onClick={() =>
-                                    onSelectCategory(category)
-                                }
-                                className="w-full text-left px-2 py-1.5 rounded-md text-sm hover:bg-muted"
-                            >
-                                {category.name}
-                            </button>
-                        ))}
+                        {categories.map((category) => {
+                            const translation = category?.translations.find((item) => item.locale === locale);
+                            return (
+                                <button
+                                    key={category.id}
+                                    onClick={() =>
+                                        onSelectCategory(category)
+                                    }
+                                    className="w-full text-left px-2 py-1.5 rounded-md text-sm hover:bg-muted"
+                                >
+                                    {(translation?.name != undefined && translation?.name != '') ? translation?.name : category.name}
+                                </button>
+                            )
+                        })}
                     </div>
                 </div>
             )}

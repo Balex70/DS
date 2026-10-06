@@ -56,6 +56,7 @@ export function Search({locale}: {locale: string}) {
                         &&
                         <DropdownSearchResults
                             query={debouncedQuery}
+                            locale={locale}
                             products={data?.products}
                             categories={data?.categories}
                             onSelectProduct={(p) => {
