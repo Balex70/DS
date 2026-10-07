@@ -61,11 +61,32 @@ export const columns = (): ColumnDef<ProductVariant>[] => [
         )
       }
 
-      return (
-        <Badge className="bg-green-200 text-green-800 hover:bg-green-100">
-          {productVariant.ai_status}
-        </Badge>
-      )
+      switch (productVariant.ai_status) {
+        case "queued":
+          return (
+            <Badge className="bg-yellow-200 text-yellow-800 hover:bg-yellow-100">
+              {productVariant.ai_status}
+            </Badge>
+          )
+        case "processing":
+          return (
+            <Badge className="bg-blue-200 text-blue-800 hover:bg-blue-100">
+              {productVariant.ai_status}
+            </Badge>
+          )
+        case "failed":
+          return (
+            <Badge className="bg-red-200 text-red-800 hover:bg-red-100">
+              {productVariant.ai_status}
+            </Badge>
+          )
+        case "done":
+          return (
+            <Badge className="bg-green-200 text-green-800 hover:bg-green-100">
+              {productVariant.ai_status}
+            </Badge>
+          )
+      }
     },
   },
 ]

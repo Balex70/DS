@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input"
 import { ProductVariant } from "@/types/product"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
+import { Badge } from "@/components/ui/badge"
 
 export function EditProductVariantDrawer({
   open,
@@ -40,6 +41,60 @@ export function EditProductVariantDrawer({
             }
         >
     >({})
+
+    const [copied, setCopied] = useState<"vid" | "sku" | null>(null)
+
+    const copyToClipboard = async (
+        value: string,
+        type: "vid" | "sku"
+    ) => {
+        await navigator.clipboard.writeText(value)
+
+        setCopied(type)
+
+        setTimeout(() => {
+            setCopied(null)
+        }, 1500)
+    }
+
+    const getAiStatusBadge = (status: string) => {
+        switch (status) {
+            case "queued":
+                return (
+                    <Badge className="bg-yellow-200 text-yellow-800 hover:bg-yellow-100">
+                        {status}
+                    </Badge>
+                )
+
+            case "processing":
+                return (
+                    <Badge className="bg-blue-200 text-blue-800 hover:bg-blue-100">
+                        {status}
+                    </Badge>
+                )
+
+            case "failed":
+                return (
+                    <Badge className="bg-red-200 text-red-800 hover:bg-red-100">
+                        {status}
+                    </Badge>
+                )
+
+            case "done":
+                return (
+                    <Badge className="bg-green-200 text-green-800 hover:bg-green-100">
+                        {status}
+                    </Badge>
+                )
+
+            default:
+                return (
+                    <Badge className="bg-gray-200 text-gray-800 hover:bg-gray-100">
+                        Null
+                    </Badge>
+                )
+        }
+    }
 
     const updateTranslation = (
         locale: string,
@@ -124,6 +179,50 @@ export function EditProductVariantDrawer({
         <SheetContent side="right" style={{ maxWidth: '40vw' }}>
             <SheetHeader>
             <SheetTitle>Edit product variant: {productVariant?.id}</SheetTitle>
+            <div className="flex items-center">
+                <span>VID: {productVariant?.external_id}</span>
+
+                {productVariant?.external_id && (
+                    <button
+                        type="button"
+                        onClick={() =>
+                            copyToClipboard(productVariant.external_id, "vid")
+                        }
+                        className="ml-2"
+                        title="Copy VID"
+                    >
+                        {copied === "vid" ? "✓" : "Copy"}
+                    </button>
+                )}
+            </div>
+            <div className="flex items-center">
+                <span>SKU: {productVariant?.sku}</span>
+
+                {productVariant?.sku && (
+                    <button
+                        type="button"
+                        onClick={() =>
+                            copyToClipboard(productVariant.sku, "sku")
+                        }
+                        className="ml-2"
+                        title="Copy SKU"
+                    >
+                        {copied === "sku" ? "✓" : "Copy"}
+                    </button>
+                )}
+            </div>
+            {productVariant?.ai_status && (
+                <div className="flex items-center gap-2">
+                    <span>AI Status:</span>
+                    {getAiStatusBadge(productVariant.ai_status)}
+                </div>
+            )}
+            {productVariant?.stock && (
+                <div className="flex items-center gap-2">
+                    <span>Stock:</span>
+                    {productVariant?.stock}
+                </div>
+            )}
             </SheetHeader>
 
             <Tabs
