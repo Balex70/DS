@@ -48,6 +48,17 @@ class CjProductService
         return $data;
     }
 
+    public function getVariantStock(string $variantId): array
+    {
+        $data = $this->client->getVariantStock($variantId);
+
+        if (!isset($data) || empty($data)) {
+            return [];
+        }
+
+        return $data;
+    }
+
     public function calculateShipping(array $payload): array
     {
         $cjShippingPayload = [

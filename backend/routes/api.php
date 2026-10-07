@@ -59,6 +59,7 @@ Route::get('product-variants/{product}', [ProductVariantController::class, 'inde
 Route::patch('product-variants/{productVariant}', [ProductVariantController::class, 'update'])->middleware('auth:sanctum');
 Route::patch('product-variants/ai-status-change/{product}/{newAiStatus}', [ProductVariantController::class, 'changeAllVariantsAiStatuses'])->middleware('auth:sanctum');
 Route::patch('product-variants/translations-remove/{product}', [ProductVariantController::class, 'removeTranslations'])->middleware('auth:sanctum');
+Route::patch('product-variants/stock-update/{productVariant}', [ProductVariantController::class, 'stockUpdate'])->middleware('auth:sanctum');
 
 // Customer
 Route::prefix('customer')->group(function () {

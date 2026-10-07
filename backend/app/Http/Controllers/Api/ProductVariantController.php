@@ -11,6 +11,7 @@ use App\Http\Requests\UpdateProductVariantRequest;
 use App\Http\Resources\ProductVariantResource;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\ProductVariantService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Gate;
 class ProductVariantController extends Controller
 {
     public function __construct(
+        private ProductVariantService $service,
         private CreateAppLogAction $createAppLogAction
     ) {}
 
@@ -88,6 +90,18 @@ class ProductVariantController extends Controller
         });
 
         return new ProductVariantResource($productVariant);
+    }
+
+    /**
+     * Update stock for product variant
+     */
+    public function stockUpdate(ProductVariant $productVariant)
+    {
+        Gate::authorize('update', $productVariant);
+
+        $this->service->updateVariantStock($productVariant);
+
+        // TODO: Maybe return here for FE or better use Store controller instead
     }
 
     /**
