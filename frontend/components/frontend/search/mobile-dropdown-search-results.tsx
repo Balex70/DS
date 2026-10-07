@@ -10,6 +10,7 @@ import { Search } from "lucide-react";
 
 type DropdownSearchResultsProps = {
     query: string;
+    locale: string;
     products?: Product[];
     categories?: Category[];
     onSelectProduct: (product: Product) => void;
@@ -18,6 +19,7 @@ type DropdownSearchResultsProps = {
 
 export function MobileDropdownSearchResults({
     query,
+    locale,
     products = [],
     categories = [],
     onSelectProduct,
@@ -82,7 +84,7 @@ export function MobileDropdownSearchResults({
                             }
                             className="flex w-full items-center justify-between pl-2 pr-4 py-1.5 rounded-md text-sm hover:bg-muted flex justify-between"
                         >
-                            <span className="truncate">{product.name_processed ?? product.name_raw}</span>
+                            <span className="truncate">{product.translation ? product.translation?.name : product.name_processed ? product.name_processed : product.name_raw}</span>
 
                             {product.price && (
                                 <span className="text-xs text-muted-foreground">
@@ -112,17 +114,20 @@ export function MobileDropdownSearchResults({
                     </div>
 
                     <div className="space-y-1">
-                        {categories.map((category) => (
-                            <button
-                                key={category.id}
-                                onClick={() =>
-                                    onSelectCategory(category)
-                                }
-                                className="flex w-full items-center justify-between px-2 py-1.5 rounded-md text-sm hover:bg-muted"
-                            >
-                                {category.name}
-                            </button>
-                        ))}
+                        {categories.map((category) => {
+                            const translation = category?.translations.find((item) => item.locale === locale);
+                            return (
+                                <button
+                                    key={category.id}
+                                    onClick={() =>
+                                        onSelectCategory(category)
+                                    }
+                                    className="flex w-full items-center justify-between px-2 py-1.5 rounded-md text-sm hover:bg-muted"
+                                >
+                                    {(translation?.name != undefined && translation?.name != '') ? translation?.name : category.name}
+                                </button>
+                            )
+                        })}
                     </div>
                 </div>
             )}

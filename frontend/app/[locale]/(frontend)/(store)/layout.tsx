@@ -5,17 +5,20 @@ import { CurrencyContextWrapper } from "@/context/CurrencyContextWrapper";
 import { QueryProvider } from "@/providers/query-provider";
 import { NextIntlClientProvider } from 'next-intl';
 
-export default function Layout({
+export default async function Layout({
     children,
+    params,
 }: {
     children: React.ReactNode;
+    params: Promise<{ locale: string }>;
 }) {
+    const { locale } = await params;
     return (
         <NextIntlClientProvider>
             <CurrencyContextWrapper>
                 <QueryProvider>
                     <div className="min-h-screen bg-background">
-                        <Header />
+                        <Header locale={locale} />
 
                         <div className="container mx-auto px-4 py-6">
                             {children}
