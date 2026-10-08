@@ -72,6 +72,7 @@ export type ProductVariant = {
     price: number;
     currency_price: number;
     stock: number;
+    stock_needs_update: boolean;
     weight: string;
     volume: string;
     image?: ProductImageType;

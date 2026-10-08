@@ -27,6 +27,10 @@ class ProductVariant extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'stock_synced_at' => 'datetime',
+    ];
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
@@ -50,5 +54,11 @@ class ProductVariant extends Model
     public function translation()
     {
         return $this->hasOne(ProductVariantTranslation::class);
+    }
+
+    public function stockNeedsUpdate(): bool
+    {
+        return $this->stock_synced_at === null
+            || $this->stock_synced_at->lte(now()->subMinutes(15));
     }
 }

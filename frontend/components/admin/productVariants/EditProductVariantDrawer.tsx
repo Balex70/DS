@@ -283,12 +283,15 @@ export function EditProductVariantDrawer({
                     {getAiStatusBadge(productVariant.ai_status)}
                 </div>
             )}
-            {productVariant?.stock && (
-                <div className="flex items-center gap-2">
-                    <span>Stock:</span>
-                    {productVariant?.stock}
-                </div>
-            )}
+            <div className="flex items-center gap-2">
+                <span>Stock:</span>
+                {productVariant?.stock && (
+                    <span>{productVariant?.stock}</span>
+                )}
+                {productVariant?.stock_needs_update && (
+                    <span className="text-red-500">(Stock Needs update*)</span>
+                )}
+            </div>
 
             <Button onClick={handleStockUpdate} disabled={isStockUpdating} className="w-fit self-start">
                 {isStockUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
