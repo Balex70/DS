@@ -12,6 +12,8 @@ import { CurrencyCode } from "@/types/currency";
 import { useRouter } from "@/i18n/navigation";
 import { useEffect, useState } from "react";
 import { stockUpdate } from "@/services/product-variant-service";
+import { Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 type Props = {
     product: Product;
@@ -100,17 +102,45 @@ export function ProductDetail({
                             )
                         </span>
                     )}
-                    {isStockUpdating
-                        ? (
-                            <div className="ml-2 text-sm font-normal text-muted-foreground">
-                                Stock: Updating
-                            </div>
+                    <div className="flex items-center mt-2">
+                        {isStockUpdating ? (
+                            <Badge
+                                variant="outline"
+                                className="min-h-7 gap-1.5 border-amber-600/20 bg-amber-50/50 px-2.5 py-1 text-sm text-amber-700/70"
+                            >
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                Checking availability...
+                            </Badge>
+                        ) : stock === null ? (
+                            <Badge
+                                variant="outline"
+                                className="min-h-7 px-2.5 py-1 text-sm text-muted-foreground"
+                            >
+                                Availability unknown
+                            </Badge>
+                        ) : stock === 0 ? (
+                            <Badge
+                                variant="outline"
+                                className="min-h-7 border-red-600/20 bg-red-50/50 px-2.5 py-1 text-sm text-red-700/60"
+                            >
+                                Out of stock
+                            </Badge>
+                        ) : stock <= 10 ? (
+                            <Badge
+                                variant="outline"
+                                className="min-h-7 border-amber-600/20 bg-amber-50/50 px-2.5 py-1 text-sm text-amber-700/70"
+                            >
+                                Only {stock} left
+                            </Badge>
                         ) : (
-                            <div className="ml-2 text-sm font-normal text-muted-foreground">
-                                Stock: {stock}
-                            </div>
-                        )
-                    }
+                            <Badge
+                                variant="outline"
+                                className="min-h-7 border-green-600/70 bg-green-50/50 px-2.5 py-2 text-sm text-green-700"
+                            >
+                                In stock
+                            </Badge>
+                        )}
+                    </div>
 
                 </div>
 
