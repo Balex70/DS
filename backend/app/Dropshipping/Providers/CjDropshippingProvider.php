@@ -36,7 +36,7 @@ class CjDropshippingProvider implements DropshippingProviderInterface
         return $this->products->getProductDetails($externalProductId);
     }
 
-    public function getVariantStock(string $variantId): array
+    public function getVariantStock(string $variantId): ?int
     {
         return $this->products->getVariantStock($variantId);
     }

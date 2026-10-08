@@ -11,7 +11,7 @@ interface DropshippingProviderInterface
 
     public function getProductDetails(string $externalProductId): array;
 
-    public function getVariantStock(string $variantId): array;
+    public function getVariantStock(string $variantId): ?int;
 
     public function calculateShipping(array $payload): array;
 

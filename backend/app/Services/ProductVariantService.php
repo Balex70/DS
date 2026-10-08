@@ -17,38 +17,42 @@ class ProductVariantService
         private CreateAppLogAction $createAppLogAction
     ) {}
 
-    public function updateVariantStock(ProductVariant $productVariant): void
+    public function updateVariantStock(ProductVariant $productVariant): ?ProductVariant
     {
         $provider = $this->manager->driver();
 
         $this->createAppLogAction->execute(
             level: AppLogLevelEnum::INFO,
             realm: AppLogRealmEnum::PRODUCT,
-            message: 'Product variant with ID: ' . $productVariant->id . ' (vid: ' . $productVariant->vid . ') stock update started',
+            message: 'Product variant with ID: ' . $productVariant->id . ' (external_id(vid): ' . $productVariant->external_id . ') stock update started',
         );
 
         try {
-            $stockData = $provider->getVariantStock($productVariant->external_id);
-            \Log::info($stockData);
-        } catch (\Throwable $e) {
-            // $productVariant->update([
-            //     'enrichment_failed_at' => now(),
-            //     'enrichment_error' => $e->getMessage(),
-            // ]);
+            $stock = $provider->getVariantStock($productVariant->external_id);
 
+            if($stock === null) {
+                return null;
+            }
+            $productVariant->update([
+                'stock' => $stock,
+                // 'stock_synced_at' => now(),
+            ]);
+        } catch (\Throwable $e) {
             $this->createAppLogAction->execute(
                 level: AppLogLevelEnum::ERROR,
                 realm: AppLogRealmEnum::PRODUCT,
-                message: 'Product variant with ID: ' . $productVariant->id . ' (vid: ' . $productVariant->vid . ') stock update failed while fetching variant stock data from CJ. Error: ' . $e->getMessage(),
+                message: 'Product variant with ID: ' . $productVariant->id . ' (external_id(vid): ' . $productVariant->external_id . ') stock update failed while fetching variant stock data from CJ. Error: ' . $e->getMessage(),
             );
 
-            return;
+            return null;
         }
 
         $this->createAppLogAction->execute(
             level: AppLogLevelEnum::SUCCESS,
             realm: AppLogRealmEnum::PRODUCT,
-            message: 'Product variant with ID: ' . $productVariant->id . ' (vid: ' . $productVariant->vid . ') stock update completed successfully',
+            message: 'Product variant with ID: ' . $productVariant->id . ' (external_id(vid): ' . $productVariant->external_id . ') stock update completed successfully',
         );
+
+        return $productVariant->fresh();
     }
 }

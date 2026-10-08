@@ -99,9 +99,18 @@ class ProductVariantController extends Controller
     {
         Gate::authorize('update', $productVariant);
 
-        $this->service->updateVariantStock($productVariant);
+        $variant = $this->service->updateVariantStock($productVariant);
 
-        // TODO: Maybe return here for FE or better use Store controller instead
+        if (!$variant) {
+            return response()->json([
+                'message' => 'Unable to update stock.',
+            ], 502);
+        }
+
+        return response()->json([
+            'stock' => $variant->stock,
+            // 'stock_synced_at' => $variant->stock_synced_at,
+        ]);
     }
 
     /**

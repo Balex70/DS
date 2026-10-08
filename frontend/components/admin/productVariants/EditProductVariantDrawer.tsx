@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
+import { toast } from "sonner"
 
 export function EditProductVariantDrawer({
   open,
@@ -33,6 +34,7 @@ export function EditProductVariantDrawer({
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [isStockUpdating, setIsStockUpdating] = useState(false)
+    const [errorStockUpdate, setErrorStockUpdate] = useState<string | null>(null)
     const [selectedLocale, setSelectedLocale] = useState("en")
     const locales = ["en", "uk"]
 
@@ -196,19 +198,46 @@ export function EditProductVariantDrawer({
                 'Accept': 'application/json',
                 'X-XSRF-TOKEN': xsrfToken,
             };
-            await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/product-variants/stock-update/${productVariant.id}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/product-variants/stock-update/${productVariant.id}`, {
                 method: "PATCH",
                 credentials: 'include',
                 headers: headers,
                 cache: 'no-cache', // 'no-cache' if you want it fresh each time
             })
 
-            // await onRefresh()
+            if (!res.ok) {
+                const contentType = res.headers.get('content-type') || '';
+                if (contentType.includes('application/json')) {
+                    const errorJson = await res.json();
+                    if (Array.isArray(errorJson.errors)) {
+                        errorJson.errors.forEach((error: string, index: number) => {
+                            setTimeout(() => toast.error(error), index * 2000);
+                        });
+                        return;
+                    } else {
+                        toast.error(errorJson.message || 'Unknown API error');
+                        return;
+                    }
+                } else {
+                    // HTML / text response → system-level issue (not for client)
+                    const rawText = await res.text();
+                    setErrorStockUpdate(rawText.slice(0, 400));
+                    return;
+                }
+            }
+
+            onSuccess();
+            toast.success("Stock updated successfully");
         } catch (e) {
-            console.error("Stock update failed", e)
+            setErrorStockUpdate("Stock update failed" + e)
         } finally {
             setIsStockUpdating(false)
         }
+    }
+
+    if (errorStockUpdate) {
+        toast.error(errorStockUpdate)
+        setErrorStockUpdate(null)
     }
 
     return (
