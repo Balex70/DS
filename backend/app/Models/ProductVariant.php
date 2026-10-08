@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'cost_price',
     'price',
     'stock',
+    'stock_synced_at',
     'weight',
     'volume',
     'image_id',

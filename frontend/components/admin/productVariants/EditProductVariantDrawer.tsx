@@ -290,7 +290,7 @@ export function EditProductVariantDrawer({
                 </div>
             )}
 
-            <Button onClick={handleStockUpdate} disabled={isStockUpdating}>
+            <Button onClick={handleStockUpdate} disabled={isStockUpdating} className="w-fit self-start">
                 {isStockUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isStockUpdating ? "Updating..." : "Stock update"}
             </Button>

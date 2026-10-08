@@ -109,7 +109,7 @@ class ProductVariantController extends Controller
 
         return response()->json([
             'stock' => $variant->stock,
-            // 'stock_synced_at' => $variant->stock_synced_at,
+            'stock_synced_at' => $variant->stock_synced_at,
         ]);
     }
 

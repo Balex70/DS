@@ -35,7 +35,7 @@ class ProductVariantService
             }
             $productVariant->update([
                 'stock' => $stock,
-                // 'stock_synced_at' => now(),
+                'stock_synced_at' => now(),
             ]);
         } catch (\Throwable $e) {
             $this->createAppLogAction->execute(
