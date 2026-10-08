@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Store\CategoryController as StoreCategoryController
 use App\Http\Controllers\Api\Store\OrderController as StoreOrderController;
 use App\Http\Controllers\Api\Store\PaymentController as StorePaymentController;
 use App\Http\Controllers\Api\Store\ProductController as StoreProductController;
+use App\Http\Controllers\Api\Store\ProductVariantController as StoreProductVariantController;
 use App\Http\Controllers\Api\Store\SearchController as StoreSearchController;
 use App\Http\Controllers\Api\Store\SettingController as StoreSettingController;
 use App\Http\Controllers\Api\UserController;
@@ -115,6 +116,9 @@ Route::prefix('store')->group(function () {
     Route::get('products/filters', [StoreProductController::class, 'filters']);
     Route::get('products/latest', [StoreProductController::class, 'latest']);
     Route::get('products/{product}', [StoreProductController::class, 'show']);
+
+    // Product Variants
+    Route::patch('product-variants/stock-update/{productVariant}', [StoreProductVariantController::class, 'stockUpdate']);
 
     // Orders
     Route::post('orders/create', [StoreOrderController::class, 'store'])->middleware(EnsureCartToken::class);

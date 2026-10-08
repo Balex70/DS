@@ -10,6 +10,8 @@ import MobileVariantSelector from "./mobile-variant-selector";
 import { Product, ProductVariant } from "@/types/product";
 import { CurrencyCode } from "@/types/currency";
 import { useRouter } from "@/i18n/navigation";
+import { useEffect, useState } from "react";
+import { stockUpdate } from "@/services/product-variant-service";
 
 type Props = {
     product: Product;
@@ -26,6 +28,8 @@ export function ProductDetail({
     const locale = useLocale();
     const t = useTranslations('frontend')
     const router = useRouter();
+    const [stock, setStock] = useState(selectedVariant.stock);
+    const [isStockUpdating, setIsStockUpdating] = useState(selectedVariant.stock_needs_update);
     
     const activeVariantId = selectedVariant?.id;
     const galleryMainImage = selectedVariant?.image ?? product.big_image;
@@ -46,6 +50,28 @@ export function ProductDetail({
             packing_weight: product.packing_weight ?? undefined
         });
     };
+
+    useEffect(() => {
+        if (!selectedVariant.stock_needs_update) {
+            return;
+        }
+
+        const updateStock = async () => {
+            setIsStockUpdating(true);
+
+            try {
+                const data = await stockUpdate(selectedVariant.id);
+
+                setStock(data.stock);
+            } catch (error) {
+                console.error('STOCK UPDATE FAILED:', error);
+            } finally {
+                setIsStockUpdating(false);
+            }
+        };
+
+        updateStock();
+    }, [selectedVariant.id, selectedVariant.stock_needs_update]);
 
     return (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 mb-10">
@@ -74,13 +100,25 @@ export function ProductDetail({
                             )
                         </span>
                     )}
+                    {isStockUpdating
+                        ? (
+                            <div className="ml-2 text-sm font-normal text-muted-foreground">
+                                Stock: Updating
+                            </div>
+                        ) : (
+                            <div className="ml-2 text-sm font-normal text-muted-foreground">
+                                Stock: {stock}
+                            </div>
+                        )
+                    }
+
                 </div>
 
                 {/* ACTIONS */}
                 <div className="flex gap-3 pt-4">
                     <button
                         onClick={handleAddToCart}
-                        disabled={isPending}
+                        disabled={isPending || isStockUpdating || stock === 0}
                         className="rounded-md bg-black px-4 py-2 text-white hover:opacity-90 disabled:opacity-50"
                     >
                         {isPending ? t('product.adding') : t('product.add_to_cart')}

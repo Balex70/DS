@@ -48,6 +48,20 @@ export const columns = (): ColumnDef<ProductVariant>[] => [
     }
   },
   {
+    accessorKey: "stock",
+    header: "Stock",
+    cell: ({ row }) => {
+      const stock = row.original.stock
+      const needsUpdate = row.original.stock_needs_update
+
+      return (
+        <div className="max-w-[450px] truncate">
+          <span>{stock} {stock && needsUpdate && "(Outdated)"}</span>
+        </div>
+      )
+    }
+  },
+  {
     id: "ai_status",
     header: "AI Status",
     cell: ({ row }) => {

@@ -30,9 +30,6 @@ class ProductVariantService
         try {
             $stock = $provider->getVariantStock($productVariant->external_id);
 
-            if($stock === null) {
-                return null;
-            }
             $productVariant->update([
                 'stock' => $stock,
                 'stock_synced_at' => now(),
