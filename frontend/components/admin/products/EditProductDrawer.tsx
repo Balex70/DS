@@ -131,7 +131,7 @@ export function EditProductDrawer({
         <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent side="right" style={{ maxWidth: '40vw' }}>
             <SheetHeader>
-            <SheetTitle>Edit product</SheetTitle>
+            <SheetTitle>Edit product (ID: {product?.id})</SheetTitle>
             </SheetHeader>
 
             <Tabs
