@@ -63,7 +63,14 @@
       "adding": "Додаємо...",
       "options": "Варіанти",
       "no_image": "Немає зображення",
-      "description_label": "Короткий опис"
+      "description_label": "Короткий опис",
+      "availability": {
+        "checking": "Перевіряємо наявність...",
+        "unknown": "Наявність невідома",
+        "out_of_stock": "Немає в наявності",
+        "only_left": "Залишилося лише {count} шт.",
+        "in_stock": "Є в наявності"
+      }
     },
     "megamenu": {
       "catalog": "Каталог",

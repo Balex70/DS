@@ -65,8 +65,8 @@ export function ProductDetail({
                 const data = await stockUpdate(selectedVariant.id);
 
                 setStock(data.stock);
-            } catch (error) {
-                console.error('STOCK UPDATE FAILED:', error);
+            } catch {
+                // Keep the existing stock value if the update fails.
             } finally {
                 setIsStockUpdating(false);
             }
@@ -109,35 +109,35 @@ export function ProductDetail({
                                 className="min-h-7 gap-1.5 border-amber-600/20 bg-amber-50/50 px-2.5 py-1 text-sm text-amber-700/70"
                             >
                                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                Checking availability...
+                                {t('product.availability.checking')}
                             </Badge>
                         ) : stock === null ? (
                             <Badge
                                 variant="outline"
                                 className="min-h-7 px-2.5 py-1 text-sm text-muted-foreground"
                             >
-                                Availability unknown
+                                {t('product.availability.unknown')}
                             </Badge>
                         ) : stock === 0 ? (
                             <Badge
                                 variant="outline"
                                 className="min-h-7 border-red-600/20 bg-red-50/50 px-2.5 py-1 text-sm text-red-700/60"
                             >
-                                Out of stock
+                                {t('product.availability.out_of_stock')}
                             </Badge>
                         ) : stock <= 10 ? (
                             <Badge
                                 variant="outline"
                                 className="min-h-7 border-amber-600/20 bg-amber-50/50 px-2.5 py-1 text-sm text-amber-700/70"
                             >
-                                Only {stock} left
+                                {t('product.availability.only_left', { count: stock })}
                             </Badge>
                         ) : (
                             <Badge
                                 variant="outline"
                                 className="min-h-7 border-green-600/70 bg-green-50/50 px-2.5 py-2 text-sm text-green-700"
                             >
-                                In stock
+                                {t('product.availability.in_stock')}
                             </Badge>
                         )}
                     </div>
