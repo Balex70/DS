@@ -32,6 +32,7 @@ class ProductVariantController extends Controller
 
         $variants = $product->variants()
             ->with('translations')
+            ->orderBy('id')
             ->paginate(8);
 
         return ProductVariantResource::collection(

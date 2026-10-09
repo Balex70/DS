@@ -91,7 +91,7 @@ class ProductController extends Controller
         $product->load([
             'variants' => fn ($query) => $query
                 ->with('image', 'translations')
-                ->orderBy('price'),
+                ->orderBy('id'),
             'translations'
         ]);
 
