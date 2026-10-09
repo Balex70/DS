@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Store\CategoryController as StoreCategoryController
 use App\Http\Controllers\Api\Store\OrderController as StoreOrderController;
 use App\Http\Controllers\Api\Store\PaymentController as StorePaymentController;
 use App\Http\Controllers\Api\Store\ProductController as StoreProductController;
+use App\Http\Controllers\Api\Store\ProductVariantController as StoreProductVariantController;
 use App\Http\Controllers\Api\Store\SearchController as StoreSearchController;
 use App\Http\Controllers\Api\Store\SettingController as StoreSettingController;
 use App\Http\Controllers\Api\UserController;
@@ -59,6 +60,7 @@ Route::get('product-variants/{product}', [ProductVariantController::class, 'inde
 Route::patch('product-variants/{productVariant}', [ProductVariantController::class, 'update'])->middleware('auth:sanctum');
 Route::patch('product-variants/ai-status-change/{product}/{newAiStatus}', [ProductVariantController::class, 'changeAllVariantsAiStatuses'])->middleware('auth:sanctum');
 Route::patch('product-variants/translations-remove/{product}', [ProductVariantController::class, 'removeTranslations'])->middleware('auth:sanctum');
+Route::patch('product-variants/stock-update/{productVariant}', [ProductVariantController::class, 'stockUpdate'])->middleware('auth:sanctum');
 
 // Customer
 Route::prefix('customer')->group(function () {
@@ -114,6 +116,9 @@ Route::prefix('store')->group(function () {
     Route::get('products/filters', [StoreProductController::class, 'filters']);
     Route::get('products/latest', [StoreProductController::class, 'latest']);
     Route::get('products/{product}', [StoreProductController::class, 'show']);
+
+    // Product Variants
+    Route::patch('product-variants/stock-update/{productVariant}', [StoreProductVariantController::class, 'stockUpdate']);
 
     // Orders
     Route::post('orders/create', [StoreOrderController::class, 'store'])->middleware(EnsureCartToken::class);

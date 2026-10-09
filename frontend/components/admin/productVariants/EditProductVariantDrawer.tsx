@@ -14,6 +14,9 @@ import { ProductVariant } from "@/types/product"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Loader2 } from "lucide-react"
+import { toast } from "sonner"
 
 export function EditProductVariantDrawer({
   open,
@@ -30,6 +33,8 @@ export function EditProductVariantDrawer({
     const [price, setPrice] = useState(0)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [isStockUpdating, setIsStockUpdating] = useState(false)
+    const [errorStockUpdate, setErrorStockUpdate] = useState<string | null>(null)
     const [selectedLocale, setSelectedLocale] = useState("en")
     const locales = ["en", "uk"]
 
@@ -174,6 +179,67 @@ export function EditProductVariantDrawer({
         }
     }
 
+    const handleStockUpdate = async () => {
+        if (!productVariant) return
+
+        try {
+            setIsStockUpdating(true)
+
+            const getCookie = (name: string) => {
+                const value = `; ${document.cookie}`
+                const parts = value.split(`; ${name}=`)
+                if (parts.length === 2) return parts.pop()?.split(";").shift()
+            }
+
+            const xsrfToken = decodeURIComponent(getCookie("XSRF-TOKEN") || "")
+
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-XSRF-TOKEN': xsrfToken,
+            };
+            const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/product-variants/stock-update/${productVariant.id}`, {
+                method: "PATCH",
+                credentials: 'include',
+                headers: headers,
+                cache: 'no-cache', // 'no-cache' if you want it fresh each time
+            })
+
+            if (!res.ok) {
+                const contentType = res.headers.get('content-type') || '';
+                if (contentType.includes('application/json')) {
+                    const errorJson = await res.json();
+                    if (Array.isArray(errorJson.errors)) {
+                        errorJson.errors.forEach((error: string, index: number) => {
+                            setTimeout(() => toast.error(error), index * 2000);
+                        });
+                        return;
+                    } else {
+                        toast.error(errorJson.message || 'Unknown API error');
+                        return;
+                    }
+                } else {
+                    // HTML / text response → system-level issue (not for client)
+                    const rawText = await res.text();
+                    setErrorStockUpdate(rawText.slice(0, 400));
+                    return;
+                }
+            }
+
+            onSuccess();
+            toast.success("Stock updated successfully");
+        } catch (e) {
+            setErrorStockUpdate("Stock update failed" + e)
+        } finally {
+            setIsStockUpdating(false)
+        }
+    }
+
+    if (errorStockUpdate) {
+        toast.error(errorStockUpdate)
+        setErrorStockUpdate(null)
+    }
+
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent side="right" style={{ maxWidth: '40vw' }}>
@@ -217,12 +283,20 @@ export function EditProductVariantDrawer({
                     {getAiStatusBadge(productVariant.ai_status)}
                 </div>
             )}
-            {productVariant?.stock && (
-                <div className="flex items-center gap-2">
-                    <span>Stock:</span>
-                    {productVariant?.stock}
-                </div>
-            )}
+            <div className="flex items-center gap-2">
+                <span>Stock:</span>
+                {productVariant?.stock && (
+                    <span>{productVariant?.stock}</span>
+                )}
+                {productVariant?.stock_needs_update && (
+                    <span className="text-red-500">(Stock Needs update*)</span>
+                )}
+            </div>
+
+            <Button onClick={handleStockUpdate} disabled={isStockUpdating} className="w-fit self-start">
+                {isStockUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isStockUpdating ? "Updating..." : "Stock update"}
+            </Button>
             </SheetHeader>
 
             <Tabs

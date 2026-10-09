@@ -82,6 +82,29 @@ class CjApiClient
         return $json['data'] ?? [];
     }
 
+    public function getVariantStock(string $variantId): array
+    {
+        $token = $this->authService->getValidAccessToken();
+        if(!$token) {
+            throw new \Exception('CJ authentication failed: no valid token available');
+        }
+
+        $response = Http::withHeaders([
+            'CJ-Access-Token' => $token,
+            'Accept' => 'application/json',
+        ])->get("{$this->baseUrl}/product/stock/queryByVid", [
+            'vid' => $variantId
+        ]);
+
+        $json = $response->json();
+
+        if (!isset($json['code']) || $json['code'] !== 200) {
+            throw new \Exception('CJ API error: ' . ($json['message'] ?? 'Unknown error'));
+        }
+
+        return $json['data'] ?? [];
+    }
+
     public function calculateShipping(array $payload): array
     {
         $token = $this->authService->getValidAccessToken();
