@@ -41,9 +41,9 @@ class CartService
 
         foreach ($cart['items'] as &$existingItem) {
             if (
-                isset($existingItem['product_id']) &&
-                isset($item['product_id']) &&
-                $existingItem['product_id'] === $item['product_id']
+                isset($existingItem['product_variant_id']) &&
+                isset($item['product_variant_id']) &&
+                $existingItem['product_variant_id'] === $item['product_variant_id']
             ) {
                 $existingItem['quantity'] += $item['quantity'];
 
@@ -59,12 +59,12 @@ class CartService
         return $cart;
     }
 
-    public function updateQuantity(string $token, int $productId, int $quantity): array
+    public function updateQuantity(string $token, int $variantId, int $quantity): array
     {
         $cart = $this->get($token);
 
         foreach ($cart['items'] as &$item) {
-            if (($item['product_id'] ?? null) === $productId) {
+            if (($item['product_variant_id'] ?? null) === $variantId) {
                 $item['quantity'] = $quantity;
                 break;
             }
@@ -75,14 +75,14 @@ class CartService
         return $cart;
     }
 
-    public function removeItem(string $token, int $productId): array
+    public function removeItem(string $token, int $variantId): array
     {
         $cart = $this->get($token);
 
         $cart['items'] = array_values(
             array_filter(
                 $cart['items'],
-                fn ($item) => ($item['product_id'] ?? null) !== $productId
+                fn ($item) => ($item['product_variant_id'] ?? null) !== $variantId
             )
         );
 

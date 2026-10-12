@@ -23,7 +23,7 @@ export function ProductCard({ product }: Props) {
         e.preventDefault();
         e.stopPropagation();
         addToCart({
-            product_id: product.cheapest_variant.id,
+            product_variant_id: product.cheapest_variant.id,
             vid: product.cheapest_variant.external_id,
             title: product.cheapest_variant.name ?? product.name_processed ?? product.name_raw,
             sku: product.cheapest_variant.sku,
