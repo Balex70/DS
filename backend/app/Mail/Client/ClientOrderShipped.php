@@ -49,7 +49,7 @@ class ClientOrderShipped extends Mailable
         $items = $this->order->items->map(function ($item) {
             $variant = ProductVariant::with([
                 'translation' => fn ($q) => $q->where('locale', $this->order->locale),
-            ])->find($item->product_id);
+            ])->find($item->product_variant_id);
 
             $item->translated_title =
                 $variant?->translation?->name
