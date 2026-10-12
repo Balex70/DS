@@ -32,7 +32,7 @@ class CartController extends Controller
                 $locale = $request->locale ?? 'en';
                 $productVariant = ProductVariant::with([
                     'translation' => fn ($q) => $q->where('locale', $locale),
-                ])->find($cartItem['product_id']);
+                ])->find($cartItem['product_variant_id']);
             }
 
             $hydratedItem = [
@@ -64,7 +64,7 @@ class CartController extends Controller
         );
 
         $item = $request->validate([
-            'product_id' => ['nullable', 'integer'],
+            'product_variant_id' => ['nullable', 'integer'],
             'vid' => ['required', 'string'],
             'title' => ['required', 'string'],
             'sku' => ['required', 'string'],
@@ -87,13 +87,13 @@ class CartController extends Controller
         $token = $request->attributes->get('cart_token');
 
         $data = $request->validate([
-            'product_id' => ['required', 'integer'],
+            'product_variant_id' => ['required', 'integer'],
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
 
         $cart = $cartService->updateQuantity(
             $token,
-            $data['product_id'],
+            $data['product_variant_id'],
             $data['quantity']
         );
 
@@ -105,11 +105,11 @@ class CartController extends Controller
         $token = $request->attributes->get('cart_token');
 
         $request->validate([
-            'product_id' => ['required', 'integer'],
+            'product_variant_id' => ['required', 'integer'],
         ]);
 
         if ($token) {
-            $cartService->removeItem($token, $request->product_id);
+            $cartService->removeItem($token, $request->product_variant_id);
         }
 
         return response()->json($cartService->get($token));

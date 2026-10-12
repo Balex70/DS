@@ -6,14 +6,14 @@ export function useUpdateCartItem() {
 
     return useMutation({
         mutationFn: async ({
-            productId,
+            variantId,
             quantity,
         }: {
-            productId: number;
+            variantId: number;
             quantity: number;
         }) => {
             const res = await updateCartItem({
-                product_id: productId,
+                product_variant_id: variantId,
                 quantity,
             });
 

@@ -86,7 +86,7 @@ class StoreOrderService
             // 2. Insert/Recreate order items seamlessly
             foreach ($items as $item) {
                 $order->items()->create([
-                    'product_id' => $item['product_id'] ?? null,
+                    'product_variant_id' => $item['product_variant_id'] ?? null,
                     'vid' => $item['vid'] ?? null,
                     'sku' => $item['sku'] ?? null,
                     'title' => $item['title'],

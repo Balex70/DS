@@ -43,7 +43,7 @@ export function CheckoutComponent() {
     const items = cart?.items ?? [];
 
     const cartKey = cart?.items
-        ?.map(i => `${i.product_id}:${i.quantity}`)
+        ?.map(i => `${i.product_variant_id}:${i.quantity}`)
         .sort()
         .join("|");
 

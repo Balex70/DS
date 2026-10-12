@@ -41,7 +41,7 @@ export function ProductDetail({
 
     const handleAddToCart = async () => {
         addToCart({
-            product_id: selectedVariant.id,
+            product_variant_id: selectedVariant.id,
             vid: selectedVariant.external_id,
             title: title,
             sku: selectedVariant.sku,

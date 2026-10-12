@@ -24,7 +24,7 @@ export function CartItemsDrawer({items}: Props) {
             <div className="space-y-4">
                 {items.map((item, index) => (
                     <div
-                        key={`${item.product_id}-${index}`}
+                        key={`${item.product_variant_id}-${index}`}
                         className="group flex items-center gap-4 p-2 mb-1 rounded-md transition hover:bg-muted/30"
                     >
                         {/* IMAGE */}
@@ -57,7 +57,7 @@ export function CartItemsDrawer({items}: Props) {
                                         <button
                                             onClick={() =>
                                                 updateQty({
-                                                    productId: item.product_id!,
+                                                    variantId: item.product_variant_id!,
                                                     quantity: Math.max(1, item.quantity - 1),
                                                 })
                                             }
@@ -73,7 +73,7 @@ export function CartItemsDrawer({items}: Props) {
                                         <button
                                             onClick={() =>
                                                 updateQty({
-                                                    productId: item.product_id!,
+                                                    variantId: item.product_variant_id!,
                                                     quantity: item.quantity + 1,
                                                 })
                                             }
@@ -102,7 +102,7 @@ export function CartItemsDrawer({items}: Props) {
 
                         {/* DELETE */}
                         <button
-                            onClick={() => removeItem(item.product_id!)}
+                            onClick={() => removeItem(item.product_variant_id!)}
                             disabled={isRemovePending}
                             className="
                                 ml-auto flex h-10 w-10 items-center justify-center
