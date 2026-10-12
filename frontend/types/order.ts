@@ -47,7 +47,7 @@ export type Meta = {
 
 type OrderItem = {
     order_id: number;
-    product_id?: number;
+    product_variant_id?: number;
     title: string;
     quantity: number;
     price: number;
