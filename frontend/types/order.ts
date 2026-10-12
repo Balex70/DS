@@ -45,7 +45,7 @@ export type Meta = {
   to: number
 }
 
-type OrderItem = {
+export type OrderItem = {
     order_id: number;
     product_variant_id?: number;
     title: string;
@@ -53,6 +53,8 @@ type OrderItem = {
     price: number;
     total: number;
     variant_data?: string;
+    vid: string;
+    sku: string;
 }
 
 export type OrderPayload = {
