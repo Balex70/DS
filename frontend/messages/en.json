@@ -63,7 +63,14 @@
       "adding": "Adding...",
       "options": "Options",
       "no_image": "No image",
-      "description_label": "Description"
+      "description_label": "Description",
+      "availability": {
+        "checking": "Checking availability...",
+        "unknown": "Availability unknown",
+        "out_of_stock": "Out of stock",
+        "only_left": "Only {count} left",
+        "in_stock": "In stock"
+      }
     },
     "megamenu": {
       "catalog": "Catalog",

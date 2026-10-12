@@ -11,6 +11,7 @@ use App\Http\Requests\UpdateProductVariantRequest;
 use App\Http\Resources\ProductVariantResource;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\ProductVariantService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Gate;
 class ProductVariantController extends Controller
 {
     public function __construct(
+        private ProductVariantService $service,
         private CreateAppLogAction $createAppLogAction
     ) {}
 
@@ -30,6 +32,7 @@ class ProductVariantController extends Controller
 
         $variants = $product->variants()
             ->with('translations')
+            ->orderBy('id')
             ->paginate(8);
 
         return ProductVariantResource::collection(
@@ -88,6 +91,27 @@ class ProductVariantController extends Controller
         });
 
         return new ProductVariantResource($productVariant);
+    }
+
+    /**
+     * Update stock for product variant
+     */
+    public function stockUpdate(ProductVariant $productVariant)
+    {
+        Gate::authorize('update', $productVariant);
+
+        $variant = $this->service->updateVariantStock($productVariant);
+
+        if (!$variant) {
+            return response()->json([
+                'message' => 'Unable to update stock.',
+            ], 502);
+        }
+
+        return response()->json([
+            'stock' => $variant->stock,
+            'stock_synced_at' => $variant->stock_synced_at,
+        ]);
     }
 
     /**

@@ -55,6 +55,7 @@ class CjProductMapper
             'big_image' => $data['bigImage'] ?? $base['big_image'] ?? null,
 
             'add_mark_status' => (bool) ($data['addMarkStatus'] ?? $base['add_mark_status'] ?? null),
+            'warehouse_inventory_num' => $data['warehouseInventoryNum'] ?? $base['warehouse_inventory_num'] ?? null,
 
             'variants' => $variants,
 
@@ -93,12 +94,24 @@ class CjProductMapper
                 'name' => $variantName ?: $productName,
                 'key' => $key,
                 'price' => $this->parsePrice($v['variantSellPrice'] ?? null),
-                'stock' => isset($v['inventoryNum']) ? (int) $v['inventoryNum'] : null,
+                'stock' => $this->parseVariantStock($v['inventories'] ?? []),
                 'weight' => $v['variantWeight'] ?? null,
                 'volume' => $v['variantVolume'] ?? null,
                 'image' => $v['variantImage'] ?? null,
             ];
         }, $variants);
+    }
+
+    private function parseVariantStock(array $inventories): ?int
+    {
+        if (!$inventories) {
+            return null;
+        }
+
+        return array_sum(array_map(
+            fn (array $inventory) => (int) ($inventory['totalInventory'] ?? 0),
+            $inventories
+        ));
     }
     
     private function cleanHtml(?string $html): ?string

@@ -69,6 +69,8 @@ class ProductService
                     'now_price' => $mappedDetails['now_price'],
                     'suggested_price' => $mappedDetails['suggested_price'],
                     'add_mark_status' => $mappedDetails['add_mark_status'],
+                    'warehouse_inventory_num' => $mappedDetails['warehouse_inventory_num'],
+                    'raw_data' => $mappedDetails['raw_data'],
                     'updated_at' => $now,
                     'last_enrichment_at' => $now,
                     'product_weight' => $mappedDetails['product_weight'],

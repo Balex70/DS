@@ -380,6 +380,17 @@ helm-local-upgrade: create-be-env-secrets create-fe-env-secrets
 	--set cron.image.tag=$(VERSION) \
 	--atomic --wait --timeout 5m
 
+# Restart workloads to reload environment variables from Kubernetes Secrets
+helm-restart:
+	@ bin/kctl rollout restart deployment $(RELEASE)-backend
+	@ bin/kctl rollout restart deployment $(RELEASE)-frontend
+	@ bin/kctl rollout restart deployment $(RELEASE)-queue
+	@ bin/kctl rollout restart deployment $(RELEASE)-cron
+	@ bin/kctl rollout status deployment $(RELEASE)-backend --timeout=5m
+	@ bin/kctl rollout status deployment $(RELEASE)-frontend --timeout=5m
+	@ bin/kctl rollout status deployment $(RELEASE)-queue --timeout=5m
+	@ bin/kctl rollout status deployment $(RELEASE)-cron --timeout=5m
+
 # you need to restore database from backups ./db-backups after rollback
 # helm-rollback doesn't restore database!!!
 helm-rollback:

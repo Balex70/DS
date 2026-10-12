@@ -48,6 +48,17 @@ class CjProductService
         return $data;
     }
 
+    public function getVariantStock(string $variantId): ?int
+    {
+        $data = $this->client->getVariantStock($variantId);
+
+        if (!isset($data) || empty($data)) {
+            return null;
+        }
+
+        return $this->parseVariantInventoryStock($data);
+    }
+
     public function calculateShipping(array $payload): array
     {
         $cjShippingPayload = [
@@ -81,5 +92,30 @@ class CjProductService
             'total_pages' => $data['totalPages'] ?? 0,
             'total_records' => $data['totalRecords'] ?? 0,
         ];
+    }
+
+    private function parseVariantInventoryStock(array $inventory): ?int
+    {
+        if (empty($inventory)) {
+            return null;
+        }
+
+        $stocks = array_filter(
+            $inventory,
+            fn ($item) => is_array($item)
+                && array_key_exists('totalInventoryNum', $item)
+                && $item['totalInventoryNum'] !== null
+        );
+
+        if ($stocks === []) {
+            return null;
+        }
+
+        return array_sum(
+            array_map(
+                fn (array $item) => (int) $item['totalInventoryNum'],
+                $stocks
+            )
+        );
     }
 }
