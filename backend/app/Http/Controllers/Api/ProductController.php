@@ -254,6 +254,16 @@ ID: {$product->id} ($product->name_processed)"
         $productId = $product->id;
         $productName = $product->name_raw;
 
+        // Disallow deleting a product that has orders
+        if ($product->hasOrders()) {
+            $this->createAppLogAction->execute(
+                AppLogLevelEnum::INFO,
+                AppLogRealmEnum::PRODUCT,
+                "Product with ID: {$productId} with name: {$productName} tried to delete but failed because it has orders."
+            );
+            abort(409, 'Cannot delete a product that has orders.');
+        }
+
         $product->delete();
 
         $this->createAppLogAction->execute(
