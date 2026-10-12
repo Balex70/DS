@@ -10,6 +10,10 @@ import MobileVariantSelector from "./mobile-variant-selector";
 import { Product, ProductVariant } from "@/types/product";
 import { CurrencyCode } from "@/types/currency";
 import { useRouter } from "@/i18n/navigation";
+import { useEffect, useState } from "react";
+import { stockUpdate } from "@/services/product-variant-service";
+import { Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 type Props = {
     product: Product;
@@ -26,6 +30,8 @@ export function ProductDetail({
     const locale = useLocale();
     const t = useTranslations('frontend')
     const router = useRouter();
+    const [stock, setStock] = useState(selectedVariant.stock);
+    const [isStockUpdating, setIsStockUpdating] = useState(selectedVariant.stock_needs_update);
     
     const activeVariantId = selectedVariant?.id;
     const galleryMainImage = selectedVariant?.image ?? product.big_image;
@@ -46,6 +52,28 @@ export function ProductDetail({
             packing_weight: product.packing_weight ?? undefined
         });
     };
+
+    useEffect(() => {
+        if (!selectedVariant.stock_needs_update) {
+            return;
+        }
+
+        const updateStock = async () => {
+            setIsStockUpdating(true);
+
+            try {
+                const data = await stockUpdate(selectedVariant.id);
+
+                setStock(data.stock);
+            } catch {
+                // Keep the existing stock value if the update fails.
+            } finally {
+                setIsStockUpdating(false);
+            }
+        };
+
+        updateStock();
+    }, [selectedVariant.id, selectedVariant.stock_needs_update]);
 
     return (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 mb-10">
@@ -74,13 +102,53 @@ export function ProductDetail({
                             )
                         </span>
                     )}
+                    <div className="flex items-center mt-2">
+                        {isStockUpdating ? (
+                            <Badge
+                                variant="outline"
+                                className="min-h-7 gap-1.5 border-amber-600/20 bg-amber-50/50 px-2.5 py-1 text-sm text-amber-700/70"
+                            >
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                {t('product.availability.checking')}
+                            </Badge>
+                        ) : stock === null ? (
+                            <Badge
+                                variant="outline"
+                                className="min-h-7 px-2.5 py-1 text-sm text-muted-foreground"
+                            >
+                                {t('product.availability.unknown')}
+                            </Badge>
+                        ) : stock === 0 ? (
+                            <Badge
+                                variant="outline"
+                                className="min-h-7 border-red-600/20 bg-red-50/50 px-2.5 py-1 text-sm text-red-700/60"
+                            >
+                                {t('product.availability.out_of_stock')}
+                            </Badge>
+                        ) : stock <= 10 ? (
+                            <Badge
+                                variant="outline"
+                                className="min-h-7 border-amber-600/20 bg-amber-50/50 px-2.5 py-1 text-sm text-amber-700/70"
+                            >
+                                {t('product.availability.only_left', { count: stock })}
+                            </Badge>
+                        ) : (
+                            <Badge
+                                variant="outline"
+                                className="min-h-7 border-green-600/70 bg-green-50/50 px-2.5 py-2 text-sm text-green-700"
+                            >
+                                {t('product.availability.in_stock')}
+                            </Badge>
+                        )}
+                    </div>
+
                 </div>
 
                 {/* ACTIONS */}
                 <div className="flex gap-3 pt-4">
                     <button
                         onClick={handleAddToCart}
-                        disabled={isPending}
+                        disabled={isPending || isStockUpdating || stock === 0}
                         className="rounded-md bg-black px-4 py-2 text-white hover:opacity-90 disabled:opacity-50"
                     >
                         {isPending ? t('product.adding') : t('product.add_to_cart')}

@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'cost_price',
     'price',
     'stock',
+    'stock_synced_at',
     'weight',
     'volume',
     'image_id',
@@ -25,6 +26,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ProductVariant extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'stock_synced_at' => 'datetime',
+    ];
 
     public function product(): BelongsTo
     {
@@ -49,5 +54,11 @@ class ProductVariant extends Model
     public function translation()
     {
         return $this->hasOne(ProductVariantTranslation::class);
+    }
+
+    public function stockNeedsUpdate(): bool
+    {
+        return $this->stock_synced_at === null
+            || $this->stock_synced_at->lte(now()->subMinutes(15));
     }
 }
