@@ -84,16 +84,27 @@ export type OrderPayload = {
     locale?: string;
 };
 
+export type TrackingRoute = {
+    acceptAddress: string | null;
+    acceptTime: string | null;
+    remark: string | null;
+};
+
 export type TrackingInfo = {
-    trackingNumber: string
-    logisticName: string
-    trackingFrom: string
-    trackingTo: string
-    deliveryDay: string
-    deliveryTime: string
-    trackingStatus: string
-    lastMileCarrier: string
-    lastTrackNumber: string
+    trackingNumber: string;
+    logisticName: string | null;
+    trackingFrom: string | null;
+    trackingTo: string | null;
+    customerOrderId?: string | null;
+    deliveryDay: string | null;
+    deliveryStartTime?: string | null;
+    deliveryEndTime?: string | null;
+    trackingStatus: string | null;
+    lastTrackNumber: string | null;
+    cjMailNo?: string | null;
+    mailNo?: string | null;
+    lastMileCarrier: string | null;
+    routes?: TrackingRoute[];
 }
 
 export const latinFieldsMapper = {
