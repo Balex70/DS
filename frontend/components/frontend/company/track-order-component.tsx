@@ -37,6 +37,7 @@ const Field = ({
 
 // Standardized translation keys for tracking statuses
 export type TrackingStatusKey =
+  | 'processing'
   | 'info_received'
   | 'in_transit'
   | 'out_for_delivery'
@@ -48,6 +49,7 @@ export type TrackingStatusKey =
 
 const STATUS_MAP: Record<string, TrackingStatusKey> = {
   // REST API String Statuses
+  'processing': 'processing',
   'info received': 'info_received',
   'pending': 'info_received',
   'in transit': 'in_transit',
@@ -188,7 +190,6 @@ export function TrackOrderComponent() {
                                             {tracking.trackingNumber}
                                         </p>
                                     </div>
-
                                     <Badge
                                         variant="secondary"
                                         className={`
@@ -199,19 +200,22 @@ export function TrackOrderComponent() {
                                                     : "text-white bg-yellow-500"
                                             }
                                         `}
-                                        >
-                                        {t('footer.track_order.tracking_status.' + getTrackingStatusKey(tracking.trackingStatus))}
+                                    >
+                                        {tracking.trackingStatus?.toLowerCase() === "unknown"
+                                            ? t('footer.track_order.tracking_status.unknown')
+                                            : t(
+                                                'footer.track_order.tracking_status.' +
+                                                getTrackingStatusKey(tracking.trackingStatus)
+                                            )}
                                     </Badge>
                                 </div>
 
                                 <Separator />
-
                                 <div className="grid gap-3 sm:grid-cols-2">
                                     <Field
                                         title={t('footer.track_order.shipping_method')}
                                         field={tracking.logisticName || "—"}
                                     />
-
                                     {(tracking.trackingFrom || tracking.trackingTo) && (
                                         <Field
                                             title={t('footer.track_order.route')}
@@ -239,7 +243,6 @@ export function TrackOrderComponent() {
                                     tracking.deliveryEndTime) && (
                                     <>
                                         <Separator />
-
                                         <div className="grid gap-3 sm:grid-cols-2">
                                             {tracking.deliveryDay &&
                                                 Number(tracking.deliveryDay) > 0 && (
@@ -250,7 +253,6 @@ export function TrackOrderComponent() {
                                                                 {t('footer.track_order.estimated_transit')}
                                                             </p>
                                                         </div>
-
                                                         <p className="text-lg font-semibold">
                                                             {tracking.deliveryDay}{" "}
                                                             {t('footer.track_order.days')}
@@ -267,7 +269,6 @@ export function TrackOrderComponent() {
                                                             {t('footer.track_order.delivery_window')}
                                                         </p>
                                                     </div>
-
                                                     <p className="break-words text-sm font-semibold">
                                                         {tracking.deliveryStartTime &&
                                                         tracking.deliveryEndTime

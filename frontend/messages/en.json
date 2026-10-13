@@ -383,6 +383,7 @@
         "delivery_window": "Estimated delivery window",
         "tracking_history": "Tracking history",
         "tracking_status": {
+          "processing": "Processing",
           "info_received": "Info Received",
           "in_transit": "In Transit",
           "out_for_delivery": "Out for Delivery",
@@ -390,7 +391,7 @@
           "failed_attempt": "Delivery Failed",
           "exception": "Exception / Alert",
           "expired": "Expired",
-          "unknown": "In Transit"
+          "unknown": "Status Unknown"
         },
         "tracking_history_messages": {
           "label_created": "Label created. The warehouse is processing your order. Please wait."

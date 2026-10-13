@@ -383,6 +383,7 @@
         "delivery_window": "Орієнтовний період доставки",
         "tracking_history": "Історія відстеження",
         "tracking_status": {
+          "processing": "Обробляється",
           "info_received": "Інформацію отримано",
           "in_transit": "В дорозі",
           "out_for_delivery": "Передано на доставку",
@@ -390,7 +391,7 @@
           "failed_attempt": "Невдала спроба доставки",
           "exception": "Виключення / Помилка",
           "expired": "Термін дії закінчився",
-          "unknown": "В дорозі"
+          "unknown": "Невідомиий статус"
         },
         "tracking_history_messages": {
           "label_created": "Етикетку створено. Склад обробляє ваше замовлення. Будь ласка, зачекайте."
