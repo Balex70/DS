@@ -23,9 +23,10 @@ export function TrackingInfoButton({
     const handleTrackInfo = async () => {
         if (!order) return
         setErrorTrackInfo(null)
-        try {
-            setIsLoading(true)
+        setTracking(null);
+        setIsLoading(true);
 
+        try {
             const res = await trackInfo(order.id);
 
             if (!res.ok) {
@@ -51,13 +52,9 @@ export function TrackingInfoButton({
             }
 
             const json = await res.json()
-            const trackData: TrackingInfo = json?.data?.data ?? json?.data ?? [];
+            const trackData: TrackingInfo | null = json?.data?.data?.[0] ?? json?.data?.[0] ?? null;
 
-            if (
-                !trackData || 
-                (Array.isArray(trackData) && trackData.length === 0) ||
-                (typeof trackData === 'object' && Object.keys(trackData).length === 0)
-            ) {
+            if (!trackData || typeof trackData !== "object") {
                 setTracking(null);
                 setErrorTrackInfo("No tracking information found");
                 return;
@@ -105,89 +102,136 @@ export function TrackingInfoButton({
                         <Card>
                             <CardContent className="pt-6">
                                 <div className="space-y-6">
-
                                     <div className="flex items-start justify-between gap-4">
                                         <div>
                                             <p className="text-sm text-muted-foreground">
                                                 Tracking Number
                                             </p>
-
                                             <p className="font-semibold break-all">
                                                 {tracking.trackingNumber}
                                             </p>
                                         </div>
-
                                         <Badge variant="secondary">
-                                            {tracking.trackingStatus}
+                                            {tracking.trackingStatus || "Unknown"}
                                         </Badge>
                                     </div>
-
                                     <Separator />
-
                                     <div className="grid gap-4 sm:grid-cols-2">
-
                                         <div>
                                             <p className="text-xs text-muted-foreground">
                                                 Shipping Method
                                             </p>
-
                                             <p className="font-medium">
-                                                {tracking.logisticName}
+                                                {tracking.logisticName || "Not available yet"}
                                             </p>
                                         </div>
-
-                                        <div>
-                                            <p className="text-xs text-muted-foreground">
-                                                Estimated Delivery
-                                            </p>
-
-                                            <p className="font-medium">
-                                                {tracking.deliveryDay} days
-                                            </p>
-                                        </div>
-
                                         <div>
                                             <p className="text-xs text-muted-foreground">
                                                 Route
                                             </p>
-
                                             <p className="font-medium">
-                                                {tracking.trackingFrom} → {tracking.trackingTo}
+                                                {tracking.trackingFrom || "?"} →{" "}
+                                                {tracking.trackingTo || "?"}
                                             </p>
                                         </div>
-
                                         <div>
                                             <p className="text-xs text-muted-foreground">
                                                 Last Mile Carrier
                                             </p>
-
                                             <p className="font-medium">
-                                                {tracking.lastMileCarrier}
+                                                {tracking.lastMileCarrier || "Not assigned yet"}
                                             </p>
                                         </div>
-
-                                        <div className="sm:col-span-2">
+                                        <div>
                                             <p className="text-xs text-muted-foreground">
                                                 Last Mile Tracking Number
                                             </p>
-
                                             <p className="font-medium break-all">
-                                                {tracking.lastTrackNumber}
+                                                {tracking.lastTrackNumber || "Not available yet"}
                                             </p>
                                         </div>
-
-                                        <div className="sm:col-span-2">
-                                            <p className="text-xs text-muted-foreground">
-                                                Estimated Delivery Time
-                                            </p>
-
-                                            <p className="font-medium">
-                                                {tracking.deliveryTime}
-                                            </p>
-                                        </div>
-
                                     </div>
+                                    {((tracking.deliveryDay && Number(tracking.deliveryDay) > 0) || (tracking.deliveryStartTime && tracking.deliveryEndTime)) && (
+                                        <>
+                                            <Separator />
+                                            <div className="grid gap-3 sm:grid-cols-2">
+                                                {tracking.deliveryDay && Number(tracking.deliveryDay) > 0 && (
+                                                    <div className="rounded-lg border p-4">
+                                                        <div className="mb-2 flex items-center gap-2 text-muted-foreground">
+                                                            <Truck className="h-4 w-4" />
+                                                            <p className="text-xs font-medium">
+                                                                Estimated Transit
+                                                            </p>
+                                                        </div>
 
+                                                        <p className="text-lg font-semibold">
+                                                            {tracking.deliveryDay} days
+                                                        </p>
+                                                    </div>
+                                                )}
+
+                                                {(tracking.deliveryStartTime || tracking.deliveryEndTime) && (
+                                                    <div className="rounded-lg border p-4">
+                                                        <div className="mb-2 flex items-center gap-2 text-muted-foreground">
+                                                            <CheckCircle2Icon className="h-4 w-4" />
+                                                            <p className="text-xs font-medium">
+                                                                Estimated Delivery Window
+                                                            </p>
+                                                        </div>
+
+                                                        <p className="text-sm font-semibold">
+                                                            {tracking.deliveryStartTime &&
+                                                            tracking.deliveryEndTime
+                                                                ? `${tracking.deliveryStartTime} – ${tracking.deliveryEndTime}`
+                                                                : tracking.deliveryStartTime
+                                                                ? `From ${tracking.deliveryStartTime}`
+                                                                : `Until ${tracking.deliveryEndTime}`}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
+                                    {tracking.routes && tracking.routes.length > 0 && (
+                                            <>
+                                                <Separator />
+
+                                                <div className="space-y-4">
+                                                    <h3 className="font-semibold">
+                                                        Tracking History
+                                                    </h3>
+
+                                                    {tracking.routes.map((route, index) => (
+                                                        <div
+                                                            key={`${route.acceptTime}-${index}`}
+                                                            className="flex gap-3"
+                                                        >
+                                                            <div className="mt-1">
+                                                                <div className="h-2.5 w-2.5 rounded-full bg-primary" />
+                                                            </div>
+
+                                                            <div className="min-w-0 flex-1 space-y-1">
+                                                                <p className="text-sm font-medium">
+                                                                    {route.remark || "Tracking update"}
+                                                                </p>
+
+                                                                {route.acceptTime && (
+                                                                    <p className="text-xs text-muted-foreground">
+                                                                        {route.acceptTime}
+                                                                    </p>
+                                                                )}
+
+                                                                {route.acceptAddress && (
+                                                                    <p className="text-xs text-muted-foreground">
+                                                                        {route.acceptAddress}
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </>
+                                        )}
                                 </div>
                             </CardContent>
                         </Card>

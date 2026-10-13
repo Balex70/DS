@@ -373,12 +373,17 @@
         "looking_up": "Looking up tracking information...",
         "tracking_number": "Tracking Number",
         "shipping_method": "Shipping Company",
-        "estimated_delivery": "Estimated Delivery",
+        "route": "Route",
+        "not_assigned_yet": "Not assigned yet",
+        "not_available_yet": "Not available yet",
         "days": "days",
         "last_mile_carrier": "Local Delivery Service",
         "last_mile_tracking_number": "Local Delivery Tracking Number",
-        "estimated_delivery_time": "Estimated Delivery Time",
+        "estimated_transit": "Estimated transit",
+        "delivery_window": "Estimated delivery window",
+        "tracking_history": "Tracking history",
         "tracking_status": {
+          "processing": "Processing",
           "info_received": "Info Received",
           "in_transit": "In Transit",
           "out_for_delivery": "Out for Delivery",
@@ -386,7 +391,10 @@
           "failed_attempt": "Delivery Failed",
           "exception": "Exception / Alert",
           "expired": "Expired",
-          "unknown": "In Transit"
+          "unknown": "Status Unknown"
+        },
+        "tracking_history_messages": {
+          "label_created": "Label created. The warehouse is processing your order. Please wait."
         }
       },
       "payment_methods_section": {
