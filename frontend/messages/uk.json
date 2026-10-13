@@ -373,12 +373,17 @@
         "looking_up": "Зачекайте будь ласка...",
         "tracking_number": "Номер відстеження",
         "shipping_method": "Логістична компанія",
-        "estimated_delivery": "Приблизний термін доставки",
+        "route": "Маршрут",
+        "not_assigned_yet": "Ще не призначено",
+        "not_available_yet": "Поки що недоступно",
         "days": "днів",
         "last_mile_carrier": "Служба доставки",
         "last_mile_tracking_number": "Номер відстеження служби доставки",
-        "estimated_delivery_time": "Приблизна дата доставки",
+        "estimated_transit": "Орієнтовний термін доставки",
+        "delivery_window": "Орієнтовний період доставки",
+        "tracking_history": "Історія відстеження",
         "tracking_status": {
+          "processing": "Обробляється",
           "info_received": "Інформацію отримано",
           "in_transit": "В дорозі",
           "out_for_delivery": "Передано на доставку",
@@ -386,7 +391,10 @@
           "failed_attempt": "Невдала спроба доставки",
           "exception": "Виключення / Помилка",
           "expired": "Термін дії закінчився",
-          "unknown": "В дорозі"
+          "unknown": "Невідомиий статус"
+        },
+        "tracking_history_messages": {
+          "label_created": "Етикетку створено. Склад обробляє ваше замовлення. Будь ласка, зачекайте."
         }
       },
       "payment_methods_section": {

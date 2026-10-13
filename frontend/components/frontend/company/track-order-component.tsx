@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useTranslations } from 'next-intl'
-import { PackageSearch, TriangleAlert } from "lucide-react";
+import { PackageSearch, TriangleAlert, Truck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -37,6 +37,7 @@ const Field = ({
 
 // Standardized translation keys for tracking statuses
 export type TrackingStatusKey =
+  | 'processing'
   | 'info_received'
   | 'in_transit'
   | 'out_for_delivery'
@@ -48,6 +49,7 @@ export type TrackingStatusKey =
 
 const STATUS_MAP: Record<string, TrackingStatusKey> = {
   // REST API String Statuses
+  'processing': 'processing',
   'info received': 'info_received',
   'pending': 'info_received',
   'in transit': 'in_transit',
@@ -66,6 +68,16 @@ export function getTrackingStatusKey(status: string | number | null | undefined)
   const normalized = String(status).trim().toLowerCase();
   return STATUS_MAP[normalized] ?? 'unknown';
 }
+
+const getTrackingRemarkKey = (remark: string) => {
+    const normalized = remark.trim().toLowerCase();
+
+    if (normalized.startsWith("label created.")) {
+        return "label_created";
+    }
+
+    return null;
+};
 
 export function TrackOrderComponent() {
     const [tracking, setTracking] = useState<TrackingInfo | null>(null)
@@ -87,17 +99,17 @@ export function TrackOrderComponent() {
 
             const trackData = await getOrderTrackInfo(trackNumber);
 
-            if (
-                !trackData || 
-                (Array.isArray(trackData) && trackData.length === 0) ||
-                (typeof trackData === 'object' && Object.keys(trackData).length === 0)
-            ) {
+            const trackingInfo = Array.isArray(trackData)
+                ? trackData[0]
+                : trackData;
+
+            if (!trackingInfo?.trackingNumber) {
                 setTracking(null);
                 setErrorTrackInfo("Error");
                 return;
             }
 
-            setTracking(trackData)
+            setTracking(trackingInfo)
             setIsLoading(false)
         } catch (e) {
             setErrorTrackInfo("Error")
@@ -178,7 +190,6 @@ export function TrackOrderComponent() {
                                             {tracking.trackingNumber}
                                         </p>
                                     </div>
-
                                     <Badge
                                         variant="secondary"
                                         className={`
@@ -189,23 +200,136 @@ export function TrackOrderComponent() {
                                                     : "text-white bg-yellow-500"
                                             }
                                         `}
-                                        >
-                                        {t('footer.track_order.tracking_status.' + getTrackingStatusKey(tracking.trackingStatus))}
+                                    >
+                                        {tracking.trackingStatus?.toLowerCase() === "unknown"
+                                            ? t('footer.track_order.tracking_status.unknown')
+                                            : t(
+                                                'footer.track_order.tracking_status.' +
+                                                getTrackingStatusKey(tracking.trackingStatus)
+                                            )}
                                     </Badge>
                                 </div>
 
                                 <Separator />
-
-                                <div className="grid gap-4 sm:grid-cols-2">
-                                    <Field title={t('footer.track_order.shipping_method')} field={tracking.logisticName}/>
-                                    <Field title={t('footer.track_order.estimated_delivery')} field={tracking.deliveryDay + ' ' + t('footer.track_order.days')}/>
-                                    {/* <Field title="Route" field={tracking.trackingFrom + ' → ' + tracking.trackingTo}/> */}
-                                    <Field title={t('footer.track_order.last_mile_carrier')} field={tracking.lastMileCarrier}/>
-                                    <Field title={t('footer.track_order.last_mile_tracking_number')} field={tracking.lastTrackNumber}/>
-                                    <Field title={t('footer.track_order.estimated_delivery_time')} field={tracking.deliveryTime}/>
-
+                                <div className="grid gap-3 sm:grid-cols-2">
+                                    <Field
+                                        title={t('footer.track_order.shipping_method')}
+                                        field={tracking.logisticName || "—"}
+                                    />
+                                    {(tracking.trackingFrom || tracking.trackingTo) && (
+                                        <Field
+                                            title={t('footer.track_order.route')}
+                                            field={`${tracking.trackingFrom || "?"} → ${tracking.trackingTo || "?"}`}
+                                        />
+                                    )}
+                                    <Field
+                                        title={t('footer.track_order.last_mile_carrier')}
+                                        field={tracking.lastMileCarrier || t('footer.track_order.not_assigned_yet')}
+                                    />
+                                    <Field
+                                        title={t('footer.track_order.last_mile_tracking_number')}
+                                        field={
+                                            tracking.lastTrackNumber &&
+                                            tracking.lastTrackNumber !== "Updating"
+                                                ? tracking.lastTrackNumber
+                                                : t('footer.track_order.not_available_yet')
+                                        }
+                                    />
                                 </div>
 
+                                {((tracking.deliveryDay &&
+                                    Number(tracking.deliveryDay) > 0) ||
+                                    tracking.deliveryStartTime ||
+                                    tracking.deliveryEndTime) && (
+                                    <>
+                                        <Separator />
+                                        <div className="grid gap-3 sm:grid-cols-2">
+                                            {tracking.deliveryDay &&
+                                                Number(tracking.deliveryDay) > 0 && (
+                                                    <div className="rounded-lg border p-4">
+                                                        <div className="mb-2 flex items-center gap-2 text-muted-foreground">
+                                                            <Truck className="h-4 w-4" />
+                                                            <p className="text-xs font-medium">
+                                                                {t('footer.track_order.estimated_transit')}
+                                                            </p>
+                                                        </div>
+                                                        <p className="text-lg font-semibold">
+                                                            {tracking.deliveryDay}{" "}
+                                                            {t('footer.track_order.days')}
+                                                        </p>
+                                                    </div>
+                                                )}
+
+                                            {(tracking.deliveryStartTime ||
+                                                tracking.deliveryEndTime) && (
+                                                <div className="rounded-lg border p-4">
+                                                    <div className="mb-2 flex items-center gap-2 text-muted-foreground">
+                                                        <PackageSearch className="h-4 w-4" />
+                                                        <p className="text-xs font-medium">
+                                                            {t('footer.track_order.delivery_window')}
+                                                        </p>
+                                                    </div>
+                                                    <p className="break-words text-sm font-semibold">
+                                                        {tracking.deliveryStartTime &&
+                                                        tracking.deliveryEndTime
+                                                            ? `${tracking.deliveryStartTime} – ${tracking.deliveryEndTime}`
+                                                            : tracking.deliveryStartTime
+                                                            ? `From ${tracking.deliveryStartTime}`
+                                                            : `Until ${tracking.deliveryEndTime}`}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
+
+                                {tracking.routes && tracking.routes.length > 0 && (
+                                    <>
+                                        <Separator />
+
+                                        <div className="space-y-4">
+                                            <h3 className="font-semibold">
+                                                {t('footer.track_order.tracking_history')}
+                                            </h3>
+                                            {tracking.routes.map((route, index) => {
+                                                const key = route.remark
+                                                    ? getTrackingRemarkKey(route.remark)
+                                                    : null;
+
+                                                return (
+                                                    <div
+                                                        key={`${route.acceptTime ?? "event"}-${index}`}
+                                                        className="flex gap-3"
+                                                    >
+                                                        <div className="flex flex-col items-center">
+                                                            <div className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-primary" />
+                                                            {index < tracking.routes!.length - 1 && (
+                                                                <div className="mt-1 w-px flex-1 bg-border" />
+                                                            )}
+                                                        </div>
+                                                        <div className="min-w-0 flex-1 space-y-1 pb-4">
+                                                            <p className="text-sm font-medium">
+                                                                {key
+                                                                ? t(`footer.track_order.tracking_history_messages.${key}`)
+                                                                : route.remark || "Tracking update"}
+                                                            </p>
+                                                            {route.acceptTime && (
+                                                                <p className="text-xs text-muted-foreground">
+                                                                    {route.acceptTime}
+                                                                </p>
+                                                            )}
+                                                            {route.acceptAddress && (
+                                                                <p className="text-xs text-muted-foreground">
+                                                                    {route.acceptAddress}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </CardContent>
                     </Card>
