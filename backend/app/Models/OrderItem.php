@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 #[Fillable([
-    'order_id', 'vid', 'sku', 'product_id', 'title', 'quantity', 'price', 'total',
+    'order_id', 'vid', 'sku', 'product_variant_id', 'title', 'quantity', 'price', 'total',
 ])]
 class OrderItem extends Model
 {
@@ -21,6 +21,6 @@ class OrderItem extends Model
 
     public function variant()
     {
-        return $this->belongsTo(ProductVariant::class, 'product_id');
+        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
     }
 }

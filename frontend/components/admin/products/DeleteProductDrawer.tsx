@@ -11,6 +11,7 @@ import { getCookie, getErrorStringFromCatch } from "@/helpers/general"
 import { Product } from "@/types/product"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { CheckCircle2Icon } from "lucide-react"
+import { toast } from "sonner";
 
 export function DeleteProductDrawer({
   open,
@@ -54,14 +55,22 @@ export function DeleteProductDrawer({
         if (!res.ok) {
             const data = await res.json()
             setError(
-            Object.values(data.errors ?? {})
+              Object.values(data.errors ?? {})
                 .flat()
                 .join(", ")
             )
 
             const contentType = res.headers.get('content-type') || '';
             if (contentType.includes('application/json')) {
-                setError('Something went wrong, maybe you don\'t have permissions!');
+              if (Array.isArray(data.errors)) {
+                  data.errors.forEach((error: string, index: number) => {
+                      setTimeout(() => toast.error(error), index * 2000);
+                  });
+                  return;
+              } else {
+                  setError(data.message || data.errors || 'Something went wrong, maybe you don\'t have permissions!');
+                  return;
+              }
             }
             return
         }
@@ -75,6 +84,11 @@ export function DeleteProductDrawer({
     } finally {
       setLoading(false)
     }
+  }
+
+  if (error) {
+      toast.error(error)
+      setError(null)
   }
 
   return (
