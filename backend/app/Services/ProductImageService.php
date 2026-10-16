@@ -6,6 +6,9 @@ use App\Models\ProductImage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Format;
 
 class ProductImageService
 {
@@ -66,11 +69,13 @@ class ProductImageService
             throw new \Exception("Failed to download image: {$url}");
         }
 
-        $contents = $response->body();
+        $manager = ImageManager::usingDriver(Driver::class);
+        $image = $manager->decode($response->body());
+        $encoded = $image->encodeUsingFormat(Format::AVIF, quality: 75);
 
-        $fileName = "products/{$productId}/original/" . uniqid() . ".jpg";
+        $fileName = "products/{$productId}/original/" . uniqid() . ".avif";
 
-        Storage::disk('public')->put($fileName, $contents);
+        Storage::disk('public')->put($fileName, (string) $encoded);
 
         return $fileName;
     }
