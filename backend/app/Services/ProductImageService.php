@@ -24,12 +24,23 @@ class ProductImageService
 
         // already exists
         if ($existing) {
-
-            // update position if changed
-            $existing->update([
+            $updates = [
                 'position' => $position,
                 'status' => 'queued',
-            ]);
+            ];
+
+            // Restore the original image if its file is missing.
+            if (
+                empty($existing->original_url) ||
+                !Storage::disk('public')->exists($existing->original_url)
+            ) {
+                $updates['original_url'] = $this->downloadAndStore(
+                    $imageUrl,
+                    $productId
+                );
+            }
+
+            $existing->update($updates);
 
             return $existing;
         }
