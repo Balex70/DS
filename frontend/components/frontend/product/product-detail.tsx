@@ -10,7 +10,7 @@ import MobileVariantSelector from "./mobile-variant-selector";
 import { Product, ProductVariant } from "@/types/product";
 import { CurrencyCode } from "@/types/currency";
 import { useRouter } from "@/i18n/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { stockUpdate } from "@/services/product-variant-service";
 import { Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -32,7 +32,7 @@ export function ProductDetail({
     const router = useRouter();
     const [stock, setStock] = useState(selectedVariant.stock);
     const [isStockUpdating, setIsStockUpdating] = useState(selectedVariant.stock_needs_update);
-    
+    const stockUpdateInProgress = useRef(false);
     const activeVariantId = selectedVariant?.id;
     const galleryMainImage = selectedVariant?.image ?? product.big_image;
     const variantTranslation = selectedVariant?.translations.find((item) => item.locale === locale);
@@ -54,11 +54,12 @@ export function ProductDetail({
     };
 
     useEffect(() => {
-        if (!selectedVariant.stock_needs_update) {
+        if (!selectedVariant.stock_needs_update || stockUpdateInProgress.current) {
             return;
         }
 
         const updateStock = async () => {
+            stockUpdateInProgress.current = true;
             setIsStockUpdating(true);
 
             try {
@@ -68,6 +69,7 @@ export function ProductDetail({
             } catch {
                 // Keep the existing stock value if the update fails.
             } finally {
+                stockUpdateInProgress.current = false;
                 setIsStockUpdating(false);
             }
         };
