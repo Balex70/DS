@@ -8,6 +8,7 @@ import { useAddToCart } from "@/hooks/use-add-to-cart";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useTranslations } from "next-intl";
+import { ImageOff } from "lucide-react";
 
 type Props = {
     product: Product;
@@ -48,8 +49,11 @@ export function ProductCard({ product }: Props) {
                                 imageClassName="object-cover transition duration-300 group-hover:scale-105"
                             />
                     ) : (
-                        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                            {t('category.product_card.no_image')}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-muted/50">
+                            <ImageOff
+                                className="h-12 w-12 text-muted-foreground/40"
+                                strokeWidth={1.5}
+                            />
                         </div>
                     )}
                 </div>

@@ -6,6 +6,9 @@ use App\Models\ProductImage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Format;
 
 class ProductImageService
 {
@@ -24,12 +27,38 @@ class ProductImageService
 
         // already exists
         if ($existing) {
+            $oldPath = $existing->original_url;
 
-            // update position if changed
-            $existing->update([
+            $needsConversion = $oldPath
+            && in_array(strtolower(pathinfo($oldPath, PATHINFO_EXTENSION)), ['jpg', 'jpeg']);
+
+            $fileMissing = !$oldPath
+            || !Storage::disk('public')->exists($oldPath);
+
+            $updates = [
                 'position' => $position,
                 'status' => 'queued',
-            ]);
+            ];
+
+            // Restore the original image if its file is missing.
+            // Or if it needs conversion
+            if ($fileMissing || $needsConversion) {
+                $newPath = $this->downloadAndStore($imageUrl, $productId);
+
+                $updates['original_url'] = $newPath;
+            }
+
+            $existing->update($updates);
+
+            // delete old files
+            if (
+                isset($newPath)
+                && $oldPath
+                && $oldPath !== $newPath
+                && Storage::disk('public')->exists($oldPath)
+            ) {
+                Storage::disk('public')->delete($oldPath);
+            }
 
             return $existing;
         }
@@ -55,11 +84,13 @@ class ProductImageService
             throw new \Exception("Failed to download image: {$url}");
         }
 
-        $contents = $response->body();
+        $manager = ImageManager::usingDriver(Driver::class);
+        $image = $manager->decode($response->body());
+        $encoded = $image->encodeUsingFormat(Format::AVIF, quality: 75);
 
-        $fileName = "products/{$productId}/original/" . uniqid() . ".jpg";
+        $fileName = "products/{$productId}/original/" . uniqid() . ".avif";
 
-        Storage::disk('public')->put($fileName, $contents);
+        Storage::disk('public')->put($fileName, (string) $encoded);
 
         return $fileName;
     }
