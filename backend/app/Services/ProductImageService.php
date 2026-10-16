@@ -27,23 +27,38 @@ class ProductImageService
 
         // already exists
         if ($existing) {
+            $oldPath = $existing->original_url;
+
+            $needsConversion = $oldPath
+            && in_array(strtolower(pathinfo($oldPath, PATHINFO_EXTENSION)), ['jpg', 'jpeg']);
+
+            $fileMissing = !$oldPath
+            || !Storage::disk('public')->exists($oldPath);
+
             $updates = [
                 'position' => $position,
                 'status' => 'queued',
             ];
 
             // Restore the original image if its file is missing.
-            if (
-                empty($existing->original_url) ||
-                !Storage::disk('public')->exists($existing->original_url)
-            ) {
-                $updates['original_url'] = $this->downloadAndStore(
-                    $imageUrl,
-                    $productId
-                );
+            // Or if it needs conversion
+            if ($fileMissing || $needsConversion) {
+                $newPath = $this->downloadAndStore($imageUrl, $productId);
+
+                $updates['original_url'] = $newPath;
             }
 
             $existing->update($updates);
+
+            // delete old files
+            if (
+                isset($newPath)
+                && $oldPath
+                && $oldPath !== $newPath
+                && Storage::disk('public')->exists($oldPath)
+            ) {
+                Storage::disk('public')->delete($oldPath);
+            }
 
             return $existing;
         }
