@@ -2,9 +2,8 @@
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ProductImage from "../product/ProductImage";
-import Image from 'next/image'
 import { useRemoveFromCart } from "@/hooks/use-remove-from-cart";
-import { Trash2 } from "lucide-react";
+import { ImageOff, Trash2 } from "lucide-react";
 import { useUpdateCartItem } from "@/hooks/use-update-cart-item";
 import { CartItemPayload } from "@/types/cart";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
@@ -36,12 +35,12 @@ export function CartItemsDrawer({items}: Props) {
                                     imageClassName="object-cover"
                                 />
                             ) : (
-                                <Image
-                                    src="/products/no_image.png"
-                                    alt={item.title}
-                                    fill
-                                    className="object-cover"
-                                />
+                                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-muted/50">
+                                    <ImageOff
+                                        className="h-8 w-8 text-muted-foreground/40"
+                                        strokeWidth={1.5}
+                                    />
+                                </div>
                             )}
                         </div>
 
