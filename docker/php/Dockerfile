@@ -6,7 +6,8 @@ RUN install-php-extensions \
     redis \
     pcntl \
     bcmath \
-    zip
+    zip \
+    gd
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
