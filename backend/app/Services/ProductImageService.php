@@ -2,16 +2,22 @@
 
 namespace App\Services;
 
+use App\Actions\CreateAppLogAction;
+use App\Enums\AppLogLevelEnum;
+use App\Enums\AppLogRealmEnum;
 use App\Models\ProductImage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Drivers\Vips\Driver;
 use Intervention\Image\Format;
+use Intervention\Image\ImageManager;
 
 class ProductImageService
 {
+    public function __construct(
+        private CreateAppLogAction $createAppLogAction
+    ) {}
     public function syncOriginal(
         int $productId,
         string $imageUrl,
@@ -81,16 +87,72 @@ class ProductImageService
         $response = Http::timeout(30)->get($url);
 
         if (!$response->successful()) {
-            throw new \Exception("Failed to download image: {$url}");
+            throw new \RuntimeException("Failed to download image: {$url}");
         }
 
-        $manager = ImageManager::usingDriver(Driver::class);
-        $image = $manager->decode($response->body());
-        $encoded = $image->encodeUsingFormat(Format::AVIF, quality: 75);
+        $contents = $response->body();
 
-        $fileName = "products/{$productId}/original/" . uniqid() . ".avif";
+        $extension = strtolower(pathinfo(
+            parse_url($url, PHP_URL_PATH) ?? '',
+            PATHINFO_EXTENSION
+        )) ?: 'bin';
 
-        Storage::disk('public')->put($fileName, (string) $encoded);
+        $storedContents = $contents;
+        $reason = null;
+
+        if (strlen($contents) > 20 * 1024 * 1024) {
+            $reason = 'Image download exceeds 20 MiB';
+        } else {
+            $dimensions = @getimagesizefromstring($contents);
+
+            if ($dimensions === false) {
+                $reason = 'Downloaded file is not a valid image';
+            } else {
+                [$width, $height] = $dimensions;
+
+                if (
+                    $width <= 0 ||
+                    $height <= 0 ||
+                    $width * $height > 12_000_000
+                ) {
+                    $reason = "Image dimensions exceed limit: {$width}x{$height}";
+                }
+            }
+        }
+
+        if ($reason === null) {
+            try {
+                $manager = ImageManager::usingDriver(Driver::class);
+                $image = $manager->decode($contents);
+                $encoded = $image->encodeUsingFormat(
+                    Format::AVIF,
+                    quality: 75
+                );
+
+                $storedContents = (string) $encoded;
+                $extension = 'avif';
+            } catch (\Throwable $e) {
+                $reason = 'AVIF conversion failed: ' . $e->getMessage();
+                report($e);
+            }
+        }
+
+        if ($reason !== null) {
+            $this->createAppLogAction->execute(
+                level: AppLogLevelEnum::WARNING,
+                realm: AppLogRealmEnum::PRODUCT,
+                message: "Product ID: {$productId} (image URL: {$url}) — {$reason}; keeping original format.",
+            );
+        }
+
+        $fileName = sprintf(
+            'products/%d/original/%s.%s',
+            $productId,
+            uniqid(),
+            $extension
+        );
+
+        Storage::disk('public')->put($fileName, $storedContents);
 
         return $fileName;
     }
