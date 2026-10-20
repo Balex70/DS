@@ -32,7 +32,6 @@
       "load_more": "Показати більше",
       "loading": "Зачекайте...",
       "product_card": {
-        "no_image": "Немає зображення",
         "add_to_cart": "Додати в кошик",
         "adding": "Додаємо..."
       },
@@ -62,7 +61,6 @@
       "add_to_cart": "Додати в кошик",
       "adding": "Додаємо...",
       "options": "Варіанти",
-      "no_image": "Немає зображення",
       "description_label": "Короткий опис",
       "availability": {
         "checking": "Перевіряємо наявність...",
