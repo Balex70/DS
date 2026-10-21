@@ -12,6 +12,7 @@ import {
   Users,
   UserLock,
   ClipboardClock,
+  LayersArrowUp,
 } from "lucide-react"
 
 const sections = [
@@ -89,6 +90,13 @@ const sections = [
         description: "View application logs",
         href: "/admin/logs",
         icon: ClipboardClock,
+        iconClassName: "bg-slate-100 text-slate-600",
+      },
+      {
+        label: "Queue Jobs",
+        description: "View queue jobs",
+        href: "/admin/queue-jobs",
+        icon: LayersArrowUp,
         iconClassName: "bg-slate-100 text-slate-600",
       },
     ],

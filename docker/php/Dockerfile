@@ -1,5 +1,16 @@
 FROM dunglas/frankenphp as base
 
+# Install native libvips
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libvips \
+    libvips-dev \
+    libvips-tools \
+    libheif-examples \
+    libheif-plugin-aomenc \
+    libheif-plugin-rav1e \
+    libheif-plugin-svtenc \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install PHP extensions
 RUN install-php-extensions \
     pdo_pgsql \
@@ -7,7 +18,11 @@ RUN install-php-extensions \
     pcntl \
     bcmath \
     zip \
-    gd
+    gd \
+    ffi
+
+# Enable FFI for CLI and application processes
+RUN echo "ffi.enable=true" > /usr/local/etc/php/conf.d/ffi.ini
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

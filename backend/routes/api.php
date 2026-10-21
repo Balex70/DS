@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductVariantController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\QueueJobController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\Store\CartController;
 use App\Http\Controllers\Api\Store\CategoryController as StoreCategoryController;
@@ -104,6 +105,11 @@ Route::put('settings', [SettingController::class, 'update'])->middleware('auth:s
 // Logs
 Route::get('app-logs', [AppLogController::class, 'index'])->middleware('auth:sanctum');
 Route::delete('app-logs/{appLog}', [AppLogController::class, 'destroy'])->middleware('auth:sanctum');
+
+// Queue Jobs
+Route::get('queue-jobs', [QueueJobController::class, 'index'])->middleware('auth:sanctum');
+Route::delete('queue-jobs', [QueueJobController::class, 'destroyAll'])->middleware('auth:sanctum');
+Route::delete('queue-jobs/{queueJob}', [QueueJobController::class, 'destroy'])->middleware('auth:sanctum');
 
 // Store Order
 Route::prefix('store')->group(function () {
