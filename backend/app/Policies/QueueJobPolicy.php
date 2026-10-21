@@ -30,4 +30,16 @@ class QueueJobPolicy
 
         return false;
     }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function deleteAll(User $user): bool
+    {
+        if ($user->isAdministrator()) {
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -60,4 +60,16 @@ class QueueJobController extends Controller
 
         return response()->noContent();
     }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroyAll()
+    {
+        Gate::authorize('deleteAll', QueueJob::class);
+
+        QueueJob::query()->delete();
+
+        return response()->noContent();
+    }
 }

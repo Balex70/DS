@@ -108,6 +108,7 @@ Route::delete('app-logs/{appLog}', [AppLogController::class, 'destroy'])->middle
 
 // Queue Jobs
 Route::get('queue-jobs', [QueueJobController::class, 'index'])->middleware('auth:sanctum');
+Route::delete('queue-jobs', [QueueJobController::class, 'destroyAll'])->middleware('auth:sanctum');
 Route::delete('queue-jobs/{queueJob}', [QueueJobController::class, 'destroy'])->middleware('auth:sanctum');
 
 // Store Order

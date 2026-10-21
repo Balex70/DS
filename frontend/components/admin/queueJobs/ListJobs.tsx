@@ -7,12 +7,13 @@ import Loader from '@/components/common/Loader';
 import { JobDrawer } from './JobDrawer';
 import { DeleteJobDrawer } from './DeleteJobDrawer';
 import { JobPagination } from './JobPagination';
-import { getErrorStringFromCatch } from '@/helpers/general';
+import { getCookie, getErrorStringFromCatch } from '@/helpers/general';
 import NotFoundCard from '@/components/common/NotFoundCard';
 import { Meta, Job } from '@/types/job';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
+import { toast } from "sonner";
 
 function ListJobs () {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -25,6 +26,8 @@ function ListJobs () {
   const [search, setSearch] = useState("")
   const [searchFilter, setSearchFilter] = useState("")
   const [error, setError] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false);
+  const [errorDeleting, setErrorDeleting] = useState<string | null>(null)
   
   const fetchJobs = async (params?: {
     page?: number,
@@ -67,6 +70,66 @@ function ListJobs () {
       fetchJobs({ page, search: searchFilter })
   }, [page, searchFilter])
 
+  const handleDelete = async () => {
+      setDeleting(true);
+
+      try {
+          // get the csrf token
+          await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/sanctum/csrf-cookie`, {
+              credentials: 'include',
+          });
+
+          const csrfToken = getCookie('XSRF-TOKEN');
+
+          const headers = {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'X-XSRF-TOKEN': csrfToken!, // get the csrf token
+          };
+
+          // delete jobs
+          const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/queue-jobs`, {
+              method: 'DELETE',
+              credentials: 'include',
+              headers: headers,
+              cache: 'no-cache', // 'no-cache' if you want it fresh each time
+          })
+
+          if (!res.ok) {
+              const contentType = res.headers.get('content-type') || '';
+              if (contentType.includes('application/json')) {
+                  const errorJson = await res.json();
+                  if (Array.isArray(errorJson.errors)) {
+                      errorJson.errors.forEach((error: string, index: number) => {
+                          setTimeout(() => toast.error(error), index * 2000);
+                      });
+                      return;
+                  } else {
+                      toast.error(errorJson.errors || 'Unknown API error');
+                      return;
+                  }
+              } else {
+                  // HTML / text response → system-level issue (not for client)
+                  const rawText = await res.text();
+                  setErrorDeleting(rawText.slice(0, 400))
+                  return;
+              }
+          }
+
+          toast.success("Deleted jobs successfully");
+          fetchJobs({ page, search: searchFilter })
+      } catch (err: unknown) {
+          setErrorDeleting(getErrorStringFromCatch(err))
+      } finally {
+          setDeleting(false);
+      }
+  };
+
+  if (errorDeleting) {
+      toast.error(errorDeleting)
+      setErrorDeleting(null)
+  }
+
   if (error) {
     return (
       <NotFoundCard
@@ -78,6 +141,11 @@ function ListJobs () {
 
   return (
     <div className="w-full main-bg flex flex-col border-b-0 rounded-none">
+      <div className="flex justify-start mb-2">
+          <Button onClick={handleDelete} disabled={deleting}>
+          {deleting ? "Deleting..." : "Delete all jobs!!!"}
+          </Button>
+      </div>
       <form
         className="mb-4 flex items-center gap-2"
         onSubmit={(event) => {
