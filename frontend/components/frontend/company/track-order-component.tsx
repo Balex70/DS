@@ -38,6 +38,7 @@ const Field = ({
 // Standardized translation keys for tracking statuses
 export type TrackingStatusKey =
   | 'processing'
+  | 'en_route'
   | 'info_received'
   | 'in_transit'
   | 'out_for_delivery'
@@ -50,6 +51,7 @@ export type TrackingStatusKey =
 const STATUS_MAP: Record<string, TrackingStatusKey> = {
   // REST API String Statuses
   'processing': 'processing',
+  'en route': 'in_transit',
   'info received': 'info_received',
   'pending': 'info_received',
   'in transit': 'in_transit',
@@ -69,11 +71,57 @@ export function getTrackingStatusKey(status: string | number | null | undefined)
   return STATUS_MAP[normalized] ?? 'unknown';
 }
 
-const getTrackingRemarkKey = (remark: string) => {
-    const normalized = remark.trim().toLowerCase();
+const parseTrackingRemark = (
+    remark: string,
+): {
+    key: string;
+    params?: Record<string, string>;
+} | null => {
+    const normalized = remark.trim();
 
-    if (normalized.startsWith("label created.")) {
-        return "label_created";
+    if (/^label created\./i.test(normalized)) {
+        return { key: "label_created" };
+    }
+
+    const preShipment = normalized.match(
+        /^pre-shipment info sent to (.+)$/i,
+    );
+
+    if (preShipment) {
+        return {
+            key: "pre_shipment_info_sent",
+            params: { country: preShipment[1] },
+        };
+    }
+
+    const acceptance = normalized.match(
+        /^acceptance, sent to (.+)$/i,
+    );
+
+    if (acceptance) {
+        return {
+            key: "acceptance_sent",
+            params: { country: acceptance[1] },
+        };
+    }
+
+    const departed = normalized.match(
+        /^departed sunyou facility,\s*carrier tracking number:\s*(.+)$/i,
+    );
+
+    if (departed) {
+        return {
+            key: "departed_sunyou_facility",
+            params: { trackingNumber: departed[1].trim() },
+        };
+    }
+
+    if (/^export customs clearance completed successfully\.?$/i.test(normalized)) {
+        return { key: "export_customs_clearance_completed" };
+    }
+
+    if (/^arrived at the port of origin\.?$/i.test(normalized)) {
+        return { key: "arrived_at_port_of_origin" };
     }
 
     return null;
@@ -292,8 +340,8 @@ export function TrackOrderComponent() {
                                                 {t('footer.track_order.tracking_history')}
                                             </h3>
                                             {tracking.routes.map((route, index) => {
-                                                const key = route.remark
-                                                    ? getTrackingRemarkKey(route.remark)
+                                                const parsedRemark = route.remark
+                                                    ? parseTrackingRemark(route.remark)
                                                     : null;
 
                                                 return (
@@ -309,9 +357,12 @@ export function TrackOrderComponent() {
                                                         </div>
                                                         <div className="min-w-0 flex-1 space-y-1 pb-4">
                                                             <p className="text-sm font-medium">
-                                                                {key
-                                                                ? t(`footer.track_order.tracking_history_messages.${key}`)
-                                                                : route.remark || "Tracking update"}
+                                                                {parsedRemark
+                                                                    ? t(
+                                                                        `footer.track_order.tracking_history_messages.${parsedRemark.key}`,
+                                                                        parsedRemark.params,
+                                                                    )
+                                                                    : route.remark || "Tracking update"}
                                                             </p>
                                                             {route.acceptTime && (
                                                                 <p className="text-xs text-muted-foreground">
