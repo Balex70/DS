@@ -92,7 +92,7 @@ export function ProductDetail({
                     {title}
                 </h1>
 
-                <div className="text-3xl font-bold flex-col">
+                <div className="text-3xl font-bold flex-col text-red-500">
                     <PriceRenderer value={selectedVariant?.price ?? product.price} className="text-2xl font-semibold"/>
                     {(currency !== "USD" && selectedVariant?.currency_price && product.currency_price) && (
                         <span className="ml-2 text-sm font-normal text-muted-foreground">
@@ -151,7 +151,7 @@ export function ProductDetail({
                     <button
                         onClick={handleAddToCart}
                         disabled={isPending || isStockUpdating || stock === 0}
-                        className="rounded-md bg-black px-4 py-2 text-white hover:opacity-90 disabled:opacity-50"
+                        className="rounded-md bg-green-600 px-4 py-2 text-white hover:opacity-90 disabled:opacity-50"
                     >
                         {isPending ? t('product.adding') : t('product.add_to_cart')}
                     </button>
