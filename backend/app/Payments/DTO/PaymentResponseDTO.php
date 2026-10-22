@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Payments\DTO;
 
 class PaymentResponseDTO
@@ -8,5 +9,6 @@ class PaymentResponseDTO
         public readonly ?string $transactionId,
         public readonly ?string $redirectUrl,
         public readonly array $payload = [],
-    ) {}
+    ) {
+    }
 }

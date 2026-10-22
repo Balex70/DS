@@ -162,7 +162,7 @@ class LiqPayGateway extends AbstractGateway
         ]);
 
         PaymentChangedStatus::dispatch($payment->order, $statusToUpdate);
-        if($statusToUpdate === PaymentStatusEnum::PAID) {
+        if ($statusToUpdate === PaymentStatusEnum::PAID) {
             Mail::to($payment->order->shipping_email)->queue(new ClientOrderPaid($payment->order));
             Mail::to(config('mail.admin_address'))->queue(new AdminOrderPaid($payment->order));
         }
@@ -170,8 +170,7 @@ class LiqPayGateway extends AbstractGateway
 
     private function mapStatus(string $status): PaymentStatusEnum
     {
-        return match ($status) {
-
+        $result = match ($status) {
             /*
             * Success
             */
@@ -221,6 +220,7 @@ class LiqPayGateway extends AbstractGateway
 
             default => PaymentStatusEnum::PENDING,
         };
+        return $result;
     }
 
     public function updateStatus(string $transactionId): bool
@@ -256,7 +256,7 @@ class LiqPayGateway extends AbstractGateway
 
             PaymentChangedStatus::dispatch($payment->order, $statusToUpdate);
 
-            if($statusToUpdate === PaymentStatusEnum::PAID) {
+            if ($statusToUpdate === PaymentStatusEnum::PAID) {
                 Mail::to($payment->order->shipping_email)->queue(new ClientOrderPaid($payment->order));
                 Mail::to(config('mail.admin_address'))->queue(new AdminOrderPaid($payment->order));
             }
@@ -271,22 +271,26 @@ class LiqPayGateway extends AbstractGateway
         }
     }
 
-    public function refund(string $transactionId, float $amount): bool {
+    public function refund(string $transactionId, float $amount): bool
+    {
         return false;
     }
 
-    public function supportsCountry(string $country): bool {
+    public function supportsCountry(string $country): bool
+    {
         return in_array($country, self::SUPPORTED_COUNTRIES, true);
     }
 
-    public function supportsCurrency(string $currency): bool {
+    public function supportsCurrency(string $currency): bool
+    {
         return in_array(
             $currency,
             [CurrenciesEnum::USD->value, CurrenciesEnum::UAH->value],
         );
     }
 
-    public function supportsMethod(array $methods): bool {
+    public function supportsMethod(array $methods): bool
+    {
         return true;
     }
 

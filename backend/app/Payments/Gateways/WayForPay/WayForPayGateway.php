@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Payments\Gateways\WayForPay;
 
 use App\Enums\CurrenciesEnum;
