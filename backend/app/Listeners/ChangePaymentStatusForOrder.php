@@ -24,14 +24,16 @@ class ChangePaymentStatusForOrder
     public function handle(PaymentChangedStatus $event): void
     {
         $order = $event->order->fresh();
+
+        $immutableStatuses = [
+            OrderStatusEnum::CANCELED,
+            OrderStatusEnum::REFUNDED,
+            OrderStatusEnum::SHIPPED,
+            OrderStatusEnum::DELIVERED,
+        ];
         try {
             // Change payment status only if the order is not canceled or refunded or shipped or delivered
-            if (in_array($order->status, [
-                OrderStatusEnum::CANCELED,
-                OrderStatusEnum::REFUNDED,
-                OrderStatusEnum::SHIPPED,
-                OrderStatusEnum::DELIVERED
-            ], true)) {
+            if (in_array($order->status, $immutableStatuses, true)) {
                 $this->createAppLogAction->execute(
                     AppLogLevelEnum::WARNING,
                     AppLogRealmEnum::ORDER,
@@ -47,13 +49,13 @@ Order status [{$order->status->value}] does not allow payment status changes."
             ]);
 
             $this->createAppLogAction->execute(
-                    AppLogLevelEnum::SUCCESS,
-                    AppLogRealmEnum::ORDER,
-                    "Payment status changed for:
+                AppLogLevelEnum::SUCCESS,
+                AppLogRealmEnum::ORDER,
+                "Payment status changed for:
 Order: {$order->id}
 Old status: " . $oldStatus->value . "
 New status: " . $order->payment_status->value
-                );
+            );
         } catch (\Throwable $e) {
             $this->createAppLogAction->execute(
                 AppLogLevelEnum::ERROR,
