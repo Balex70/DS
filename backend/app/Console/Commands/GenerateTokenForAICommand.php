@@ -17,7 +17,7 @@ class GenerateTokenForAICommand extends Command
     public function handle()
     {
         $user = User::where('email', env('SUPER_ADMIN_EMAIL'))->first();
-        
+
         $token = $user->createToken('ai-worker', [
             'ai:texts',
             'ai:images',
