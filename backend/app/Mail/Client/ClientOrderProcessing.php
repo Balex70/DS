@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\App;
 
 class ClientOrderProcessing extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Create a new message instance.
