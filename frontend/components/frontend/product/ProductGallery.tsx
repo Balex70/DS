@@ -14,7 +14,7 @@ import ProductImage from "./ProductImage";
 import { cn } from "@/lib/utils";
 import { ProductImageType } from "@/types/product";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 type Props = {
@@ -73,7 +73,10 @@ export default function ProductGallery({
     if (!galleryImages.length) {
         return (
             <div className="flex aspect-square items-center justify-center rounded-lg border bg-muted text-muted-foreground">
-                {t('product.not_image')}
+                <ImageOff
+                    className="h-12 w-12 text-muted-foreground/40"
+                    strokeWidth={1.5}
+                />
             </div>
         );
     }
