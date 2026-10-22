@@ -8,7 +8,8 @@ class SyncCurrenciesAction
 {
     public function __construct(
         private CurrencyManager $manager
-    ) {}
+    ) {
+    }
 
     public function execute(): void
     {

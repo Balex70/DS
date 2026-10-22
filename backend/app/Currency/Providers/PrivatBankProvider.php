@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Currency\Providers;
 
 use App\Actions\CreateAppLogAction;
@@ -15,7 +16,8 @@ class PrivatBankProvider implements CurrencyProviderInterface
     public function __construct(
         private PrivatBankApi $privatBankApi,
         private CreateAppLogAction $createAppLogAction
-    ) {}
+    ) {
+    }
 
     public function supports(string $from, string $to): bool
     {
@@ -37,7 +39,7 @@ class PrivatBankProvider implements CurrencyProviderInterface
             provider: 'privatbank',
         );
     }
-    
+
     public function syncRate(CurrenciesEnum $from = CurrenciesEnum::USD, CurrenciesEnum $to = CurrenciesEnum::UAH): void
     {
         try {
@@ -52,12 +54,12 @@ class PrivatBankProvider implements CurrencyProviderInterface
             ], ['from_currency', 'to_currency'], ['rate', 'rate_updated_at']);
 
             $this->createAppLogAction->execute(
-                    AppLogLevelEnum::SUCCESS,
-                    AppLogRealmEnum::CURRENCY,
-                    "Currency sync completed for provider [PrivatBank]
+                AppLogLevelEnum::SUCCESS,
+                AppLogRealmEnum::CURRENCY,
+                "Currency sync completed for provider [PrivatBank]
 From: " . $from->value . " To: " . $to->value . "
 Rate: " . $rate
-                );
+            );
         } catch (\Throwable $e) {
             $this->createAppLogAction->execute(
                 AppLogLevelEnum::ERROR,
