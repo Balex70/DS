@@ -400,7 +400,7 @@ export function TrackOrderComponent() {
 
                 <Button
                     disabled={isLoading || !trackNumber.trim()}
-                    className="w-full"
+                    className="w-full bg-green-600 hover:bg-green-600/90 disabled:bg-gray-500"
                     onClick={() => handleTrackInfo(trackNumber)}
                 >
                     {t('footer.track_order.track_button')}

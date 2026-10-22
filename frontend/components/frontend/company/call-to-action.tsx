@@ -23,7 +23,7 @@ export function CallToAction() {
                         </p>
                     </div>
 
-                    <Button asChild size="lg">
+                    <Button asChild size="lg" className="bg-green-600 hover:bg-green-600/90">
                         <Link href="/contact">
                             {t('call_to_action.button_text')}
                         </Link>

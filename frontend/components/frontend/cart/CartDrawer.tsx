@@ -130,7 +130,7 @@ export function CartDrawer({
                         <div className="space-y-2">
                             <Button
                                 asChild
-                                className="w-full"
+                                className="w-full bg-green-600 hover:bg-green-600/90 disabled:opacity-50"
                             >
                                 <Link
                                     href="/checkout"
