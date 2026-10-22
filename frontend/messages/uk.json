@@ -392,7 +392,12 @@
           "unknown": "Невідомиий статус"
         },
         "tracking_history_messages": {
-          "label_created": "Етикетку створено. Склад обробляє ваше замовлення. Будь ласка, зачекайте."
+          "label_created": "Етикетку створено. Склад обробляє ваше замовлення. Будь ласка, зачекайте.",
+          "pre_shipment_info_sent": "Інформацію про відправлення надіслано до {country}.",
+          "acceptance_sent": "Відправлення прийнято та надіслано до {country}.",
+          "departed_sunyou_facility": "Відправлення залишило сортувальний центр Sunyou. Номер відстеження перевізника: {trackingNumber}.",
+          "export_customs_clearance_completed": "Митне оформлення експорту успішно завершено.",
+          "arrived_at_port_of_origin": "Відправлення прибуло до порту відправлення."
         }
       },
       "payment_methods_section": {
