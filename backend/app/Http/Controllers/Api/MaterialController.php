@@ -17,7 +17,7 @@ class MaterialController extends Controller
     public function index(Request $request)
     {
         Gate::authorize('viewAny', Material::class);
-        
+
         $query = Material::query()
             ->with(['translations'])
             ->latest();

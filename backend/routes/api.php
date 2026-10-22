@@ -75,7 +75,6 @@ Route::prefix('customer')->group(function () {
 
     Route::get('/auth/google/redirect', [CustomerController::class, 'googleRedirect']);
     Route::get('/auth/google/callback', [CustomerController::class, 'googleCallback']);
-
 });
 
 // Orders

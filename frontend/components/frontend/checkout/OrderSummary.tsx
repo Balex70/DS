@@ -255,7 +255,7 @@ export function OrderSummary({
                 </div>
 
                 <Button
-                    className="mt-6 w-full"
+                    className="mt-6 w-full bg-green-600 hover:bg-green-600/90 disabled:bg-gray-500"
                     onClick={handleSubmit}
                     disabled={isDisabled}
                 >

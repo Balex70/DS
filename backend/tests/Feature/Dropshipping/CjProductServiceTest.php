@@ -49,7 +49,7 @@ class CjProductServiceTest extends TestCase
             ],
         ], $result);
     }
-    
+
     public function test_returns_mapped_products()
     {
         $apiResponse = [
@@ -103,7 +103,7 @@ class CjProductServiceTest extends TestCase
             ],
         ], $result);
     }
-    
+
     public function test_returns_product_details()
     {
         $apiResponse = [

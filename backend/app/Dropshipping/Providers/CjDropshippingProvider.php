@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Dropshipping\Providers;
 
 use App\Dropshipping\Contracts\DropshippingProviderInterface;
@@ -12,7 +13,8 @@ class CjDropshippingProvider implements DropshippingProviderInterface
         private CjCategoryService $categories,
         private CjProductService $products,
         private CjOrderService $order
-    ) {}
+    ) {
+    }
 
     public function getName(): string
     {
@@ -70,7 +72,7 @@ class CjDropshippingProvider implements DropshippingProviderInterface
     {
         // CJ-specific logic
     }
-    
+
     public function deactivateProduct(string $externalId): bool
     {
         // CJ-specific logic

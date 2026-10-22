@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Payments\Services;
 
 use App\Payments\DTO\PaymentRequestDTO;

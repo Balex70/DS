@@ -13,7 +13,8 @@ class CurrencyController extends Controller
 {
     public function __construct(
         private CurrencyManager $manager
-    ) {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
@@ -26,7 +27,7 @@ class CurrencyController extends Controller
             Currency::all()
         );
     }
-    
+
     public function syncRate()
     {
         $this->manager->syncRate();

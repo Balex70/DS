@@ -18,7 +18,7 @@ class CategorySeeder extends Seeder
             ['name' => 'Jewelry'],
             ['name' => 'Car parts']
         ];
-    
+
         foreach ($items as $item) {
             Category::create($item);
         }

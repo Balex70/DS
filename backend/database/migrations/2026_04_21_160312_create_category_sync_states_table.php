@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('category_sync_states', function (Blueprint $table) {
             $table->id();
-            
+
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->integer('page')->default(0);
             $table->timestamp('last_run_at')->nullable();

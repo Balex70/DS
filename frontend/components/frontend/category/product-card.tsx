@@ -65,7 +65,7 @@ export function ProductCard({ product }: Props) {
                 </h3>
 
                 <div className="mt-auto space-y-2">
-                    <div className="text-lg font-semibold">
+                    <div className="text-lg font-semibold text-red-500">
                         <PriceRenderer value={product.price} />
                         {(currency !== "USD" && product.currency_price) && (
                             <div className="text-sm font-normal text-muted-foreground">
@@ -79,13 +79,13 @@ export function ProductCard({ product }: Props) {
                         )}
                     </div>
 
-                    <button
+                    {/* <button
                         onClick={handleAddToCart}
                         disabled={isPending}
                         className="rounded-md bg-black px-4 py-2 text-white hover:opacity-90 disabled:opacity-50"
                     >
                         {isPending ? t('category.product_card.adding') : t('category.product_card.add_to_cart')}
-                    </button>
+                    </button> */}
                 </div>
             </CardContent>
         </Card>

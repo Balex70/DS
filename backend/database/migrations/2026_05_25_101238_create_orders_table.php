@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('ds_provider')->default('cj');
             $table->string('ds_order_id')->nullable()->index();
             $table->string('ds_tracking_number')->nullable()->index();
-            $table->string('ds_status')->nullable(); 
+            $table->string('ds_status')->nullable();
             // e.g. pending, paid, processing, shipped, delivered, failed
 
             // Financials (snapshot at time of order)

@@ -13,7 +13,8 @@ class RetryOrDeleteFailedProductEnrichmentAction
     public function __construct(
         private ProductService $productService,
         private CreateAppLogAction $createAppLogAction
-    ) {}
+    ) {
+    }
 
     public function execute(): void
     {

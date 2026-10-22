@@ -24,7 +24,7 @@ class UpdateProductVariantRequest extends FormRequest
         return [
             'name_raw' => ['sometimes', 'string', 'max:255'],
             'name_processed' => ['sometimes', 'string', 'max:255'],
-            
+
             'price' => ['sometimes', 'numeric'],
             'translations' => ['sometimes', 'array'],
         ];

@@ -20,7 +20,8 @@ class SyncCategoryProductsAction
         private SettingService $setting,
         private CreateAppLogAction $createAppLogAction,
         private ProductService $productService
-    ) {}
+    ) {
+    }
 
     public function execute(string $categoryId): void
     {
@@ -113,7 +114,9 @@ class SyncCategoryProductsAction
                 foreach ($rows as $row) {
                     $product = $products[$row['external_id']] ?? null;
 
-                    if (!$product) continue;
+                    if (!$product) {
+                        continue;
+                    }
 
                     $pivotRows[] = [
                         'product_id' => $product->id,

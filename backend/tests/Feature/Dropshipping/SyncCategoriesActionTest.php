@@ -114,9 +114,9 @@ class SyncCategoriesActionTest extends TestCase
             'name' => 'Parent',
             'parent_id' => null,
         ]);
-        
+
         $parent = Category::where('external_id', 'parent-1')->first();
-        
+
         $this->assertDatabaseHas('categories', [
             'external_id' => 'child-1',
             'name' => 'Child',

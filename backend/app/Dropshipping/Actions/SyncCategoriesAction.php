@@ -14,7 +14,8 @@ class SyncCategoriesAction
     public function __construct(
         private DropshippingManager $manager,
         private CreateAppLogAction $createAppLogAction
-    ) {}
+    ) {
+    }
 
     public function execute(): void
     {

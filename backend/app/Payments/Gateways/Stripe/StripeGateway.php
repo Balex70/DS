@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Payments\Gateways\Stripe;
 
 use App\Enums\CurrenciesEnum;

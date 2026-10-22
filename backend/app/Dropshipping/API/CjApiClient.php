@@ -11,12 +11,13 @@ class CjApiClient
 
     public function __construct(
         private CjAuthService $authService
-    ) {}
+    ) {
+    }
 
     public function getCategories(): array
     {
         $token = $this->authService->getValidAccessToken();
-        if(!$token) {
+        if (!$token) {
             throw new \Exception('CJ authentication failed: no valid token available');
         }
 
@@ -37,7 +38,7 @@ class CjApiClient
     public function getProducts(string $categoryId, int $page, int $size = 10): array
     {
         $token = $this->authService->getValidAccessToken();
-        if(!$token) {
+        if (!$token) {
             throw new \Exception('CJ authentication failed: no valid token available');
         }
 
@@ -62,7 +63,7 @@ class CjApiClient
     public function getProductDetails(string $externalProductId): array
     {
         $token = $this->authService->getValidAccessToken();
-        if(!$token) {
+        if (!$token) {
             throw new \Exception('CJ authentication failed: no valid token available');
         }
 
@@ -85,7 +86,7 @@ class CjApiClient
     public function getVariantStock(string $variantId): array
     {
         $token = $this->authService->getValidAccessToken();
-        if(!$token) {
+        if (!$token) {
             throw new \Exception('CJ authentication failed: no valid token available');
         }
 

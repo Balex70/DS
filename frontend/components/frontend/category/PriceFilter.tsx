@@ -48,6 +48,7 @@ export function PriceFilter({
                         onChange(v as [number, number]);
                     }
                 }
+                className="[&_[data-slot=slider-range]]:bg-sky-800 [&_[data-slot=slider-thumb]]:border-sky-800"
             />
             <div className="flex items-center gap-2">
                 $
@@ -108,7 +109,7 @@ export function PriceFilter({
             </div>
             {buttonActive &&
                 <Button
-                    className="w-full mb-0"
+                    className="w-full mb-0 bg-sky-800 hover:bg-sky-800/90 disabled:bg-gray-500"
                     onClick={() => {
                         // trigger request to backend with actual price data
                         setPriceApplied()

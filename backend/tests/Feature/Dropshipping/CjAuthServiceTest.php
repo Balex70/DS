@@ -11,6 +11,7 @@ use Tests\TestCase;
 class CjAuthServiceTest extends TestCase
 {
     use RefreshDatabase;
+
     public function test_returns_valid_token_from_database()
     {
         CjToken::factory()->create([

@@ -41,6 +41,7 @@ export type ProductImageType = {
   id: string,
   url: string,
   original_url: string,
+  thumbnail_url: string,
   position: number,
   status: string
 }

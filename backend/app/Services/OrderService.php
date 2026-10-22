@@ -11,12 +11,13 @@ class OrderService
 {
     public function __construct(
         private DropshippingManager $manager,
-    ) {}
-    
+    ) {
+    }
+
     public function sendOrder(Order $order)
     {
         $provider = $this->manager->driver();
-        
+
         $payload = [
             'order_number' => $order->id,
             'shipping' => [
@@ -35,7 +36,7 @@ class OrderService
             'shipping_method' => $order->shipping_method,
             'from_country_code' => 'CN',
             'orderFlow' => 1, // use vid instead sku
-            
+
             'is_sandbox' => config('dropshipping.sandbox') ? 1 : 0,
 
             'items' => array_map(function ($item) {
@@ -44,9 +45,9 @@ class OrderService
                     'quantity' => $item['quantity'],
                 ];
             }, $order->items->toArray()),
-            
+
         ];
-        
+
         $provider->createOrder($payload);
     }
 
@@ -66,7 +67,7 @@ class OrderService
         $provider = $this->manager->driver();
 
         // Comment this line if you want test tracking info
-        if($order->ds_tracking_number === null) {
+        if ($order->ds_tracking_number === null) {
             return [
                 'success' => false,
                 'message' => 'DS tracing number not found!'
@@ -84,7 +85,7 @@ class OrderService
     {
         $provider = $this->manager->driver();
 
-        if($order->ds_order_id === null) {
+        if ($order->ds_order_id === null) {
             return [
                 'success' => false,
                 'message' => 'DS order ID not found!'
@@ -98,7 +99,8 @@ class OrderService
         return $provider->simulatePayOrder($payload);
     }
 
-    public function toOrderStatus(string $dsStatus): OrderStatusEnum {
+    public function toOrderStatus(string $dsStatus): OrderStatusEnum
+    {
         // https://developers.cjdropshipping.com/en/api/api2/api/shopping.html#order-status
         // TODO: create mappers for each ds providers
         return match ($dsStatus) {
@@ -122,7 +124,8 @@ class OrderService
         };
     }
 
-    public function toDsStatus(string $dsStatus): OrderDsStatusEnum {
+    public function toDsStatus(string $dsStatus): OrderDsStatusEnum
+    {
         // https://developers.cjdropshipping.com/en/api/api2/api/shopping.html#order-status
         // TODO: create mappers for each ds providers
         return match ($dsStatus) {

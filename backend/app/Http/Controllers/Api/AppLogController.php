@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\Gate;
 
 class AppLogController extends Controller
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -30,7 +33,7 @@ class AppLogController extends Controller
 
             $query->whereIn('level', $levels);
         }
-        
+
         if ($request->filled('realms')) {
             $realms = explode(',', $request->realms);
 

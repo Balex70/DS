@@ -11,7 +11,8 @@ class CjProductService
     public function __construct(
         private CjApiClient $client,
         private CjProductMapper $mapper
-    ) {}
+    ) {
+    }
 
     public function get(string $categoryId, int $page, int $size = 10): array
     {
