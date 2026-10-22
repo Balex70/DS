@@ -90,6 +90,12 @@ backend-test:
 testo:
 	bin/artisan test tests/Feature/Dropshipping/RetryOrDeleteFailedProductEnrichmentActionTest.php
 
+phpcs:
+	$(DOCKER_COMPOSE) exec backend ./vendor/bin/phpcs
+
+# phpcbf:
+# 	$(DOCKER_COMPOSE) exec backend ./vendor/bin/phpcbf
+
 lint:
 	$(DOCKER_COMPOSE) exec frontend /bin/sh -c "npm run lint"
 
