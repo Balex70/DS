@@ -15,6 +15,8 @@ use Laravel\Sanctum\HasApiTokens;
 class Customer extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\CustomerFactory> */
-    use HasFactory, HasApiTokens, Notifiable, SoftDeletes;
-
+    use HasFactory;
+    use HasApiTokens;
+    use Notifiable;
+    use SoftDeletes;
 }

@@ -11,8 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CategorySyncState extends Model
 {
     use HasFactory;
-    //
-    
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

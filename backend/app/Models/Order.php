@@ -29,7 +29,10 @@ use Laravel\Sanctum\HasApiTokens;
 class Order extends Model
 {
     /** @use HasFactory<\Database\Factories\OrderFactory> */
-    use HasFactory, HasApiTokens, Notifiable, SoftDeletes;
+    use HasFactory;
+    use HasApiTokens;
+    use Notifiable;
+    use SoftDeletes;
 
     protected function casts(): array
     {
