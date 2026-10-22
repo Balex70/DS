@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\Store;
 
 use App\Enums\CurrenciesEnum;
@@ -17,7 +18,9 @@ class PaymentController extends Controller
 {
     public function __construct(
         private PaymentManager $manager
-    ) {}
+    ) {
+    }
+
     public function create(Request $request, Order $order, CartService $cartService)
     {
         // abort_unless($order->customer_id === $request->user()->id, 403);
@@ -28,7 +31,7 @@ class PaymentController extends Controller
 
         $gateway = $this->manager->driver($data['payment_method']);
         $language = 'en';
-        if($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
+        if ($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
             $locale = $request->locale ?? 'en';
 
             $language = $locale;

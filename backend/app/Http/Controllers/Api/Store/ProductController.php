@@ -17,7 +17,9 @@ class ProductController extends Controller
     public function __construct(
         private ProductService $service,
         private PriceConverter $converter
-    ) {}
+    ) {
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -26,7 +28,7 @@ class ProductController extends Controller
         $query = $this->service->baseCategoryQuery($request);
         $query->with('cheapestVariant');
 
-        if($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
+        if ($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
             $locale = $request->locale ?? 'en';
 
             $query->with([
@@ -41,7 +43,7 @@ class ProductController extends Controller
             default => $query->latest(),
         };
 
-        if($request->filled('price') && count($request->price) === 2) {
+        if ($request->filled('price') && count($request->price) === 2) {
             $query->whereBetween('price', [
                 $request->price[0],
                 $request->price[1],
@@ -56,7 +58,7 @@ class ProductController extends Controller
             // });
         }
 
-        if($request->filled('activeMaterials')) {
+        if ($request->filled('activeMaterials')) {
             $query->whereHas('materials', function ($q) use ($request) {
                 $q->whereIn('materials.id', $request->activeMaterials);
             });
@@ -64,7 +66,7 @@ class ProductController extends Controller
 
         $products = $query->paginate(24);
 
-        if($request->filled('currency')) {
+        if ($request->filled('currency')) {
             $products->each(function (Product $product) use ($request) {
                 $product->currency_price = $this->converter->convert(
                     $product->price,
@@ -95,7 +97,7 @@ class ProductController extends Controller
             'translations'
         ]);
 
-        if($request->filled('currency')) {
+        if ($request->filled('currency')) {
             $product->currency_price = $this->converter->convert(
                 $product->price,
                 CurrenciesEnum::USD->value,
@@ -132,7 +134,7 @@ class ProductController extends Controller
             ->whereHas('products', function ($q) use ($productIds) {
                 $q->whereIn('products.id', $productIds);
             });
-        if($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
+        if ($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
             $locale = $request->locale ?? 'en';
 
             $materialsQuery->with([
@@ -165,7 +167,7 @@ class ProductController extends Controller
         });
         $query->with('cheapestVariant');
 
-        if($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
+        if ($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
             $locale = $request->locale ?? 'en';
 
             $query->with([
@@ -176,7 +178,7 @@ class ProductController extends Controller
         $query->latest();
         $latestProducts = $query->limit(5)->get();
 
-        if($request->filled('currency')) {
+        if ($request->filled('currency')) {
             $latestProducts->each(function (Product $product) use ($request) {
                 $product->currency_price = $this->converter->convert(
                     $product->price,

@@ -17,8 +17,8 @@ class CategoryController extends Controller
     public function __construct(
         protected CategoryService $categoryService,
         private PriceConverter $converter
-    )
-    {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
@@ -62,7 +62,7 @@ class CategoryController extends Controller
                     'bigImage',
                 ]);
 
-            if($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
+            if ($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
                 $locale = $request->locale ?? 'en';
 
                 $productsQuery->with([
@@ -74,7 +74,7 @@ class CategoryController extends Controller
                 ->limit(8)
                 ->get();
 
-            if($request->filled('currency')) {
+            if ($request->filled('currency')) {
                 $products->each(function (Product $product) use ($request) {
                     $product->currency_price = $this->converter->convert(
                         $product->price,
