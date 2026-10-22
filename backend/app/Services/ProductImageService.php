@@ -66,10 +66,7 @@ class ProductImageService
             $existing->update($updates);
 
             // delete old files
-            foreach ([
-                $oldPath,
-                $oldThumbnailPath,
-            ] as $oldFile) {
+            foreach ([$oldPath, $oldThumbnailPath] as $oldFile) {
                 if (
                     isset($newPath)
                     && $oldFile
