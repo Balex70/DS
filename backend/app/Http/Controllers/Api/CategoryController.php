@@ -22,8 +22,8 @@ class CategoryController extends Controller
     public function __construct(
         protected CjCategoryService $categories,
         protected CategoryService $categoryService
-        )
-    {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
@@ -118,14 +118,16 @@ class CategoryController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function getCategorySyncState(Category $category) {
+    public function getCategorySyncState(Category $category)
+    {
         return [
             'success' => true,
             'data' => $category->syncState
         ];
     }
 
-    public function resetCategorySyncState(Category $category) {
+    public function resetCategorySyncState(Category $category)
+    {
         $syncState = CategorySyncState::updateOrCreate(
             ['category_id' => $category->id],
             [

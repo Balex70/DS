@@ -54,7 +54,8 @@ class CategoryService
         );
     }
 
-    public function recalculateCategoryVisibility() {
+    public function recalculateCategoryVisibility()
+    {
         $categories = Category::all()->keyBy('id');
 
         $children = [];
@@ -73,7 +74,6 @@ class CategoryService
     private function updateChildren(array $children, ?int $parentId, bool $parentVisible): void
     {
         foreach ($children[$parentId] ?? [] as $category) {
-
             $visible = $parentVisible && $category->active;
 
             $category->update([

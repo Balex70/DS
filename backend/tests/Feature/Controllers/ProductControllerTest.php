@@ -14,7 +14,7 @@ use Tests\TestCase;
 class ProductControllerTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     protected User $superadmin;
     protected User $admin;
     protected User $editor;
@@ -84,7 +84,7 @@ class ProductControllerTest extends TestCase
 
         $response->assertUnauthorized();
     }
-    
+
     // UPDATE TESTS
     public function test_superadmin_can_update_product()
     {
@@ -119,7 +119,7 @@ class ProductControllerTest extends TestCase
             'id' => $product->id,
             'name_processed' => 'Updated',
         ]);
-        
+
         $this->assertDatabaseHas('product_translations', [
             'product_id' => $product->id,
             'locale' => 'uk',
@@ -205,7 +205,7 @@ class ProductControllerTest extends TestCase
 
         $response->assertForbidden();
     }
-    
+
     // DELETE TESTS
     public function test_superadmin_can_delete_product()
     {
@@ -238,12 +238,12 @@ class ProductControllerTest extends TestCase
 
         $response->assertForbidden();
     }
-    
+
     // ENRICH TESTS
     public function test_superadmin_can_enrich_product()
     {
         $product = Product::factory()->create();
-        
+
         $productServiceMock = $this->mock(ProductService::class);
         $productServiceMock
             ->shouldReceive('enrichProduct')
@@ -300,7 +300,7 @@ class ProductControllerTest extends TestCase
 
         $response->assertForbidden();
     }
-    
+
     // AI TEXTS NEXT
     public function test_ai_texts_next_returns_next_queued_product()
     {
@@ -382,7 +382,7 @@ class ProductControllerTest extends TestCase
 
         $response->assertStatus(403);
     }
-    
+
     // AI TEXTS COMPLETE
     public function test_ai_texts_complete_updates_product()
     {
@@ -409,7 +409,7 @@ class ProductControllerTest extends TestCase
             'ai_status' => ProductAiStatusEnum::DONE,
         ]);
     }
-    
+
     public function test_ai_texts_complete_fails_without_token()
     {
         $product = Product::factory()->create([
@@ -481,7 +481,7 @@ class ProductControllerTest extends TestCase
 
         $response->assertStatus(403);
     }
-    
+
     // FILTERS
     public function test_can_filter_enriched_products(): void
     {

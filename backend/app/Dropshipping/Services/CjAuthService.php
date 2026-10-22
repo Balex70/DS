@@ -28,7 +28,7 @@ class CjAuthService
 
         throw new \Exception('CJ authentication failed: no valid token available');
     }
-    
+
     private function getStoredToken(): CjToken|null
     {
         // get token from DB
@@ -54,7 +54,7 @@ class CjAuthService
             return null;
         }
 
-        $token = Cache::lock('cj-token-refresh', 10)->block(5, function () use($json) {
+        $token = Cache::lock('cj-token-refresh', 10)->block(5, function () use ($json) {
             $model = CjToken::first();
 
             $model->update([
@@ -69,7 +69,7 @@ class CjAuthService
 
         return $token;
     }
-    
+
     private function reAuth(): CjToken|null
     {
         $authResponse = Http::withHeaders([
@@ -84,7 +84,7 @@ class CjAuthService
             throw new \Exception('CJ API error on reAuth: ' . ($json['message'] ?? 'Unknown error'));
         }
 
-        $token = Cache::lock('cj-token-reauth', 10)->block(5, function () use($json) {
+        $token = Cache::lock('cj-token-reauth', 10)->block(5, function () use ($json) {
             $model = CjToken::updateOrCreate([
                 'access_token' => $json['data']['accessToken'],
                 'refresh_token' => $json['data']['refreshToken'],

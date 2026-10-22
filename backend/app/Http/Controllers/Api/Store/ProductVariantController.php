@@ -10,7 +10,8 @@ class ProductVariantController extends Controller
 {
     public function __construct(
         private ProductVariantService $service
-    ) {}
+    ) {
+    }
 
     /**
      * Update stock for product variant

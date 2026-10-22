@@ -12,7 +12,11 @@ use Illuminate\Queue\SerializesModels;
 
 class EnrichProductJob implements ShouldQueue
 {
-    use BusQueueable, InteractsWithQueue, Queueable, SerializesModels;
+    use BusQueueable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
+
     public function handle(EnrichProductAction $action, SettingService $setting)
     {
         if (! $setting->get('product_sync.allow_cron_enrichment')) {

@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ProductImage extends Model
 {
     use HasFactory;
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

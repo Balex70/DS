@@ -9,7 +9,8 @@ class EnrichProductAction
 {
     public function __construct(
         private ProductService $productService
-    ) {}
+    ) {
+    }
 
     public function execute(): void
     {

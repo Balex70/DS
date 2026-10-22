@@ -17,7 +17,8 @@ class ProductImageService
 {
     public function __construct(
         private CreateAppLogAction $createAppLogAction
-    ) {}
+    ) {
+    }
     public function syncOriginal(
         int $productId,
         string $imageUrl,

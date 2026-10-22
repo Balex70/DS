@@ -27,7 +27,7 @@ class UpdateProductRequest extends FormRequest
 
             'description_raw' => ['sometimes', 'string', 'max:1200'],
             'description_processed' => ['sometimes', 'string', 'max:1200'],
-            
+
             'price' => ['sometimes', 'numeric'],
             'now_price' => ['sometimes', 'numeric'],
             'suggested_price' => ['sometimes', 'numeric'],

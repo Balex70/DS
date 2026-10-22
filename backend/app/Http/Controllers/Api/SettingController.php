@@ -14,7 +14,8 @@ class SettingController extends Controller
      */
     public function __construct(
         private readonly SettingService $settingService
-    ) {}
+    ) {
+    }
 
     public function index(): JsonResponse
     {

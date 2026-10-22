@@ -19,12 +19,12 @@ class CjCategoryMapper
 
     private function mapRecursive(array $item, ?string $parentId, array &$result): void
     {
-        $id = $item['categoryFirstId'] 
-            ?? $item['categorySecondId'] 
+        $id = $item['categoryFirstId']
+            ?? $item['categorySecondId']
             ?? $item['categoryId'];
 
-        $name = $item['categoryFirstName'] 
-            ?? $item['categorySecondName'] 
+        $name = $item['categoryFirstName']
+            ?? $item['categorySecondName']
             ?? $item['categoryName'];
 
         $result[] = new CategoryDTO(
@@ -33,8 +33,8 @@ class CjCategoryMapper
             parentId: $parentId
         );
 
-        $children = $item['categoryFirstList'] 
-            ?? $item['categorySecondList'] 
+        $children = $item['categoryFirstList']
+            ?? $item['categorySecondList']
             ?? [];
 
         foreach ($children as $child) {

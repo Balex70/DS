@@ -13,7 +13,8 @@ class PaymentController extends Controller
 {
     public function __construct(
         private PaymentManager $manager
-    ) {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
@@ -21,15 +22,15 @@ class PaymentController extends Controller
     public function index(Request $request)
     {
         Gate::authorize('viewAny', Payment::class);
-        
+
         $query = Payment::query()
             ->with(['order.items'])
-            ->when($request->status, fn ($q) =>
-                $q->where('status', $request->status)
-            )
-            ->when($request->gateway, fn ($q) =>
-                $q->where('gateway', $request->gateway)
-            )
+            ->when($request->status, function ($q) use ($request) {
+                $q->where('status', $request->status);
+            })
+            ->when($request->gateway, function ($q) use ($request) {
+                $q->where('gateway', $request->gateway);
+            })
             ->when($request->search, function ($q) use ($request) {
                 $search = $request->search;
 
@@ -45,7 +46,8 @@ class PaymentController extends Controller
         );
     }
 
-    public function updateStatus(Payment $payment) {
+    public function updateStatus(Payment $payment)
+    {
         // TODO: add authorize and policy for this route
 
         // return response()->json($payment);

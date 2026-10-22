@@ -16,8 +16,9 @@ class StoreOrderService
     public function __construct(
         private DropshippingManager $manager,
         private PriceConverter $converter
-    ) {}
-    
+    ) {
+    }
+
     public function upsertOrderByCheckoutToken(array $data, mixed $items, string $cartToken): Order
     {
         $subtotal = collect($items)->sum(fn ($item) => $item['price'] * $item['quantity']);
@@ -96,7 +97,7 @@ class StoreOrderService
                     'variant_data' => $item['variant_data'] ?? null,
                 ]);
             }
-            
+
             return $order;
         });
     }
@@ -107,7 +108,7 @@ class StoreOrderService
 
         $shippingOptions = $provider->calculateShipping($payload);
 
-        if($currency && $currency !== CurrenciesEnum::USD->value) {
+        if ($currency && $currency !== CurrenciesEnum::USD->value) {
             return array_map(function ($item) use ($currency) {
                 $item['currency_price'] = $this->converter->convert(
                     $item['price'],
@@ -125,7 +126,7 @@ class StoreOrderService
     {
         $provider = $this->manager->driver();
 
-        if($trackNumber === '' || $trackNumber === 'null') {
+        if ($trackNumber === '' || $trackNumber === 'null') {
             return [
                 'success' => false,
             ];

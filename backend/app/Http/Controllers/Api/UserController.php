@@ -72,7 +72,8 @@ class UserController extends Controller
         return response()->noContent();
     }
 
-    public function login(LoginUserRequest $request) {
+    public function login(LoginUserRequest $request)
+    {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
@@ -84,7 +85,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function loginWithToken(LoginUserRequest $request) {
+    public function loginWithToken(LoginUserRequest $request)
+    {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
@@ -95,7 +97,8 @@ class UserController extends Controller
         return ['token' => $token->plainTextToken];
     }
 
-    public function meWithToken(Request $request) {
+    public function meWithToken(Request $request)
+    {
         return new UserResource($request->user());
     }
 }

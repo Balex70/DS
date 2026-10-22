@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Payments\DTO;
 
 class PaymentRequestDTO
@@ -14,5 +15,6 @@ class PaymentRequestDTO
         public readonly string $successUrl = '',
         public readonly string $cancelUrl = '',
         public readonly string $lang = 'en',
-    ) {}
+    ) {
+    }
 }

@@ -40,7 +40,7 @@ class SyncCategoryProductsActionTest extends TestCase
             ->shouldReceive('driver')
             ->once()
             ->andReturn($provider);
-            
+
         $manager = $this->app->instance(DropshippingManager::class, $manager);
 
         $action = $this->app->make(SyncCategoryProductsAction::class);
@@ -403,7 +403,7 @@ class SyncCategoryProductsActionTest extends TestCase
             'finished' => true,
         ]);
     }
-    
+
     public function test_transaction_is_rolled_back_on_failure()
     {
         $category = Category::factory()->create([

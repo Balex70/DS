@@ -30,15 +30,12 @@ class CustomerController extends Controller
 
         return new CustomerResource($customer);
     }
-    
+
     public function login(LoginCustomerRequest $request)
     {
         $data = $request->validated();
 
-        if (!Auth::guard('customers')->attempt([
-            'email' => $data['email'],
-            'password' => $data['password'],
-        ])) {
+        if (!Auth::guard('customers')->attempt(['email' => $data['email'], 'password' => $data['password']])) {
             return response()->json([
                 'message' => 'Invalid credentials'
             ], 401);
@@ -62,7 +59,7 @@ class CustomerController extends Controller
             'message' => 'Logged out'
         ]);
     }
-    
+
     public function me(Request $request)
     {
         $customer = Auth::guard('customers')->user();
