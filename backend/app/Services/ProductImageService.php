@@ -125,9 +125,15 @@ class ProductImageService
             try {
                 $manager = ImageManager::usingDriver(Driver::class);
                 $image = $manager->decode($contents);
+
+                // Resize oversized images while preserving aspect ratio.
+                if ($image->width() > 600 || $image->height() > 600) {
+                    $image->scaleDown(width: 600, height: 600);
+                }
+
                 $encoded = $image->encodeUsingFormat(
                     Format::AVIF,
-                    quality: 75
+                    quality: 50
                 );
 
                 $storedContents = (string) $encoded;
