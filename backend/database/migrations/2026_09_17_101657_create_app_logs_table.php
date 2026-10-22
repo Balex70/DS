@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('realm');
             $table->text('message');
             $table->timestamps();
-            
+
             $table->index('level');
             $table->index('realm');
             $table->index('created_at');

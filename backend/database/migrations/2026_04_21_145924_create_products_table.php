@@ -30,7 +30,7 @@ return new class extends Migration
 
             // Big media
             $table->string('big_image')->nullable();
-            
+
             // additional data from CJ
             // isCollect
             $table->boolean('is_collect')->default(false);
@@ -51,10 +51,10 @@ return new class extends Migration
 
             // Optional debugging (VERY useful)
             $table->json('raw_data')->nullable();
-            
+
             $table->index('status');
             $table->index('last_seen_at');
-            
+
             $table->timestamps();
         });
     }
