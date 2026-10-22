@@ -102,7 +102,7 @@ lint:
 type-check:
 	$(DOCKER_COMPOSE) exec frontend /bin/sh -c "npm run type-check"
 
-check-release: phpcs backend-test lint type-check
+check-release: backend-test lint type-check phpcs
 
 #################################################################
 #####                  #continuous integration              #####
