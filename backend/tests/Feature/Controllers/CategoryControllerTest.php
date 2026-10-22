@@ -33,16 +33,16 @@ class CategoryControllerTest extends TestCase
     #[DataProvider('index_returns_categories_provider')]
     public function test_index_returns_categories($userType)
     {
-        match($userType) {
+        match ($userType) {
             'superadmin' => $user = $this->superadmin,
             'admin' => $user = $this->admin,
             'editor' => $user = $this->editor,
         };
-        
+
         $this->assertDatabaseHas('users', [
             'email' => $user->email,
         ]);
-        
+
         $this->app->make(\Illuminate\Contracts\Auth\Access\Gate::class)
             ->policy(Category::class, CategoryPolicy::class);
 
@@ -50,7 +50,7 @@ class CategoryControllerTest extends TestCase
 
         $this->actingAs($user);
         $response = $this->getJson('/api/categories');
-                 
+
         $response->assertOk()
             ->assertJsonStructure([
                 'data' => [
@@ -67,7 +67,7 @@ class CategoryControllerTest extends TestCase
             'Editor' => ['editor'],
         ];
     }
-    
+
     public function test_index_denied_without_permission()
     {
         $user = User::factory()->unverified()->create();
@@ -81,11 +81,11 @@ class CategoryControllerTest extends TestCase
 
         $response->assertForbidden();
     }
-    
+
     #[DataProvider('index_returns_categories_provider')]
     public function test_updates_category($userType)
     {
-        match($userType) {
+        match ($userType) {
             'superadmin' => $user = $this->superadmin,
             'admin' => $user = $this->admin,
             'editor' => $user = $this->editor,
@@ -117,11 +117,11 @@ class CategoryControllerTest extends TestCase
             'name' => 'New Name',
         ]);
     }
-    
+
     #[DataProvider('index_returns_categories_provider')]
     public function test_updates_category_translations($userType)
     {
-        match($userType) {
+        match ($userType) {
             'superadmin' => $user = $this->superadmin,
             'admin' => $user = $this->admin,
             'editor' => $user = $this->editor,
@@ -168,11 +168,11 @@ class CategoryControllerTest extends TestCase
             'meta_description' => 'Нова мета опис',
         ]);
     }
-    
+
     #[DataProvider('index_returns_categories_provider')]
     public function test_bulk_activate_categories($userType)
     {
-        match($userType) {
+        match ($userType) {
             'superadmin' => $user = $this->superadmin,
             'admin' => $user = $this->admin,
             'editor' => $user = $this->editor,
