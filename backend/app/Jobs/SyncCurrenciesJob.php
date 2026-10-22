@@ -12,7 +12,11 @@ use Illuminate\Queue\SerializesModels;
 
 class SyncCurrenciesJob implements ShouldQueue
 {
-    use BusQueueable, InteractsWithQueue, Queueable, SerializesModels;
+    use BusQueueable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
+
     public function handle(SyncCurrenciesAction $action, SettingService $setting)
     {
         if (! $setting->get('currency_sync.allow_cron_sync')) {
