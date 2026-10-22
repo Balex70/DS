@@ -143,29 +143,32 @@ export default function ProductGallery({
                     className="w-full"
                 >
                     <CarouselContent className="-ml-2 px-10">
-                        {galleryImages.map((image, index) => (
-                            <CarouselItem
-                                key={image.id}
-                                className="basis-1/4 pl-2 md:basis-1/6 lg:basis-1/6"
-                            >
-                                <button
-                                    type="button"
-                                    onClick={() => mainApi?.scrollTo(index)}
-                                    className={cn(
-                                        "relative aspect-square w-full overflow-hidden rounded-xl border",
-                                        activeIndex === index
-                                            ? "border-black ring-black"
-                                            : "border-muted"
-                                    )}
+                        {galleryImages.map((image, index) => {
+                            const thumb = image.thumbnail_url ?? image.original_url
+                            return (
+                                <CarouselItem
+                                    key={image.id}
+                                    className="basis-12 pl-2 md:basis-16"
                                 >
-                                    <ProductImage
-                                        src={`/storage/${image.original_url}`}
-                                        alt={productName}
-                                        imageClassName="object-cover"
-                                    />
-                                </button>
-                            </CarouselItem>
-                        ))}
+                                    <button
+                                        type="button"
+                                        onClick={() => mainApi?.scrollTo(index)}
+                                        className={cn(
+                                            "relative aspect-square w-full overflow-hidden rounded-xl border",
+                                            activeIndex === index
+                                                ? "border-black ring-black"
+                                                : "border-muted"
+                                        )}
+                                    >
+                                        <ProductImage
+                                            src={`/storage/${thumb}`}
+                                            alt={productName}
+                                            imageClassName="object-cover"
+                                        />
+                                    </button>
+                                </CarouselItem>
+                            )
+                        })}
                     </CarouselContent>
                 </Carousel>
             </div>
