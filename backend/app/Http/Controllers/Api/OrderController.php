@@ -19,7 +19,9 @@ use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
-    public function __construct(private OrderService $service) {}
+    public function __construct(private OrderService $service)
+    {
+    }
 
     /**
      * Display a listing of the resource.
@@ -30,15 +32,15 @@ class OrderController extends Controller
 
         $orders = Order::query()
             ->with(['items'])
-            ->when($request->status, fn ($q) =>
-                $q->where('status', $request->status)
-            )
-            ->when($request->paymentStatus, fn ($q) =>
-                $q->where('payment_status', $request->paymentStatus)
-            )
-            ->when($request->dsStatus, fn ($q) =>
-                $q->where('ds_status', $request->dsStatus)
-            )
+            ->when($request->status, function ($q) use ($request) {
+                $q->where('status', $request->status);
+            })
+            ->when($request->paymentStatus, function ($q) use ($request) {
+                $q->where('payment_status', $request->paymentStatus);
+            })
+            ->when($request->dsStatus, function ($q) use ($request) {
+                $q->where('ds_status', $request->dsStatus);
+            })
             ->when($request->search, function ($q) use ($request) {
                 $search = $request->search;
 
@@ -201,7 +203,8 @@ class OrderController extends Controller
             $order->status === OrderStatusEnum::CREATED ||
             $order->status === OrderStatusEnum::PROCESSING ||
             $order->status === OrderStatusEnum::SHIPPED ||
-            $order->status === OrderStatusEnum::DELIVERED) {
+            $order->status === OrderStatusEnum::DELIVERED
+        ) {
             return response()->json([
                 'message' => 'Cannot delete order with status ' . $order->status . '.',
             ], 422);

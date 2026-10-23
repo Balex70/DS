@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Payments;
 
 use App\Payments\Contracts\PaymentGatewayInterface;
@@ -40,12 +41,8 @@ class PaymentManager
                     $country,
                     $currency,
                     $methods
-                )
-            )
-            ->sortByDesc(fn ($gateway) =>
-                $gateway->getPriority()
-            );
-
+                ))
+            ->sortByDesc(fn ($gateway) => $gateway->getPriority());
         return $available->first();
     }
 

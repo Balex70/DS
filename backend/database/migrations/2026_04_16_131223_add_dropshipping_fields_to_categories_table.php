@@ -27,7 +27,7 @@ return new class extends Migration
                 ['external_id', 'provider'],
                 'categories_external_provider_unique'
             );
-            
+
             // non-unique index parent_id
             $table->index('parent_id', 'categories_parent_id_index');
         });

@@ -21,7 +21,8 @@ class ProductVariantController extends Controller
     public function __construct(
         private ProductVariantService $service,
         private CreateAppLogAction $createAppLogAction
-    ) {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
@@ -141,11 +142,11 @@ class ProductVariantController extends Controller
             });
 
         $this->createAppLogAction->execute(
-                    AppLogLevelEnum::SUCCESS,
-                    AppLogRealmEnum::PRODUCT,
-                    "Translations for product's all variants removed:
+            AppLogLevelEnum::SUCCESS,
+            AppLogRealmEnum::PRODUCT,
+            "Translations for product's all variants removed:
 ID: {$product->id} ($product->name_processed)"
-                );
+        );
 
         return response()->json([
             'message' => 'Translations for product variants removed successfully',

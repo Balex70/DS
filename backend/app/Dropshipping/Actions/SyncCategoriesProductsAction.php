@@ -11,7 +11,8 @@ class SyncCategoriesProductsAction
 {
     public function __construct(
         private SettingService $setting
-    ) {}
+    ) {
+    }
 
     public function execute(): void
     {

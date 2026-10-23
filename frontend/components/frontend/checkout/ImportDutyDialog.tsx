@@ -70,6 +70,7 @@ export default function ImportDutyDialog({
                                 onCheckedChange={(checked) =>
                                     setAccepted(checked === true)
                                 }
+                                className="data-[state=checked]:border-green-600 data-[state=checked]:bg-green-600 data-[state=checked]:text-white"
                             />
 
                             <Label
@@ -97,6 +98,7 @@ export default function ImportDutyDialog({
                             e.preventDefault();
                             handleConfirm();
                         }}
+                        className="!bg-green-600 !text-white hover:!bg-green-600/90 disabled:!bg-gray-500 disabled:!opacity-100"
                     >
                         {t('checkout.import_duty_dialog.accept_button')}
                     </AlertDialogAction>

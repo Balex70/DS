@@ -17,7 +17,8 @@ class ProductImageService
 {
     public function __construct(
         private CreateAppLogAction $createAppLogAction
-    ) {}
+    ) {
+    }
     public function syncOriginal(
         int $productId,
         string $imageUrl,
@@ -34,12 +35,16 @@ class ProductImageService
         // already exists
         if ($existing) {
             $oldPath = $existing->original_url;
+            $oldThumbnailPath = $existing->thumbnail_url;
 
             $needsConversion = $oldPath
-            && in_array(strtolower(pathinfo($oldPath, PATHINFO_EXTENSION)), ['jpg', 'jpeg']);
+            && strtolower(pathinfo($oldPath, PATHINFO_EXTENSION)) !== 'avif';
 
             $fileMissing = !$oldPath
             || !Storage::disk('public')->exists($oldPath);
+
+            $thumbnailMissing = !$oldThumbnailPath
+            || !Storage::disk('public')->exists($oldThumbnailPath);
 
             $updates = [
                 'position' => $position,
@@ -48,41 +53,48 @@ class ProductImageService
 
             // Restore the original image if its file is missing.
             // Or if it needs conversion
-            if ($fileMissing || $needsConversion) {
-                $newPath = $this->downloadAndStore($imageUrl, $productId);
+            if ($fileMissing || $needsConversion || $thumbnailMissing) {
+                [$newPath, $newThumbnailPath] = $this->downloadAndStore(
+                    $imageUrl,
+                    $productId
+                );
 
                 $updates['original_url'] = $newPath;
+                $updates['thumbnail_url'] = $newThumbnailPath;
             }
 
             $existing->update($updates);
 
             // delete old files
-            if (
-                isset($newPath)
-                && $oldPath
-                && $oldPath !== $newPath
-                && Storage::disk('public')->exists($oldPath)
-            ) {
-                Storage::disk('public')->delete($oldPath);
+            foreach ([$oldPath, $oldThumbnailPath] as $oldFile) {
+                if (
+                    isset($newPath)
+                    && $oldFile
+                    && !in_array($oldFile, [$newPath, $newThumbnailPath], true)
+                    && Storage::disk('public')->exists($oldFile)
+                ) {
+                    Storage::disk('public')->delete($oldFile);
+                }
             }
 
-            return $existing;
+            return $existing->refresh();
         }
 
         // create new
-        $path = $this->downloadAndStore($imageUrl, $productId);
+        [$imagePath, $thumbnailPath] = $this->downloadAndStore($imageUrl, $productId);
 
         return ProductImage::create([
             'product_id' => $productId,
             'url' => $imageUrl, // fallback original field
-            'original_url' => $path, // canonical source
+            'original_url' => $imagePath, // canonical source
+            'thumbnail_url' => $thumbnailPath,
             'position' => $position,
             'status' => 'queued',
             'type' => $type,
         ]);
     }
 
-    public function downloadAndStore(string $url, int $productId): string
+    public function downloadAndStore(string $url, int $productId): array
     {
         $response = Http::timeout(30)->get($url);
 
@@ -97,7 +109,8 @@ class ProductImageService
             PATHINFO_EXTENSION
         )) ?: 'bin';
 
-        $storedContents = $contents;
+        $imageContents = $contents;
+        $thumbnailContents = null;
         $reason = null;
 
         if (strlen($contents) > 20 * 1024 * 1024) {
@@ -124,12 +137,29 @@ class ProductImageService
             try {
                 $manager = ImageManager::usingDriver(Driver::class);
                 $image = $manager->decode($contents);
+                $thumbnailImage = $manager->decode($contents);
+
+                // Resize oversized images while preserving aspect ratio.
+                if ($image->width() > 600 || $image->height() > 600) {
+                    $image->scaleDown(width: 600, height: 600);
+                }
+
+                // Resize image for thumbnail
+                $thumbnailImage->scaleDown(width: 100, height: 100);
+
                 $encoded = $image->encodeUsingFormat(
                     Format::AVIF,
                     quality: 75
                 );
 
-                $storedContents = (string) $encoded;
+                $encodedThumbnail = $thumbnailImage->encodeUsingFormat(
+                    Format::AVIF,
+                    quality: 25
+                );
+
+                $imageContents = (string) $encoded;
+                $thumbnailContents = (string) $encodedThumbnail;
+
                 $extension = 'avif';
             } catch (\Throwable $e) {
                 $reason = 'AVIF conversion failed: ' . $e->getMessage();
@@ -145,16 +175,30 @@ class ProductImageService
             );
         }
 
-        $fileName = sprintf(
+        $imageFileName = sprintf(
             'products/%d/original/%s.%s',
             $productId,
             uniqid(),
             $extension
         );
 
-        Storage::disk('public')->put($fileName, $storedContents);
+        $thumbnailFileName = sprintf(
+            'products/%d/thumbnails/%s.%s',
+            $productId,
+            uniqid(),
+            $extension
+        );
 
-        return $fileName;
+        Storage::disk('public')->put($imageFileName, $imageContents);
+
+        if ($thumbnailContents !== null) {
+            Storage::disk('public')->put($thumbnailFileName, $thumbnailContents);
+        }
+
+        return [
+            $imageFileName,
+            $thumbnailContents !== null ? $thumbnailFileName : null,
+        ];
     }
 
     public function storeAiProcessed(int $productId, UploadedFile $file): string

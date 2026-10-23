@@ -10,7 +10,8 @@ class CjCategoryService
     public function __construct(
         private CjApiClient $client,
         private CjCategoryMapper $mapper
-    ) {}
+    ) {
+    }
 
     public function all(): array
     {

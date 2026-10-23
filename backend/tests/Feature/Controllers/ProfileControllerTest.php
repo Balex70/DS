@@ -9,7 +9,7 @@ use Tests\TestCase;
 class ProfileControllerTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     protected User $superadmin;
     protected User $admin;
     protected User $editor;
@@ -25,7 +25,7 @@ class ProfileControllerTest extends TestCase
         $this->admin = User::factory()->admin()->create();
         $this->editor = User::factory()->editor()->create();
     }
-    
+
     public function test_user_can_update_own_profile()
     {
         $response = $this->actingAs($this->editor)

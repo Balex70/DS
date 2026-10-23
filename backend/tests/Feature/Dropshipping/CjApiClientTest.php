@@ -22,7 +22,7 @@ class CjApiClientTest extends TestCase
 
         return new CjApiClient($auth);
     }
-    
+
     public function test_get_categories_throws_when_no_token()
     {
         $client = $this->makeClient(null);
@@ -32,7 +32,7 @@ class CjApiClientTest extends TestCase
 
         $client->getCategories();
     }
-    
+
     public function test_get_products_throws_when_no_token()
     {
         $client = $this->makeClient(null);
@@ -42,7 +42,7 @@ class CjApiClientTest extends TestCase
 
         $client->getProducts('123', 2, 20);
     }
-    
+
     public function test_get_product_details_throws_when_no_token()
     {
         $client = $this->makeClient(null);
@@ -52,15 +52,15 @@ class CjApiClientTest extends TestCase
 
         $client->getProductDetails('123gh56');
     }
-    
+
     #[DataProvider('get_categories_throws_on_api_error_provider')]
     public function test_get_categories_throws_on_api_error(?string $message, string $errorMessage)
     {
         $responseReturn = [
             'code' => 500,
         ];
-        
-        if($message !== null) {
+
+        if ($message !== null) {
             $responseReturn['message'] = $message;
         }
         Http::fake([
@@ -74,7 +74,7 @@ class CjApiClientTest extends TestCase
 
         $client->getCategories();
     }
-    
+
     public static function get_categories_throws_on_api_error_provider(): array
     {
         return [
@@ -82,7 +82,7 @@ class CjApiClientTest extends TestCase
             'No message return Unknown error' => [null, 'Unknown error'],
         ];
     }
-    
+
     public function test_get_categories_returns_data()
     {
         Http::fake([
@@ -98,7 +98,7 @@ class CjApiClientTest extends TestCase
 
         $this->assertEquals(['cat1', 'cat2'], $result);
     }
-    
+
     public function test_get_products_sends_correct_params()
     {
         // Http::fake();
@@ -108,12 +108,11 @@ class CjApiClientTest extends TestCase
                 'data' => []
             ], 200),
         ]);
-        
 
         $client = $this->makeClient();
 
         $client->getProducts('123', 2, 20);
-        
+
         Http::assertSent(function ($request) {
             return str_contains($request->url(), 'developers.cjdropshipping.com/api2.0/v1/product/listV2')
                 && $request['categoryId'] === '123'
@@ -121,7 +120,7 @@ class CjApiClientTest extends TestCase
                 && $request['size'] === 20;
         });
     }
-    
+
     public function test_get_products_returns_data()
     {
         $products = [
@@ -148,7 +147,7 @@ class CjApiClientTest extends TestCase
 
         $this->assertEquals($products, $result);
     }
-    
+
     public function test_get_product_details_returns_data()
     {
         Http::fake([

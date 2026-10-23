@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Currency;
 
 use App\Currency\DTO\ExchangeRate;
@@ -25,7 +26,7 @@ class CurrencyManager
 
         return null;
     }
-    
+
     public function syncRate(): void
     {
         foreach ($this->providers as $provider) {

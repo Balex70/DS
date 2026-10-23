@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Dropshipping;
 
 use App\Dropshipping\Contracts\DropshippingProviderInterface;

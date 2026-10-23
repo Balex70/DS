@@ -35,7 +35,7 @@ class CjOrderMapper
 
             'shopLogisticsType' => 2,
             'orderFlow' => 1, // use vid instead sku
-            
+
             'isSandbox' => $data['is_sandbox'] ?? 0,
 
             'products' => array_map(function ($item) {

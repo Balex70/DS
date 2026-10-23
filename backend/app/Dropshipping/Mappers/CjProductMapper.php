@@ -39,7 +39,7 @@ class CjProductMapper
             'external_id' => $base['external_id'],
 
             'name_raw' => $name,
-            
+
             'description_raw' => $this->cleanHtml($data['description']) ?? null,
 
             'price' => $this->parsePrice($data['sellPrice'] ?? $base['price'] ?? null),
@@ -64,7 +64,7 @@ class CjProductMapper
             'raw_data' => array_merge($base['raw_data'], $data)
         ];
     }
-    
+
     private function extractImages(array $cjImages): array
     {
         $images = [];
@@ -75,7 +75,7 @@ class CjProductMapper
 
         return array_values(array_unique($images));
     }
-    
+
     private function mapVariants(array $variants, ?string $productName): array
     {
         return array_map(function ($v) use ($productName) {
@@ -113,7 +113,7 @@ class CjProductMapper
             $inventories
         ));
     }
-    
+
     private function cleanHtml(?string $html): ?string
     {
         if (!$html) {

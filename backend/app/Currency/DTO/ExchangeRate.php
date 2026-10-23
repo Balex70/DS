@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Currency\DTO;
 
 class ExchangeRate
@@ -10,5 +11,6 @@ class ExchangeRate
         public readonly float $rate,
         public readonly \DateTimeInterface $rateUpdatedAt,
         public readonly string $provider,
-    ) {}
+    ) {
+    }
 }

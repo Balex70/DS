@@ -15,7 +15,6 @@ return new class extends Migration
             $table->dropColumn('status');
             $table->dropColumn('last_seen_at');
             $table->dropColumn('synced_at');
-            
         });
     }
 

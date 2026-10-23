@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\Store;
 
 use App\Currency\Services\PriceConverter;
@@ -16,7 +17,9 @@ class SearchController extends Controller
 {
     public function __construct(
         private PriceConverter $converter
-    ) {}
+    ) {
+    }
+
     public function search(Request $request)
     {
         $validated = $request->validate([
@@ -50,7 +53,7 @@ class SearchController extends Controller
                 ->whereNull('enrichment_failed_at')
                 ->select(['id', 'name_raw', 'name_processed', 'price', 'slug']);
 
-            if($locale) {
+            if ($locale) {
                 $products = $query
                 ->with([
                     'variants',
@@ -90,7 +93,7 @@ class SearchController extends Controller
                     ->get();
             }
 
-            if($currency) {
+            if ($currency) {
                 $products->each(function (Product $product) use ($currency) {
                     $product->currency_price = $this->converter->convert(
                         $product->price,

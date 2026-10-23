@@ -13,13 +13,13 @@ use App\Services\StoreOrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
-
 class OrderController extends Controller
 {
     public function __construct(
         private CartService $cartService,
         private StoreOrderService $storeOrderService
-    ) {}
+    ) {
+    }
 
     /**
      * Display a listing of the resource.
@@ -45,7 +45,7 @@ class OrderController extends Controller
         $token = $request->attributes->get('cart_token');
         $cart = $this->cartService->get($token);
         $items = $cart['items'];
-        
+
         if (empty($items)) {
             return response()->json(['message' => 'Cart is empty'], 422);
         }
@@ -80,7 +80,7 @@ class OrderController extends Controller
             'shippingData' => $shippingData
         ];
 
-        if($request->filled('currency') && $request->currency !== CurrenciesEnum::USD->value) {
+        if ($request->filled('currency') && $request->currency !== CurrenciesEnum::USD->value) {
             return $this->storeOrderService->calculateShipping($payload, $request->currency);
         }
 

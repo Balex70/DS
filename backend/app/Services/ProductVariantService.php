@@ -15,7 +15,8 @@ class ProductVariantService
         private DropshippingManager $manager,
         private CjProductMapper $mapper,
         private CreateAppLogAction $createAppLogAction
-    ) {}
+    ) {
+    }
 
     public function updateVariantStock(ProductVariant $productVariant): ?ProductVariant
     {

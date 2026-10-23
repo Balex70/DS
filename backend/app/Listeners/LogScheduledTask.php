@@ -11,7 +11,8 @@ class LogScheduledTask
 {
     public function __construct(
         private CreateAppLogAction $createAppLogAction
-    ) {}
+    ) {
+    }
 
     public function handleFailed(ScheduledTaskFailed $event): void
     {

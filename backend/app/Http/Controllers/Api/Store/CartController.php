@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\Store;
 
 use App\Currency\Services\PriceConverter;
@@ -14,7 +15,8 @@ class CartController extends Controller
 {
     public function __construct(
         private PriceConverter $converter
-    ) {}
+    ) {
+    }
 
     public function show(Request $request, CartService $cartService)
     {
@@ -28,7 +30,7 @@ class CartController extends Controller
         $hydratedItems = [];
 
         foreach ($cartEntity['items'] as $cartItem) {
-            if($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
+            if ($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
                 $locale = $request->locale ?? 'en';
                 $productVariant = ProductVariant::with([
                     'translation' => fn ($q) => $q->where('locale', $locale),
@@ -40,12 +42,12 @@ class CartController extends Controller
                 'title' => $productVariant?->translation?->name ?? $productVariant?->name ?? $cartItem['title'],
             ];
 
-            if($request->filled('currency') && $request->currency !== CurrenciesEnum::USD->value) {
+            if ($request->filled('currency') && $request->currency !== CurrenciesEnum::USD->value) {
                 $currencyPrice = $this->converter->convert(
-                        $cartItem['price'],
-                        CurrenciesEnum::USD->value,
-                        $request->currency, //
-                    );
+                    $cartItem['price'],
+                    CurrenciesEnum::USD->value,
+                    $request->currency, //
+                );
                 $hydratedItem['currency_price'] = $currencyPrice;
             }
 

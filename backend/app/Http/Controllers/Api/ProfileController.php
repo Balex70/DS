@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    
     public function me(Request $request)
     {
         return new UserResource($request->user());

@@ -11,7 +11,7 @@ use Tests\TestCase;
 class UserControllerTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     protected User $superadmin;
     protected User $admin;
     protected User $editor;
@@ -19,7 +19,7 @@ class UserControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->superadmin = User::where(
             'email',
             'superadmin@test.com'
@@ -42,7 +42,7 @@ class UserControllerTest extends TestCase
                 'data',
             ]);
     }
-    
+
     public function test_admin_can_view_users()
     {
         User::factory()->count(3)->create();
@@ -64,7 +64,7 @@ class UserControllerTest extends TestCase
 
         $response->assertForbidden();
     }
-    
+
     // CREATE TESTS
     public function test_superadmin_can_create_user()
     {
@@ -90,7 +90,7 @@ class UserControllerTest extends TestCase
         $this->assertTrue($user->hasRole('admin'));
         $this->assertTrue(Hash::check('password', $user->password));
     }
-    
+
     public function test_admin_can_create_user()
     {
         Role::firstOrCreate(['name' => 'test admin']);
@@ -129,7 +129,7 @@ class UserControllerTest extends TestCase
 
         $response->assertForbidden();
     }
-    
+
     // SHOW TESTS
     public function test_superadmin_can_view_single_user()
     {
@@ -146,17 +146,17 @@ class UserControllerTest extends TestCase
                 ],
             ]);
     }
-    
+
     public function test_editor_cannot_view_single_user()
     {
         $user = User::factory()->create();
-    
+
         $response = $this->actingAs($this->editor)
             ->getJson("/api/users/{$user->id}");
 
         $response->assertForbidden();
     }
-    
+
     // UPDATE TESTS
     public function test_superadmin_can_update_any_user()
     {
@@ -178,7 +178,7 @@ class UserControllerTest extends TestCase
         $this->assertEquals('Updated By Superadmin', $targetUser->name);
         $this->assertTrue($targetUser->hasRole('admin'));
     }
-    
+
     public function test_admin_can_update_other_user()
     {
         $targetUser = User::factory()->editor()->create([
@@ -198,7 +198,7 @@ class UserControllerTest extends TestCase
 
         $this->assertEquals('Updated By Admin', $targetUser->name);
     }
-    
+
     public function test_admin_cannot_update_self()
     {
         $originalName = $this->admin->name;
@@ -234,7 +234,7 @@ class UserControllerTest extends TestCase
 
         $this->assertEquals($originalName, $this->editor->name);
     }
-    
+
     public function test_editor_cannot_update_other_user()
     {
         $targetUser = User::factory()->create();
@@ -248,7 +248,7 @@ class UserControllerTest extends TestCase
 
         $response->assertForbidden();
     }
-    
+
     // DELETE TESTS
     public function test_superadmin_can_delete_user()
     {
@@ -261,7 +261,7 @@ class UserControllerTest extends TestCase
 
         $this->assertModelMissing($target);
     }
-    
+
     public function test_superadmin_cannot_delete_self()
     {
         $response = $this->actingAs($this->superadmin)
@@ -283,7 +283,7 @@ class UserControllerTest extends TestCase
 
         $this->assertModelExists($target);
     }
-    
+
     public function test_user_cannot_delete_themselves_even_with_permission()
     {
         $user = User::factory()->create();
@@ -296,7 +296,7 @@ class UserControllerTest extends TestCase
 
         $this->assertModelExists($user);
     }
-    
+
     public function test_editor_cannot_delete_other_user()
     {
         $target = User::factory()->create();
@@ -308,7 +308,7 @@ class UserControllerTest extends TestCase
 
         $this->assertModelExists($target);
     }
-    
+
     // LOGIN TESTS
     public function test_user_can_login_successfully()
     {
@@ -349,7 +349,7 @@ class UserControllerTest extends TestCase
 
         $this->assertGuest();
     }
-    
+
     public function test_session_regenerates_on_login()
     {
         $password = 'password';

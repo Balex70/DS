@@ -11,11 +11,15 @@ use Illuminate\Queue\SerializesModels;
 
 class SyncCategoryProductsJob implements ShouldQueue
 {
-    use BusQueueable, InteractsWithQueue, Queueable, SerializesModels;
+    use BusQueueable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public function __construct(
         public string $categoryId
-    ) {}
+    ) {
+    }
     public function handle(SyncCategoryProductsAction $action)
     {
         $action->execute($this->categoryId);

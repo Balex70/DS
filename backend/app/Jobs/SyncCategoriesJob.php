@@ -11,7 +11,11 @@ use Illuminate\Queue\SerializesModels;
 
 class SyncCategoriesJob implements ShouldQueue
 {
-    use BusQueueable, InteractsWithQueue, Queueable, SerializesModels;
+    use BusQueueable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
+
     public function handle(SyncCategoriesAction $action)
     {
         $action->execute();

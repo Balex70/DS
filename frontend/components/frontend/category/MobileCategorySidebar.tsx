@@ -83,7 +83,7 @@ export function MobileCategorySidebar({
                             />
 
                         <Button
-                            className="w-full my-4"
+                            className="w-full my-4 bg-sky-800 hover:bg-sky-800/90 disabled:bg-gray-500"
                             onClick={() => {
                                 setPriceApplied()
                                 setActiveMaterials(activeDraftMaterials)

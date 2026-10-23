@@ -20,8 +20,9 @@ class ProductService
         private CjProductMapper $mapper,
         private ProductImageService $imageService,
         private CreateAppLogAction $createAppLogAction
-    ) {}
-    
+    ) {
+    }
+
     public function enrichProduct(Product $productToEnrich): void
     {
         $provider = $this->manager->driver();
@@ -113,8 +114,8 @@ class ProductService
                 }
 
                 // Store images
-                if($mappedDetails['images']) {
-                    foreach ($mappedDetails['images'] as $key =>$imageUrl) {
+                if ($mappedDetails['images']) {
+                    foreach ($mappedDetails['images'] as $key => $imageUrl) {
                         $this->imageService->syncOriginal($productToEnrich->id, $imageUrl, $key, null);
                     }
                 }
