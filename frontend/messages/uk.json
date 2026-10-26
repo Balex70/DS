@@ -373,17 +373,18 @@
         "shipping_method": "Логістична компанія",
         "route": "Маршрут",
         "not_assigned_yet": "Ще не призначено",
-        "not_available_yet": "Поки що недоступно",
         "days": "днів",
         "last_mile_carrier": "Служба доставки",
         "last_mile_tracking_number": "Номер відстеження служби доставки",
-        "estimated_transit": "Орієнтовний термін доставки",
+        "last_mile_tracking_unavailable": "Поки недоступний. Перевірте історію відстеження нижче - там може бути номер відстеження місцевого перевізника.",
+        "transit_duration": "Час у дорозі",
         "delivery_window": "Орієнтовний період доставки",
         "tracking_history": "Історія відстеження",
         "tracking_status": {
           "processing": "Обробляється",
-          "info_received": "Інформацію отримано",
           "in_transit": "В дорозі",
+          "arrived_at_courier_facility": "Прибуло до кур'єрського центру",
+          "info_received": "Інформацію отримано",
           "out_for_delivery": "Передано на доставку",
           "delivered": "Доставлено",
           "failed_attempt": "Невдала спроба доставки",
@@ -397,7 +398,11 @@
           "acceptance_sent": "Відправлення прийнято та надіслано до {country}.",
           "departed_sunyou_facility": "Відправлення залишило сортувальний центр Sunyou. Номер відстеження перевізника: {trackingNumber}.",
           "export_customs_clearance_completed": "Митне оформлення експорту успішно завершено.",
-          "arrived_at_port_of_origin": "Відправлення прибуло до порту відправлення."
+          "arrived_at_port_of_origin": "Відправлення прибуло до порту відправлення.",
+          "in_transit": "Відправлення в дорозі.",
+          "customs_clearance_in_process": "Триває митне оформлення.",
+          "arrived_at_destination_airport": "Відправлення прибуло до аеропорту країни призначення.",
+          "departed_from_port_of_origin": "Відправлення вирушило з порту відправлення."
         }
       },
       "payment_methods_section": {
