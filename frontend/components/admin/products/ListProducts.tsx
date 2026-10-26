@@ -225,13 +225,31 @@ function ListProducts () {
         open={editOpen}
         onOpenChange={setEditOpen}
         product={selectedProduct}
-        onSuccess={fetchProducts}
+        onSuccess={() =>
+          fetchProducts({
+            page,
+            enrichStatuses,
+            aiTextsProcessed,
+            suspiciousPrices,
+            aiStatuses,
+            categoryIds
+          })
+        }
       />
 
       <DeleteProductDrawer
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        onSuccess={fetchProducts}
+        onSuccess={() =>
+          fetchProducts({
+            page,
+            enrichStatuses,
+            aiTextsProcessed,
+            suspiciousPrices,
+            aiStatuses,
+            categoryIds
+          })
+        }
         product={selectedProduct}
       />
     </div>
