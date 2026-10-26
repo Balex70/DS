@@ -373,17 +373,18 @@
         "shipping_method": "Shipping Company",
         "route": "Route",
         "not_assigned_yet": "Not assigned yet",
-        "not_available_yet": "Not available yet",
         "days": "days",
         "last_mile_carrier": "Local Delivery Service",
         "last_mile_tracking_number": "Local Delivery Tracking Number",
-        "estimated_transit": "Estimated transit",
+        "last_mile_tracking_unavailable": "Not available yet. Check the tracking history below for the last-mile tracking number.",
+        "transit_duration": "Time in transit",
         "delivery_window": "Estimated delivery window",
         "tracking_history": "Tracking history",
         "tracking_status": {
           "processing": "Processing",
-          "info_received": "Info Received",
           "in_transit": "In Transit",
+          "arrived_at_courier_facility": "Arrived at courier facility",
+          "info_received": "Info Received",
           "out_for_delivery": "Out for Delivery",
           "delivered": "Delivered",
           "failed_attempt": "Delivery Failed",
@@ -397,7 +398,11 @@
           "acceptance_sent": "Shipment accepted and sent to {country}.",
           "departed_sunyou_facility": "Departed Sunyou facility. Carrier tracking number: {trackingNumber}.",
           "export_customs_clearance_completed": "Export customs clearance completed successfully.",
-          "arrived_at_port_of_origin": "Arrived at the port of origin."
+          "arrived_at_port_of_origin": "Arrived at the port of origin.",
+          "in_transit": "The shipment is in transit.",
+          "customs_clearance_in_process": "Customs clearance is in progress.",
+          "arrived_at_destination_airport": "Arrived at the destination country's airport.",
+          "departed_from_port_of_origin": "Departed from the port of origin."
         }
       },
       "payment_methods_section": {

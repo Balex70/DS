@@ -2,13 +2,13 @@
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useTranslations } from 'next-intl'
-import { PackageSearch, TriangleAlert, Truck } from "lucide-react";
+import { Info, PackageSearch, TriangleAlert, Truck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Link } from "@/i18n/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { TrackingInfo } from "@/types/order";
+import { TrackingInfo, TrackingRoute } from "@/types/order";
 import { getOrderTrackInfo } from "@/services/order-service";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -39,6 +39,7 @@ const Field = ({
 export type TrackingStatusKey =
   | 'processing'
   | 'en_route'
+  | 'arrived_at_courier_facility'
   | 'info_received'
   | 'in_transit'
   | 'out_for_delivery'
@@ -52,6 +53,7 @@ const STATUS_MAP: Record<string, TrackingStatusKey> = {
   // REST API String Statuses
   'processing': 'processing',
   'en route': 'in_transit',
+  'arrived courier facility': 'arrived_at_courier_facility',
   'info received': 'info_received',
   'pending': 'info_received',
   'in transit': 'in_transit',
@@ -64,12 +66,54 @@ const STATUS_MAP: Record<string, TrackingStatusKey> = {
   'expired': 'expired',
 };
 
+const statusColorClass: Record<TrackingStatusKey, string> = {
+    processing: "bg-blue-500 text-white",
+    en_route: "bg-blue-500 text-white",
+    arrived_at_courier_facility: "bg-teal-500 text-white",
+    info_received: "bg-blue-500 text-white",
+    in_transit: "bg-blue-600 text-white",
+    out_for_delivery: "bg-green-500 text-white",
+    delivered: "bg-green-700 text-white",
+    failed_attempt: "bg-orange-500 text-white",
+    exception: "bg-red-600 text-white",
+    expired: "bg-gray-500 text-white",
+    unknown: "bg-muted text-muted-foreground",
+};
+
 export function getTrackingStatusKey(status: string | number | null | undefined): TrackingStatusKey {
   if (!status) return 'unknown';
 
   const normalized = String(status).trim().toLowerCase();
   return STATUS_MAP[normalized] ?? 'unknown';
 }
+
+const normalizeTrackingValue = (
+    value: string | null | undefined,
+): string | null => {
+    const normalized = value?.trim();
+
+    if (!normalized || /^(updating|n\/a|none|null|unknown)$/i.test(normalized)) {
+        return null;
+    }
+
+    return normalized;
+};
+
+const extractLastMileTrackingNumberFromHistory = (
+    routes?: TrackingRoute[],
+): string | null => {
+    for (const route of routes ?? []) {
+        const match = route.remark?.match(
+            /^Departed Sunyou Facility,\s*Carrier Tracking Number:\s*([A-Z0-9]+)$/i,
+        );
+
+        if (match) {
+            return match[1];
+        }
+    }
+
+    return null;
+};
 
 const parseTrackingRemark = (
     remark: string,
@@ -124,6 +168,24 @@ const parseTrackingRemark = (
         return { key: "arrived_at_port_of_origin" };
     }
 
+    if (
+        /^(the shipment is in transit)\.?$/i.test(normalized)
+    ) {
+        return { key: "in_transit" };
+    }
+
+    if (/^customs clearance in process\.?$/i.test(normalized)) {
+        return { key: "customs_clearance_in_process" };
+    }
+
+    if (/^arrived at destination country airport\.?$/i.test(normalized)) {
+        return { key: "arrived_at_destination_airport" };
+    }
+
+    if (/^departed from port of origin\.?$/i.test(normalized)) {
+        return { key: "departed_from_port_of_origin" };
+    }
+
     return null;
 };
 
@@ -174,6 +236,13 @@ export function TrackOrderComponent() {
             handleTrackInfo(trackingNumber);
         }
     }, [searchParams, handleTrackInfo]);
+
+    const statusKey = getTrackingStatusKey(tracking?.trackingStatus);
+
+    const lastMileTrackingNumber = tracking
+        ? normalizeTrackingValue(tracking.lastTrackNumber) ??
+        extractLastMileTrackingNumberFromHistory(tracking.routes)
+        : null;
 
     return (
         <Card className="py-3 sm:py-6 ">
@@ -228,7 +297,7 @@ export function TrackOrderComponent() {
                         <CardContent className="px-3 sm:px-6">
                             <div className="space-y-6">
 
-                                <div className="flex items-start justify-between gap-4">
+                                <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
                                     <div>
                                         <p className="text-sm text-muted-foreground">
                                             {t('footer.track_order.tracking_number')}
@@ -240,21 +309,9 @@ export function TrackOrderComponent() {
                                     </div>
                                     <Badge
                                         variant="secondary"
-                                        className={`
-                                            text-sm px-6 py-3 font-semibold
-                                            ${
-                                                tracking.trackingStatus === "In transit"
-                                                    ? "text-white bg-green-500"
-                                                    : "text-white bg-yellow-500"
-                                            }
-                                        `}
+                                        className={`px-6 py-3 text-sm font-semibold ${statusColorClass[statusKey]}`}
                                     >
-                                        {tracking.trackingStatus?.toLowerCase() === "unknown"
-                                            ? t('footer.track_order.tracking_status.unknown')
-                                            : t(
-                                                'footer.track_order.tracking_status.' +
-                                                getTrackingStatusKey(tracking.trackingStatus)
-                                            )}
+                                        {t(`footer.track_order.tracking_status.${statusKey}`)}
                                     </Badge>
                                 </div>
 
@@ -270,19 +327,34 @@ export function TrackOrderComponent() {
                                             field={`${tracking.trackingFrom || "?"} → ${tracking.trackingTo || "?"}`}
                                         />
                                     )}
-                                    <Field
-                                        title={t('footer.track_order.last_mile_carrier')}
-                                        field={tracking.lastMileCarrier || t('footer.track_order.not_assigned_yet')}
-                                    />
-                                    <Field
-                                        title={t('footer.track_order.last_mile_tracking_number')}
-                                        field={
-                                            tracking.lastTrackNumber &&
-                                            tracking.lastTrackNumber !== "Updating"
-                                                ? tracking.lastTrackNumber
-                                                : t('footer.track_order.not_available_yet')
-                                        }
-                                    />
+                                    {(tracking.lastMileCarrier) && (
+                                        <Field
+                                            title={t('footer.track_order.last_mile_carrier')}
+                                            field={tracking.lastMileCarrier}
+                                        />
+                                    )}
+                                    {lastMileTrackingNumber ? (
+                                        <Field
+                                            title={t('footer.track_order.last_mile_tracking_number')}
+                                            field={lastMileTrackingNumber}
+                                        />
+                                    ) : (
+                                        <div>
+                                            <p className="text-sm text-muted-foreground">
+                                                {t('footer.track_order.last_mile_tracking_number')}
+                                            </p>
+
+                                            <div className="flex gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-900 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200">
+                                                <Info className="mt-0.5 h-5 w-5 shrink-0" />
+
+                                                <div className="space-y-1">
+                                                    <p className="text-sm">
+                                                        {t('footer.track_order.last_mile_tracking_unavailable')}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {((tracking.deliveryDay &&
@@ -298,7 +370,7 @@ export function TrackOrderComponent() {
                                                         <div className="mb-2 flex items-center gap-2 text-muted-foreground">
                                                             <Truck className="h-4 w-4" />
                                                             <p className="text-xs font-medium">
-                                                                {t('footer.track_order.estimated_transit')}
+                                                                {t('footer.track_order.transit_duration')}
                                                             </p>
                                                         </div>
                                                         <p className="text-lg font-semibold">
