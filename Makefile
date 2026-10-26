@@ -6,11 +6,6 @@ ifneq (,$(wildcard ./.env))
     export
 endif
 
-### VARIABLES ###
-DOCKER_BACKEND_CONTAINER=$(shell docker compose ps --quiet backend)
-DOCKER_POSTGRES_CONTAINER=$(shell docker compose ps --quiet db)
-DOCKER_FE_CONTAINER=$(shell docker compose ps --quiet frontend)
-
 ### DOCKER ###
 # Docker compose command
 DOCKER_COMPOSE=docker compose
@@ -53,13 +48,13 @@ laravel-log:
 	$(DOCKER_COMPOSE) exec backend /bin/sh -c "tail -n 300 -f /app/storage/logs/laravel.log"
 
 backend-log:
-	docker logs --follow $(DOCKER_BACKEND_CONTAINER)
-	
+	docker logs --follow $$(docker compose ps --quiet backend)
+
 postgres-log:
-	docker logs --follow $(DOCKER_POSTGRES_CONTAINER)
-	
+	docker logs --follow $$(docker compose ps --quiet db)
+
 nextjs-log:
-	docker logs --tail 100 -f $(DOCKER_FE_CONTAINER)
+	docker logs --tail 100 -f $$(docker compose ps --quiet frontend)
 
 # Target to run the backend in the background ('-l' -> Use a Login Shell to be able to use profile.d scripts)
 sh-backend:
