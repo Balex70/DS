@@ -1,6 +1,7 @@
 'use client'
 
-import { ImageOff, LoaderCircle } from 'lucide-react';
+import { ImageSpinner } from '@/components/custom/ImageSpinner';
+import { ImageOff } from 'lucide-react';
 import Image from 'next/image'
 import { useState } from 'react';
 
@@ -11,12 +12,7 @@ export function ProductImage({ src, alt, imageClassName}: {src: string, alt: str
     return (
         <>
             {isLoading && !hasError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
-                    <LoaderCircle
-                        className="h-12 w-12 animate-spin text-muted-foreground/50"
-                        strokeWidth={3}
-                    />
-                </div>
+                <ImageSpinner />
             )}
 
             {!hasError && (
