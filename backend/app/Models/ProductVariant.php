@@ -58,7 +58,8 @@ class ProductVariant extends Model
 
     public function stockNeedsUpdate(): bool
     {
-        return $this->stock_synced_at === null
+        return $this->stock === null
+            || $this->stock_synced_at === null
             || $this->stock_synced_at->lte(now()->subMinutes(15));
     }
 }

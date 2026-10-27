@@ -18,6 +18,12 @@ class ProductVariantController extends Controller
      */
     public function stockUpdate(ProductVariant $productVariant)
     {
+        if (!$productVariant->stockNeedsUpdate()) {
+            return response()->json([
+                'stock' => $productVariant->stock,
+            ]);
+        }
+
         $variant = $this->service->updateVariantStock($productVariant);
 
         if (!$variant) {
