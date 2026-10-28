@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { MaterialOption } from "@/types/material";
 import { useTranslations } from "next-intl";
+import { useMemo } from "react";
 
 type MaterialsFilterProps = {
     activeMaterials: number[];
@@ -17,15 +18,49 @@ export function MaterialsFilter({
     onChange,
 }: MaterialsFilterProps) {
     const t = useTranslations('frontend')
-    const toggleMaterial = (materialId: number) => {
-        const isSelected = activeMaterials.includes(materialId);
+
+    const groupedMaterials = useMemo(() => {
+        const groups = new Map<
+            string,
+            { ids: number[]; name: string }
+        >();
+
+        for (const material of materialsOptions) {
+            const key = material.name.trim().toLowerCase();
+            const existing = groups.get(key);
+
+            if (existing) {
+                existing.ids.push(material.id);
+            } else {
+                const translatedName =
+                    material.translation?.name ?? material.name;
+
+                groups.set(key, {
+                    ids: [material.id],
+                    name:
+                        translatedName.charAt(0).toUpperCase() +
+                        translatedName.slice(1),
+                });
+            }
+        }
+
+        return Array.from(groups.values()).sort((a, b) =>
+            a.name.localeCompare(b.name),
+        );
+    }, [materialsOptions]);
+
+    const toggleMaterial = (materialIds: number[]) => {
+        const isSelected = materialIds.some((id) =>
+            activeMaterials.includes(id),
+        );
 
         const next = isSelected
-            ? activeMaterials.filter((id) => id !== materialId)
-            : [...activeMaterials, materialId];
+            ? activeMaterials.filter((id) => !materialIds.includes(id))
+            : [...new Set([...activeMaterials, ...materialIds])];
 
         onChange(next);
     };
+
     return (
         <div className="space-y-4 pt-3 px-3">
             <div>
@@ -35,21 +70,29 @@ export function MaterialsFilter({
             </div>
 
             <div className="space-y-2">
-                {materialsOptions.map((material) => {
-                    const id = `material-${material.id}`;
+                {groupedMaterials.map((material) => {
+                    const id = `material-${material.ids[0]}`;
 
                     return (
-                        <div key={material.id} className="flex items-center space-x-2">
+                        <div
+                            key={material.name.toLowerCase()}
+                            className="flex items-center space-x-2"
+                        >
                             <Checkbox
                                 id={id}
-                                checked={activeMaterials.includes(material.id)}
-                                onCheckedChange={() => toggleMaterial(material.id)}
+                                checked={material.ids.some((materialId) =>
+                                    activeMaterials.includes(materialId),
+                                )}
+                                onCheckedChange={() =>
+                                    toggleMaterial(material.ids)
+                                }
                             />
+
                             <Label
                                 htmlFor={id}
                                 className="text-sm font-normal cursor-pointer"
                             >
-                                {material.translation?.name ?? material.name}
+                                {material.name}
                             </Label>
                         </div>
                     );
