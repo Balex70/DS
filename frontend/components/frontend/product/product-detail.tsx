@@ -10,6 +10,7 @@ import { Product, ProductVariant } from "@/types/product";
 import { CurrencyCode } from "@/types/currency";
 import { useRouter } from "@/i18n/navigation";
 import { ProductControls } from "./ProductControls";
+import { Badge } from "@/components/ui/badge";
 
 type Props = {
     product: Product;
@@ -128,6 +129,26 @@ export function ProductDetail({
                                 })}
                             </div>
                         )}
+                    </div>
+                )}
+                {product.materials?.length >= 1 && (
+                    <div className="space-y-2">
+                        <div className="text-sm font-medium text-muted-foreground">
+                            {t('product.materials')}
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {product.materials.map((material) => {
+                                return (
+                                    <Badge
+                                        key={material.id}
+                                        variant="outline"
+                                        className="h-6 px-2.5 py-2 text-sm font-normal text-slate-700 border-slate-200 bg-slate-50"
+                                    >
+                                        {(material.translation?.name ?? material.name).trim().toLocaleLowerCase().replace(/^./u, (char) => char.toLocaleUpperCase())}
+                                    </Badge>
+                                );
+                            })}
+                        </div>
                     </div>
                 )}
             </div>

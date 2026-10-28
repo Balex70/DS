@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Category;
+use App\Models\Material;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -32,6 +33,11 @@ class ProductResource extends JsonResource
                 'name' => $category->name,
                 'full_path' => $category->full_path,
             ]),
+            'materials' => $this->materials->map(fn (Material $material) => [
+                'id' => $material->id,
+                'name' => $material->name,
+                'translation' => $material->translation
+            ])
         ];
     }
 }

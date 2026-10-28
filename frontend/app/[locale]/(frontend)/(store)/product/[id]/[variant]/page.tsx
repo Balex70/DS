@@ -70,7 +70,7 @@ export default async function ProductPage({
     const cookieStore = await cookies();
     const currency = getCurrency(cookieStore.get("currency")?.value);
 
-    const product = await getProduct(id, currency);
+    const product = await getProduct(id, currency, locale);
     if (!product) {
         notFound();
     }

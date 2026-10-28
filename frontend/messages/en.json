@@ -32,6 +32,7 @@
       "load_more": "Load more",
       "loading": "Loading...",
       "product_card": {
+        "materials": "Materials",
         "add_to_cart": "Add to cart",
         "adding": "Adding..."
       },
@@ -61,6 +62,7 @@
       "add_to_cart": "Add to cart",
       "adding": "Adding...",
       "options": "Options",
+      "materials": "Materials",
       "description_label": "Description",
       "availability": {
         "checking": "Checking availability...",

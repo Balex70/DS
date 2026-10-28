@@ -35,7 +35,7 @@ function ListMaterials () {
       };
 
       // fetch materials
-      const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/materials`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/materials?${query.toString()}`, {
           method: 'GET',
           credentials: 'include',
           headers: headers,

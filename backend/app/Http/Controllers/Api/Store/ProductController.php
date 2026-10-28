@@ -11,6 +11,7 @@ use App\Models\Material;
 use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -33,6 +34,7 @@ class ProductController extends Controller
 
             $query->with([
                 'translation' => fn ($q) => $q->where('locale', $locale),
+                'materials.translation' => fn ($q) => $q->where('locale', $locale),
             ]);
         }
 
@@ -59,8 +61,23 @@ class ProductController extends Controller
         }
 
         if ($request->filled('activeMaterials')) {
-            $query->whereHas('materials', function ($q) use ($request) {
-                $q->whereIn('materials.id', $request->activeMaterials);
+            $materialIds = $request->input('activeMaterials');
+
+            $materialNames = Material::query()
+                ->whereIn('id', $materialIds)
+                ->selectRaw('LOWER(TRIM(name)) as normalized_name')
+                ->distinct()
+                ->pluck('normalized_name');
+
+            $matchingMaterialIds = Material::query()
+                ->whereIn(
+                    DB::raw('LOWER(TRIM(name))'),
+                    $materialNames
+                )
+                ->pluck('id');
+
+            $query->whereHas('materials', function ($q) use ($matchingMaterialIds) {
+                $q->whereIn('materials.id', $matchingMaterialIds);
             });
         }
 
@@ -90,11 +107,13 @@ class ProductController extends Controller
             404
         );
 
+        $locale = $request->locale ?? 'en';
         $product->load([
             'variants' => fn ($query) => $query
                 ->with('image', 'translations')
                 ->orderBy('id'),
-            'translations'
+            'translations',
+            'materials.translation' => fn ($q) => $q->where('locale', $locale),
         ]);
 
         if ($request->filled('currency')) {
