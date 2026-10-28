@@ -36,6 +36,7 @@ class ProductResource extends JsonResource
             'materials' => $this->materials->map(fn (Material $material) => [
                 'id' => $material->id,
                 'name' => $material->name,
+                'translation' => $material->translation
             ])
         ];
     }
