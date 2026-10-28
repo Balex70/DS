@@ -1,5 +1,6 @@
 "use client"
 
+import { Badge } from "@/components/ui/badge"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { ProductWithCategories } from "@/types/product"
 import { format } from "date-fns"
@@ -66,6 +67,19 @@ export function ProductDrawerSecondaryFields({product}: {product: ProductWithCat
             <div className="text-md text-muted-foreground">
                 {product.updated_at ? format(new Date(product.updated_at), "PPpp") : "No"}
             </div>
+        </Field>
+        <Field>
+          <FieldLabel>Materials</FieldLabel>
+
+          <div className="flex flex-wrap gap-2">
+            {product.materials?.map((material) => (
+                <>
+                <Badge variant="secondary">
+                    {material.name} ({material.id})
+                </Badge>
+                </>
+            ))}
+          </div>
         </Field>
     </FieldGroup>
   )
