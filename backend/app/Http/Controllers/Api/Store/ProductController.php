@@ -34,6 +34,7 @@ class ProductController extends Controller
 
             $query->with([
                 'translation' => fn ($q) => $q->where('locale', $locale),
+                'materials.translation' => fn ($q) => $q->where('locale', $locale),
             ]);
         }
 
