@@ -19,6 +19,7 @@ export function ProductCard({ product }: Props) {
     const { currency } = useCurrency();
     const t = useTranslations('frontend')
     const cheapestVariantImage = product.cheapest_variant?.image?.original_url ?? product.big_image?.original_url ?? undefined;
+    const cheapestVariantId = product?.cheapest_variant?.external_id ?? '';
 
     const handleAddToCart = async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -38,7 +39,7 @@ export function ProductCard({ product }: Props) {
     return (
         <Card className="overflow-hidden transition hover:shadow-md gap-2 pb-0 pt-0">
             <Link
-                href={`/product/${product.id}`}
+                href={`/product/${product.id}/${cheapestVariantId}`}
                 className="group block"
             >
                 <div className="relative aspect-square bg-muted">

@@ -1,8 +1,9 @@
 'use client';
 
-import { ImageOff, LoaderCircle } from 'lucide-react';
+import { ImageOff } from 'lucide-react';
 import Image, { ImageProps } from 'next/image';
 import { useState } from 'react';
+import { ImageSpinner } from './ImageSpinner';
 
 type ProductImageProps = Omit<ImageProps, 'src'> & {
     src: string;
@@ -19,12 +20,7 @@ export function HeroCarouselImage({ src, ...props }: ProductImageProps) {
     return (
         <>
             {isLoading && !hasError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
-                    <LoaderCircle
-                        className="h-12 w-12 animate-spin text-muted-foreground/50"
-                        strokeWidth={3}
-                    />
-                </div>
+                <ImageSpinner />
             )}
 
             {!hasError && (
