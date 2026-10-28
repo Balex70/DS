@@ -32,6 +32,7 @@
       "load_more": "Load more",
       "loading": "Loading...",
       "product_card": {
+        "materials": "Materials",
         "add_to_cart": "Add to cart",
         "adding": "Adding..."
       },
