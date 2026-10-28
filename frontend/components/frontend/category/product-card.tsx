@@ -89,7 +89,7 @@ export function ProductCard({ product }: Props) {
                                     variant="outline"
                                     className="h-5 px-1.5 py-0 text-xs font-normal text-slate-700 border-slate-200 bg-slate-50"
                                 >
-                                    {material.translation?.name ?? material.name}
+                                    {(material.translation?.name ?? material.name).trim().toLocaleLowerCase().replace(/^./u, (char) => char.toLocaleUpperCase())}
                                 </Badge>
                             </>
                         ))}
