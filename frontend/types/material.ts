@@ -13,7 +13,11 @@ export type Material = {
     translations: {
         locale: string,
         name: string
-    }[]
+    }[],
+    translation: {
+        locale: string,
+        name: string
+    }
 }
 
 export type Meta = {

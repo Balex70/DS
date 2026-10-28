@@ -9,6 +9,7 @@ import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useTranslations } from "next-intl";
 import { ImageOff } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 type Props = {
     product: Product;
@@ -79,7 +80,20 @@ export function ProductCard({ product }: Props) {
                             </div>
                         )}
                     </div>
-
+                    <div className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+                        <span className="shrink-0">{t('category.product_card.materials')}:</span>
+                        {product.materials?.map((material) => (
+                            <>
+                                <Badge
+                                    key={material.id}
+                                    variant="outline"
+                                    className="h-5 px-1.5 py-0 text-xs font-normal text-slate-700 border-slate-200 bg-slate-50"
+                                >
+                                    {(material.translation?.name ?? material.name).trim().toLocaleLowerCase().replace(/^./u, (char) => char.toLocaleUpperCase())}
+                                </Badge>
+                            </>
+                        ))}
+                    </div>
                     {/* <button
                         onClick={handleAddToCart}
                         disabled={isPending}

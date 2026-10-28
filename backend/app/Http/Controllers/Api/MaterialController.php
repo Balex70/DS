@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateMaterialRequest;
+use App\Http\Resources\MaterialResource;
 use App\Models\Material;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,7 @@ class MaterialController extends Controller
             ->with(['translations'])
             ->latest();
 
-        return response()->json(
+        return MaterialResource::collection(
             $query->paginate(10)
         );
     }

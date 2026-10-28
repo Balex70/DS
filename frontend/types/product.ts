@@ -1,4 +1,5 @@
 import { Category } from "./category";
+import { Material } from "./material";
 
 export type Product = {
   id: number,
@@ -31,6 +32,7 @@ export type Product = {
   cheapest_variant: ProductVariant,
   translation: ProductTranslation | null
   translations: ProductTranslation[],
+  materials: Material[],
   created_at: Date,
   updated_at: Date
 }
