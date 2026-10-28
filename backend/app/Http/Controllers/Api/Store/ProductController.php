@@ -107,11 +107,13 @@ class ProductController extends Controller
             404
         );
 
+        $locale = $request->locale ?? 'en';
         $product->load([
             'variants' => fn ($query) => $query
                 ->with('image', 'translations')
                 ->orderBy('id'),
-            'translations'
+            'translations',
+            'materials.translation' => fn ($q) => $q->where('locale', $locale),
         ]);
 
         if ($request->filled('currency')) {

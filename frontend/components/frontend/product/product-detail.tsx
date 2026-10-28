@@ -144,7 +144,7 @@ export function ProductDetail({
                                         variant="outline"
                                         className="h-6 px-2.5 py-2 text-sm font-normal text-slate-700 border-slate-200 bg-slate-50"
                                     >
-                                        {material.name}
+                                        {material.translation?.name ?? material.name}
                                     </Badge>
                                 );
                             })}

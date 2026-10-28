@@ -10,7 +10,8 @@ const sliceCharacters = 600
 
 export async function getProduct(
     id: string | number,
-    currency?: string
+    currency?: string,
+    locale?: string
 ): Promise<Product> {
     try {
         // await delay(3000);
@@ -18,6 +19,10 @@ export async function getProduct(
 
         if (currency) {
             query.append("currency", String(currency));
+        }
+
+        if (locale) {
+            query.append("locale", String(locale));
         }
 
         const url = `${process.env.CORE_API_ENTRYPOINT}/api/store/products/${id}/?${query.toString()}`;
