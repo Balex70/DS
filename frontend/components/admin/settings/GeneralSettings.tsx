@@ -81,6 +81,50 @@ export default function GeneralSettings({
                     }
                 />
             </div>
+            <div className="space-y-2">
+                <Label htmlFor="store-legal-name-uk">Legal Name (Ukrainian)</Label>
+
+                <Input
+                    id="store-legal-name-uk"
+                    value={settings["store.legal_name.uk"] ?? ""}
+                    onChange={(e) =>
+                        updateSetting("store.legal_name.uk", e.target.value)
+                    }
+                />
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="store-legal-address-uk">Legal Address (Ukrainian)</Label>
+
+                <Input
+                    id="store-legal-address-uk"
+                    value={settings["store.legal_address.uk"] ?? ""}
+                    onChange={(e) =>
+                        updateSetting("store.legal_address.uk", e.target.value)
+                    }
+                />
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="store-legal-email-uk">Legal Email (Ukrainian)</Label>
+
+                <Input
+                    id="store-legal-email-uk"
+                    value={settings["store.legal_email.uk"] ?? ""}
+                    onChange={(e) =>
+                        updateSetting("store.legal_email.uk", e.target.value)
+                    }
+                />
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="store-legal-phone-uk">Legal Phone (Ukrainian)</Label>
+
+                <Input
+                    id="store-legal-phone-uk"
+                    value={settings["store.legal_phone.uk"] ?? ""}
+                    onChange={(e) =>
+                        updateSetting("store.legal_phone.uk", e.target.value)
+                    }
+                />
+            </div>
 
             <div className="flex items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">

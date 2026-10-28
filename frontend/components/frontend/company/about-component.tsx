@@ -12,6 +12,15 @@ export function AboutComponent({settings, locale}: {settings: Settings, locale: 
     const addressKey: keyof Settings = `store.fe_address.${locale as Locale}`;
     const address = settings[addressKey];
 
+    const legalNameKey: keyof Settings = `store.legal_name.${locale as Locale}`;
+    const legalName = settings[legalNameKey];
+    const legalAddressKey: keyof Settings = `store.legal_address.${locale as Locale}`;
+    const legalAddress = settings[legalAddressKey];
+    const legalEmailKey: keyof Settings = `store.legal_email.${locale as Locale}`;
+    const legalEmail = settings[legalEmailKey];
+    const legalPhoneKey: keyof Settings = `store.legal_phone.${locale as Locale}`;
+    const legalPhone = settings[legalPhoneKey];
+
     return (
         <div className="mx-auto py-4 lg:py-10">
             <div className="mb-12 text-center">
@@ -50,14 +59,20 @@ export function AboutComponent({settings, locale}: {settings: Settings, locale: 
                         {t("footer.about_us_section.where_to_find_us.header")}
                     </h2>
 
-                    {address && (
+                    {(legalName && legalAddress && legalEmail && legalPhone) ? (
                         <div className="mt-6 flex flex-col items-center">
-                            <MapPin className="mb-3 h-8 w-8 text-primary" />
-
-                            <p className="text-muted-foreground">
-                                {address}
-                            </p>
+                            <p className="text-muted-foreground">{legalName}</p>
+                            <p className="text-muted-foreground">{legalAddress}</p>
+                            <p className="text-muted-foreground">{legalEmail}</p>
+                            <p className="text-muted-foreground">{legalPhone}</p>
                         </div>
+                    ) : (
+                        address && (
+                            <div className="mt-6 flex flex-col items-center">
+                                <MapPin className="mb-3 h-8 w-8 text-primary" />
+                                <p className="text-muted-foreground">{address}</p>
+                            </div>
+                        )
                     )}
                 </div>
             </section>

@@ -25,6 +25,22 @@ class Settings
             'type' => 'string',
             'default' => null,
         ],
+        'store.legal_name.uk' => [
+            'type' => 'string',
+            'default' => null,
+        ],
+        'store.legal_address.uk' => [
+            'type' => 'string',
+            'default' => null,
+        ],
+        'store.legal_email.uk' => [
+            'type' => 'string',
+            'default' => null,
+        ],
+        'store.legal_phone.uk' => [
+            'type' => 'string',
+            'default' => null,
+        ],
 
         // 'checkout.guest_checkout' => [
         //     'type' => 'boolean',
