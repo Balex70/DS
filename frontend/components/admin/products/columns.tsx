@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge"
 import { PriceRenderer } from "@/components/custom/PriceRenderer"
 import { Category } from "@/types/category"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Material } from "@/types/material"
 
 const EIGHT_WEEKS_MS = 1000 * 60 * 60 * 24 * 56
 
@@ -185,6 +186,25 @@ export const columns = ({
                 {categories.map((category) => category.full_path).join(" | ")}
               </div>
             </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )
+    }
+  },
+  {
+    accessorKey: "materials",
+    header: "Materials",
+    cell: ({ row }) => {
+      const materials: Material[] = row.original.materials
+
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="max-w-[250px] truncate cursor-help">
+                {materials.map((material) => material.name).join(" | ")}
+              </div>
+            </TooltipTrigger>
           </Tooltip>
         </TooltipProvider>
       )
