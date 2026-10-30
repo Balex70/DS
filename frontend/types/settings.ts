@@ -4,6 +4,14 @@ export type Settings = {
     "store.fe_phone": string;
     "store.fe_address.en": string;
     "store.fe_address.uk": string;
+    "store.legal_name.en": string;
+    "store.legal_address.en": string;
+    "store.legal_email.en": string;
+    "store.legal_phone.en": string;
+    "store.legal_name.uk": string;
+    "store.legal_address.uk": string;
+    "store.legal_email.uk": string;
+    "store.legal_phone.uk": string;
     "product_sync.allow_cron_sync": boolean;
     "product_sync.allow_cron_enrichment": boolean;
     "product_sync.allow_cron_retry_enrichment": boolean;
