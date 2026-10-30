@@ -3,12 +3,15 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { useFullSearch } from "@/hooks/use-full-search";
 import { ProductCard } from "../category/product-card";
+import { CurrencyCode } from "@/types/currency";
 
 type SearchComponentProps = {
     q: string | undefined;
+    locale: string;
+    currency: CurrencyCode;
 }
 
-export function SearchComponent({q}: SearchComponentProps) {
+export function SearchComponent({q, locale, currency}: SearchComponentProps) {
     const {
             data,
             isLoading,
@@ -17,10 +20,12 @@ export function SearchComponent({q}: SearchComponentProps) {
             isFetchingNextPage,
         } = useFullSearch({
             q: q ? q : "",
-            sort: "latest",
+            locale,
+            currency
         });
 
-    const products = data?.pages.flatMap(page => page.data) ?? [];
+    const products = data?.pages.flatMap(page => page.products.data) ?? [];
+    const categories = data?.pages[0].categories ?? [];
 
     if (isLoading) {
         return (

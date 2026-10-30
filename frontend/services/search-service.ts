@@ -8,15 +8,19 @@ export type SearchResult = {
     categories: Category[];
 }
 
-export type GetSearchProductsParams = {
+export type GetFullSearchProductsParams = {
     q: string;
+    locale: string,
+    currency?: CurrencyCode,
     page?: number;
-    sort?: string;
 }
 
-type PaginatedFullSearchResponse<T> = {
-    data: T[];
-    meta: Meta;
+type PaginatedFullSearchResponse<T, M> = {
+    products: {
+        data: T[];
+        meta: Meta;
+    },
+    categories: M[]
 }
 
 export async function search(
@@ -35,8 +39,8 @@ export async function search(
 }
 
 export async function fullSearch(
-    params: GetSearchProductsParams
-): Promise<PaginatedFullSearchResponse<Product>> {
+    params: GetFullSearchProductsParams
+): Promise<PaginatedFullSearchResponse<Product, Category>> {
     const response = await api.get("/api/store/full-search", {
         params,
     });
