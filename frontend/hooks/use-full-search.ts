@@ -14,7 +14,14 @@ type PaginatedFullSearchResponse<T, M> = {
     categories: M[]
 }
 
-export function useFullSearch(params: { q: string; locale: string, currency?: CurrencyCode }) {
+export function useFullSearch(params: {
+    q: string;
+    locale: string,
+    sort: string;
+    price?: [number, number];
+    activeMaterials?: number[];
+    currency?: CurrencyCode
+}) {
     return useInfiniteQuery<PaginatedFullSearchResponse<Product, Category>>({
         queryKey: ["search", params],
         queryFn: ({ pageParam = 1 }) =>
