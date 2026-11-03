@@ -16,6 +16,51 @@ class SearchService
     ) {
     }
 
+    public function searchQuery(string $search, string $locale, string $currency): array
+    {
+        $query = $this->baseQuery($search, $locale);
+
+        $products = $query->limit(10)->get();
+
+        if ($currency) {
+            $products->each(function (Product $product) use ($currency) {
+                $product->currency_price = $this->converter->convert(
+                    $product->price,
+                    CurrenciesEnum::USD->value,
+                    $currency,
+                );
+            });
+        }
+
+        $categories = Category::query()
+            ->where('active', true)
+            ->where('is_visible', true)
+            ->select(['id', 'name', 'slug', 'full_path'])
+            ->when(
+                $locale,
+                fn ($query) => $query->where(function ($q) use ($search, $locale) {
+                    $q->where('name', 'ILIKE', "%{$search}%")
+                        ->orWhereHas('translations', function ($tq) use ($search, $locale) {
+                            $tq->where('locale', $locale)
+                                ->where('name', 'ILIKE', "%{$search}%");
+                        });
+                }),
+                fn ($query) => $query->where('name', 'ILIKE', "%{$search}%")
+            )
+            ->with([
+                'translations' => fn ($q) => $locale
+                    ? $q->where('locale', $locale)
+                    : $q,
+            ])
+            ->limit(5)
+            ->get();
+
+        return [
+            $products,
+            $categories
+        ];
+    }
+
     public function fullSearchQuery(string $search, string $locale, string $currency, array | null $priceRange, array | null $activeMaterials): array
     {
         $query = $this->baseQuery($search, $locale);
