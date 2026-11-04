@@ -9,6 +9,14 @@ class Settings
             'type' => 'string',
             'default' => 'My Store',
         ],
+        'store.footer_name.en' => [
+            'type' => 'string',
+            'default' => '',
+        ],
+        'store.footer_name.uk' => [
+            'type' => 'string',
+            'default' => '',
+        ],
         'store.fe_email' => [
             'type' => 'string',
             'default' => null,
