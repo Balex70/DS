@@ -63,29 +63,11 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
     const products = data?.pages.flatMap(page => page.products.data) ?? [];
     const categories = data?.pages[0].categories ?? [];
 
-    if (isLoading) {
-        // return (
-        //     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        //         {Array.from({ length: 8 }).map((_, i) => (
-        //             <Card key={i}>
-        //                 <CardContent className="p-4 space-y-2">
-        //                     <div className="h-4 w-3/4 rounded bg-muted" />
-        //                     <div className="h-3 w-1/2 rounded bg-muted" />
-        //                 </CardContent>
-        //             </Card>
-        //         ))}
-        //     </div>
-        // );
-    }
-
     let hasProducts = true;
     if (minPrice === 0 && maxPrice === 10000) {
         hasProducts = false;
     }
 
-    // if (!products.length && !categories.length) {
-    //     return <SimpleNotFoundCard title={t('search.no_results')} description={t('search.no_results_description')}/>
-    // }
     return (
         <div className="flex w-full gap-6">
             <aside className="hidden w-72 shrink-0 lg:block">
