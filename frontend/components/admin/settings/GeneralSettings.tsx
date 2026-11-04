@@ -37,6 +37,28 @@ export default function GeneralSettings({
                 />
             </div>
             <div className="space-y-2">
+                <Label htmlFor="store-footer-name-en">Footer Name (English)</Label>
+
+                <Input
+                    id="store-footer-name-en"
+                    value={settings["store.footer_name.en"] ?? ""}
+                    onChange={(e) =>
+                        updateSetting("store.footer_name.en", e.target.value)
+                    }
+                />
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="store-footer-name-uk">Footer Name (Ukrainian)</Label>
+
+                <Input
+                    id="store-footer-name-uk"
+                    value={settings["store.footer_name.uk"] ?? ""}
+                    onChange={(e) =>
+                        updateSetting("store.footer_name.uk", e.target.value)
+                    }
+                />
+            </div>
+            <div className="space-y-2">
                 <Label htmlFor="store-fe-email">Store email (render on Frontend)</Label>
 
                 <Input
