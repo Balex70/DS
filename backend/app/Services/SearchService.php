@@ -109,7 +109,7 @@ class SearchService
                 );
             });
         }
-        
+
         $categories = Category::query()
             ->where('active', true)
             ->where('is_visible', true)
