@@ -16,6 +16,7 @@ import { CategorySidebar } from "../category/CategorySidebar";
 import { SortSelect } from "../category/SortSelect";
 import { MobileCategorySidebar } from "../category/MobileCategorySidebar";
 import { MobileSortSelect } from "../category/MobileSortSelect";
+import { Search } from "lucide-react";
 
 type SearchComponentProps = {
     q: string | undefined;
@@ -203,6 +204,30 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
                                 </div>
                             )}
                         </>
+                    )}
+                    {(!products.length && !categories.length && !isLoading) && (
+                        <Card className="mt-0">
+                            <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+                                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                                    <Search className="h-5 w-5 text-muted-foreground" />
+                                </div>
+
+                                <h2 className="text-lg font-semibold">
+                                    {t("search.no_results")}
+                                </h2>
+
+                                <p className="mt-2 max-w-md text-sm text-muted-foreground">
+                                    {t("search.no_results_description")}
+                                </p>
+
+                                <p className="mt-3 text-sm">
+                                    <span className="text-muted-foreground">
+                                        {t("search.searched_for")}
+                                    </span>{" "}
+                                    <span className="font-medium">&quot;{q}&quot;</span>
+                                </p>
+                            </div>
+                        </Card>
                     )}
                 </div>
             </main>
