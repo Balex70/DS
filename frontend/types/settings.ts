@@ -1,5 +1,7 @@
 export type Settings = {
     "store.name": string;
+    "store.footer_name.en": string;
+    "store.footer_name.uk": string;
     "store.fe_email": string;
     "store.fe_phone": string;
     "store.fe_address.en": string;
