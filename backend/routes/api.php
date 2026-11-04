@@ -146,6 +146,7 @@ Route::prefix('store')->group(function () {
     // Search
     Route::get('search', [StoreSearchController::class, 'search']);
     Route::get('full-search', [StoreSearchController::class, 'fullSearch']);
+    Route::get('full-search/filters', [StoreSearchController::class, 'filters']);
 
     // Settings
     Route::get('settings', [StoreSettingController::class, 'index']);
