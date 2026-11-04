@@ -53,6 +53,7 @@ class SearchController extends Controller
         $validated = $request->validate([
             'q' => ['nullable', 'string', 'max:100'],
             'locale' => ['nullable', Rule::enum(LocalesEnum::class)],
+            'sort' => ['nullable', 'string', 'max:100'],
             'currency' => ['nullable', Rule::enum(CurrenciesEnum::class)],
             'price' => ['nullable', 'array'],
             'activeMaterials' => ['nullable', 'array'],
@@ -68,11 +69,12 @@ class SearchController extends Controller
         }
 
         $locale = $validated['locale'] ?? null;
+        $sort = $validated['sort'] ?? null;
         $currency = $validated['currency'] ?? null;
         $priceRange = $request->filled('price') ? $request->input('price') : null;
         $activeMaterials = $request->filled('activeMaterials') ? $request->input('activeMaterials') : null;
 
-        [$paginatedProducts, $categories] = $this->searchService->fullSearchQuery($search, $locale, $currency, $priceRange, $activeMaterials);
+        [$paginatedProducts, $categories] = $this->searchService->fullSearchQuery($search, $locale, $sort, $currency, $priceRange, $activeMaterials);
 
         return response()->json([
             'products' => [

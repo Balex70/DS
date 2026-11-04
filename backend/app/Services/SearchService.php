@@ -61,7 +61,7 @@ class SearchService
         ];
     }
 
-    public function fullSearchQuery(string $search, string $locale, string $currency, array | null $priceRange, array | null $activeMaterials): array
+    public function fullSearchQuery(string $search, string $locale, string $sort, string $currency, array | null $priceRange, array | null $activeMaterials): array
     {
         $query = $this->baseQuery($search, $locale);
 
@@ -92,7 +92,14 @@ class SearchService
                 $q->whereIn('materials.id', $matchingMaterialIds);
             });
         }
-        
+
+        match ($sort ?? 'latest') {
+            'latest' => $query->latest(),
+            'price_asc' => $query->orderBy('price'),
+            'price_desc' => $query->orderByDesc('price'),
+            default => $query->latest(),
+        };
+
         if ($currency) {
             $query->each(function (Product $product) use ($currency) {
                 $product->currency_price = $this->converter->convert(
@@ -184,7 +191,7 @@ class SearchService
                     });
                 });
         }
- 
+
         return $query;
     }
 }

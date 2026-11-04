@@ -13,6 +13,7 @@ import { useSearchFilters } from "@/hooks/use-search-filters";
 import { useState } from "react";
 import { SortSelectValue } from "@/types/category";
 import { CategorySidebar } from "../category/CategorySidebar";
+import { SortSelect } from "../category/SortSelect";
 
 type SearchComponentProps = {
     q: string | undefined;
@@ -157,6 +158,10 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
                             <h2 className="mb-4 text-xl font-semibold">
                                 Products ({products.length})
                             </h2>
+                            {/* Desktop */}
+                            <div className="hidden lg:block">
+                                <SortSelect hasProducts={hasProducts} value={sort} onChange={setSort} />
+                            </div>
                             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                                 {products.map(product => (
                                     <ProductCard key={product.id} product={product} />
