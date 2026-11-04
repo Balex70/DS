@@ -54,6 +54,7 @@ export function SearchBar({
                     {value &&
                         <>
                             <InputGroupButton
+                                type="button"
                                 size="icon-xs"
                                 aria-label="Clear"
                                 onClick={() => onChange("")}

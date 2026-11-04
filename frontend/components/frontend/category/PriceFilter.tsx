@@ -29,6 +29,10 @@ export function PriceFilter({
     const t = useTranslations('frontend')
     const [localValue, setLocalValue] = useState<[number, number]>(value);
 
+    if (min === max) {
+        return null;
+    }
+
     return (
         <div className="space-y-4 pt-2 px-3">
             <div>
