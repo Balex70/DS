@@ -1,8 +1,10 @@
 'use client'
 
 import Image from "next/image";
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { useSettings } from "@/hooks/use-settings";
+import { Settings } from "@/types/settings";
+import { Locale } from "@/i18n/config";
 
 type TrustImageProps = {
     src: string;
@@ -24,6 +26,10 @@ function TrustImage({ src, alt }: TrustImageProps) {
 export default function FooterBottomSection() {
     const { data: settings } = useSettings();
     const t = useTranslations('frontend')
+    const locale = useLocale();
+
+    const footerNameKey: keyof Settings = `store.footer_name.${locale as Locale}`;
+    const footerName = settings && settings[footerNameKey];
 
     return (
         <div className="border-t mb-8 md:mb-2">
@@ -32,8 +38,8 @@ export default function FooterBottomSection() {
                 <p className="text-center text-xs text-muted-foreground lg:text-left">
                     © {new Date().getFullYear()}
                     {' ' + t('footer.copyright')}
-                    {settings?.["store.name"] && settings?.["store.name"] !== '' &&
-                        ' - ' + settings?.["store.name"]
+                    {footerName && footerName !== '' &&
+                        ' - ' + footerName
                     }
                 </p>
 
