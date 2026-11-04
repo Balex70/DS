@@ -14,6 +14,8 @@ import { useState } from "react";
 import { SortSelectValue } from "@/types/category";
 import { CategorySidebar } from "../category/CategorySidebar";
 import { SortSelect } from "../category/SortSelect";
+import { MobileCategorySidebar } from "../category/MobileCategorySidebar";
+import { MobileSortSelect } from "../category/MobileSortSelect";
 
 type SearchComponentProps = {
     q: string | undefined;
@@ -161,6 +163,27 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
                             {/* Desktop */}
                             <div className="hidden lg:block">
                                 <SortSelect hasProducts={hasProducts} value={sort} onChange={setSort} />
+                            </div>
+                            {/* Mobile */}
+                            <div className="flex items-center justify-between lg:hidden">
+                                <MobileCategorySidebar
+                                    hasProducts={hasProducts}
+                                    isLoading={false}
+                                    minPrice={minPrice}
+                                    maxPrice={maxPrice}
+                                    price={priceDraft}
+                                    activeMaterials={activeMaterials}
+                                    materialsOptions={filterData?.materials ?? []}
+                                    onPriceChange={setPriceDraft}
+                                    setPriceApplied={() => setPrice(priceDraft)}
+                                    setActiveMaterials={setActiveMaterials}
+                                />
+
+                                <MobileSortSelect
+                                    hasProducts={hasProducts}
+                                    value={sort}
+                                    onChange={setSort}
+                                />
                             </div>
                             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                                 {products.map(product => (

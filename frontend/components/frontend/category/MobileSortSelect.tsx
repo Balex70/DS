@@ -39,7 +39,7 @@ export function MobileSortSelect({
                     className="h-9 rounded-2xl border border-input bg-background px-3 shadow-xs hover:bg-accent"
                     >
                     <ArrowUpDown className="mr-2 h-4 w-4 text-muted-foreground" />
-                    {t(selected?.label || "category.sort.latest")}
+                    <span>{t(selected?.label ?? "category.sort.latest")}</span>
                 </Button>
             </SheetTrigger>
 
