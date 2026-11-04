@@ -237,7 +237,11 @@
       "start_typing": "Start typing to search...",
       "products": "Products",
       "categories": "Categories",
-      "results_for": "Search results for \"{query}\""
+      "results_for": "Search results for \"{query}\"",
+      "meta": {
+        "title": "Search Products",
+        "description": "Discover products at affordable prices. Browse our selection and find what you're looking for."
+      }
     },
     "footer": {
       "company": "Company",

@@ -1,6 +1,9 @@
 import { SearchComponent } from "@/components/frontend/search/search-component";
 import { CURRENCIES, CurrencyCode } from "@/types/currency";
 import { cookies } from "next/headers";
+import { getTranslations } from "next-intl/server";
+import { Metadata } from "next";
+import { getSettings } from "@/actions/settingsActions";
 
 type Props = {
     searchParams: Promise<{
@@ -10,6 +13,25 @@ type Props = {
         locale: string;
     }>;
 };
+
+export async function generateMetadata({
+    params,
+}: Pick<Props, "params">): Promise<Metadata> {
+    const { locale } = await params;
+    const settings = await getSettings();
+    const t = await getTranslations({ locale, namespace: "frontend" });
+
+    const storeName = (settings?.["store.name"] && settings?.["store.name"] !== '') ? ' | ' + settings?.["store.name"] : '';
+
+    return {
+        title: t("search.meta.title") + storeName,
+        description: t("search.meta.description"),
+        robots: {
+            index: false,
+            follow: true,
+        },
+    };
+}
 
 const DEFAULT_CURRENCY: CurrencyCode = "USD";
 function getCurrency(value: string | undefined): CurrencyCode {
