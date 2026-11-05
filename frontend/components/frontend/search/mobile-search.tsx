@@ -62,7 +62,7 @@ export function MobileSearch({locale}: {locale: string}) {
                                     onChange={(value) => {
                                         setQuery(value);
                                     }}
-                                    onClickSearch={() => setOpen(true)}
+                                    onClickSearch={() => setOpen(false)}
                                 />
                             </div>
 
