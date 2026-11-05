@@ -45,4 +45,7 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    'opensearch' => [
+        'host' => env('OPENSEARCH_HOST', 'http://opensearch:9200'),
+    ],
 ];
