@@ -47,5 +47,6 @@ return [
 
     'opensearch' => [
         'host' => env('OPENSEARCH_HOST', 'http://opensearch:9200'),
+        'index' => env('OPENSEARCH_INDEX', 'products'),
     ],
 ];
