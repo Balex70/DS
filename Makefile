@@ -13,6 +13,9 @@ DOCKER_COMPOSE_PROD = docker compose -f docker-compose.yml -f docker-compose.pro
 DOCKER_COMPOSE_CI=docker compose -f docker-compose.ci.yml
 DOCKER_COMPOSE_KUBE=docker-compose --env-file frontend/.env.kube -f docker-compose.kube.yml # use docker compose in local
 
+DB_BACKUP_DIR ?= ./backups
+DB_BACKUP_FILE ?= local-$(shell date +%Y%m%d-%H%M%S).dump
+
 show-config:
 	$(DOCKER_COMPOSE) config
 
@@ -98,6 +101,38 @@ type-check:
 	$(DOCKER_COMPOSE) exec frontend /bin/sh -c "npm run type-check"
 
 check-release: backend-test lint type-check phpcs
+
+# Export PostgreSQL database in custom format
+db-export:
+	@mkdir -p "$(DB_BACKUP_DIR)"
+	$(DOCKER_COMPOSE) exec -T db sh -c \
+		'pg_dump -Fc --no-owner --no-privileges -U "$$POSTGRES_USER" "$$POSTGRES_DB"' \
+		> "$(DB_BACKUP_DIR)/$(DB_BACKUP_FILE)"
+	@echo "Database backup created: $(DB_BACKUP_DIR)/$(DB_BACKUP_FILE)"
+
+# Import PostgreSQL custom-format dump
+# make db-import DB_DUMP=./backups/production.dump
+db-import:
+	@test -f "$(DB_DUMP)" || (echo "Dump not found: $(DB_DUMP)" && exit 1)
+	$(DOCKER_COMPOSE) exec -T db sh -c \
+		'pg_restore --clean --if-exists --no-owner --no-privileges --single-transaction -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"' \
+		< "$(DB_DUMP)"
+
+# Import gzipped PostgreSQL SQL dump (from production)
+# make db-import-gz DB_DUMP=./backups/db-2026-11-05.sql.gz
+db-import-gz:
+	@test -f "$(DB_DUMP)" || (echo "Dump not found: $(DB_DUMP)" && exit 1)
+	$(DOCKER_COMPOSE) exec -T db sh -c '\
+		set -e; \
+		psql -v ON_ERROR_STOP=1 -U "$$POSTGRES_USER" -d postgres \
+			-c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '\''$$POSTGRES_DB'\'' AND pid <> pg_backend_pid()"; \
+		psql -v ON_ERROR_STOP=1 -U "$$POSTGRES_USER" -d postgres \
+			-c "DROP DATABASE IF EXISTS \"$$POSTGRES_DB\""; \
+		psql -v ON_ERROR_STOP=1 -U "$$POSTGRES_USER" -d postgres \
+			-c "CREATE DATABASE \"$$POSTGRES_DB\" OWNER \"$$POSTGRES_USER\""; \
+	'
+	gunzip -c "$(DB_DUMP)" | $(DOCKER_COMPOSE) exec -T db sh -c \
+		'psql -v ON_ERROR_STOP=1 -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"'
 
 #################################################################
 #####                  #continuous integration              #####
