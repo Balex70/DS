@@ -115,7 +115,11 @@ class OpenSearchProvider implements SearchEngineInterface
                             ? [[
                                 'multi_match' => [
                                     'query' => $search,
-                                    'fields' => ['name_raw', 'name_processed'],
+                                    'fields' => [
+                                        'name_raw',
+                                        'name_processed',
+                                        'translations.name',
+                                    ],
                                 ],
                             ]]
                             : [],
