@@ -2,6 +2,9 @@
 
 namespace App\SearchEngine\Providers\OpenSearch;
 
+use App\Actions\CreateAppLogAction;
+use App\Enums\AppLogLevelEnum;
+use App\Enums\AppLogRealmEnum;
 use App\SearchEngine\Contracts\SearchEngineInterface;
 use OpenSearch\Client;
 use OpenSearch\GuzzleClientFactory;
@@ -10,7 +13,10 @@ class OpenSearchProvider implements SearchEngineInterface
 {
     protected Client $client;
 
-    public function __construct(GuzzleClientFactory $clientFactory)
+    public function __construct(
+        private GuzzleClientFactory $clientFactory,
+        private CreateAppLogAction $createAppLogAction,
+    )
     {
         $this->client = $clientFactory->create([
             'base_uri' => config('services.opensearch.host'),
@@ -34,6 +40,44 @@ class OpenSearchProvider implements SearchEngineInterface
             'id' => $product['id'],
             'body' => $product,
         ]);
+    }
+
+    public function bulkIndexProducts(array $documents): void
+    {
+        if (empty($documents)) {
+            return;
+        }
+
+        $body = [];
+
+        foreach ($documents as $document) {
+            $body[] = [
+                'index' => [
+                    '_index' => 'products',
+                    '_id' => (string) $document['id'],
+                ],
+            ];
+
+            $body[] = $document;
+        }
+
+        $response = $this->client->bulk([
+            'body' => $body,
+        ]);
+
+        if ($response['errors'] ?? false) {
+            foreach ($response['items'] as $item) {
+                $result = $item['index'];
+
+                if (isset($result['error'])) {
+                    $this->createAppLogAction->execute(
+                        level: AppLogLevelEnum::ERROR,
+                        realm: AppLogRealmEnum::PRODUCT,
+                        message: 'OpenSearch bulk indexing failed: ' . $result['_id'] ?? null . ' Error: ' . $result['error'],
+                    );
+                }
+            }
+        }
     }
 
     public function fullSearchProducts(
@@ -112,17 +156,58 @@ class OpenSearchProvider implements SearchEngineInterface
                 'query' => [
                     'bool' => [
                         'must' => $search !== null && $search !== ''
-                            ? [[
-                                'multi_match' => [
-                                    'query' => $search,
-                                    'fields' => [
-                                        'name_raw',
-                                        'name_processed',
-                                        'translations.name',
+                        ? [
+                            [
+                                'bool' => [
+                                    'should' => [
+                                        [
+                                            'multi_match' => [
+                                                'query' => $search,
+                                                'fields' => [
+                                                    'name_raw',
+                                                    'name_processed',
+                                                    'translations.name',
+                                                ],
+                                            ],
+                                        ],
+                                        // Variant names
+                                        [
+                                            'nested' => [
+                                                'path' => 'variants',
+                                                'query' => [
+                                                    'multi_match' => [
+                                                        'query' => $search,
+                                                        'fields' => [
+                                                            'variants.name',
+                                                            'variants.name_processed',
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+
+                                        // Variant translations (nested inside variants)
+                                        [
+                                            'nested' => [
+                                                'path' => 'variants',
+                                                'query' => [
+                                                    'nested' => [
+                                                        'path' => 'variants.translations',
+                                                        'query' => [
+                                                            'match' => [
+                                                                'variants.translations.name' => $search,
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
                                     ],
+                                    'minimum_should_match' => 1,
                                 ],
-                            ]]
-                            : [],
+                            ],
+                        ]
+                        : [],
                         'must_not' => [
                             ['exists' => ['field' => 'enrichment_failed_at']],
                         ],

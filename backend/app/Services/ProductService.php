@@ -200,7 +200,8 @@ class ProductService
             'translations',
             'bigImage',
             'cheapestVariant',
-            'materials'
+            'materials',
+            'variants',
         ]);
 
         try {
@@ -300,28 +301,27 @@ class ProductService
             message: 'Products reindex started',
         );
 
-        $query = Product::query();
-        $query->with([
+        $provider = $this->searchEngineManager->driver();
+
+        Product::query()
+        ->with([
             'translations',
             'bigImage',
             'cheapestVariant',
-            'materials'
-        ])->chunkById(100, function ($products) {
-            foreach ($products as $product) {
-                try {
-                    $document = $this->buildSearchIndexDocument($product);
+            'materials.translations',
+            'variants.translations',
+        ])
+        ->chunkById(100, function ($products) use ($provider) {
+            $documents = $products
+                ->map(fn ($product) => $this->buildSearchIndexDocument($product))
+                ->all();
 
-                    $this->searchEngineManager
-                        ->driver()
-                        ->indexProduct($document);
-                } catch (\Throwable $e) {
-                    $this->createAppLogAction->execute(
-                        level: AppLogLevelEnum::ERROR,
-                        realm: AppLogRealmEnum::PRODUCT,
-                        message: 'Product indexing failed. Product ID: ' . $product->id . ' Error: ' . $e->getMessage(),
-                    );
-                }
-            }
+            $provider->bulkIndexProducts($documents);
+            // $this->createAppLogAction->execute(
+            //     level: AppLogLevelEnum::SUCCESS,
+            //     realm: AppLogRealmEnum::PRODUCT,
+            //     message: 'Products indexed: ' . count($documents),
+            // );
         });
 
         $this->createAppLogAction->execute(
@@ -381,6 +381,19 @@ class ProductService
             'visible_category_ids' => $product->categories()
                 ->where('is_visible', true)
                 ->pluck('categories.id')
+                ->all(),
+            'variants' => $product->variants
+                ->map(fn ($variant) => [
+                    'id' => $variant->id,
+                    'name' => $variant->name,
+                    'name_processed' => $variant->name_processed,
+                    'translations' => $variant->translations
+                        ->map(fn ($translation) => [
+                            'locale' => $translation->locale,
+                            'name' => $translation->name,
+                        ])
+                        ->all(),
+                ])
                 ->all(),
         ];
     }
