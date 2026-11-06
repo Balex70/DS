@@ -21,6 +21,12 @@ export function SearchProductCard({ product }: Props) {
     const productImage = product.big_image?.original_url ?? undefined;
     const cheapestVariantId = product?.cheapest_variant?.external_id ?? '';
     const cheapestPrice = product?.cheapest_variant?.price ?? product.price;
+
+    const translation = product.translations?.find(
+        (translation) => translation.locale === locale
+    );
+    const productName = translation?.name ?? product.name_processed ?? product.name_raw;
+
     const getMaterialName = (material: Product['materials'][number]) => {
         return (
             material.translations?.find(
@@ -55,7 +61,7 @@ export function SearchProductCard({ product }: Props) {
 
             <CardContent className="flex h-full flex-col p-3">
                 <h3 className="line-clamp-2 text-sm font-medium">
-                    {product.translation ? product.translation?.name : product.name_processed ? product.name_processed : product.name_raw}
+                    {productName}
                 </h3>
 
                 <div className="mt-auto space-y-2">
