@@ -109,7 +109,7 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
                 <aside className="hidden w-72 shrink-0 lg:block">
                     {!isLoading &&
                         <SearchSidebar
-                            hasProducts={hasProducts}
+                            totalProducts={totalProducts}
                             minPrice={minPrice}
                             maxPrice={maxPrice}
                             price={priceDraft}

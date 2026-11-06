@@ -19,7 +19,7 @@ type Props = {
 };
 
 export function SearchSidebar({
-    hasProducts,
+    totalProducts,
     minPrice, maxPrice, price,
     activeMaterials,
     materialsOptions,
@@ -37,26 +37,36 @@ export function SearchSidebar({
                 </h2>
             </div>
 
-            <ScrollArea className="h-[calc(100vh-12rem)]">
-                <div>
-                    <PriceFilter
-                        min={minPrice}
-                        max={maxPrice}
-                        value={price}
-                        onChange={onPriceChange}
-                        setPriceApplied={setPriceApplied}
-                        buttonActive={true}
-                        />
+            {totalProducts > 0 ? (
+                <ScrollArea className="h-[calc(100vh-12rem)]">
+                    <div>
+                        <PriceFilter
+                            min={minPrice}
+                            max={maxPrice}
+                            value={price}
+                            onChange={onPriceChange}
+                            setPriceApplied={setPriceApplied}
+                            buttonActive={true}
+                            />
 
-                    <MaterialsFilter
-                        activeMaterials={activeMaterials}
-                        materialsOptions={materialsOptions}
-                        onChange={setActiveMaterials}
-                        />
+                        <MaterialsFilter
+                            activeMaterials={activeMaterials}
+                            materialsOptions={materialsOptions}
+                            onChange={setActiveMaterials}
+                            />
 
-                    {/* <WeightFilter min={data.weight.min} max={data.weight.max} /> */}
+                        {/* <WeightFilter min={data.weight.min} max={data.weight.max} /> */}
+                    </div>
+                </ScrollArea>
+            ) : (
+                <div className="p-3 animate-pulse">
+                    <div className="h-3 w-64 bg-gray-200 rounded" />
+
+                    <div className="space-y-2 mt-4">
+                        <div className="h-4 w-64 bg-gray-200 rounded" />
+                    </div>
                 </div>
-            </ScrollArea>
+            )}
         </div>
     );
 }

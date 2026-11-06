@@ -125,8 +125,15 @@ class SearchService
     {
         $provider = $this->searchEngineManager->driver();
 
+        $categoryIds = Category::query()
+            ->where('active', true)
+            ->where('is_visible', true)
+            ->pluck('id')
+            ->all();
+
         $filters = [
             'materials' => $activeMaterials,
+            'category_ids' => $categoryIds,
         ];
 
         if ($priceRange && count($priceRange) === 2) {
