@@ -10,11 +10,11 @@ import Image from 'next/image'
 import { useState } from "react";
 import { SortSelectValue } from "@/types/category";
 import { SortSelect } from "../category/SortSelect";
-import { MobileCategorySidebar } from "../category/MobileCategorySidebar";
 import { MobileSortSelect } from "../category/MobileSortSelect";
 import { Search } from "lucide-react";
 import { SearchProductCard } from "./product-card";
 import { SearchSidebar } from "./SearchSidebar";
+import { MobileSearchSidebar } from "./MobileSearchSidebar";
 
 type SearchComponentProps = {
     q: string | undefined;
@@ -184,7 +184,7 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
                                 </div>
                                 {/* Mobile */}
                                 <div className="flex items-center justify-between lg:hidden">
-                                    <MobileCategorySidebar
+                                    <MobileSearchSidebar
                                         hasProducts={hasProducts}
                                         isLoading={false}
                                         minPrice={minPrice}
