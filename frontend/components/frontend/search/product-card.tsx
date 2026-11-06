@@ -5,7 +5,7 @@ import { Product } from "@/types/product";
 import { Link } from "@/i18n/navigation";
 import { PriceRenderer } from "@/components/custom/PriceRenderer";
 import { useCurrency } from "@/context/CurrencyContext";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ImageOff } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import ProductImage from "../product/ProductImage";
@@ -15,11 +15,19 @@ type Props = {
 };
 
 export function SearchProductCard({ product }: Props) {
+    const locale = useLocale();
     const { currency } = useCurrency();
     const t = useTranslations('frontend')
     const productImage = product.big_image?.original_url ?? undefined;
     const cheapestVariantId = product?.cheapest_variant?.external_id ?? '';
     const cheapestPrice = product?.cheapest_variant?.price ?? product.price;
+    const getMaterialName = (material: Product['materials'][number]) => {
+        return (
+            material.translations?.find(
+                (translation) => translation.locale === locale
+            )?.name ?? material.name
+        );
+    };
 
     return (
         <Card className="overflow-hidden transition hover:shadow-md gap-2 pb-0 pt-0">
@@ -73,7 +81,7 @@ export function SearchProductCard({ product }: Props) {
                                     variant="outline"
                                     className="h-5 px-1.5 py-0 text-xs font-normal text-slate-700 border-slate-200 bg-slate-50"
                                 >
-                                    {(material.translation?.name ?? material.name).trim().toLocaleLowerCase().replace(/^./u, (char) => char.toLocaleUpperCase())}
+                                    {(getMaterialName(material)).trim().toLocaleLowerCase().replace(/^./u, (char) => char.toLocaleUpperCase())}
                                 </Badge>
                             </>
                         ))}

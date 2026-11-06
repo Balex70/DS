@@ -200,6 +200,7 @@ class ProductService
             'translations',
             'bigImage',
             'cheapestVariant',
+            'materials'
         ]);
 
         try {
@@ -326,6 +327,18 @@ class ProductService
                 ])
                 ->all(),
 
+            'materials' => $product->materials
+                ->map(fn ($material) => [
+                    'id' => $material->id,
+                    'name' => $material->name,
+                    'translations' => $material->translations
+                        ->map(fn ($translation) => [
+                            'locale' => $translation->locale,
+                            'name' => $translation->name,
+                        ])
+                        ->all(),
+                ])
+                ->all(),
             'visible_category_ids' => $product->categories()
                 ->where('is_visible', true)
                 ->pluck('categories.id')
