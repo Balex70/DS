@@ -116,7 +116,14 @@ class SearchService
     {
         $provider = $this->searchEngineManager->driver();
 
-        $result = $provider->fullSearchProducts(search: $search, locale: $locale);
+        $result = $provider->fullSearchProducts(
+            search: $search,
+            locale: $locale,
+            filters: [
+                'price' => $priceRange,
+                'materials' => $activeMaterials,
+            ],
+        );
         // \Log::info('fullSearchQuery result');
         // \Log::info($result);
 

@@ -73,6 +73,19 @@ class OpenSearchProvider implements SearchEngineInterface
             ];
         }
 
+        if (!empty($filters['materials'])) {
+            $searchFilters[] = [
+                'nested' => [
+                    'path' => 'materials',
+                    'query' => [
+                        'terms' => [
+                            'materials.id' => $filters['materials'],
+                        ],
+                    ],
+                ],
+            ];
+        }
+
         $response = $this->client->search([
             'index' => 'products',
             'body' => [
