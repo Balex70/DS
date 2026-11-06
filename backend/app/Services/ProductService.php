@@ -10,6 +10,7 @@ use App\Enums\AppLogRealmEnum;
 use App\Enums\ProductAiStatusEnum;
 use App\Enums\ProductVariantAiStatusEnum;
 use App\Models\Product;
+use App\SearchEngine\SearchEngineManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +20,8 @@ class ProductService
         private DropshippingManager $manager,
         private CjProductMapper $mapper,
         private ProductImageService $imageService,
-        private CreateAppLogAction $createAppLogAction
+        private CreateAppLogAction $createAppLogAction,
+        private SearchEngineManager $searchEngineManager,
     ) {
     }
 
@@ -193,6 +195,35 @@ class ProductService
             realm: AppLogRealmEnum::PRODUCT,
             message: 'Product with ID: ' . $productToEnrich->id . ' (external_id: ' . $productToEnrich->external_id . ') enrichment completed successfully',
         );
+
+        $productToIndex = $productToEnrich->fresh([
+            'translations',
+        ]);
+
+        try {
+            $this->searchEngineManager
+                ->driver()
+                ->indexProduct(
+                    $this->buildSearchIndexDocument($productToIndex)
+                );
+
+            $this->createAppLogAction->execute(
+                level: AppLogLevelEnum::SUCCESS,
+                realm: AppLogRealmEnum::PRODUCT,
+                message: 'Product with ID: ' . $productToIndex->id .
+                    ' (external_id: ' . $productToIndex->external_id .
+                    ') added to search engine index',
+            );
+        } catch (\Throwable $e) {
+            $this->createAppLogAction->execute(
+                level: AppLogLevelEnum::ERROR,
+                realm: AppLogRealmEnum::PRODUCT,
+                message: 'Product with ID: ' . $productToEnrich->id .
+                    ' (external_id: ' . $productToEnrich->external_id .
+                    ') Failed to index enriched product in OpenSearch. Error: ' .
+                    $e->getMessage(),
+            );
+        }
     }
 
     /*
@@ -256,5 +287,38 @@ class ProductService
                 $status === ProductVariantAiStatusEnum::DONE->value &&
                 $currentName !== $newName
             );
+    }
+
+    private function buildSearchIndexDocument(Product $product): array
+    {
+        return [
+            'id' => $product->id,
+            'external_id' => $product->external_id,
+            'name_raw' => $product->name_raw,
+            'name_processed' => $product->name_processed,
+            'slug' => $product->slug,
+            'price' => $product->price,
+            'big_image' => $product->bigImage,
+
+            'created_at' => $product->created_at?->toISOString(),
+            'updated_at' => $product->updated_at?->toISOString(),
+            'last_enrichment_at' => $product->last_enrichment_at?->toISOString(),
+            'ai_texts_at' => $product->ai_texts_at?->toISOString(),
+            'enrichment_failed_at' => $product->enrichment_failed_at?->toISOString(),
+
+            'translations' => $product->translations
+                ->map(fn ($translation) => [
+                    'locale' => $translation->locale,
+                    'name' => $translation->name,
+                    'description' => $translation->description,
+                    'translated_at' => $translation->translated_at?->toISOString(),
+                ])
+                ->all(),
+
+            'visible_category_ids' => $product->categories()
+                ->where('is_visible', true)
+                ->pluck('categories.id')
+                ->all(),
+        ];
     }
 }

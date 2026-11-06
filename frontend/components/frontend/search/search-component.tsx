@@ -16,6 +16,7 @@ import { SortSelect } from "../category/SortSelect";
 import { MobileCategorySidebar } from "../category/MobileCategorySidebar";
 import { MobileSortSelect } from "../category/MobileSortSelect";
 import { Search } from "lucide-react";
+import { SearchProductCard } from "./product-card";
 
 type SearchComponentProps = {
     q: string | undefined;
@@ -89,6 +90,9 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
 
     const products = data?.pages.flatMap(page => page.products.data) ?? [];
     const categories = data?.pages[0].categories ?? [];
+
+    console.log('products');
+    console.log(products);
 
     let hasProducts = true;
     if (minPrice === 0 && maxPrice === 10000) {
@@ -203,7 +207,7 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
                                 </div>
                                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                                     {products.map(product => (
-                                        <ProductCard key={product.id} product={product} />
+                                        <SearchProductCard key={product.id} product={product} />
                                     ))}
                                 </div>
 

@@ -13,4 +13,8 @@ class ProductTranslation extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductTranslationFactory> */
     use HasFactory;
+
+    protected $casts = [
+        'translated_at' => 'datetime',
+    ];
 }

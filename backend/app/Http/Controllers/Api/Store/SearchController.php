@@ -77,78 +77,64 @@ class SearchController extends Controller
         [$paginatedProducts, $categories] = $this->searchService->fullSearchQuery($search, $locale, $sort, $currency, $priceRange, $activeMaterials);
 
         return response()->json([
-            'products' => [
-                'data' => ProductResource::collection($paginatedProducts->items()),
-                'meta' => [
-                    'current_page' => $paginatedProducts->currentPage(),
-                    'last_page' => $paginatedProducts->lastPage(),
-                    'per_page' => $paginatedProducts->perPage(),
-                    'total' => $paginatedProducts->total(),
-                ],
-                'links' => [
-                    'first' => $paginatedProducts->url(1),
-                    'last' => $paginatedProducts->url($paginatedProducts->lastPage()),
-                    'prev' => $paginatedProducts->previousPageUrl(),
-                    'next' => $paginatedProducts->nextPageUrl(),
-                ],
-            ],
+            'products' => $paginatedProducts,
             'categories' => CategoryResource::collection($categories),
         ]);
     }
 
     public function filters(Request $request)
     {
-        $validated = $request->validate([
-            'q' => ['nullable', 'string', 'max:100'],
-            'locale' => ['nullable', Rule::enum(LocalesEnum::class)],
-            'currency' => ['nullable', Rule::enum(CurrenciesEnum::class)],
-            'price' => ['nullable', 'array'],
-            'activeMaterials' => ['nullable', 'array'],
-        ]);
+        // $validated = $request->validate([
+        //     'q' => ['nullable', 'string', 'max:100'],
+        //     'locale' => ['nullable', Rule::enum(LocalesEnum::class)],
+        //     'currency' => ['nullable', Rule::enum(CurrenciesEnum::class)],
+        //     'price' => ['nullable', 'array'],
+        //     'activeMaterials' => ['nullable', 'array'],
+        // ]);
 
-        $search = trim($validated['q'] ?? null);
-        $locale = $validated['locale'] ?? null;
+        // $search = trim($validated['q'] ?? null);
+        // $locale = $validated['locale'] ?? null;
 
-        $base = $this->searchService->baseQuery($search, $locale);
-        $baseWithVariants = $base->join('product_variants', 'products.id', '=', 'product_variants.product_id');
+        // $base = $this->searchService->filterQuery($search, $locale);
+        // $baseWithVariants = $base->join('product_variants', 'products.id', '=', 'product_variants.product_id');
 
-        // PRICE RANGE (clone to avoid query mutation)
-        $price = (clone $baseWithVariants)
-            ->reorder()
-            ->select([
-                DB::raw('MIN(products.price) as min'),
-                DB::raw('MAX(products.price) as max'),
-            ])
-            ->first();
-
-        // MATERIALS (clone to avoid query mutation)
-        $productIds = (clone $base)
-            ->select('products.id')
-            ->distinct()
-            ->pluck('id');
-        $materialsQuery = Material::query()
-            ->whereHas('products', function ($q) use ($productIds) {
-                $q->whereIn('products.id', $productIds);
-            });
-        if ($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
-            $locale = $request->locale ?? 'en';
-
-            $materialsQuery->with([
-                'translation' => fn ($q) => $q->where('locale', $locale),
-            ]);
-        }
-        $materials = $materialsQuery->select('id', 'name')->get();
-
-        // WEIGHT RANGE
-        // $weight = $base
-        //     ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
-        //     ->selectRaw('MIN(product_variants.weight) as min, MAX(product_variants.weight) as max')
+        // // PRICE RANGE (clone to avoid query mutation)
+        // $price = (clone $baseWithVariants)
+        //     ->reorder()
+        //     ->select([
+        //         DB::raw('MIN(products.price) as min'),
+        //         DB::raw('MAX(products.price) as max'),
+        //     ])
         //     ->first();
 
-        return response()->json([
-            'price' => $price,
-            'materials' => $materials,
-            'weight' => [],
-        ]);
+        // // MATERIALS (clone to avoid query mutation)
+        // $productIds = (clone $base)
+        //     ->select('products.id')
+        //     ->distinct()
+        //     ->pluck('id');
+        // $materialsQuery = Material::query()
+        //     ->whereHas('products', function ($q) use ($productIds) {
+        //         $q->whereIn('products.id', $productIds);
+        //     });
+        // if ($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
+        //     $locale = $request->locale ?? 'en';
+
+        //     $materialsQuery->with([
+        //         'translation' => fn ($q) => $q->where('locale', $locale),
+        //     ]);
+        // }
+        // $materials = $materialsQuery->select('id', 'name')->get();
+
+        // // WEIGHT RANGE
+        // // $weight = $base
+        // //     ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+        // //     ->selectRaw('MIN(product_variants.weight) as min, MAX(product_variants.weight) as max')
+        // //     ->first();
+
+        // return response()->json([
+        //     'price' => $price,
+        //     'materials' => $materials,
+        //     'weight' => [],
+        // ]);
     }
 }

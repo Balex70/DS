@@ -26,7 +26,10 @@ class Product extends Model
     use HasFactory;
 
     protected $casts = [
-        'raw_data' => 'array'
+        'raw_data' => 'array',
+        'last_enrichment_at' => 'datetime',
+        'ai_texts_at' => 'datetime',
+        'enrichment_failed_at' => 'datetime',
     ];
 
     protected $with = ['images', 'bigImage'];

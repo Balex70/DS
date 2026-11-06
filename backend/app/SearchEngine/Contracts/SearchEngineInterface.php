@@ -6,6 +6,8 @@ interface SearchEngineInterface
 {
     public function getName(): string;
 
+    public function indexProduct(array $product): void;
+
     /**
      * Search products.
      *
@@ -24,7 +26,7 @@ interface SearchEngineInterface
      *     }
      * }
      */
-    public function searchProducts(
+    public function fullSearchProducts(
         string $search,
         ?string $locale = null,
         array $filters = [],
