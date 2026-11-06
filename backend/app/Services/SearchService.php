@@ -112,7 +112,16 @@ class SearchService
         ];
     }
 
-    public function fullSearchQuery(string $search, string $locale, string $sort, string $currency, array | null $priceRange, array | null $activeMaterials): array
+    public function fullSearchQuery(
+        string $search,
+        string $locale,
+        string $sort,
+        string $currency,
+        ?array $priceRange,
+        ?array $activeMaterials,
+        int $page = 1,
+        int $perPage = 10,
+    ): array
     {
         $provider = $this->searchEngineManager->driver();
 
@@ -130,6 +139,8 @@ class SearchService
             locale: $locale,
             sort: $sort,
             filters: $filters,
+            page: $page,
+            perPage: $perPage,
         );
 
         if ($currency) {

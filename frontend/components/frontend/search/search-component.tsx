@@ -90,6 +90,7 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
     };
 
     const products = data?.pages.flatMap(page => page.products.data) ?? [];
+    const totalProducts = data?.pages[0].products.meta.total ?? 0;
     const categories = data?.pages[0].categories ?? [];
 
     console.log('products');
@@ -176,7 +177,7 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
                         {products.length > 0 && (
                             <>
                                 <h2 className="mb-4 text-xl font-semibold">
-                                    Products ({products.length})
+                                    Products ({totalProducts})
                                 </h2>
                                 {/* Desktop */}
                                 <div className="hidden lg:block">
