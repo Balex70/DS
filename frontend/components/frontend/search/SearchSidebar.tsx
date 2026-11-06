@@ -37,36 +37,26 @@ export function SearchSidebar({
                 </h2>
             </div>
 
-            {!hasProducts ? (
-                <div className="p-3 animate-pulse">
-                    <div className="h-3 w-64 bg-gray-200 rounded" />
+            <ScrollArea className="h-[calc(100vh-12rem)]">
+                <div>
+                    <PriceFilter
+                        min={minPrice}
+                        max={maxPrice}
+                        value={price}
+                        onChange={onPriceChange}
+                        setPriceApplied={setPriceApplied}
+                        buttonActive={true}
+                        />
 
-                    <div className="space-y-2 mt-4">
-                        <div className="h-4 w-64 bg-gray-200 rounded" />
-                    </div>
+                    <MaterialsFilter
+                        activeMaterials={activeMaterials}
+                        materialsOptions={materialsOptions}
+                        onChange={setActiveMaterials}
+                        />
+
+                    {/* <WeightFilter min={data.weight.min} max={data.weight.max} /> */}
                 </div>
-            ) : (
-                <ScrollArea className="h-[calc(100vh-12rem)]">
-                    <div>
-                        <PriceFilter
-                            min={minPrice}
-                            max={maxPrice}
-                            value={price}
-                            onChange={onPriceChange}
-                            setPriceApplied={setPriceApplied}
-                            buttonActive={true}
-                            />
-
-                        <MaterialsFilter
-                            activeMaterials={activeMaterials}
-                            materialsOptions={materialsOptions}
-                            onChange={setActiveMaterials}
-                            />
-
-                        {/* <WeightFilter min={data.weight.min} max={data.weight.max} /> */}
-                    </div>
-                </ScrollArea>
-            )}
+            </ScrollArea>
         </div>
     );
 }

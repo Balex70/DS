@@ -105,10 +105,13 @@ class OpenSearchProvider implements SearchEngineInterface
                         'must_not' => [
                             ['exists' => ['field' => 'enrichment_failed_at']],
                         ],
-                        'filter' => [
-                            ...$defaultFilters,
-                            ...$searchFilters,
-                        ],
+                        'filter' => $defaultFilters,
+                    ],
+                ],
+
+                'post_filter' => [
+                    'bool' => [
+                        'filter' => $searchFilters,
                     ],
                 ],
                 'aggs' => [

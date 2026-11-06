@@ -116,44 +116,22 @@ class SearchService
     {
         $provider = $this->searchEngineManager->driver();
 
+        $filters = [
+            'materials' => $activeMaterials,
+        ];
+
+        if ($priceRange && count($priceRange) === 2) {
+            $filters['min_price'] = $priceRange[0];
+            $filters['max_price'] = $priceRange[1];
+        }
+
         $result = $provider->fullSearchProducts(
             search: $search,
             locale: $locale,
-            filters: [
-                'price' => $priceRange,
-                'materials' => $activeMaterials,
-            ],
+            filters: $filters,
         );
         // \Log::info('fullSearchQuery result');
         // \Log::info($result);
-
-        // if ($priceRange && count($priceRange) === 2) {
-        //     $query->whereBetween('price', [
-        //         $priceRange[0],
-        //         $priceRange[1],
-        //     ]);
-        // }
-
-        // if ($activeMaterials && count($activeMaterials) > 0) {
-        //     $materialIds = $activeMaterials;
-
-        //     $materialNames = Material::query()
-        //         ->whereIn('id', $materialIds)
-        //         ->selectRaw('LOWER(TRIM(name)) as normalized_name')
-        //         ->distinct()
-        //         ->pluck('normalized_name');
-
-        //     $matchingMaterialIds = Material::query()
-        //         ->whereIn(
-        //             DB::raw('LOWER(TRIM(name))'),
-        //             $materialNames
-        //         )
-        //         ->pluck('id');
-
-        //     $query->whereHas('materials', function ($q) use ($matchingMaterialIds) {
-        //         $q->whereIn('materials.id', $matchingMaterialIds);
-        //     });
-        // }
 
         // match ($sort ?? 'latest') {
         //     'latest' => $query->latest(),
