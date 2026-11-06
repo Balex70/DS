@@ -198,6 +198,8 @@ class ProductService
 
         $productToIndex = $productToEnrich->fresh([
             'translations',
+            'bigImage',
+            'cheapestVariant',
         ]);
 
         try {
@@ -299,6 +301,14 @@ class ProductService
             'slug' => $product->slug,
             'price' => $product->price,
             'big_image' => $product->bigImage,
+
+            'cheapest_variant' => $product->cheapestVariant
+                ? [
+                    'id' => $product->cheapestVariant->id,
+                    'external_id' => $product->cheapestVariant->external_id,
+                    // Add other fields needed by the storefront
+                ]
+                : null,
 
             'created_at' => $product->created_at?->toISOString(),
             'updated_at' => $product->updated_at?->toISOString(),
