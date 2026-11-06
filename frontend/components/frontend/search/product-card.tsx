@@ -19,6 +19,7 @@ export function SearchProductCard({ product }: Props) {
     const t = useTranslations('frontend')
     const productImage = product.big_image?.original_url ?? undefined;
     const cheapestVariantId = product?.cheapest_variant?.external_id ?? '';
+    const cheapestPrice = product?.cheapest_variant?.price ?? product.price;
 
     return (
         <Card className="overflow-hidden transition hover:shadow-md gap-2 pb-0 pt-0">
@@ -51,7 +52,7 @@ export function SearchProductCard({ product }: Props) {
 
                 <div className="mt-auto space-y-2">
                     <div className="text-lg font-semibold text-red-500">
-                        <PriceRenderer value={product.price} />
+                        <PriceRenderer value={cheapestPrice} />
                         {(currency !== "USD" && product.currency_price) && (
                             <div className="text-sm font-normal text-muted-foreground">
                                 (

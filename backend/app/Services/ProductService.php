@@ -306,6 +306,7 @@ class ProductService
                 ? [
                     'id' => $product->cheapestVariant->id,
                     'external_id' => $product->cheapestVariant->external_id,
+                    'price' => $product->cheapestVariant->price,
                     // Add other fields needed by the storefront
                 ]
                 : null,
