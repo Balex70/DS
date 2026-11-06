@@ -74,10 +74,11 @@ class SearchController extends Controller
         $priceRange = $request->filled('price') ? $request->input('price') : null;
         $activeMaterials = $request->filled('activeMaterials') ? $request->input('activeMaterials') : null;
 
-        [$paginatedProducts, $categories] = $this->searchService->fullSearchQuery($search, $locale, $sort, $currency, $priceRange, $activeMaterials);
+        [$paginatedProducts, $filters, $categories] = $this->searchService->fullSearchQuery($search, $locale, $sort, $currency, $priceRange, $activeMaterials);
 
         return response()->json([
             'products' => $paginatedProducts,
+            'filters' => $filters,
             'categories' => CategoryResource::collection($categories),
         ]);
     }

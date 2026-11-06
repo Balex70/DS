@@ -117,8 +117,8 @@ class SearchService
         $provider = $this->searchEngineManager->driver();
 
         $result = $provider->fullSearchProducts(search: $search, locale: $locale);
-        \Log::info('fullSearchQuery result');
-        \Log::info($result);
+        // \Log::info('fullSearchQuery result');
+        // \Log::info($result);
 
         // if ($priceRange && count($priceRange) === 2) {
         //     $query->whereBetween('price', [
@@ -195,17 +195,18 @@ class SearchService
 
         return [
             $result['products'],
+            $result['filters'],
             $categories
         ];
     }
 
     public function filterQuery(string | null $search, string | null $locale = null)
     {
-        $provider = $this->searchEngineManager->driver();
+        // $provider = $this->searchEngineManager->driver();
 
-        $result = $provider->fullSearchProducts(search: $search, locale: $locale);
-        \Log::info('baseQuery result');
-        \Log::info($result);
+        // $result = $provider->fullSearchProducts(search: $search, locale: $locale);
+        // \Log::info('baseQuery result');
+        // \Log::info($result);
 
         // return $query;
     }

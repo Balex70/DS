@@ -98,10 +98,45 @@ class OpenSearchProvider implements SearchEngineInterface
                         ],
                     ],
                 ],
+                'aggs' => [
+                    'price_stats' => [
+                        'stats' => [
+                            'field' => 'price',
+                        ],
+                    ],
+                    'materials' => [
+                        'nested' => [
+                            'path' => 'materials',
+                        ],
+                        'aggs' => [
+                            'material_ids' => [
+                                'terms' => [
+                                    'field' => 'materials.id',
+                                    'size' => 100,
+                                ],
+                                'aggs' => [
+                                    'material_details' => [
+                                        'top_hits' => [
+                                            'size' => 1,
+                                            '_source' => [
+                                                'includes' => [
+                                                    'materials.id',
+                                                    'materials.name',
+                                                    'materials.translations',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ]);
 
         $total = $response['hits']['total']['value'];
+        $aggregations = $response['aggregations'];
         return [
             'products' => [
                 'data' => array_map(
@@ -115,10 +150,20 @@ class OpenSearchProvider implements SearchEngineInterface
                     'total' => $total,
                 ],
             ],
-            'total' => $response['hits']['total']['value'],
-            'price_range' => [
-                'min' => null,
-                'max' => null,
+            'filters' => [
+                'price' => [
+                    'min' => $aggregations['price_stats']['min'] ?? 0,
+                    'max' => $aggregations['price_stats']['max'] ?? 0,
+                ],
+                'materials' => array_map(
+                    fn (array $bucket) => [
+                        'id' => $bucket['key'],
+                        'count' => $bucket['doc_count'],
+                        'name' => $bucket['material_details']['hits']['hits'][0]['_source']['name'] ?? null,
+                        'translations' => $bucket['material_details']['hits']['hits'][0]['_source']['translations'] ?? [],
+                    ],
+                    $aggregations['materials']['material_ids']['buckets']
+                ),
             ],
         ];
     }

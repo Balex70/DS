@@ -2,21 +2,19 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { useFullSearch } from "@/hooks/use-full-search";
-import { ProductCard } from "../category/product-card";
 import { CurrencyCode } from "@/types/currency";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import CategoryImage from "../category/CategoryImage";
 import Image from 'next/image'
-import { useSearchFilters } from "@/hooks/use-search-filters";
 import { useState } from "react";
 import { SortSelectValue } from "@/types/category";
-import { CategorySidebar } from "../category/CategorySidebar";
 import { SortSelect } from "../category/SortSelect";
 import { MobileCategorySidebar } from "../category/MobileCategorySidebar";
 import { MobileSortSelect } from "../category/MobileSortSelect";
 import { Search } from "lucide-react";
 import { SearchProductCard } from "./product-card";
+import { SearchSidebar } from "./SearchSidebar";
 
 type SearchComponentProps = {
     q: string | undefined;
@@ -26,19 +24,14 @@ type SearchComponentProps = {
 
 export function SearchComponent({q, locale, currency}: SearchComponentProps) {
     const t = useTranslations('frontend')
-    const { data: filterData, isLoading: isFilterLoading } = useSearchFilters({q: q ? q : "", locale: locale});
     const [sort, setSort] = useState<SortSelectValue>("latest");
-    const minPrice = filterData?.price.min ?? 0;
-    const maxPrice = filterData?.price.max ?? 10000;
 
-    const defaultPrice: [number, number] = [minPrice, maxPrice];
     const [filterState, setFilterState] = useState({
         q,
         price: null as [number, number] | null,
         priceDraft: null as [number, number] | null,
         activeMaterials: [] as number[],
     });
-
     const currentFilters = filterState.q === q
         ? filterState
         : {
@@ -48,9 +41,32 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
             activeMaterials: [],
         };
 
-    const price = currentFilters.price ?? defaultPrice;
-    const priceDraft = currentFilters.priceDraft ?? defaultPrice;
+    const activePrice = currentFilters.price ?? [0, 10000];
     const activeMaterials = currentFilters.activeMaterials;
+
+    const {
+            data,
+            isLoading,
+            fetchNextPage,
+            hasNextPage,
+            isFetchingNextPage,
+        } = useFullSearch({
+            q: q ? q : "",
+            locale,
+            sort,
+            price: activePrice,
+            activeMaterials,
+            currency
+        });
+
+    const filterData = data?.pages[0]?.filters;
+
+    const minPrice = filterData?.price.min ?? 0;
+    const maxPrice = filterData?.price.max ?? 10000;
+
+    const defaultPrice: [number, number] = [minPrice, maxPrice];
+    const priceDraft = currentFilters.priceDraft ?? defaultPrice;
+
     const setPrice = (price: [number, number]) => {
         setFilterState(prev => ({
             ...prev,
@@ -73,31 +89,13 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
         }));
     };
 
-    const {
-            data,
-            isLoading,
-            fetchNextPage,
-            hasNextPage,
-            isFetchingNextPage,
-        } = useFullSearch({
-            q: q ? q : "",
-            locale,
-            sort,
-            price,
-            activeMaterials,
-            currency
-        });
-
     const products = data?.pages.flatMap(page => page.products.data) ?? [];
     const categories = data?.pages[0].categories ?? [];
 
     console.log('products');
     console.log(products);
 
-    let hasProducts = true;
-    if (minPrice === 0 && maxPrice === 10000) {
-        hasProducts = false;
-    }
+    const hasProducts = (data?.pages[0]?.products.meta.total ?? 0) > 0;
 
     return (
         <div className="space-y-6">
@@ -108,8 +106,8 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
             )}
             <div className="flex w-full gap-6">
                 <aside className="hidden w-72 shrink-0 lg:block">
-                    {!isFilterLoading &&
-                        <CategorySidebar
+                    {!isLoading &&
+                        <SearchSidebar
                             hasProducts={hasProducts}
                             minPrice={minPrice}
                             maxPrice={maxPrice}
