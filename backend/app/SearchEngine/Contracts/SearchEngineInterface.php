@@ -29,6 +29,7 @@ interface SearchEngineInterface
     public function fullSearchProducts(
         string $search,
         ?string $locale = null,
+        string $sort = 'latest',
         array $filters = [],
         int $page = 1,
         int $perPage = 20

@@ -128,17 +128,9 @@ class SearchService
         $result = $provider->fullSearchProducts(
             search: $search,
             locale: $locale,
+            sort: $sort,
             filters: $filters,
         );
-        // \Log::info('fullSearchQuery result');
-        // \Log::info($result);
-
-        // match ($sort ?? 'latest') {
-        //     'latest' => $query->latest(),
-        //     'price_asc' => $query->orderBy('price'),
-        //     'price_desc' => $query->orderByDesc('price'),
-        //     default => $query->latest(),
-        // };
 
         if ($currency) {
             $result['products']['data'] = array_map(

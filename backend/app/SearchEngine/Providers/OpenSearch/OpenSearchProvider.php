@@ -39,10 +39,26 @@ class OpenSearchProvider implements SearchEngineInterface
     public function fullSearchProducts(
         string $search,
         ?string $locale = null,
+        string $sort = 'latest',
         array $filters = [],
         int $page = 1,
         int $perPage = 10
     ): array {
+        $sortOptions = match ($sort) {
+            'latest' => [
+                ['created_at' => ['order' => 'desc']],
+            ],
+            'price_asc' => [
+                ['price' => ['order' => 'asc']],
+            ],
+            'price_desc' => [
+                ['price' => ['order' => 'desc']],
+            ],
+            default => [
+                ['created_at' => ['order' => 'desc']],
+            ],
+        };
+
         // Default filters
         $defaultFilters = [
             ['exists' => ['field' => 'last_enrichment_at']],
@@ -92,6 +108,7 @@ class OpenSearchProvider implements SearchEngineInterface
                 'from' => ($page - 1) * $perPage,
                 'size' => $perPage,
                 'track_total_hits' => true,
+                'sort' => $sortOptions,
                 'query' => [
                     'bool' => [
                         'must' => $search !== null && $search !== ''
