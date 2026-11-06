@@ -155,15 +155,20 @@ class SearchService
         //     default => $query->latest(),
         // };
 
-        // if ($currency) {
-        //     $query->each(function (Product $product) use ($currency) {
-        //         $product->currency_price = $this->converter->convert(
-        //             $product->price,
-        //             CurrenciesEnum::USD->value,
-        //             $currency,
-        //         );
-        //     });
-        // }
+        if ($currency) {
+            $result['products']['data'] = array_map(
+                function (array $product) use ($currency) {
+                    $product['currency_price'] = $this->converter->convert(
+                        $product['price'],
+                        CurrenciesEnum::USD->value,
+                        $currency,
+                    );
+
+                    return $product;
+                },
+                $result['products']['data']
+            );
+        }
 
         $categories = Category::query()
             ->where('active', true)
