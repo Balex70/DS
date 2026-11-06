@@ -7,7 +7,7 @@ import { Material } from "@/types/material";
 import { useTranslations } from "next-intl";
 
 type Props = {
-    hasProducts?: boolean;
+    totalProducts: number;
     minPrice: number;
     maxPrice: number;
     price: [number, number];

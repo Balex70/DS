@@ -217,7 +217,7 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
                                             disabled={isFetchingNextPage}
                                             className="px-4 py-2 text-sm border rounded"
                                         >
-                                            {isFetchingNextPage ? "Loading..." : "Load more"}
+                                            {isFetchingNextPage ? t('category.loading') : t('category.load_more')}
                                         </button>
                                     </div>
                                 )}
