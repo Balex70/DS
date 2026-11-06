@@ -286,6 +286,15 @@ ID: {$product->id} ($product->name_processed)"
         return response()->json(['message' => 'Product enriched'], 200);
     }
 
+    public function reindexProducts()
+    {
+        Gate::authorize('viewAny', Product::class);
+
+        $this->service->reindexProducts();
+
+        return response()->json(['message' => 'Products reindexed'], 200);
+    }
+
     public function aiTextsNext()
     {
         $productToProcess = DB::transaction(function () {

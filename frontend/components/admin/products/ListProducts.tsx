@@ -15,6 +15,7 @@ import NotFoundCard from '@/components/common/NotFoundCard';
 import { Input } from '@/components/ui/input';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ReindexProducts from './ReindexProducts';
 
 function ListProducts () {
   const [products, setProducts] = useState<ProductWithCategories[]>([]);
@@ -97,6 +98,7 @@ function ListProducts () {
 
   return (
     <div className="w-full main-bg flex flex-col border-b-0 rounded-none">
+      <ReindexProducts />
       <form
         className="mb-4 flex items-center gap-2"
         onSubmit={(event) => {

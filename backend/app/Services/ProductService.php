@@ -292,6 +292,45 @@ class ProductService
             );
     }
 
+    public function reindexProducts(): void
+    {
+        $this->createAppLogAction->execute(
+            level: AppLogLevelEnum::INFO,
+            realm: AppLogRealmEnum::PRODUCT,
+            message: 'Products reindex started',
+        );
+
+        $query = Product::query();
+        $query->with([
+            'translations',
+            'bigImage',
+            'cheapestVariant',
+            'materials'
+        ])->chunkById(100, function ($products) {
+            foreach ($products as $product) {
+                try {
+                    $document = $this->buildSearchIndexDocument($product);
+
+                    $this->searchEngineManager
+                        ->driver()
+                        ->indexProduct($document);
+                } catch (\Throwable $e) {
+                    $this->createAppLogAction->execute(
+                        level: AppLogLevelEnum::ERROR,
+                        realm: AppLogRealmEnum::PRODUCT,
+                        message: 'Product indexing failed. Product ID: ' . $product->id . ' Error: ' . $e->getMessage(),
+                    );
+                }
+            }
+        });
+
+        $this->createAppLogAction->execute(
+            level: AppLogLevelEnum::SUCCESS,
+            realm: AppLogRealmEnum::PRODUCT,
+            message: 'Products reindex completed',
+        );
+    }
+
     private function buildSearchIndexDocument(Product $product): array
     {
         return [
