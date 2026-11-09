@@ -102,6 +102,14 @@ type-check:
 
 check-release: backend-test lint type-check phpcs
 
+docker-ai-worker-token:
+	docker compose exec -T backend php artisan tinker --execute="\
+	\$$user = \App\Models\User::firstOrCreate(\
+		['email' => 'ai-worker@local'], \
+		['name' => 'AI Worker', 'password' => \Illuminate\Support\Facades\Hash::make(\Illuminate\Support\Str::random(32))]\
+	); \
+	echo \$$user->createToken('ai-worker-token')->plainTextToken . PHP_EOL;"
+
 # Export PostgreSQL database in custom format
 db-export:
 	@mkdir -p "$(DB_BACKUP_DIR)"
