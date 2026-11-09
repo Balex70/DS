@@ -207,6 +207,10 @@ cron-pod:
 	@ export CRON_POD_NAME=$(shell bin/kctl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=ds-cron); \
 	if [ "$$CRON_POD_NAME" = "" ]; then echo "\e[1;31mCRON Pod not exist!\e[0m"; else bin/kctl exec -ti $$CRON_POD_NAME -- sh; fi
 
+opensearch-pod:
+	@ export OPENSEARCH_POD_NAME=$(shell bin/kctl get pods --selector=app=$(RELEASE)-opensearch -o jsonpath='{.items[0].metadata.name}'); \
+	if [ "$$OPENSEARCH_POD_NAME" = "" ]; then echo "\e[1;31mOPENSEARCH Pod does not exist!\e[0m"; else bin/kctl exec -ti $$OPENSEARCH_POD_NAME -- sh; fi
+
 # can be accessed without kubernetes running pods
 sh-backend-image:
 	docker run --rm -it --entrypoint sh localhost:32000/ds-backend:0.0.1
@@ -238,6 +242,9 @@ describe-queue:
 describe-cron:
 	@ bin/kctl describe pod $(RELEASE)-cron
 
+describe-opensearch:
+	@ bin/kctl describe pod $(RELEASE)-opensearch
+
 describe-migration:
 	@ bin/kctl describe pod $(RELEASE)-migration
 
@@ -252,6 +259,9 @@ describe-backend-service:
 
 describe-frontend-service:
 	@ bin/kctl describe services $(RELEASE)-frontend-service
+
+describe-opensearch-service:
+	@ bin/kctl describe service $(RELEASE)-opensearch-service
 
 describe-ingress:
 	@ bin/kctl describe ingress $(RELEASE)-ingress
@@ -304,6 +314,9 @@ svc-db:
 svc-redis:
 	@ bin/kctl get svc $(RELEASE)-redis -o yaml
 
+svc-opensearch:
+	@ bin/kctl get svc $(RELEASE)-opensearch-service -o yaml
+
 log-backend:
 	@ export BACKEND_POD_NAME=$(shell bin/kctl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=ds-backend); \
 	bin/kctl logs -f $$BACKEND_POD_NAME
@@ -323,6 +336,10 @@ log-cron:
 log-cron-previous:
 	@ export CRON_POD_NAME=$(shell bin/kctl get pods --selector=app=$(RELEASE)-cron -o jsonpath='{.items[0].metadata.name}'); \
 	if [ "$$CRON_POD_NAME" = "" ]; then echo "\e[1;31mCRON Pod does not exist!\e[0m"; else bin/kctl logs $$CRON_POD_NAME --previous; fi
+
+log-opensearch:
+	@ export OPENSEARCH_POD_NAME=$(shell bin/kctl get pods --selector=app=$(RELEASE)-opensearch -o jsonpath='{.items[0].metadata.name}'); \
+	if [ "$$OPENSEARCH_POD_NAME" = "" ]; then echo "\e[1;31mOPENSEARCH Pod does not exist!\e[0m"; else bin/kctl logs -f $$OPENSEARCH_POD_NAME; fi
 
 get-jobs:
 	@ bin/kctl get jobs
