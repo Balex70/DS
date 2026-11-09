@@ -443,7 +443,7 @@ class OpenSearchProvider implements SearchEngineInterface
         return [
             'settings' => [
                 'index' => [
-                    'max_ngram_diff' => 13,
+                    'max_ngram_diff' => 23,
                     'number_of_shards' => 1,
                     'number_of_replicas' => 1,
                 ],
@@ -452,7 +452,7 @@ class OpenSearchProvider implements SearchEngineInterface
                         'product_ngram_tokenizer' => [
                             'type' => 'ngram',
                             'min_gram' => 2,
-                            'max_gram' => 15,
+                            'max_gram' => 25,
                             'token_chars' => ['letter', 'digit'],
                         ],
                     ],
@@ -611,6 +611,8 @@ class OpenSearchProvider implements SearchEngineInterface
                             ],
                             'name' => [
                                 'type' => 'text',
+                                'analyzer' => 'product_ngram_analyzer',
+                                'search_analyzer' => 'product_search_analyzer',
                                 'fields' => [
                                     'keyword' => [
                                         'type' => 'keyword',
