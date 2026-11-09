@@ -165,15 +165,4 @@ class SearchService
             $categories
         ];
     }
-
-    public function filterQuery(string | null $search, string | null $locale = null)
-    {
-        // $provider = $this->searchEngineManager->driver();
-
-        // $result = $provider->fullSearchProducts(search: $search, locale: $locale);
-        // \Log::info('baseQuery result');
-        // \Log::info($result);
-
-        // return $query;
-    }
 }
