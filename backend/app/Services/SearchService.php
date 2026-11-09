@@ -89,8 +89,7 @@ class SearchService
         ?array $activeMaterials,
         int $page = 1,
         int $perPage = 10,
-    ): array
-    {
+    ): array {
         $provider = $this->searchEngineManager->driver();
 
         $categoryIds = Category::query()

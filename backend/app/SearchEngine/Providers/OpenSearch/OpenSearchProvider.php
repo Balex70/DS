@@ -16,8 +16,7 @@ class OpenSearchProvider implements SearchEngineInterface
     public function __construct(
         private GuzzleClientFactory $clientFactory,
         private CreateAppLogAction $createAppLogAction,
-    )
-    {
+    ) {
         $this->client = $clientFactory->create([
             'base_uri' => config('services.opensearch.host'),
         ]);
@@ -27,7 +26,7 @@ class OpenSearchProvider implements SearchEngineInterface
     {
         return 'opensearch';
     }
-    
+
     public function info(): array
     {
         return $this->client->info();

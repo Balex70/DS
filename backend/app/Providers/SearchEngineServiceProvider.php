@@ -18,7 +18,7 @@ class SearchEngineServiceProvider extends ServiceProvider
             [OpenSearchProvider::class],
             'searchEngine.provider'
         );
-        
+
         $this->app->singleton(
             SearchEngineManager::class,
             fn ($app) => new SearchEngineManager(

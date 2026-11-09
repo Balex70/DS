@@ -67,7 +67,7 @@ class ProductSearchIndexer
             );
         }
     }
-    
+
     public function reindexProducts(): void
     {
         $provider = $this->searchEngineManager->driver();
