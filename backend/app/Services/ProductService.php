@@ -22,6 +22,7 @@ class ProductService
         private ProductImageService $imageService,
         private CreateAppLogAction $createAppLogAction,
         private SearchEngineManager $searchEngineManager,
+        private ProductSearchIndexer $productSearchIndexer
     ) {
     }
 
@@ -86,7 +87,9 @@ class ProductService
                     $updates['ai_status'] = ProductAiStatusEnum::QUEUED;
                 }
 
+                $productToEnrich->skipSearchIndexing(); // Skip indexing because we use explicit indexing
                 $productToEnrich->update($updates);
+                $productToEnrich->skipSearchIndexing(false);
 
                 // Store and sync materials
                 if (!empty($mappedDetails['material'])) {
@@ -196,38 +199,7 @@ class ProductService
             message: 'Product with ID: ' . $productToEnrich->id . ' (external_id: ' . $productToEnrich->external_id . ') enrichment completed successfully',
         );
 
-        $productToIndex = $productToEnrich->fresh([
-            'translations',
-            'bigImage',
-            'cheapestVariant',
-            'materials',
-            'variants',
-        ]);
-
-        try {
-            $this->searchEngineManager
-                ->driver()
-                ->indexProduct(
-                    $this->buildSearchIndexDocument($productToIndex)
-                );
-
-            $this->createAppLogAction->execute(
-                level: AppLogLevelEnum::SUCCESS,
-                realm: AppLogRealmEnum::PRODUCT,
-                message: 'Product with ID: ' . $productToIndex->id .
-                    ' (external_id: ' . $productToIndex->external_id .
-                    ') added to search engine index',
-            );
-        } catch (\Throwable $e) {
-            $this->createAppLogAction->execute(
-                level: AppLogLevelEnum::ERROR,
-                realm: AppLogRealmEnum::PRODUCT,
-                message: 'Product with ID: ' . $productToEnrich->id .
-                    ' (external_id: ' . $productToEnrich->external_id .
-                    ') Failed to index enriched product in OpenSearch. Error: ' .
-                    $e->getMessage(),
-            );
-        }
+        $this->productSearchIndexer->indexProduct($productToEnrich->id);
     }
 
     /*
@@ -301,100 +273,12 @@ class ProductService
             message: 'Products reindex started',
         );
 
-        $provider = $this->searchEngineManager->driver();
-
-        Product::query()
-        ->with([
-            'translations',
-            'bigImage',
-            'cheapestVariant',
-            'materials.translations',
-            'variants.translations',
-        ])
-        ->chunkById(100, function ($products) use ($provider) {
-            $documents = $products
-                ->map(fn ($product) => $this->buildSearchIndexDocument($product))
-                ->all();
-
-            $provider->bulkIndexProducts($documents);
-            // $this->createAppLogAction->execute(
-            //     level: AppLogLevelEnum::SUCCESS,
-            //     realm: AppLogRealmEnum::PRODUCT,
-            //     message: 'Products indexed: ' . count($documents),
-            // );
-        });
+        $this->productSearchIndexer->reindexProducts();
 
         $this->createAppLogAction->execute(
             level: AppLogLevelEnum::SUCCESS,
             realm: AppLogRealmEnum::PRODUCT,
             message: 'Products reindex completed',
         );
-    }
-
-    private function buildSearchIndexDocument(Product $product): array
-    {
-        return [
-            'id' => $product->id,
-            'external_id' => $product->external_id,
-            'name_raw' => $product->name_raw,
-            'name_processed' => $product->name_processed,
-            'slug' => $product->slug,
-            'price' => $product->price,
-            'big_image' => $product->bigImage,
-
-            'cheapest_variant' => $product->cheapestVariant
-                ? [
-                    'id' => $product->cheapestVariant->id,
-                    'external_id' => $product->cheapestVariant->external_id,
-                    'price' => $product->cheapestVariant->price,
-                    // Add other fields needed by the storefront
-                ]
-                : null,
-
-            'created_at' => $product->created_at?->toISOString(),
-            'updated_at' => $product->updated_at?->toISOString(),
-            'last_enrichment_at' => $product->last_enrichment_at?->toISOString(),
-            'ai_texts_at' => $product->ai_texts_at?->toISOString(),
-            'enrichment_failed_at' => $product->enrichment_failed_at?->toISOString(),
-
-            'translations' => $product->translations
-                ->map(fn ($translation) => [
-                    'locale' => $translation->locale,
-                    'name' => $translation->name,
-                    'description' => $translation->description,
-                    'translated_at' => $translation->translated_at?->toISOString(),
-                ])
-                ->all(),
-
-            'materials' => $product->materials
-                ->map(fn ($material) => [
-                    'id' => $material->id,
-                    'name' => $material->name,
-                    'translations' => $material->translations
-                        ->map(fn ($translation) => [
-                            'locale' => $translation->locale,
-                            'name' => $translation->name,
-                        ])
-                        ->all(),
-                ])
-                ->all(),
-            'visible_category_ids' => $product->categories()
-                ->where('is_visible', true)
-                ->pluck('categories.id')
-                ->all(),
-            'variants' => $product->variants
-                ->map(fn ($variant) => [
-                    'id' => $variant->id,
-                    'name' => $variant->name,
-                    'name_processed' => $variant->name_processed,
-                    'translations' => $variant->translations
-                        ->map(fn ($translation) => [
-                            'locale' => $translation->locale,
-                            'name' => $translation->name,
-                        ])
-                        ->all(),
-                ])
-                ->all(),
-        ];
     }
 }

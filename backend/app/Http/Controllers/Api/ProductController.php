@@ -12,6 +12,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\ProductSearchIndexer;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,8 @@ class ProductController extends Controller
 {
     public function __construct(
         private ProductService $service,
-        private CreateAppLogAction $createAppLogAction
+        private CreateAppLogAction $createAppLogAction,
+        private ProductSearchIndexer $productSearchIndexer
     ) {
     }
 
@@ -233,6 +235,7 @@ class ProductController extends Controller
     {
         Gate::authorize('update', $product);
         $product->translations()->delete();
+        $this->productSearchIndexer->indexProduct($product->id);
 
         $this->createAppLogAction->execute(
             AppLogLevelEnum::SUCCESS,

@@ -42,6 +42,14 @@ class OpenSearchProvider implements SearchEngineInterface
         ]);
     }
 
+    public function deleteProduct(int $productId): void
+    {
+        $this->client->delete([
+            'index' => 'products',
+            'id' => (string) $productId,
+        ]);
+    }
+
     public function bulkIndexProducts(array $documents): void
     {
         if (empty($documents)) {

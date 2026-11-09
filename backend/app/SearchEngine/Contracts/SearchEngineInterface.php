@@ -8,6 +8,8 @@ interface SearchEngineInterface
 
     public function indexProduct(array $product): void;
 
+    public function deleteProduct(int $productId): void;
+
     public function bulkIndexProducts(array $documents): void;
 
     /**
