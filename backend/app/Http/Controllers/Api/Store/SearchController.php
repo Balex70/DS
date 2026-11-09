@@ -6,11 +6,8 @@ use App\Enums\CurrenciesEnum;
 use App\Enums\LocalesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
-use App\Http\Resources\ProductResource;
-use App\Models\Material;
 use App\Services\SearchService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class SearchController extends Controller

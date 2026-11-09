@@ -93,9 +93,6 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
     const totalProducts = data?.pages[0].products.meta.total ?? 0;
     const categories = data?.pages[0].categories ?? [];
 
-    console.log('products');
-    console.log(products);
-
     const hasProducts = (data?.pages[0]?.products.meta.total ?? 0) > 0;
 
     return (

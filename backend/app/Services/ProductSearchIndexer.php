@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\Actions\CreateAppLogAction;
-use App\Dropshipping\DropshippingManager;
-use App\Dropshipping\Mappers\CjProductMapper;
 use App\Enums\AppLogLevelEnum;
 use App\Enums\AppLogRealmEnum;
 use App\Models\Product;

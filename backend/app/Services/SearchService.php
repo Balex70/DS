@@ -5,10 +5,7 @@ namespace App\Services;
 use App\Currency\Services\PriceConverter;
 use App\Enums\CurrenciesEnum;
 use App\Models\Category;
-use App\Models\Material;
-use App\Models\Product;
 use App\SearchEngine\SearchEngineManager;
-use Illuminate\Support\Facades\DB;
 
 class SearchService
 {
