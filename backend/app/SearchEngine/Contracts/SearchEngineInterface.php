@@ -10,6 +10,8 @@ interface SearchEngineInterface
 
     public function deleteProduct(int $productId): void;
 
+    public function clearProductsIndex(): void;
+
     public function bulkIndexProducts(array $documents): void;
 
     public function searchProducts(

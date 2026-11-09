@@ -72,6 +72,8 @@ class ProductSearchIndexer
     {
         $provider = $this->searchEngineManager->driver();
 
+        $provider->clearProductsIndex();
+
         Product::query()
         ->with([
             'translations',

@@ -50,6 +50,18 @@ class OpenSearchProvider implements SearchEngineInterface
         ]);
     }
 
+    public function clearProductsIndex(): void
+    {
+        $this->client->deleteByQuery([
+            'index' => 'products',
+            'body' => [
+                'query' => [
+                    'match_all' => new \stdClass(),
+                ],
+            ],
+        ]);
+    }
+
     public function bulkIndexProducts(array $documents): void
     {
         if (empty($documents)) {
