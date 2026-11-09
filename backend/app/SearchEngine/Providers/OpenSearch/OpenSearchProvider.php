@@ -88,6 +88,116 @@ class OpenSearchProvider implements SearchEngineInterface
         }
     }
 
+    public function searchProducts(
+        string $search,
+        ?string $locale = null,
+        array $filters = [],
+        ?int $limit = 10
+    ): array {
+        $sortOptions = [
+            'created_at' => [
+                'order' => 'desc'
+            ]
+        ];
+
+        // Default filters
+        $defaultFilters = [
+            ['exists' => ['field' => 'last_enrichment_at']],
+            ['exists' => ['field' => 'ai_texts_at']],
+        ];
+
+        // Dynamic filters
+        $searchFilters = [];
+        if (!empty($filters['category_ids'])) {
+            $searchFilters[] = [
+                'terms' => [
+                    'visible_category_ids' => $filters['category_ids'],
+                ],
+            ];
+        }
+
+        $response = $this->client->search([
+            'index' => 'products',
+            'body' => [
+                'size' => $limit,
+                'track_total_hits' => true,
+                'sort' => $sortOptions,
+                'query' => [
+                    'bool' => [
+                        'must' => $search !== null && $search !== ''
+                        ? [
+                            [
+                                'bool' => [
+                                    'should' => [
+                                        [
+                                            'multi_match' => [
+                                                'query' => $search,
+                                                'fields' => [
+                                                    'name_raw',
+                                                    'name_processed',
+                                                    'translations.name',
+                                                ],
+                                            ],
+                                        ],
+                                        // Variant names
+                                        [
+                                            'nested' => [
+                                                'path' => 'variants',
+                                                'query' => [
+                                                    'multi_match' => [
+                                                        'query' => $search,
+                                                        'fields' => [
+                                                            'variants.name',
+                                                            'variants.name_processed',
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+
+                                        // Variant translations (nested inside variants)
+                                        [
+                                            'nested' => [
+                                                'path' => 'variants',
+                                                'query' => [
+                                                    'nested' => [
+                                                        'path' => 'variants.translations',
+                                                        'query' => [
+                                                            'match' => [
+                                                                'variants.translations.name' => $search,
+                                                            ],
+                                                        ],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                    'minimum_should_match' => 1,
+                                ],
+                            ],
+                        ]
+                        : [],
+                        'must_not' => [
+                            ['exists' => ['field' => 'enrichment_failed_at']],
+                        ],
+                        'filter' => $defaultFilters,
+                    ],
+                ],
+
+                'post_filter' => [
+                    'bool' => [
+                        'filter' => $searchFilters,
+                    ],
+                ],
+            ],
+        ]);
+
+        return array_map(
+            fn (array $hit) => $hit['_source'],
+            $response['hits']['hits']
+        );
+    }
+
     public function fullSearchProducts(
         string $search,
         ?string $locale = null,

@@ -12,6 +12,13 @@ interface SearchEngineInterface
 
     public function bulkIndexProducts(array $documents): void;
 
+    public function searchProducts(
+        string $search,
+        ?string $locale = null,
+        array $filters = [],
+        ?int $limit = 10
+    ): array;
+
     /**
      * Search products.
      *

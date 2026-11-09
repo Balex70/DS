@@ -20,67 +20,38 @@ class SearchService
 
     public function searchQuery(string $search, string $locale, string $currency): array
     {
-        $query = Product::query();
-        $query->whereNotNull('last_enrichment_at');
-        $query->whereNotNull('ai_texts_at');
-        $query->whereNull('enrichment_failed_at');
-        $query->whereHas('categories', function ($q) {
-            $q->where('is_visible', true);
-        });
-        $query->select([
-            'products.id',
-            'products.name_raw',
-            'products.name_processed',
-            'products.price',
-            'products.slug',
-        ]);
+        $provider = $this->searchEngineManager->driver();
 
-        if ($locale) {
-            $query
-            ->with([
-                'variants',
-                'translation' => fn ($q) => $q->where('locale', $locale),
-                'variants.translation' => fn ($q) => $q->where('locale', $locale),
-            ])
-            ->where(function ($q) use ($search, $locale) {
-                $q->where('products.name_processed', 'ILIKE', "%{$search}%")
-                ->orWhere('products.name_raw', 'ILIKE', "%{$search}%")
-                ->orWhereHas('translations', function ($tq) use ($search, $locale) {
-                    $tq->where('locale', $locale)
-                        ->where('name', 'ILIKE', "%{$search}%");
-                })
-                ->orWhereHas('variants', function ($vq) use ($search, $locale) {
-                    $vq->where('product_variants.name', 'ILIKE', "%{$search}%")
-                        ->orWhere('product_variants.name_processed', 'ILIKE', "%{$search}%")
-                        ->orWhereHas('translations', function ($vtq) use ($search, $locale) {
-                            $vtq->where('locale', $locale)
-                                ->where('name', 'ILIKE', "%{$search}%");
-                        });
-                });
-            });
-        } else {
-            $query
-                ->with(['variants'])
-                ->where(function ($q) use ($search) {
-                    $q->where('products.name_processed', 'ILIKE', "%{$search}%")
-                    ->orWhere('products.name_raw', 'ILIKE', "%{$search}%")
-                    ->orWhereHas('variants', function ($vq) use ($search) {
-                        $vq->where('product_variants.name', 'ILIKE', "%{$search}%")
-                        ->orWhere('product_variants.name_processed', 'ILIKE', "%{$search}%");
-                    });
-                });
-        }
+        $categoryIds = Category::query()
+            ->where('active', true)
+            ->where('is_visible', true)
+            ->pluck('id')
+            ->all();
 
-        $products = $query->limit(10)->get();
+        $filters = [
+            'category_ids' => $categoryIds,
+        ];
+
+        $products = $provider->searchProducts(
+            search: $search,
+            locale: $locale,
+            filters: $filters,
+            limit: 10
+        );
 
         if ($currency) {
-            $products->each(function (Product $product) use ($currency) {
-                $product->currency_price = $this->converter->convert(
-                    $product->price,
-                    CurrenciesEnum::USD->value,
-                    $currency,
-                );
-            });
+            $products = array_map(
+                function (array $product) use ($currency) {
+                    $product['currency_price'] = $this->converter->convert(
+                        $product['price'],
+                        CurrenciesEnum::USD->value,
+                        $currency,
+                    );
+
+                    return $product;
+                },
+                $products
+            );
         }
 
         $categories = Category::query()
