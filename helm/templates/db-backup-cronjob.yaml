@@ -47,7 +47,7 @@ spec:
                               - /bin/sh
                               - -c
                               - |
-                                  set -e
+                                  set -euo pipefail
 
                                   DATE=$(date +"%Y-%m-%d")
                                   YEAR_MONTH=$(date +"%Y-%m")
@@ -67,14 +67,17 @@ spec:
                                   # Daily backup
                                   #
                                   DAILY_FILE="${DAILY_DIR}/db-${DATE}.sql.gz"
+                                  TEMP_FILE="${DAILY_FILE}.tmp"
 
                                   echo "Creating daily backup: ${DAILY_FILE}"
 
                                   pg_dump \
-                                      -U "${DB_USERNAME}" \
-                                      -d "${DB_DATABASE}" \
-                                      | gzip > "${DAILY_FILE}"
-
+                                    --no-owner \
+                                    --no-acl \
+                                    -U "${DB_USERNAME}" \
+                                    -d "${DB_DATABASE}" \
+                                    | gzip > "${TEMP_FILE}"
+                                  mv "${TEMP_FILE}" "${DAILY_FILE}"
                                   echo "Daily backup completed successfully"
 
                                   #

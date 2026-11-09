@@ -5,12 +5,20 @@ import { fullSearch } from "@/services/search-service";
 import { CurrencyCode } from "@/types/currency";
 import { Meta, Product } from "@/types/product";
 import { Category } from "@/types/category";
+import { Material } from "@/types/material";
 
 type PaginatedFullSearchResponse<T, M> = {
     products: {
         data: T[];
         meta: Meta;
     },
+    filters: {
+        price: {
+            min: number;
+            max: number;
+        };
+        materials: Material[];
+    }
     categories: M[]
 }
 

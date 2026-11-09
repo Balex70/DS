@@ -67,33 +67,39 @@ export function DropdownSearchResults({
                     </div>
 
                     <div className="space-y-1">
-                        {products.map((product) => (
-                            <button
-                                key={product.id}
-                                onClick={() =>
-                                    onSelectProduct(product)
-                                }
-                                className="w-full text-left px-2 py-1.5 rounded-md text-sm hover:bg-muted flex justify-between"
-                            >
-                                <span className="truncate">{product.translation ? product.translation?.name : product.name_processed ? product.name_processed : product.name_raw}</span>
+                        {products.map((product) => {
+                            const translation = product.translations?.find(
+                                (translation) => translation.locale === locale
+                            );
+                            const productName = translation?.name ?? product.name_processed ?? product.name_raw;
+                            return (
+                                <button
+                                    key={product.id}
+                                    onClick={() =>
+                                        onSelectProduct(product)
+                                    }
+                                    className="w-full text-left px-2 py-1.5 rounded-md text-sm hover:bg-muted flex justify-between"
+                                >
+                                    <span className="truncate">{productName}</span>
 
-                                {product.price && (
-                                    <span className="text-xs text-muted-foreground">
-                                        <PriceRenderer value={product.price} />
-                                        {(currency !== "USD" && product.currency_price) && (
-                                            <span className="ml-2 text-xs font-normal text-muted-foreground">
-                                                (
-                                                <PriceRenderer
-                                                    value={product.currency_price}
-                                                    currency={currency}
-                                                />
-                                                )
-                                            </span>
-                                        )}
-                                    </span>
-                                )}
-                            </button>
-                        ))}
+                                    {product.price && (
+                                        <span className="text-xs text-muted-foreground">
+                                            <PriceRenderer value={product.price} />
+                                            {(currency !== "USD" && product.currency_price) && (
+                                                <span className="ml-2 text-xs font-normal text-muted-foreground">
+                                                    (
+                                                    <PriceRenderer
+                                                        value={product.currency_price}
+                                                        currency={currency}
+                                                    />
+                                                    )
+                                                </span>
+                                            )}
+                                        </span>
+                                    )}
+                                </button>
+                            )
+                        })}
                     </div>
                 </div>
             )}

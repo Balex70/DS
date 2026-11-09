@@ -29,6 +29,10 @@ cron:
     tag: 0.0.1
     pullPolicy: Always
 
+opensearch:
+  image:
+    pullPolicy: Always
+
 dbBackup:
   hostPath: /root/db-backups/ds
 
