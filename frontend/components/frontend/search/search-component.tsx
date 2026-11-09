@@ -174,7 +174,7 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
                         {products.length > 0 && (
                             <>
                                 <h2 className="mb-4 text-xl font-semibold">
-                                    Products ({totalProducts})
+                                    {t('search.products')} ({totalProducts})
                                 </h2>
                                 {/* Desktop */}
                                 <div className="hidden lg:block">
