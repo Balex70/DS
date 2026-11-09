@@ -88,7 +88,7 @@ export function MobileSearch({locale}: {locale: string}) {
                                 products={data?.products}
                                 categories={data?.categories}
                                 onSelectProduct={(p) => {
-                                        const variant = p?.variants?.[0] ?? '';
+                                        const variant = p?.cheapest_variant ?? '';
                                         setOpen(false);
                                         setQuery(""); // clears the input and hides results
                                         router.push(`/product/${p.id}/${variant.external_id}`)
