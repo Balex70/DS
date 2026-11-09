@@ -2,20 +2,19 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { useFullSearch } from "@/hooks/use-full-search";
-import { ProductCard } from "../category/product-card";
 import { CurrencyCode } from "@/types/currency";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import CategoryImage from "../category/CategoryImage";
 import Image from 'next/image'
-import { useSearchFilters } from "@/hooks/use-search-filters";
 import { useState } from "react";
 import { SortSelectValue } from "@/types/category";
-import { CategorySidebar } from "../category/CategorySidebar";
 import { SortSelect } from "../category/SortSelect";
-import { MobileCategorySidebar } from "../category/MobileCategorySidebar";
 import { MobileSortSelect } from "../category/MobileSortSelect";
 import { Search } from "lucide-react";
+import { SearchProductCard } from "./product-card";
+import { SearchSidebar } from "./SearchSidebar";
+import { MobileSearchSidebar } from "./MobileSearchSidebar";
 
 type SearchComponentProps = {
     q: string | undefined;
@@ -25,19 +24,14 @@ type SearchComponentProps = {
 
 export function SearchComponent({q, locale, currency}: SearchComponentProps) {
     const t = useTranslations('frontend')
-    const { data: filterData, isLoading: isFilterLoading } = useSearchFilters({q: q ? q : "", locale: locale});
     const [sort, setSort] = useState<SortSelectValue>("latest");
-    const minPrice = filterData?.price.min ?? 0;
-    const maxPrice = filterData?.price.max ?? 10000;
 
-    const defaultPrice: [number, number] = [minPrice, maxPrice];
     const [filterState, setFilterState] = useState({
         q,
         price: null as [number, number] | null,
         priceDraft: null as [number, number] | null,
         activeMaterials: [] as number[],
     });
-
     const currentFilters = filterState.q === q
         ? filterState
         : {
@@ -47,9 +41,32 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
             activeMaterials: [],
         };
 
-    const price = currentFilters.price ?? defaultPrice;
-    const priceDraft = currentFilters.priceDraft ?? defaultPrice;
+    const activePrice = currentFilters.price ?? [0, 10000];
     const activeMaterials = currentFilters.activeMaterials;
+
+    const {
+            data,
+            isLoading,
+            fetchNextPage,
+            hasNextPage,
+            isFetchingNextPage,
+        } = useFullSearch({
+            q: q ? q : "",
+            locale,
+            sort,
+            price: activePrice,
+            activeMaterials,
+            currency
+        });
+
+    const filterData = data?.pages[0]?.filters;
+
+    const minPrice = filterData?.price.min ?? 0;
+    const maxPrice = filterData?.price.max ?? 10000;
+
+    const defaultPrice: [number, number] = [minPrice, maxPrice];
+    const priceDraft = currentFilters.priceDraft ?? defaultPrice;
+
     const setPrice = (price: [number, number]) => {
         setFilterState(prev => ({
             ...prev,
@@ -72,28 +89,11 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
         }));
     };
 
-    const {
-            data,
-            isLoading,
-            fetchNextPage,
-            hasNextPage,
-            isFetchingNextPage,
-        } = useFullSearch({
-            q: q ? q : "",
-            locale,
-            sort,
-            price,
-            activeMaterials,
-            currency
-        });
-
     const products = data?.pages.flatMap(page => page.products.data) ?? [];
+    const totalProducts = data?.pages[0].products.meta.total ?? 0;
     const categories = data?.pages[0].categories ?? [];
 
-    let hasProducts = true;
-    if (minPrice === 0 && maxPrice === 10000) {
-        hasProducts = false;
-    }
+    const hasProducts = (data?.pages[0]?.products.meta.total ?? 0) > 0;
 
     return (
         <div className="space-y-6">
@@ -104,9 +104,9 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
             )}
             <div className="flex w-full gap-6">
                 <aside className="hidden w-72 shrink-0 lg:block">
-                    {!isFilterLoading &&
-                        <CategorySidebar
-                            hasProducts={hasProducts}
+                    {!isLoading &&
+                        <SearchSidebar
+                            totalProducts={totalProducts}
                             minPrice={minPrice}
                             maxPrice={maxPrice}
                             price={priceDraft}
@@ -174,7 +174,7 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
                         {products.length > 0 && (
                             <>
                                 <h2 className="mb-4 text-xl font-semibold">
-                                    Products ({products.length})
+                                    {t('search.products')} ({totalProducts})
                                 </h2>
                                 {/* Desktop */}
                                 <div className="hidden lg:block">
@@ -182,7 +182,7 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
                                 </div>
                                 {/* Mobile */}
                                 <div className="flex items-center justify-between lg:hidden">
-                                    <MobileCategorySidebar
+                                    <MobileSearchSidebar
                                         hasProducts={hasProducts}
                                         isLoading={false}
                                         minPrice={minPrice}
@@ -203,7 +203,7 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
                                 </div>
                                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                                     {products.map(product => (
-                                        <ProductCard key={product.id} product={product} />
+                                        <SearchProductCard key={product.id} product={product} />
                                     ))}
                                 </div>
 
@@ -214,7 +214,7 @@ export function SearchComponent({q, locale, currency}: SearchComponentProps) {
                                             disabled={isFetchingNextPage}
                                             className="px-4 py-2 text-sm border rounded"
                                         >
-                                            {isFetchingNextPage ? "Loading..." : "Load more"}
+                                            {isFetchingNextPage ? t('category.loading') : t('category.load_more')}
                                         </button>
                                     </div>
                                 )}

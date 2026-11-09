@@ -41,6 +41,8 @@ Route::get('categories/get-sync-state/{category}', [CategoryController::class, '
 Route::post('categories/reset-sync-state/{category}', [CategoryController::class, 'resetCategorySyncState'])->middleware('auth:sanctum');
 
 // Products
+Route::post('products/reindex', [ProductController::class, 'reindexProducts'])->middleware('auth:sanctum');
+Route::get('products/config-index', [ProductController::class, 'configProductsIndex'])->middleware('auth:sanctum');
 Route::apiResource('products', ProductController::class)->middleware('auth:sanctum');
 Route::patch('products/enrich/{product}', [ProductController::class, 'enrich'])->middleware('auth:sanctum');
 Route::patch('products/ai-status-change/{product}/{newAiStatus}', [ProductController::class, 'changeAiStatus'])->middleware('auth:sanctum');
@@ -146,7 +148,6 @@ Route::prefix('store')->group(function () {
     // Search
     Route::get('search', [StoreSearchController::class, 'search']);
     Route::get('full-search', [StoreSearchController::class, 'fullSearch']);
-    Route::get('full-search/filters', [StoreSearchController::class, 'filters']);
 
     // Settings
     Route::get('settings', [StoreSettingController::class, 'index']);

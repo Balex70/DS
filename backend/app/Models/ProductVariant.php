@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Services\ProductSearchIndexer;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 
 #[Fillable([
     'product_id',
@@ -61,5 +63,26 @@ class ProductVariant extends Model
         return $this->stock === null
             || $this->stock_synced_at === null
             || $this->stock_synced_at->lte(now()->subMinutes(15));
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(function (ProductVariant $variant) {
+            $productId = $variant->product_id;
+
+            DB::afterCommit(function () use ($productId) {
+                app(ProductSearchIndexer::class)
+                    ->indexProduct($productId);
+            });
+        });
+
+        static::deleted(function (ProductVariant $variant) {
+            $productId = $variant->product_id;
+
+            DB::afterCommit(function () use ($productId) {
+                app(ProductSearchIndexer::class)
+                    ->indexProduct($productId);
+            });
+        });
     }
 }

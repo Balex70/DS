@@ -10,6 +10,7 @@ use App\Enums\AppLogRealmEnum;
 use App\Enums\ProductAiStatusEnum;
 use App\Enums\ProductVariantAiStatusEnum;
 use App\Models\Product;
+use App\SearchEngine\SearchEngineManager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +20,9 @@ class ProductService
         private DropshippingManager $manager,
         private CjProductMapper $mapper,
         private ProductImageService $imageService,
-        private CreateAppLogAction $createAppLogAction
+        private CreateAppLogAction $createAppLogAction,
+        private SearchEngineManager $searchEngineManager,
+        private ProductSearchIndexer $productSearchIndexer
     ) {
     }
 
@@ -84,7 +87,9 @@ class ProductService
                     $updates['ai_status'] = ProductAiStatusEnum::QUEUED;
                 }
 
+                $productToEnrich->skipSearchIndexing(); // Skip indexing because we use explicit indexing
                 $productToEnrich->update($updates);
+                $productToEnrich->skipSearchIndexing(false);
 
                 // Store and sync materials
                 if (!empty($mappedDetails['material'])) {
@@ -193,6 +198,8 @@ class ProductService
             realm: AppLogRealmEnum::PRODUCT,
             message: 'Product with ID: ' . $productToEnrich->id . ' (external_id: ' . $productToEnrich->external_id . ') enrichment completed successfully',
         );
+
+        $this->productSearchIndexer->indexProduct($productToEnrich->id);
     }
 
     /*
@@ -256,5 +263,39 @@ class ProductService
                 $status === ProductVariantAiStatusEnum::DONE->value &&
                 $currentName !== $newName
             );
+    }
+
+    public function reindexProducts(): void
+    {
+        $this->createAppLogAction->execute(
+            level: AppLogLevelEnum::INFO,
+            realm: AppLogRealmEnum::PRODUCT,
+            message: 'Products reindex started',
+        );
+
+        $this->productSearchIndexer->reindexProducts();
+
+        $this->createAppLogAction->execute(
+            level: AppLogLevelEnum::SUCCESS,
+            realm: AppLogRealmEnum::PRODUCT,
+            message: 'Products reindex completed',
+        );
+    }
+
+    public function configProductsIndex(): void
+    {
+        $this->createAppLogAction->execute(
+            level: AppLogLevelEnum::INFO,
+            realm: AppLogRealmEnum::PRODUCT,
+            message: 'Configuring products index started',
+        );
+
+        $this->productSearchIndexer->configProductsIndex();
+
+        $this->createAppLogAction->execute(
+            level: AppLogLevelEnum::SUCCESS,
+            realm: AppLogRealmEnum::PRODUCT,
+            message: 'Configuring products index completed',
+        );
     }
 }

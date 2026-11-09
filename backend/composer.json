@@ -15,6 +15,7 @@
         "laravel/socialite": "^5.27",
         "laravel/tinker": "^3.0",
         "liqpay/liqpay": "^1.4",
+        "opensearch-project/opensearch-php": "^2.7",
         "spatie/laravel-permission": "^7.3"
     },
     "require-dev": {
