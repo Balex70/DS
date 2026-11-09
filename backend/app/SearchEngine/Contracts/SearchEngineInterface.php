@@ -47,4 +47,6 @@ interface SearchEngineInterface
         int $page = 1,
         int $perPage = 20
     ): array;
+
+    public function applyProductsIndexConfiguration(): void;
 }

@@ -281,4 +281,21 @@ class ProductService
             message: 'Products reindex completed',
         );
     }
+
+    public function configProductsIndex(): void
+    {
+        $this->createAppLogAction->execute(
+            level: AppLogLevelEnum::INFO,
+            realm: AppLogRealmEnum::PRODUCT,
+            message: 'Configuring products index started',
+        );
+
+        $this->productSearchIndexer->configProductsIndex();
+
+        $this->createAppLogAction->execute(
+            level: AppLogLevelEnum::SUCCESS,
+            realm: AppLogRealmEnum::PRODUCT,
+            message: 'Configuring products index completed',
+        );
+    }
 }

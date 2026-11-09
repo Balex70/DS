@@ -298,6 +298,15 @@ ID: {$product->id} ($product->name_processed)"
         return response()->json(['message' => 'Products reindexed'], 200);
     }
 
+    public function configProductsIndex()
+    {
+        Gate::authorize('viewAny', Product::class);
+
+        $this->service->configProductsIndex();
+
+        return response()->json(['message' => 'Products index configured successfully'], 200);
+    }
+
     public function aiTextsNext()
     {
         $productToProcess = DB::transaction(function () {

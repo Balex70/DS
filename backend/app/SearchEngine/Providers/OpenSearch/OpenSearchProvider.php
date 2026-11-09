@@ -419,4 +419,239 @@ class OpenSearchProvider implements SearchEngineInterface
             ],
         ];
     }
+
+    public function applyProductsIndexConfiguration(): void
+    {
+        $indexExists = $this->client->indices()->exists([
+            'index' => 'products',
+        ]);
+
+        if ($indexExists) {
+            $this->client->indices()->delete([
+                'index' => 'products',
+            ]);
+        }
+
+        $this->client->indices()->create([
+            'index' => 'products',
+            'body' => $this->productsIndexConfiguration(),
+        ]);
+    }
+
+    private function productsIndexConfiguration(): array
+    {
+        return [
+            'settings' => [
+                'index' => [
+                    'max_ngram_diff' => 13,
+                    'number_of_shards' => 1,
+                    'number_of_replicas' => 1,
+                ],
+                'analysis' => [
+                    'tokenizer' => [
+                        'product_ngram_tokenizer' => [
+                            'type' => 'ngram',
+                            'min_gram' => 2,
+                            'max_gram' => 15,
+                            'token_chars' => ['letter', 'digit'],
+                        ],
+                    ],
+                    'analyzer' => [
+                        'product_ngram_analyzer' => [
+                            'type' => 'custom',
+                            'tokenizer' => 'product_ngram_tokenizer',
+                            'filter' => ['lowercase'],
+                        ],
+                        'product_search_analyzer' => [
+                            'type' => 'custom',
+                            'tokenizer' => 'standard',
+                            'filter' => ['lowercase'],
+                        ],
+                    ],
+                ],
+            ],
+            'mappings' => [
+                'properties' => [
+                    'ai_texts_at' => [
+                        'type' => 'date',
+                    ],
+                    'big_image' => [
+                        'properties' => [
+                            'created_at' => ['type' => 'date'],
+                            'id' => ['type' => 'long'],
+                            'original_url' => [
+                                'type' => 'text',
+                                'fields' => [
+                                    'keyword' => [
+                                        'type' => 'keyword',
+                                        'ignore_above' => 256,
+                                    ],
+                                ],
+                            ],
+                            'position' => ['type' => 'long'],
+                            'product_id' => ['type' => 'long'],
+                            'status' => [
+                                'type' => 'text',
+                                'fields' => [
+                                    'keyword' => [
+                                        'type' => 'keyword',
+                                        'ignore_above' => 256,
+                                    ],
+                                ],
+                            ],
+                            'thumbnail_url' => [
+                                'type' => 'text',
+                                'fields' => [
+                                    'keyword' => [
+                                        'type' => 'keyword',
+                                        'ignore_above' => 256,
+                                    ],
+                                ],
+                            ],
+                            'type' => [
+                                'type' => 'text',
+                                'fields' => [
+                                    'keyword' => [
+                                        'type' => 'keyword',
+                                        'ignore_above' => 256,
+                                    ],
+                                ],
+                            ],
+                            'updated_at' => ['type' => 'date'],
+                            'url' => [
+                                'type' => 'text',
+                                'fields' => [
+                                    'keyword' => [
+                                        'type' => 'keyword',
+                                        'ignore_above' => 256,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'cheapest_variant' => [
+                        'properties' => [
+                            'external_id' => [
+                                'type' => 'text',
+                                'fields' => [
+                                    'keyword' => [
+                                        'type' => 'keyword',
+                                        'ignore_above' => 256,
+                                    ],
+                                ],
+                            ],
+                            'id' => ['type' => 'long'],
+                            'price' => ['type' => 'long'],
+                        ],
+                    ],
+                    'created_at' => ['type' => 'date'],
+                    'external_id' => [
+                        'type' => 'text',
+                        'fields' => [
+                            'keyword' => [
+                                'type' => 'keyword',
+                                'ignore_above' => 256,
+                            ],
+                        ],
+                    ],
+                    'id' => ['type' => 'long'],
+                    'last_enrichment_at' => ['type' => 'date'],
+                    'materials' => [
+                        'type' => 'nested',
+                        'properties' => [
+                            'id' => ['type' => 'long'],
+                            'name' => [
+                                'type' => 'text',
+                                'fields' => [
+                                    'keyword' => [
+                                        'type' => 'keyword',
+                                        'ignore_above' => 256,
+                                    ],
+                                ],
+                            ],
+                            'translations' => [
+                                'type' => 'nested',
+                                'properties' => [
+                                    'locale' => ['type' => 'keyword'],
+                                    'name' => ['type' => 'text'],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'name_processed' => [
+                        'type' => 'text',
+                        'analyzer' => 'product_ngram_analyzer',
+                        'search_analyzer' => 'product_search_analyzer',
+                    ],
+                    'name_raw' => [
+                        'type' => 'text',
+                        'analyzer' => 'product_ngram_analyzer',
+                        'search_analyzer' => 'product_search_analyzer',
+                    ],
+                    'price' => ['type' => 'long'],
+                    'translations' => [
+                        'properties' => [
+                            'description' => [
+                                'type' => 'text',
+                                'fields' => [
+                                    'keyword' => [
+                                        'type' => 'keyword',
+                                        'ignore_above' => 256,
+                                    ],
+                                ],
+                            ],
+                            'locale' => [
+                                'type' => 'text',
+                                'fields' => [
+                                    'keyword' => [
+                                        'type' => 'keyword',
+                                        'ignore_above' => 256,
+                                    ],
+                                ],
+                            ],
+                            'name' => [
+                                'type' => 'text',
+                                'fields' => [
+                                    'keyword' => [
+                                        'type' => 'keyword',
+                                        'ignore_above' => 256,
+                                    ],
+                                ],
+                            ],
+                            'translated_at' => ['type' => 'date'],
+                        ],
+                    ],
+                    'updated_at' => ['type' => 'date'],
+                    'visible_category_ids' => ['type' => 'long'],
+                    'variants' => [
+                        'type' => 'nested',
+                        'properties' => [
+                            'id' => ['type' => 'long'],
+                            'name' => [
+                                'type' => 'text',
+                                'analyzer' => 'product_ngram_analyzer',
+                                'search_analyzer' => 'product_search_analyzer',
+                            ],
+                            'name_processed' => [
+                                'type' => 'text',
+                                'analyzer' => 'product_ngram_analyzer',
+                                'search_analyzer' => 'product_search_analyzer',
+                            ],
+                            'translations' => [
+                                'type' => 'nested',
+                                'properties' => [
+                                    'locale' => ['type' => 'keyword'],
+                                    'name' => [
+                                        'type' => 'text',
+                                        'analyzer' => 'product_ngram_analyzer',
+                                        'search_analyzer' => 'product_search_analyzer',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
 }

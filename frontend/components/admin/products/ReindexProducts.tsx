@@ -14,14 +14,21 @@ function ReindexProducts () {
     try {
       setLoading(true)
 
+      const getCookie = (name: string) => {
+          const value = `; ${document.cookie}`
+          const parts = value.split(`; ${name}=`)
+          if (parts.length === 2) return parts.pop()?.split(";").shift()
+      }
+      const xsrfToken = decodeURIComponent(getCookie("XSRF-TOKEN") || "")
       const headers = {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'X-XSRF-TOKEN': xsrfToken,
       };
 
       // fetch/sync currency
       const res = await fetch(`${process.env.NEXT_PUBLIC_CORE_API_ENTRYPOINT}/api/products/reindex`, {
-          method: 'GET',
+          method: 'POST',
           credentials: 'include',
           headers: headers,
           cache: 'no-cache', // 'no-cache' if you want it fresh each time
@@ -48,7 +55,13 @@ function ReindexProducts () {
         }
       }
 
-      toast.success("Index updated");
+      const data = await res.json();
+
+      if (data.message !== 'Products reindexed') {
+        throw new Error('Unexpected API response');
+      }
+
+      toast.success(data.message);
     } catch (err: unknown) {
       setError(getErrorStringFromCatch(err))
     } finally {

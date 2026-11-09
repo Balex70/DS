@@ -91,6 +91,11 @@ class ProductSearchIndexer
         });
     }
 
+    public function configProductsIndex(): void
+    {
+        $this->searchEngineManager->driver()->applyProductsIndexConfiguration();
+    }
+
     private function buildSearchIndexDocument(Product $product): array
     {
         return [
