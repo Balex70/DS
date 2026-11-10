@@ -34,3 +34,18 @@ spec:
           volumeMounts:
             - mountPath: "/app/storage"
               name: {{ .Release.Name }}-backend-pv-storage
+      initContainers:
+        - name: init-laravel-storage
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p \
+                /app/storage/logs \
+                /app/storage/framework/cache/data \
+                /app/storage/framework/sessions \
+                /app/storage/framework/views
+          volumeMounts:
+            - name: {{ .Release.Name }}-backend-pv-storage
+              mountPath: /app/storage
