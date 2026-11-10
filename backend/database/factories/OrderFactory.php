@@ -54,7 +54,7 @@ class OrderFactory extends Factory
         $countries = ['US', 'PL', 'DE', 'GB', 'FR', 'UA'];
 
         return [
-            'order_number' => 'ORD-' . strtoupper(Str::random(10)),
+            'order_number' => 'ORD-' . strtoupper(Str::random(10)) . '-' . strtoupper(substr(str_replace('-', '', (string) Str::uuid()), 0, 8)),
 
             'customer_id' => Customer::factory(), // or null if guest
             // 'customer_id' => null,
