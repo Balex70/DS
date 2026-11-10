@@ -104,7 +104,7 @@ class ProductSearchIndexer
             'name_raw' => $product->name_raw,
             'name_processed' => $product->name_processed,
             'slug' => $product->slug,
-            'price' => $product->price,
+            'price' => $product->cheapestVariant->price,
             'big_image' => $product->bigImage,
 
             'cheapest_variant' => $product->cheapestVariant
