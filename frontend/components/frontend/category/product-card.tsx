@@ -38,11 +38,11 @@ export function ProductCard({ product }: Props) {
         });
     };
     return (
-        <Card className="overflow-hidden transition hover:shadow-md gap-2 pb-0 pt-0">
-            <Link
-                href={`/product/${product.id}/${cheapestVariantId}`}
-                className="group block"
-            >
+        <Link
+            href={`/product/${product.id}/${cheapestVariantId}`}
+            className="group block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+            <Card className="overflow-hidden transition hover:shadow-md gap-2 pb-0 pt-0">
                 <div className="relative aspect-square bg-muted">
                     {product.big_image?.url ? (
                         <ProductImage
@@ -59,50 +59,50 @@ export function ProductCard({ product }: Props) {
                         </div>
                     )}
                 </div>
-            </Link>
 
-            <CardContent className="flex h-full flex-col p-3">
-                <h3 className="line-clamp-2 text-sm font-medium">
-                    {product.translation ? product.translation?.name : product.name_processed ? product.name_processed : product.name_raw}
-                </h3>
+                <CardContent className="flex h-full flex-col p-3">
+                    <h3 className="line-clamp-2 text-sm font-medium">
+                        {product.translation ? product.translation?.name : product.name_processed ? product.name_processed : product.name_raw}
+                    </h3>
 
-                <div className="mt-auto space-y-2">
-                    <div className="text-lg font-semibold text-red-500">
-                        <PriceRenderer value={product.price} />
-                        {(currency !== "USD" && product.currency_price) && (
-                            <div className="text-sm font-normal text-muted-foreground">
-                                (
-                                <PriceRenderer
-                                    value={product.currency_price}
-                                    currency={currency}
-                                />
-                                )
-                            </div>
-                        )}
+                    <div className="mt-auto space-y-2">
+                        <div className="text-lg font-semibold text-red-500">
+                            <PriceRenderer value={product.price} />
+                            {(currency !== "USD" && product.currency_price) && (
+                                <div className="text-sm font-normal text-muted-foreground">
+                                    (
+                                    <PriceRenderer
+                                        value={product.currency_price}
+                                        currency={currency}
+                                    />
+                                    )
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+                            <span className="shrink-0">{t('category.product_card.materials')}:</span>
+                            {product.materials?.map((material) => (
+                                <>
+                                    <Badge
+                                        key={material.id}
+                                        variant="outline"
+                                        className="h-5 px-1.5 py-0 text-xs font-normal text-slate-700 border-slate-200 bg-slate-50"
+                                    >
+                                        {(material.translation?.name ?? material.name).trim().toLocaleLowerCase().replace(/^./u, (char) => char.toLocaleUpperCase())}
+                                    </Badge>
+                                </>
+                            ))}
+                        </div>
+                        {/* <button
+                            onClick={handleAddToCart}
+                            disabled={isPending}
+                            className="rounded-md bg-black px-4 py-2 text-white hover:opacity-90 disabled:opacity-50"
+                        >
+                            {isPending ? t('category.product_card.adding') : t('category.product_card.add_to_cart')}
+                        </button> */}
                     </div>
-                    <div className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
-                        <span className="shrink-0">{t('category.product_card.materials')}:</span>
-                        {product.materials?.map((material) => (
-                            <>
-                                <Badge
-                                    key={material.id}
-                                    variant="outline"
-                                    className="h-5 px-1.5 py-0 text-xs font-normal text-slate-700 border-slate-200 bg-slate-50"
-                                >
-                                    {(material.translation?.name ?? material.name).trim().toLocaleLowerCase().replace(/^./u, (char) => char.toLocaleUpperCase())}
-                                </Badge>
-                            </>
-                        ))}
-                    </div>
-                    {/* <button
-                        onClick={handleAddToCart}
-                        disabled={isPending}
-                        className="rounded-md bg-black px-4 py-2 text-white hover:opacity-90 disabled:opacity-50"
-                    >
-                        {isPending ? t('category.product_card.adding') : t('category.product_card.add_to_cart')}
-                    </button> */}
-                </div>
-            </CardContent>
-        </Card>
+                </CardContent>
+            </Card>
+        </Link>
     );
 }
