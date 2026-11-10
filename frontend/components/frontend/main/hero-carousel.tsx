@@ -41,10 +41,11 @@ export function HeroCarousel() {
             <CarouselContent>
                 {products && products.map((product) => {
                     const cheapestVariantImage = product.cheapest_variant?.image?.original_url ?? product.big_image?.original_url ?? undefined;
+                    const cheapestVariantId = product?.cheapest_variant?.external_id ?? '';
                     return (
                         <CarouselItem key={product.id}>
                             <Link
-                                href={`/product/${product.id}`}
+                                href={`/product/${product.id}/${cheapestVariantId}`}
                                 className="group block"
                             >
                                 <div
