@@ -57,7 +57,7 @@ function ReindexProducts () {
 
       const data = await res.json();
 
-      if (data.message !== 'Products reindexed') {
+      if (data.message !== 'Products reindex queued') {
         throw new Error('Unexpected API response');
       }
 
