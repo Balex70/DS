@@ -8,6 +8,7 @@ use App\Enums\AppLogRealmEnum;
 use App\SearchEngine\Contracts\SearchEngineInterface;
 use OpenSearch\Client;
 use OpenSearch\GuzzleClientFactory;
+use RuntimeException;
 
 class OpenSearchProvider implements SearchEngineInterface
 {
@@ -85,6 +86,8 @@ class OpenSearchProvider implements SearchEngineInterface
         ]);
 
         if ($response['errors'] ?? false) {
+            $errors = [];
+
             foreach ($response['items'] as $item) {
                 $result = $item['index'];
 
@@ -94,8 +97,14 @@ class OpenSearchProvider implements SearchEngineInterface
                         realm: AppLogRealmEnum::PRODUCT,
                         message: 'OpenSearch bulk indexing failed: ' . $result['_id'] ?? null . ' Error: ' . $result['error'],
                     );
+
+                    $errors[] = $result['_id'] ?? 'unknown';
                 }
             }
+
+            throw new RuntimeException(
+                'OpenSearch bulk indexing failed for products: ' . implode(', ', $errors)
+            );
         }
     }
 
