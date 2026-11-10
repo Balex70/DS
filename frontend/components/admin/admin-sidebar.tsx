@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { ClipboardClock, Hammer, Home, List, Settings, ShoppingCart, FolderTree, UserLock, UsersRound, DollarSign, ArrowDownUp, LayersArrowUp } from "lucide-react"
+import { ClipboardClock, Hammer, Home, List, Settings, ShoppingCart, FolderTree, UserLock, UsersRound, DollarSign, ArrowDownUp, LayersArrowUp, SquareExclamationPoint } from "lucide-react"
 import { AdminModeToggle } from "./admin-mode-toggle"
 import Link from "next/link"
 
@@ -137,6 +137,14 @@ export function AdminSidebar() {
                   <Link href="/admin/queue-jobs" className="flex items-center gap-2">
                     <LayersArrowUp />
                     <span>Queue Jobs</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/admin/failed-jobs" className="flex items-center gap-2">
+                    <SquareExclamationPoint />
+                    <span>Failed Jobs</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
