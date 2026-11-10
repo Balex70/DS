@@ -160,30 +160,33 @@ const parseTrackingRemark = (
         };
     }
 
-    if (/^export customs clearance completed successfully\.?$/i.test(normalized)) {
-        return { key: "export_customs_clearance_completed" };
-    }
+    const exactRemarks: Record<string, string> = {
+        'delivered': 'delivered',
+        'ready for pickup': 'ready_for_pickup',
+        'arrived at the processing center of the last mile provider':
+            'arrived_at_last_mile_processing_center',
+        'hand over to last mile': 'handed_over_to_last_mile',
+        'customs clearance completed successfully':
+            'customs_clearance_completed',
+        'export customs clearance completed successfully':
+            'export_customs_clearance_completed',
+        'arrived at the port of origin':
+            'arrived_at_port_of_origin',
+        'the shipment is in transit': 'in_transit',
+        'customs clearance in process':
+            'customs_clearance_in_process',
+        'arrived at destination country airport':
+            'arrived_at_destination_airport',
+        'departed from port of origin':
+            'departed_from_port_of_origin',
+    };
 
-    if (/^arrived at the port of origin\.?$/i.test(normalized)) {
-        return { key: "arrived_at_port_of_origin" };
-    }
+    const key = normalized
+        .replace(/[.]$/, '')
+        .toLowerCase();
 
-    if (
-        /^(the shipment is in transit)\.?$/i.test(normalized)
-    ) {
-        return { key: "in_transit" };
-    }
-
-    if (/^customs clearance in process\.?$/i.test(normalized)) {
-        return { key: "customs_clearance_in_process" };
-    }
-
-    if (/^arrived at destination country airport\.?$/i.test(normalized)) {
-        return { key: "arrived_at_destination_airport" };
-    }
-
-    if (/^departed from port of origin\.?$/i.test(normalized)) {
-        return { key: "departed_from_port_of_origin" };
+    if (exactRemarks[key]) {
+        return { key: exactRemarks[key] };
     }
 
     return null;

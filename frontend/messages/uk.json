@@ -409,7 +409,12 @@
           "in_transit": "Відправлення в дорозі.",
           "customs_clearance_in_process": "Триває митне оформлення.",
           "arrived_at_destination_airport": "Відправлення прибуло до аеропорту країни призначення.",
-          "departed_from_port_of_origin": "Відправлення вирушило з порту відправлення."
+          "departed_from_port_of_origin": "Відправлення вирушило з порту відправлення.",
+          "customs_clearance_completed": "Митне оформлення успішно завершено",
+          "handed_over_to_last_mile": "Передано місцевому перевізнику",
+          "arrived_at_last_mile_processing_center": "Прибуло до сортувального центру місцевого перевізника",
+          "ready_for_pickup": "Готове до отримання",
+          "delivered": "Доставлено"
         }
       },
       "payment_methods_section": {
