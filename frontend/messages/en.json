@@ -409,7 +409,12 @@
           "in_transit": "The shipment is in transit.",
           "customs_clearance_in_process": "Customs clearance is in progress.",
           "arrived_at_destination_airport": "Arrived at the destination country's airport.",
-          "departed_from_port_of_origin": "Departed from the port of origin."
+          "departed_from_port_of_origin": "Departed from the port of origin.",
+          "customs_clearance_completed": "Customs clearance completed successfully",
+          "handed_over_to_last_mile": "Handed over to last-mile carrier",
+          "arrived_at_last_mile_processing_center": "Arrived at last-mile processing center",
+          "ready_for_pickup": "Ready for pickup",
+          "delivered": "Delivered"
         }
       },
       "payment_methods_section": {

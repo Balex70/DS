@@ -10,6 +10,7 @@ use App\Enums\ProductVariantAiStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
+use App\Jobs\ReindexProductsJob;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Services\ProductSearchIndexer;
@@ -293,9 +294,9 @@ ID: {$product->id} ($product->name_processed)"
     {
         Gate::authorize('viewAny', Product::class);
 
-        $this->service->reindexProducts();
+        ReindexProductsJob::dispatch();
 
-        return response()->json(['message' => 'Products reindexed'], 200);
+        return response()->json(['message' => 'Products reindex queued'], 202);
     }
 
     public function configProductsIndex()
