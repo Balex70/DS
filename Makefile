@@ -13,6 +13,9 @@ DOCKER_COMPOSE_PROD = docker compose -f docker-compose.yml -f docker-compose.pro
 DOCKER_COMPOSE_CI=docker compose -f docker-compose.ci.yml
 DOCKER_COMPOSE_KUBE=docker-compose --env-file frontend/.env.kube -f docker-compose.kube.yml # use docker compose in local
 
+DB_BACKUP_DIR ?= ./backups
+DB_BACKUP_FILE ?= local-$(shell date +%Y%m%d-%H%M%S).dump
+
 show-config:
 	$(DOCKER_COMPOSE) config
 
@@ -99,6 +102,46 @@ type-check:
 
 check-release: backend-test lint type-check phpcs
 
+docker-ai-worker-token:
+	docker compose exec -T backend php artisan tinker --execute="\
+	\$$user = \App\Models\User::firstOrCreate(\
+		['email' => 'ai-worker@local'], \
+		['name' => 'AI Worker', 'password' => \Illuminate\Support\Facades\Hash::make(\Illuminate\Support\Str::random(32))]\
+	); \
+	echo \$$user->createToken('ai-worker-token')->plainTextToken . PHP_EOL;"
+
+# Export PostgreSQL database in custom format
+db-export:
+	@mkdir -p "$(DB_BACKUP_DIR)"
+	$(DOCKER_COMPOSE) exec -T db sh -c \
+		'pg_dump -Fc --no-owner --no-privileges -U "$$POSTGRES_USER" "$$POSTGRES_DB"' \
+		> "$(DB_BACKUP_DIR)/$(DB_BACKUP_FILE)"
+	@echo "Database backup created: $(DB_BACKUP_DIR)/$(DB_BACKUP_FILE)"
+
+# Import PostgreSQL custom-format dump
+# make db-import DB_DUMP=./backups/production.dump
+db-import:
+	@test -f "$(DB_DUMP)" || (echo "Dump not found: $(DB_DUMP)" && exit 1)
+	$(DOCKER_COMPOSE) exec -T db sh -c \
+		'pg_restore --clean --if-exists --no-owner --no-privileges --single-transaction -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"' \
+		< "$(DB_DUMP)"
+
+# Import gzipped PostgreSQL SQL dump (from production)
+# make db-import-gz DB_DUMP=./backups/db-2026-11-05.sql.gz
+db-import-gz:
+	@test -f "$(DB_DUMP)" || (echo "Dump not found: $(DB_DUMP)" && exit 1)
+	$(DOCKER_COMPOSE) exec -T db sh -c '\
+		set -e; \
+		psql -v ON_ERROR_STOP=1 -U "$$POSTGRES_USER" -d postgres \
+			-c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '\''$$POSTGRES_DB'\'' AND pid <> pg_backend_pid()"; \
+		psql -v ON_ERROR_STOP=1 -U "$$POSTGRES_USER" -d postgres \
+			-c "DROP DATABASE IF EXISTS \"$$POSTGRES_DB\""; \
+		psql -v ON_ERROR_STOP=1 -U "$$POSTGRES_USER" -d postgres \
+			-c "CREATE DATABASE \"$$POSTGRES_DB\" OWNER \"$$POSTGRES_USER\""; \
+	'
+	gunzip -c "$(DB_DUMP)" | $(DOCKER_COMPOSE) exec -T db sh -c \
+		'psql -v ON_ERROR_STOP=1 -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"'
+
 #################################################################
 #####                  #continuous integration              #####
 #################################################################
@@ -164,6 +207,10 @@ cron-pod:
 	@ export CRON_POD_NAME=$(shell bin/kctl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=ds-cron); \
 	if [ "$$CRON_POD_NAME" = "" ]; then echo "\e[1;31mCRON Pod not exist!\e[0m"; else bin/kctl exec -ti $$CRON_POD_NAME -- sh; fi
 
+opensearch-pod:
+	@ export OPENSEARCH_POD_NAME=$(shell bin/kctl get pods --selector=app=$(RELEASE)-opensearch -o jsonpath='{.items[0].metadata.name}'); \
+	if [ "$$OPENSEARCH_POD_NAME" = "" ]; then echo "\e[1;31mOPENSEARCH Pod does not exist!\e[0m"; else bin/kctl exec -ti $$OPENSEARCH_POD_NAME -- sh; fi
+
 # can be accessed without kubernetes running pods
 sh-backend-image:
 	docker run --rm -it --entrypoint sh localhost:32000/ds-backend:0.0.1
@@ -195,6 +242,9 @@ describe-queue:
 describe-cron:
 	@ bin/kctl describe pod $(RELEASE)-cron
 
+describe-opensearch:
+	@ bin/kctl describe pod $(RELEASE)-opensearch
+
 describe-migration:
 	@ bin/kctl describe pod $(RELEASE)-migration
 
@@ -209,6 +259,9 @@ describe-backend-service:
 
 describe-frontend-service:
 	@ bin/kctl describe services $(RELEASE)-frontend-service
+
+describe-opensearch-service:
+	@ bin/kctl describe service $(RELEASE)-opensearch-service
 
 describe-ingress:
 	@ bin/kctl describe ingress $(RELEASE)-ingress
@@ -261,6 +314,9 @@ svc-db:
 svc-redis:
 	@ bin/kctl get svc $(RELEASE)-redis -o yaml
 
+svc-opensearch:
+	@ bin/kctl get svc $(RELEASE)-opensearch-service -o yaml
+
 log-backend:
 	@ export BACKEND_POD_NAME=$(shell bin/kctl get pods --template '{{range .items}}{{.metadata.name}}{{end}}' --selector=app=ds-backend); \
 	bin/kctl logs -f $$BACKEND_POD_NAME
@@ -280,6 +336,10 @@ log-cron:
 log-cron-previous:
 	@ export CRON_POD_NAME=$(shell bin/kctl get pods --selector=app=$(RELEASE)-cron -o jsonpath='{.items[0].metadata.name}'); \
 	if [ "$$CRON_POD_NAME" = "" ]; then echo "\e[1;31mCRON Pod does not exist!\e[0m"; else bin/kctl logs $$CRON_POD_NAME --previous; fi
+
+log-opensearch:
+	@ export OPENSEARCH_POD_NAME=$(shell bin/kctl get pods --selector=app=$(RELEASE)-opensearch -o jsonpath='{.items[0].metadata.name}'); \
+	if [ "$$OPENSEARCH_POD_NAME" = "" ]; then echo "\e[1;31mOPENSEARCH Pod does not exist!\e[0m"; else bin/kctl logs -f $$OPENSEARCH_POD_NAME; fi
 
 get-jobs:
 	@ bin/kctl get jobs

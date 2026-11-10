@@ -73,6 +73,24 @@ cron:
     - artisan
     - schedule:run
 
+opensearch:
+  image:
+    repository: opensearchproject/opensearch
+    tag: "3.9.0"
+    pullPolicy: IfNotPresent
+  port: 9200
+  javaOpts: "-Xms512m -Xmx512m"
+  persistence:
+    enabled: true
+    size: 10Gi
+  resources:
+    requests:
+      memory: 1Gi
+      cpu: 250m
+    limits:
+      memory: 2Gi
+      cpu: "1"
+
 dbBackup:
   schedule: "0 3 * * *"
 

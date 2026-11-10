@@ -12,6 +12,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Services\ProductSearchIndexer;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,8 @@ class ProductController extends Controller
 {
     public function __construct(
         private ProductService $service,
-        private CreateAppLogAction $createAppLogAction
+        private CreateAppLogAction $createAppLogAction,
+        private ProductSearchIndexer $productSearchIndexer
     ) {
     }
 
@@ -233,6 +235,7 @@ class ProductController extends Controller
     {
         Gate::authorize('update', $product);
         $product->translations()->delete();
+        $this->productSearchIndexer->indexProduct($product->id);
 
         $this->createAppLogAction->execute(
             AppLogLevelEnum::SUCCESS,
@@ -284,6 +287,24 @@ ID: {$product->id} ($product->name_processed)"
         $this->service->enrichProduct($product);
 
         return response()->json(['message' => 'Product enriched'], 200);
+    }
+
+    public function reindexProducts()
+    {
+        Gate::authorize('viewAny', Product::class);
+
+        $this->service->reindexProducts();
+
+        return response()->json(['message' => 'Products reindexed'], 200);
+    }
+
+    public function configProductsIndex()
+    {
+        Gate::authorize('viewAny', Product::class);
+
+        $this->service->configProductsIndex();
+
+        return response()->json(['message' => 'Products index configured successfully'], 200);
     }
 
     public function aiTextsNext()
