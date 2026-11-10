@@ -157,7 +157,7 @@ class CjApiClient
         return $json['data'] ?? [];
     }
 
-    public function checkOrderStatus(int $orderId): array
+    public function checkOrderStatus(string $orderId): array
     {
         $token = $this->authService->getValidAccessToken();
 

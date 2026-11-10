@@ -20,7 +20,7 @@ class CjOrderService
         return $this->client->createOrder($cjPayload);
     }
 
-    public function checkStatus(int $orderId): array
+    public function checkStatus(string $orderId): array
     {
         return $this->client->checkOrderStatus($orderId);
     }

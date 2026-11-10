@@ -74,7 +74,7 @@ class StoreOrderService
             } else {
                 // Scenario B: Create a fresh order record
                 $extraData = [
-                    'order_number' => 'ORD-' . strtoupper(Str::random(10)),
+                    'order_number' => 'ORD-' . strtoupper(Str::random(10)) . '-' . strtoupper(substr(str_replace('-', '', (string) Str::uuid()), 0, 8)),
                     'customer_id' => $customer ? $customer->id : null,
                     'ds_provider' => $data['ds_provider'] ?? 'cj',
                     'status' => OrderStatusEnum::DRAFT,

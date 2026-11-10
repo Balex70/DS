@@ -19,7 +19,7 @@ class OrderService
         $provider = $this->manager->driver();
 
         $payload = [
-            'order_number' => $order->id,
+            'order_number' => $order->order_number,
             'shipping' => [
                 'zip' => $order->shipping_postal_code,
                 'country' => $order->shipping_country,
@@ -56,7 +56,7 @@ class OrderService
         $provider = $this->manager->driver();
 
         $payload = [
-            'orderId' => $order->id
+            'orderId' => $order->order_number
         ];
 
         return $provider->checkOrderStatus($payload);
