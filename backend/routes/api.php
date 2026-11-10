@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AppLogController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CurrencyController;
 use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\FailedJobController;
 use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
@@ -111,6 +112,11 @@ Route::delete('app-logs/{appLog}', [AppLogController::class, 'destroy'])->middle
 Route::get('queue-jobs', [QueueJobController::class, 'index'])->middleware('auth:sanctum');
 Route::delete('queue-jobs', [QueueJobController::class, 'destroyAll'])->middleware('auth:sanctum');
 Route::delete('queue-jobs/{queueJob}', [QueueJobController::class, 'destroy'])->middleware('auth:sanctum');
+
+// Failed Jobs
+Route::get('failed-jobs', [FailedJobController::class, 'index'])->middleware('auth:sanctum');
+Route::delete('failed-jobs', [FailedJobController::class, 'destroyAll'])->middleware('auth:sanctum');
+Route::delete('failed-jobs/{failedJob}', [FailedJobController::class, 'destroy'])->middleware('auth:sanctum');
 
 // Store Order
 Route::prefix('store')->group(function () {
