@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import MobileVariantSelector from "./mobile-variant-selector";
 import { Product, ProductVariant } from "@/types/product";
 import { CurrencyCode } from "@/types/currency";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { ProductControls } from "./ProductControls";
 import { Badge } from "@/components/ui/badge";
 
@@ -102,6 +102,21 @@ export function ProductDetail({
                                 <div className="lg:hidden">
                                     <MobileVariantSelector product={product} variants={product.variants} selectedVariant={selectedVariant} />
                                 </div>
+
+                                {/* Crawlable variant links */}
+                                <nav aria-label="Available product variants" className="sr-only">
+                                    {product.variants.map((variant) => (
+                                        <Link
+                                            key={variant.external_id}
+                                            href={`/product/${product.id}/${variant.external_id}`}
+                                            aria-current={
+                                                variant.id === activeVariantId ? "page" : undefined
+                                            }
+                                        >
+                                            {variant.key}
+                                        </Link>
+                                    ))}
+                                </nav>
                             </>
                         ) : (
                             <div className="flex flex-wrap gap-2">
@@ -109,13 +124,10 @@ export function ProductDetail({
                                     const isSelected = variant.id === activeVariantId;
 
                                     return (
-                                        <button
+                                        <Link
                                             key={variant.id}
-                                            onClick={() => {
-                                                router.push(
-                                                    `/product/${product.id.toString()}/${variant.external_id.toString()}`
-                                                );
-                                            }}
+                                            href={`/product/${product.id.toString()}/${variant.external_id.toString()}`}
+                                            aria-current={isSelected ? "page" : undefined}
                                             className={cn(
                                                 "rounded-2xl border px-3 py-1.5 text-sm transition-all",
                                                 isSelected
@@ -124,7 +136,7 @@ export function ProductDetail({
                                             )}
                                         >
                                             {variant.key}
-                                        </button>
+                                        </Link>
                                     );
                                 })}
                             </div>
