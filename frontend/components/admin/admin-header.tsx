@@ -10,7 +10,6 @@ export function AdminHeader() {
       <div className="flex items-center justify-between h-14 px-4">
         <div className="flex items-center gap-4">
           <SidebarTrigger />
-          Header content
         </div>
         <div className="flex items-center gap-4">
           {/* You can add Search or Notifications here too */}
