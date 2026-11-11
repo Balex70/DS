@@ -38,6 +38,8 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'applog.delete']);
         Permission::firstOrCreate(['name' => 'queuejob.edit']);
         Permission::firstOrCreate(['name' => 'queuejob.delete']);
+        Permission::firstOrCreate(['name' => 'failedjob.edit']);
+        Permission::firstOrCreate(['name' => 'failedjob.delete']);
         Permission::firstOrCreate(['name' => 'view dashboard']);
 
         // roles
