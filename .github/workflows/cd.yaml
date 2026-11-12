@@ -51,4 +51,5 @@ jobs:
             docker push bachynskyialex/ds-frontend:$VERSION
             docker rmi bachynskyialex/ds-frontend:$VERSION
             docker image prune -a --force
+            docker builder prune -af
             make helm-prod-upgrade
