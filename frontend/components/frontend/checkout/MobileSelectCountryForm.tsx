@@ -43,16 +43,34 @@ export default function MobileSelectCountryForm({
                 <Button
                     variant="outline"
                     role="combobox"
-                    className="w-full justify-between"
+                    className="
+                        h-12
+                        w-full
+                        justify-between
+                        !text-base
+                        font-normal
+                        rounded-lg
+                        border-muted-foreground/25
+                        transition-colors
+                        focus-visible:border-emerald-500
+                        focus-visible:ring-2
+                        focus-visible:ring-emerald-500/20
+                        focus-visible:ring-offset-0
+                        data-[state=open]:border-emerald-500
+                        data-[state=open]:ring-2
+                        data-[state=open]:ring-emerald-500/20
+                    "
                 >
-                    {selectedCountry?.name ?? t('checkout.select_country')}
+                    <span className="truncate">
+                        {selectedCountry?.name ?? t('checkout.select_country')}
+                    </span>
 
-                    <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </SheetTrigger>
 
             <SheetContent side="bottom" className="!h-dvh max-h-dvh w-full rounded-none">
-                <BottomSheetHeader>{t('checkout.select_country')}</BottomSheetHeader>
+                <BottomSheetHeader className="font-semibold">{t('checkout.select_country')}</BottomSheetHeader>
                 
                 <Separator className="my-0" />
                 <ScrollArea className="h-[calc(100dvh-64px)]">
@@ -77,17 +95,19 @@ export default function MobileSelectCountryForm({
                                     }}
                                     className="
                                         flex w-full items-center justify-between
-                                        px-4 py-3
-                                        text-left
-                                        hover:bg-muted
-                                        active:bg-muted/80
+                                        px-4 py-4
+                                        text-left text-lg
                                         transition-colors
+                                        hover:bg-green-50
+                                        active:bg-green-100
+                                        dark:hover:bg-green-950/40
+                                        dark:active:bg-green-950/60
                                     "
                                 >
                                     <span>{country.name}</span>
 
                                     {form.shipping_country === country.code && (
-                                        <Check className="h-5 w-5 text-primary" />
+                                        <Check className="h-5 w-5 text-green-600 dark:text-green-400" />
                                     )}
                                 </button>
                             )

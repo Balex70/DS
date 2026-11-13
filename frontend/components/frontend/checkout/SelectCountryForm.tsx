@@ -54,7 +54,23 @@ export function SelectCountryForm({
                 <Button
                     variant="outline"
                     role="combobox"
-                    className="w-full justify-between"
+                    className="
+                        h-12
+                        w-full
+                        justify-between
+                        !text-base
+                        font-normal
+                        rounded-lg
+                        border-muted-foreground/25
+                        transition-colors
+                        focus-visible:border-emerald-500
+                        focus-visible:ring-2
+                        focus-visible:ring-emerald-500/20
+                        focus-visible:ring-offset-0
+                        data-[state=open]:border-emerald-500
+                        data-[state=open]:ring-2
+                        data-[state=open]:ring-emerald-500/20
+                    "
                 >
                     {selectedCountry?.name ?? t('checkout.select_country')}
 
@@ -67,7 +83,7 @@ export function SelectCountryForm({
                 className="w-[--radix-popover-trigger-width] p-0">
                 <div className="w-[var(--radix-popover-trigger-width)]">
                     <Command>
-                        <CommandInput placeholder={t('checkout.search_country_placeholder')} />
+                        <CommandInput placeholder={t('checkout.search_country_placeholder')} className="!text-base" />
 
                         <CommandList>
                             <CommandEmpty>{t('checkout.no_country_found')}</CommandEmpty>
@@ -80,6 +96,7 @@ export function SelectCountryForm({
                                         <CommandItem
                                             key={country.code}
                                             value={country.name}
+                                            className="py-3 text-base"
                                             onSelect={() => {
                                                 setShippingMethod(undefined);
                                                 setPayload(null);
