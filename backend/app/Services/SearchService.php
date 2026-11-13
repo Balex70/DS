@@ -135,7 +135,7 @@ class SearchService
         $categories = Category::query()
             ->where('active', true)
             ->where('is_visible', true)
-            ->select(['id', 'name', 'slug', 'full_path'])
+            ->select(['id', 'name', 'slug', 'full_path', 'image'])
             ->when(
                 $locale,
                 fn ($query) => $query->where(function ($q) use ($search, $locale) {
