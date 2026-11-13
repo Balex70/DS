@@ -39,11 +39,22 @@ export function InputField({
 
     return (
         <div className="space-y-1">
-            <FieldLabel className="text-sm text-muted-foreground font-normal">{label}:</FieldLabel>
+            <FieldLabel className="text-sm text-muted-foreground font-medium">{label}:</FieldLabel>
             <Input
                 placeholder=""
                 value={form[fieldName] ?? ""}
                 onChange={(e) => onFieldChange(fieldName, e.target.value)}
+                className="
+                    h-12
+                    !text-base
+                    rounded-lg
+                    border-muted-foreground/25
+                    transition-colors
+                    focus-visible:border-green-600
+                    focus-visible:ring-2
+                    focus-visible:ring-green-600/20
+                    focus-visible:ring-offset-0
+                "
             />
             {((form[fieldName]) && latinFieldName) &&
                 (

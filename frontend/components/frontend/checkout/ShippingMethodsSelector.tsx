@@ -108,7 +108,7 @@ export function ShippingMethodsSelector({
                             flex cursor-pointer items-start justify-between rounded-xl border p-2 sm:p-4 transition
                             ${
                                 selected
-                                    ? "border-black bg-muted"
+                                    ? "border-green-600 bg-green-100/13 hover:border-green-700"
                                     : "hover:border-gray-400"
                             }
                         `}
@@ -129,7 +129,7 @@ export function ShippingMethodsSelector({
                                         {labels.map((label) => (
                                             <span
                                                 key={label}
-                                                className="rounded-sm bg-gray-200 px-2 py-0.5 text-xs text-muted-foreground"
+                                                className="rounded-sm bg-blue-600/13 px-2 py-0.5 text-xs text-muted-foreground"
                                             >
                                                 {label}
                                             </span>
@@ -145,7 +145,7 @@ export function ShippingMethodsSelector({
                             </div>
                         </div>
 
-                        <div className="font-semibold">
+                        <div className="font-normal">
                             <PriceRenderer value={method.price} />
                             {(currency !== "USD" && method.currency_price) && (
                                 <span className="block text-xs font-normal text-muted-foreground">
@@ -214,7 +214,7 @@ export function ShippingMethodsSelector({
                                             </div>
                                         </div>
 
-                                        <div className="font-semibold">
+                                        <div className="font-normal">
                                             <PriceRenderer
                                                 value={method.price}
                                             />
