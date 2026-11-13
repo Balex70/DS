@@ -1,15 +1,20 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-
 import { X } from "lucide-react";
 import { SheetClose, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 
-export default function BottomSheetHeader({children}: { children: React.ReactNode }) {
+interface Props {
+    children: React.ReactNode;
+    className?: string;
+}
+
+export default function BottomSheetHeader({ children, className }: Props) {
     return (
         <SheetHeader className="pb-0">
             <div className="flex items-center justify-between">
-                <SheetTitle className="inline-flex items-center">
+                <SheetTitle className={cn("inline-flex items-center text-base", className)}>
                     {children}
                 </SheetTitle>
 
