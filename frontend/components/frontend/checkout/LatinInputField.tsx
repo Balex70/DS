@@ -41,7 +41,7 @@ export function LatinInputField({ form, label, fieldName, initialValue, onSave }
                             <Button
                                 type="button"
                                 size="sm"
-                                className="absolute right-1 top-1/2 h-7 h-full -translate-y-1/2 bg-emerald-600 px-3 text-white hover:bg-emerald-700"
+                                className="absolute right-0 top-0 h-9 rounded-l-none bg-green-600/90 px-3 text-white hover:bg-green-600 active:translate-y-0"
                                 onClick={() => {
                                     if (inputRef.current) {
                                         onSave(fieldName, inputRef.current.value);
