@@ -16,6 +16,7 @@ use App\Models\Material;
 use App\Models\Product;
 use App\SearchEngine\SearchEngineManager;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
@@ -349,6 +350,46 @@ class ProductService
         }
 
         return $query;
+    }
+
+    public function getLatestProducts(array $filters, int $limit): Collection
+    {
+        $query = Product::query()
+            ->whereNotNull('last_enrichment_at')
+            ->whereNotNull('ai_texts_at')
+            ->whereNull('enrichment_failed_at')
+            ->whereHas('categories', function ($q) {
+                $q->where('categories.is_visible', true);
+            })
+            ->with('cheapestVariant');
+
+        $locale = $filters['locale'] ?? null;
+
+        if ($locale && LocalesEnum::tryFrom($locale)) {
+            $query->with([
+                'translation' => fn ($q) => $q->where('locale', $locale),
+            ]);
+        }
+
+        $products = $query
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->limit($limit)
+            ->get();
+
+        $currency = $filters['currency'] ?? null;
+
+        if ($currency) {
+            $products->each(function (Product $product) use ($currency) {
+                $product->currency_price = $this->converter->convert(
+                    $product->price,
+                    CurrenciesEnum::USD->value,
+                    $currency,
+                );
+            });
+        }
+
+        return $products;
     }
 
     public function generatePrice(int $costPrice): int

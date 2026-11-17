@@ -86,38 +86,11 @@ class ProductController extends Controller
 
     public function latest(Request $request)
     {
-        $query = Product::query();
-        $query->whereNotNull('last_enrichment_at');
-        $query->whereNotNull('ai_texts_at');
-        $query->whereNull('enrichment_failed_at');
-        $query->whereHas('categories', function ($q) {
-            $q->where('is_visible', true);
-        });
-        $query->with('cheapestVariant');
-
-        if ($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
-            $locale = $request->locale ?? 'en';
-
-            $query->with([
-                'translation' => fn ($q) => $q->where('locale', $locale),
-            ]);
-        }
-
-        $query->latest();
-        $latestProducts = $query->limit(5)->get();
-
-        if ($request->filled('currency')) {
-            $latestProducts->each(function (Product $product) use ($request) {
-                $product->currency_price = $this->converter->convert(
-                    $product->price,
-                    CurrenciesEnum::USD->value,
-                    $request->currency,
-                );
-            });
-        }
-
         return ProductResource::collection(
-            $latestProducts
+            $this->service->getLatestProducts(
+                $request->only(['locale', 'currency']),
+                5
+            )
         );
     }
 }
