@@ -39,10 +39,10 @@ class ProductController extends Controller
         }
 
         match ($request->sort ?? 'latest') {
-            'latest' => $query->latest(),
-            'price_asc' => $query->orderBy('price'),
-            'price_desc' => $query->orderByDesc('price'),
-            default => $query->latest(),
+            'latest' => $query->orderByDesc('created_at')->orderByDesc('id'),
+            'price_asc' => $query->orderBy('price')->orderBy('id'),
+            'price_desc' => $query->orderByDesc('price')->orderBy('id'),
+            default => $query->orderByDesc('created_at')->orderByDesc('id'),
         };
 
         if ($request->filled('price') && count($request->price) === 2) {
