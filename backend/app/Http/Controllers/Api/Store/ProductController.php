@@ -7,11 +7,9 @@ use App\Enums\CurrenciesEnum;
 use App\Enums\LocalesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
-use App\Models\Material;
 use App\Models\Product;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -26,75 +24,17 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = $this->service->baseCategoryQuery($request);
-        $query->with('cheapestVariant');
-
-        if ($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
-            $locale = $request->locale ?? 'en';
-
-            $query->with([
-                'translation' => fn ($q) => $q->where('locale', $locale),
-                'materials.translation' => fn ($q) => $q->where('locale', $locale),
-            ]);
-        }
-
-        match ($request->sort ?? 'latest') {
-            'latest' => $query->orderByDesc('created_at')->orderByDesc('id'),
-            'price_asc' => $query->orderBy('price')->orderBy('id'),
-            'price_desc' => $query->orderByDesc('price')->orderBy('id'),
-            default => $query->orderByDesc('created_at')->orderByDesc('id'),
-        };
-
-        if ($request->filled('price') && count($request->price) === 2) {
-            $query->whereBetween('price', [
-                $request->price[0],
-                $request->price[1],
-            ]);
-
-            // TODO: can use variants but not sure if necessary for now (and it slower and requires show price range in products list)
-            // $query->whereHas('variants', function ($q) use ($request) {
-            //     $q->whereBetween('price', [
-            //         $request->price[0],
-            //         $request->price[1],
-            //     ]);
-            // });
-        }
-
-        if ($request->filled('activeMaterials')) {
-            $materialIds = $request->input('activeMaterials');
-
-            $materialNames = Material::query()
-                ->whereIn('id', $materialIds)
-                ->selectRaw('LOWER(TRIM(name)) as normalized_name')
-                ->distinct()
-                ->pluck('normalized_name');
-
-            $matchingMaterialIds = Material::query()
-                ->whereIn(
-                    DB::raw('LOWER(TRIM(name))'),
-                    $materialNames
-                )
-                ->pluck('id');
-
-            $query->whereHas('materials', function ($q) use ($matchingMaterialIds) {
-                $q->whereIn('materials.id', $matchingMaterialIds);
-            });
-        }
-
-        $products = $query->paginate(24);
-
-        if ($request->filled('currency')) {
-            $products->each(function (Product $product) use ($request) {
-                $product->currency_price = $this->converter->convert(
-                    $product->price,
-                    CurrenciesEnum::USD->value,
-                    $request->currency,
-                );
-            });
-        }
+        $filters = $request->only([
+            'category',
+            'locale',
+            'sort',
+            'price',
+            'activeMaterials',
+            'currency',
+        ]);
 
         return ProductResource::collection(
-            $products
+            $this->service->getCategoryProducts($filters)
         );
     }
 
@@ -136,43 +76,12 @@ class ProductController extends Controller
 
     public function filters(Request $request)
     {
-        $base = $this->service->baseCategoryQuery($request);
-        $baseWithVariants = $base->join('product_variants', 'products.id', '=', 'product_variants.product_id');
-
-        // PRICE RANGE (clone to avoid query mutation)
-        $price = (clone $baseWithVariants)
-            ->selectRaw('MIN(products.price) as min, MAX(products.price) as max')
-            ->first();
-
-        // MATERIALS (clone to avoid query mutation)
-        $productIds = (clone $base)
-            ->select('products.id')
-            ->distinct()
-            ->pluck('id');
-        $materialsQuery = Material::query()
-            ->whereHas('products', function ($q) use ($productIds) {
-                $q->whereIn('products.id', $productIds);
-            });
-        if ($request->filled('locale') && LocalesEnum::tryFrom($request->locale)) {
-            $locale = $request->locale ?? 'en';
-
-            $materialsQuery->with([
-                'translation' => fn ($q) => $q->where('locale', $locale),
-            ]);
-        }
-        $materials = $materialsQuery->select('id', 'name')->get();
-
-        // WEIGHT RANGE
-        // $weight = $base
-        //     ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
-        //     ->selectRaw('MIN(product_variants.weight) as min, MAX(product_variants.weight) as max')
-        //     ->first();
-
-        return response()->json([
-            'price' => $price,
-            'materials' => $materials,
-            'weight' => [],
+        $filters = $request->only([
+            'category',
+            'locale',
         ]);
+
+        return response()->json($this->service->getFilters($filters));
     }
 
     public function latest(Request $request)
