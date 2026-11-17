@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers\Api\Store;
 
-use App\Currency\Services\PriceConverter;
-use App\Enums\CurrenciesEnum;
-use App\Enums\LocalesEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
@@ -14,8 +11,7 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     public function __construct(
-        private ProductService $service,
-        private PriceConverter $converter
+        private ProductService $service
     ) {
     }
 
@@ -40,38 +36,12 @@ class ProductController extends Controller
 
     public function show(Request $request, Product $product)
     {
-        abort_unless(
-            $product->last_enrichment_at !== null
-                && $product->ai_texts_at !== null
-                && $product->enrichment_failed_at === null,
-            404
+        return new ProductResource(
+            $this->service->getProductDetails(
+                $product,
+                $request->only(['locale', 'currency'])
+            )
         );
-
-        $locale = $request->locale ?? 'en';
-        $product->load([
-            'variants' => fn ($query) => $query
-                ->with('image', 'translations')
-                ->orderBy('id'),
-            'translations',
-            'materials.translation' => fn ($q) => $q->where('locale', $locale),
-        ]);
-
-        if ($request->filled('currency')) {
-            $product->currency_price = $this->converter->convert(
-                $product->price,
-                CurrenciesEnum::USD->value,
-                $request->currency,
-            );
-            $product->variants->each(function ($variant) use ($request) {
-                $variant->currency_price = $this->converter->convert(
-                    $variant->price,
-                    CurrenciesEnum::USD->value,
-                    $request->currency,
-                );
-            });
-        }
-
-        return new ProductResource($product);
     }
 
     public function filters(Request $request)

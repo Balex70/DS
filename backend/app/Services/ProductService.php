@@ -210,6 +210,46 @@ class ProductService
         $this->productSearchIndexer->indexProduct($productToEnrich->id);
     }
 
+    public function getProductDetails(Product $product, array $filters): Product
+    {
+        abort_unless(
+            $product->last_enrichment_at !== null
+                && $product->ai_texts_at !== null
+                && $product->enrichment_failed_at === null,
+            404
+        );
+
+        $locale = $filters['locale'] ?? 'en';
+
+        $product->load([
+            'variants' => fn ($query) => $query
+                ->with('image', 'translations')
+                ->orderBy('id'),
+            'translations',
+            'materials.translation' => fn ($q) => $q->where('locale', $locale),
+        ]);
+
+        $currency = $filters['currency'] ?? null;
+
+        if ($currency) {
+            $product->currency_price = $this->converter->convert(
+                $product->price,
+                CurrenciesEnum::USD->value,
+                $currency,
+            );
+
+            $product->variants->each(function ($variant) use ($currency) {
+                $variant->currency_price = $this->converter->convert(
+                    $variant->price,
+                    CurrenciesEnum::USD->value,
+                    $currency,
+                );
+            });
+        }
+
+        return $product;
+    }
+
     public function getCategoryProducts(array $filters): LengthAwarePaginator
     {
         $query = $this->baseCategoryQuery($filters);
