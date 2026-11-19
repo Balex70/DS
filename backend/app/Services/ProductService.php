@@ -3,15 +3,21 @@
 namespace App\Services;
 
 use App\Actions\CreateAppLogAction;
+use App\Currency\Services\PriceConverter;
 use App\Dropshipping\DropshippingManager;
 use App\Dropshipping\Mappers\CjProductMapper;
 use App\Enums\AppLogLevelEnum;
 use App\Enums\AppLogRealmEnum;
+use App\Enums\CurrenciesEnum;
+use App\Enums\LocalesEnum;
 use App\Enums\ProductAiStatusEnum;
 use App\Enums\ProductVariantAiStatusEnum;
+use App\Models\Material;
 use App\Models\Product;
 use App\SearchEngine\SearchEngineManager;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class ProductService
@@ -22,7 +28,9 @@ class ProductService
         private ProductImageService $imageService,
         private CreateAppLogAction $createAppLogAction,
         private SearchEngineManager $searchEngineManager,
-        private ProductSearchIndexer $productSearchIndexer
+        private ProductSearchIndexer $productSearchIndexer,
+        private CategoryService $categoryService,
+        private PriceConverter $converter
     ) {
     }
 
@@ -202,21 +210,177 @@ class ProductService
         $this->productSearchIndexer->indexProduct($productToEnrich->id);
     }
 
+    public function getProductDetails(Product $product, array $filters): Product
+    {
+        abort_unless(
+            $product->last_enrichment_at !== null
+                && $product->ai_texts_at !== null
+                && $product->enrichment_failed_at === null,
+            404
+        );
+
+        $locale = $filters['locale'] ?? 'en';
+
+        $product->load([
+            'variants' => fn ($query) => $query
+                ->with('image', 'translations')
+                ->orderBy('id'),
+            'translations',
+            'materials.translation' => fn ($q) => $q->where('locale', $locale),
+        ]);
+
+        $currency = $filters['currency'] ?? null;
+
+        if ($currency) {
+            $product->currency_price = $this->converter->convert(
+                $product->price,
+                CurrenciesEnum::USD->value,
+                $currency,
+            );
+
+            $product->variants->each(function ($variant) use ($currency) {
+                $variant->currency_price = $this->converter->convert(
+                    $variant->price,
+                    CurrenciesEnum::USD->value,
+                    $currency,
+                );
+            });
+        }
+
+        return $product;
+    }
+
+    public function getCategoryProducts(array $filters): LengthAwarePaginator
+    {
+        $query = $this->baseCategoryQuery($filters);
+        $query->with('cheapestVariant');
+
+        $locale = $filters['locale'] ?? null;
+        $sort = $filters['sort'] ?? null;
+        $price = $filters['price'] ?? null;
+        $materialIds = $filters['activeMaterials'] ?? null;
+        $currency = $filters['currency'] ?? null;
+
+        if ($locale && LocalesEnum::tryFrom($locale)) {
+            $query->with([
+                'translation' => fn ($q) => $q->where('locale', $locale),
+                'materials.translation' => fn ($q) => $q->where('locale', $locale),
+            ]);
+        }
+
+        match ($sort ?? 'latest') {
+            'latest' => $query->orderByDesc('created_at')->orderByDesc('id'),
+            'price_asc' => $query->orderBy('price')->orderBy('id'),
+            'price_desc' => $query->orderByDesc('price')->orderBy('id'),
+            default => $query->orderByDesc('created_at')->orderByDesc('id'),
+        };
+
+        if ($price && count($price) === 2) {
+            $query->whereBetween('price', [
+                $price[0],
+                $price[1],
+            ]);
+
+            // TODO: can use variants but not sure if necessary for now (and it slower and requires show price range in products list)
+            // $query->whereHas('variants', function ($q) use ($request) {
+            //     $q->whereBetween('price', [
+            //         $request->price[0],
+            //         $request->price[1],
+            //     ]);
+            // });
+        }
+
+        if (!empty($materialIds)) {
+            $materialNames = Material::query()
+                ->whereIn('id', $materialIds)
+                ->selectRaw('LOWER(TRIM(name)) as normalized_name')
+                ->distinct()
+                ->pluck('normalized_name');
+
+            $matchingMaterialIds = Material::query()
+                ->whereIn(
+                    DB::raw('LOWER(TRIM(name))'),
+                    $materialNames
+                )
+                ->pluck('id');
+
+            $query->whereHas('materials', function ($q) use ($matchingMaterialIds) {
+                $q->whereIn('materials.id', $matchingMaterialIds);
+            });
+        }
+
+        $products = $query->paginate(24);
+
+        if ($currency) {
+            $products->each(function (Product $product) use ($currency) {
+                $product->currency_price = $this->converter->convert(
+                    $product->price,
+                    CurrenciesEnum::USD->value,
+                    $currency,
+                );
+            });
+        }
+
+        return $products;
+    }
+
+    public function getFilters(array $filters): array
+    {
+        $query = $this->baseCategoryQuery($filters);
+
+        $locale = $filters['locale'] ?? null;
+
+        $baseWithVariants = $query->join('product_variants', 'products.id', '=', 'product_variants.product_id');
+
+        // PRICE RANGE (clone to avoid query mutation)
+        $price = (clone $baseWithVariants)
+            ->selectRaw('MIN(products.price) as min, MAX(products.price) as max')
+            ->first();
+
+        // MATERIALS (clone to avoid query mutation)
+        $materialsQuery = Material::query()
+            ->whereHas('products', function ($q) use ($query) {
+                $q->whereIn(
+                    'products.id',
+                    (clone $query)->select('products.id')
+                );
+            });
+        if ($locale && LocalesEnum::tryFrom($locale)) {
+            $materialsQuery->with([
+                'translation' => fn ($q) => $q->where('locale', $locale),
+            ]);
+        }
+        $materials = $materialsQuery->select('id', 'name')->get();
+
+        // WEIGHT RANGE
+        // $weight = $base
+        //     ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+        //     ->selectRaw('MIN(product_variants.weight) as min, MAX(product_variants.weight) as max')
+        //     ->first();
+
+        return [
+            'price' => $price,
+            'materials' => $materials,
+            'weight' => [],
+        ];
+    }
+
     /*
     * 1) Used as base query for getting products in category page
     * 2) Used as base query for getting filters in category page
     */
-    public function baseCategoryQuery(Request $request)
+    public function baseCategoryQuery(array $filters): Builder
     {
         $query = Product::query();
         $query->whereNotNull('last_enrichment_at');
         $query->whereNotNull('ai_texts_at');
         $query->whereNull('enrichment_failed_at');
 
-        $slugArray = $request->category;
-        $allChildrenIds = app(CategoryService::class)->getCategoryAndChildrenIds($slugArray);
+        $category = $filters['category'] ?? null;
 
-        if ($request->filled('category')) {
+        if ($category) {
+            $allChildrenIds = $this->categoryService->getCategoryAndChildrenIds($category);
+
             $query->whereHas('categories', function ($q) use ($allChildrenIds) {
                 $q->whereIn('id', $allChildrenIds);
             })
@@ -226,6 +390,46 @@ class ProductService
         }
 
         return $query;
+    }
+
+    public function getLatestProducts(array $filters, int $limit): Collection
+    {
+        $query = Product::query()
+            ->whereNotNull('last_enrichment_at')
+            ->whereNotNull('ai_texts_at')
+            ->whereNull('enrichment_failed_at')
+            ->whereHas('categories', function ($q) {
+                $q->where('categories.is_visible', true);
+            })
+            ->with('cheapestVariant');
+
+        $locale = $filters['locale'] ?? null;
+
+        if ($locale && LocalesEnum::tryFrom($locale)) {
+            $query->with([
+                'translation' => fn ($q) => $q->where('locale', $locale),
+            ]);
+        }
+
+        $products = $query
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->limit($limit)
+            ->get();
+
+        $currency = $filters['currency'] ?? null;
+
+        if ($currency) {
+            $products->each(function (Product $product) use ($currency) {
+                $product->currency_price = $this->converter->convert(
+                    $product->price,
+                    CurrenciesEnum::USD->value,
+                    $currency,
+                );
+            });
+        }
+
+        return $products;
     }
 
     public function generatePrice(int $costPrice): int
