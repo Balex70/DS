@@ -71,35 +71,11 @@ class ProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
         Gate::authorize('update', $product);
-        $data = $request->validated();
 
-        DB::transaction(function () use ($product, $data) {
-
-            // 1. Update base product fields | en
-            $product->update([
-                'price' => $data['price'],
-                'name_processed' => $data['translations']['en']['name'],
-                'description_processed' => $data['translations']['en']['description'],
-            ]);
-
-            // 2. Sync translations
-            if (!empty($data['translations'])) {
-                foreach ($data['translations'] as $locale => $translation) {
-                    if ($locale === 'en') {
-                        continue;
-                    }
-                    $product->translations()->updateOrCreate(
-                        [
-                            'locale' => $locale,
-                        ],
-                        [
-                            'name' => $translation['name'],
-                            'description' => $translation['description'] ?? null,
-                        ]
-                    );
-                }
-            }
-        });
+        $product = $this->service->updateProduct(
+            $product,
+            $request->validated()
+        );
 
         return new ProductResource($product);
     }

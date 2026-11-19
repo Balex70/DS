@@ -341,6 +341,40 @@ class ProductService
         return $query->paginate(10);
     }
 
+    public function updateProduct(Product $product, array $data): Product
+    {
+        return DB::transaction(function () use ($product, $data) {
+
+            // UPDATE BASE PRODUCT FIELDS | en
+            $product->update([
+                'price' => $data['price'],
+                'name_processed' => $data['translations']['en']['name'],
+                'description_processed' => $data['translations']['en']['description'],
+            ]);
+
+            // SYNC TRANSLATIONS
+            if (!empty($data['translations'])) {
+                foreach ($data['translations'] as $locale => $translation) {
+                    if ($locale === 'en') {
+                        continue;
+                    }
+
+                    $product->translations()->updateOrCreate(
+                        [
+                            'locale' => $locale,
+                        ],
+                        [
+                            'name' => $translation['name'],
+                            'description' => $translation['description'] ?? null,
+                        ]
+                    );
+                }
+            }
+
+            return $product;
+        });
+    }
+
     public function getProductDetails(Product $product, array $filters): Product
     {
         abort_unless(
