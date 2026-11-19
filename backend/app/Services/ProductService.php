@@ -210,6 +210,137 @@ class ProductService
         $this->productSearchIndexer->indexProduct($productToEnrich->id);
     }
 
+    public function getAdminProducts(array $filters): LengthAwarePaginator
+    {
+        $searchQuery = $filters['search'] ?? null;
+        $categoryIds = $filters['categoryIds'] ?? null;
+        $enrichStatuses = $filters['enrichStatuses'] ?? null;
+        $aiStatuses = $filters['aiStatuses'] ?? null;
+        $aiTextsProcessed = $filters['aiTextsProcessed'] ?? null;
+        $suspiciousPrices = $filters['suspiciousPrices'] ?? null;
+
+        $query = Product::query()->orderBy('id');
+        $query->with('translations');
+
+        // SEARCH
+        if ($searchQuery) {
+            $query->where(function ($q) use ($searchQuery) {
+                $q->where('name_raw', 'ILIKE', "%{$searchQuery}%")
+                    ->orWhere('name_processed', 'ILIKE', "%{$searchQuery}%")
+                    ->orWhereHas('translations', function ($tq) use ($searchQuery) {
+                        $tq->where('name', 'ILIKE', "%{$searchQuery}%");
+                    })
+                    ->orWhereHas('variants', function ($q) use ($searchQuery) {
+                        $q->where('name', 'ILIKE', "%{$searchQuery}%")
+                            ->orWhere('name_processed', 'ILIKE', "%{$searchQuery}%")
+                            ->orWhereHas('translations', function ($vtq) use ($searchQuery) {
+                                $vtq->where('name', 'ILIKE', "%{$searchQuery}%");
+                            });
+                    });
+            });
+        }
+
+        // CATEGORY FILTER
+        if ($categoryIds) {
+            $categoryIdsArray = explode(',', $categoryIds);
+
+            $query->whereHas('categories', function ($q) use ($categoryIdsArray) {
+                $q->whereIn('categories.id', $categoryIdsArray);
+            });
+        }
+
+        // ENRICH STATUS FILTER
+        if ($enrichStatuses) {
+            $outdatedDate = now()->subWeeks(8);
+            $enrichStatusesArray = explode(',', $enrichStatuses);
+
+            $query->where(function ($q) use ($enrichStatusesArray, $outdatedDate) {
+                // ENRICHED FILTER
+                if (in_array('enriched', $enrichStatusesArray, true)) {
+                    $q->orWhere(function ($r) use ($outdatedDate) {
+                        $r->whereNotNull('last_enrichment_at')
+                            ->where('last_enrichment_at', '>', $outdatedDate);
+                    });
+                }
+
+                // OUTDATED FILTER
+                if (in_array('outdated', $enrichStatusesArray, true)) {
+                    $q->orWhere(function ($r) use ($outdatedDate) {
+                        $r->where(function ($s) use ($outdatedDate) {
+                            $s->whereNotNull('last_enrichment_at')
+                                ->where('last_enrichment_at', '<', $outdatedDate);
+                        })
+                        ->whereNull('enrichment_failed_at');
+                    });
+                }
+
+                // FRESH FILTER
+                if (in_array('fresh', $enrichStatusesArray, true)) {
+                    $q->orWhere(function ($r) {
+                        $r->whereNull('last_enrichment_at')
+                            ->whereNull('enrichment_failed_at');
+                    });
+                }
+
+                // ENRICHMENT FAILED FILTER
+                if (in_array('failed', $enrichStatusesArray, true)) {
+                    $q->orWhereNotNull('enrichment_failed_at');
+                }
+            });
+        }
+
+        // AI STATUS FILTER
+        if ($aiStatuses) {
+            $aiStatusesArray = explode(',', $aiStatuses);
+
+            $query->where(function ($q) use ($aiStatusesArray) {
+                // QUEUED FILTER
+                if (in_array(ProductAiStatusEnum::QUEUED->value, $aiStatusesArray, true)) {
+                    $q->orWhere('ai_status', ProductAiStatusEnum::QUEUED->value);
+                }
+
+                // PROCESSING FILTER
+                if (in_array(ProductAiStatusEnum::PROCESSING->value, $aiStatusesArray, true)) {
+                    $q->orWhere('ai_status', ProductAiStatusEnum::PROCESSING->value);
+                }
+
+                // DONE FILTER
+                if (in_array(ProductAiStatusEnum::DONE->value, $aiStatusesArray, true)) {
+                    $q->orWhere('ai_status', ProductAiStatusEnum::DONE->value);
+                }
+
+                // FAILED FILTER
+                if (in_array(ProductAiStatusEnum::FAILED->value, $aiStatusesArray, true)) {
+                    $q->orWhere('ai_status', ProductAiStatusEnum::FAILED->value);
+                }
+
+                // NULL FILTER
+                if (in_array('null', $aiStatusesArray, true)) {
+                    $q->orWhereNull('ai_status');
+                }
+            });
+        }
+
+        // AI TEXTS FILTER
+        if ($aiTextsProcessed) {
+            $query->whereNotNull('ai_texts_at');
+        }
+
+        // SUSPICIOUS PRICE FILTER
+        if ($suspiciousPrices) {
+            $query->where(function ($q) {
+                $q->whereNull('price')
+                    ->orWhereNull('cost_price')
+                    ->orWhere(function ($r) {
+                        $r->where('cost_price', '>', 0)
+                            ->whereRaw('ABS(price - cost_price) * 100 < cost_price * 5');
+                    });
+            });
+        }
+
+        return $query->paginate(10);
+    }
+
     public function getProductDetails(Product $product, array $filters): Product
     {
         abort_unless(
